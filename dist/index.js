@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:true});var React=require('react'),material=require('@mui/material'),reactDom=require('react-dom'),reactForm=require('@pdg/react-form'),dayjs=require('dayjs');function _interopDefaultLegacy(e){return e&&typeof e==='object'&&'default'in e?e:{'default':e}}function _interopNamespace(e){if(e&&e.__esModule)return e;var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n["default"]=e;return Object.freeze(n)}var React__default=/*#__PURE__*/_interopDefaultLegacy(React);var React__namespace=/*#__PURE__*/_interopNamespace(React);var dayjs__default=/*#__PURE__*/_interopDefaultLegacy(dayjs);var commonjsGlobal$1 = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};var classnames = {exports: {}};/*!
+'use strict';Object.defineProperty(exports,'__esModule',{value:true});var React=require('react'),material=require('@mui/material'),reactDom=require('react-dom'),dayjs=require('dayjs'),reactForm=require('@pdg/react-form');function _interopDefaultLegacy(e){return e&&typeof e==='object'&&'default'in e?e:{'default':e}}function _interopNamespace(e){if(e&&e.__esModule)return e;var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n["default"]=e;return Object.freeze(n)}var React__default=/*#__PURE__*/_interopDefaultLegacy(React);var React__namespace=/*#__PURE__*/_interopNamespace(React);var dayjs__default=/*#__PURE__*/_interopDefaultLegacy(dayjs);var commonjsGlobal$1 = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};var classnames = {exports: {}};/*!
 	Copyright (c) 2018 Jed Watson.
 	Licensed under the MIT License (MIT), see
 	http://jedwatson.github.io/classnames
@@ -8520,6 +8520,16 @@ var TableBodyCell = function (_a) {
                             e.stopPropagation();
                         } },
                         React__default["default"].createElement(material.Tooltip, __assign({ title: React__default["default"].createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
+                }
+                break;
+            case 'date':
+                if (data && data instanceof Date) {
+                    data = dayjs__default["default"](data).format('YYYY-MM-DD');
+                }
+                break;
+            case 'datetime':
+                if (data && data instanceof Date) {
+                    data = dayjs__default["default"](data).format('YYYY-MM-DD HH:mm:ss');
                 }
                 break;
             default:

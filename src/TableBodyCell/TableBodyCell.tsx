@@ -4,6 +4,7 @@ import { TableBodyCellProps as Props } from './TableBodyCell.types';
 import { numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
+import dayjs from "dayjs";
 
 const StyledButtonsBox = styled(Box)`
   display: inline-flex;
@@ -65,6 +66,16 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
               </Tooltip>
             </a>
           );
+        }
+        break;
+      case 'date':
+        if (data && data instanceof Date) {
+          data = dayjs(data).format('YYYY-MM-DD')
+        }
+        break;
+      case 'datetime':
+        if (data && data instanceof Date) {
+          data = dayjs(data).format('YYYY-MM-DD HH:mm:ss')
         }
         break;
       default:

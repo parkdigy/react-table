@@ -12,7 +12,7 @@ export interface TableItem {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableColumn<T = TableItem> {
-  type?: 'text' | 'number' | 'date' | 'img' | 'button' | 'buttons';
+  type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'buttons';
   label?: ReactNode;
   name?: string;
   align?: TableCellProps['align'];

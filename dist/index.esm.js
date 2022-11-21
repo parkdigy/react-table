@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,useCallback}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button}from'@mui/material';import {findDOMNode}from'react-dom';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import dayjs from'dayjs';var commonjsGlobal$1 = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};var classnames = {exports: {}};/*!
+import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,useCallback}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button}from'@mui/material';import {findDOMNode}from'react-dom';import dayjs from'dayjs';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';var commonjsGlobal$1 = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};var classnames = {exports: {}};/*!
 	Copyright (c) 2018 Jed Watson.
 	Licensed under the MIT License (MIT), see
 	http://jedwatson.github.io/classnames
@@ -8520,6 +8520,16 @@ var TableBodyCell = function (_a) {
                             e.stopPropagation();
                         } },
                         React__default.createElement(Tooltip, __assign({ title: React__default.createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
+                }
+                break;
+            case 'date':
+                if (data && data instanceof Date) {
+                    data = dayjs(data).format('YYYY-MM-DD');
+                }
+                break;
+            case 'datetime':
+                if (data && data instanceof Date) {
+                    data = dayjs(data).format('YYYY-MM-DD HH:mm:ss');
                 }
                 break;
             default:
