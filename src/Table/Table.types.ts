@@ -19,6 +19,7 @@ export interface TableColumn<T = TableItem> {
   width?: string | number;
   minWidth?: string | number;
   ellipsis?: boolean;
+  dateFormat?: string;
   tooltipProps?: Omit<TooltipProps, 'children' | 'title'>;
   head?: {
     className?: CommonSxProps['className'];

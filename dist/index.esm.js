@@ -8523,13 +8523,13 @@ var TableBodyCell = function (_a) {
                 }
                 break;
             case 'date':
-                if (data && data instanceof Date) {
-                    data = dayjs(data).format('YYYY-MM-DD');
+                if (data) {
+                    data = dayjs(data, column.dateFormat).format('YYYY-MM-DD');
                 }
                 break;
             case 'datetime':
-                if (data && data instanceof Date) {
-                    data = dayjs(data).format('YYYY-MM-DD HH:mm:ss');
+                if (data) {
+                    data = dayjs(data, column.dateFormat).format('YYYY-MM-DD HH:mm:ss');
                 }
                 break;
             default:
