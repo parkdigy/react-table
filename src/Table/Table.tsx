@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import classNames from 'classnames';
 import {
   Table as MuiTable,
@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import SimpleBar from 'simplebar-react';
 import { useResizeDetector } from 'react-resize-detector';
-import { TableProps, TableDefaultProps, TableCommands, TableColumn } from './Table.types';
+import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
 import TableHeadCell from '../TableHeadCell';
 import TableBodyCell from '../TableBodyCell';
@@ -22,6 +22,10 @@ import TablePagination from '../TablePagination';
 import { useAutoUpdateState } from '@pdg/react-hook';
 
 import 'simplebar-react/dist/simplebar.min.css';
+
+function columnFilter<T>(v: T | undefined | null | false): v is T {
+  return v !== undefined && v !== null && v !== false;
+}
 
 const Table = React.forwardRef<TableCommands, TableProps>(
   (
@@ -67,6 +71,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     // State -----------------------------------------------------------------------------------------------------------
 
     const [columns, setColumns] = useAutoUpdateState<TableProps['columns']>(initColumns);
+    const [finalColumns, setFinalColumns] = useState<TableColumn<TableItem>[]>();
     const [items, setItems] = useAutoUpdateState<TableProps['items']>(initItems);
     const [paging, setPaging] = useAutoUpdateState<TableProps['paging']>(initPaging);
     const [tableSx] = useAutoUpdateState<TableProps['sx']>(
@@ -82,6 +87,12 @@ const Table = React.forwardRef<TableCommands, TableProps>(
         };
       }, [cellPadding])
     );
+
+    // Effect ----------------------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+      setFinalColumns(columns?.filter(columnFilter));
+    }, [columns]);
 
     // Commands --------------------------------------------------------------------------------------------------------
 
@@ -117,13 +128,13 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     // Render ----------------------------------------------------------------------------------------------------------
 
-    return columns ? (
+    return finalColumns ? (
       <Paper className='ReactMuiTable' variant='outlined' style={{ width: '100%' }}>
         <SimpleBar style={{ height, minHeight, maxHeight }}>
           <MuiTable stickyHeader={stickyHeader} sx={tableSx}>
             <TableHead>
               <TableRow>
-                {columns.map((column, idx) => (
+                {finalColumns.map((column, idx) => (
                   <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
                 ))}
               </TableRow>
@@ -138,7 +149,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                       hover
                       sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
                     >
-                      {columns.map((column: TableColumn, columnIdx) => (
+                      {finalColumns.map((column: TableColumn, columnIdx) => (
                         <TableBodyCell
                           key={columnIdx}
                           index={idx}
@@ -153,7 +164,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                   ))
                 ) : (
                   <StyledBodyRow>
-                    <TableCell colSpan={columns.length}>
+                    <TableCell colSpan={finalColumns.length}>
                       {noData ? (
                         noData
                       ) : (
@@ -182,7 +193,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
               >
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={finalColumns.length}
                     style={{ borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' }}
                   >
                     <Stack alignItems={pagingAlign}>
@@ -202,7 +213,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
             {footer && (
               <TableFooter>
                 <TableRow>
-                  {columns.map((column, idx) => (
+                  {finalColumns.map((column, idx) => (
                     <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
                   ))}
                 </TableRow>

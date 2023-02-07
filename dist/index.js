@@ -8604,7 +8604,10 @@ var templateObject_1;var TableFooterCell = function (_a) {
     style.appendChild(document.createTextNode(css));
   }
 }var css_248z = "[data-simplebar]{position:relative;flex-direction:column;flex-wrap:wrap;justify-content:flex-start;align-content:flex-start;align-items:flex-start}.simplebar-wrapper{overflow:hidden;width:inherit;height:inherit;max-width:inherit;max-height:inherit}.simplebar-mask{direction:inherit;position:absolute;overflow:hidden;padding:0;margin:0;left:0;top:0;bottom:0;right:0;width:auto!important;height:auto!important;z-index:0}.simplebar-offset{direction:inherit!important;box-sizing:inherit!important;resize:none!important;position:absolute;top:0;left:0;bottom:0;right:0;padding:0;margin:0;-webkit-overflow-scrolling:touch}.simplebar-content-wrapper{direction:inherit;box-sizing:border-box!important;position:relative;display:block;height:100%;width:auto;max-width:100%;max-height:100%;scrollbar-width:none;-ms-overflow-style:none}.simplebar-content-wrapper::-webkit-scrollbar,.simplebar-hide-scrollbar::-webkit-scrollbar{width:0;height:0}.simplebar-content:after,.simplebar-content:before{content:' ';display:table}.simplebar-placeholder{max-height:100%;max-width:100%;width:100%;pointer-events:none}.simplebar-height-auto-observer-wrapper{box-sizing:inherit!important;height:100%;width:100%;max-width:1px;position:relative;float:left;max-height:1px;overflow:hidden;z-index:-1;padding:0;margin:0;pointer-events:none;flex-grow:inherit;flex-shrink:0;flex-basis:0}.simplebar-height-auto-observer{box-sizing:inherit;display:block;opacity:0;position:absolute;top:0;left:0;height:1000%;width:1000%;min-height:1px;min-width:1px;overflow:hidden;pointer-events:none;z-index:-1}.simplebar-track{z-index:1;position:absolute;right:0;bottom:0;pointer-events:none;overflow:hidden}[data-simplebar].simplebar-dragging .simplebar-content{pointer-events:none;user-select:none;-webkit-user-select:none}[data-simplebar].simplebar-dragging .simplebar-track{pointer-events:all}.simplebar-scrollbar{position:absolute;left:0;right:0;min-height:10px}.simplebar-scrollbar:before{position:absolute;content:'';background:#000;border-radius:7px;left:2px;right:2px;opacity:0;transition:opacity .2s .5s linear}.simplebar-scrollbar.simplebar-visible:before{opacity:.5;transition-delay:0s;transition-duration:0s}.simplebar-track.simplebar-vertical{top:0;width:11px}.simplebar-scrollbar:before{top:2px;bottom:2px;left:2px;right:2px}.simplebar-track.simplebar-horizontal{left:0;height:11px}.simplebar-track.simplebar-horizontal .simplebar-scrollbar{right:auto;left:0;top:0;bottom:0;min-height:0;min-width:10px;width:auto}[data-simplebar-direction=rtl] .simplebar-track.simplebar-vertical{right:auto;left:0}.simplebar-dummy-scrollbar-size{direction:rtl;position:fixed;opacity:0;visibility:hidden;height:500px;width:500px;overflow-y:hidden;overflow-x:scroll;-ms-overflow-style:scrollbar!important}.simplebar-dummy-scrollbar-size>div{width:200%;height:200%;margin:10px 0}.simplebar-hide-scrollbar{position:fixed;left:0;visibility:hidden;overflow-y:scroll;scrollbar-width:none;-ms-overflow-style:none}\n";
-styleInject(css_248z);var Table = React__default["default"].forwardRef(function (_a, ref) {
+styleInject(css_248z);function columnFilter(v) {
+    return v !== undefined && v !== null && v !== false;
+}
+var Table = React__default["default"].forwardRef(function (_a, ref) {
     // State - footerHeight --------------------------------------------------------------------------------------------
     var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange;
     var _b = React.useState(), footerHeight = _b[0], setFooterHeight = _b[1];
@@ -8622,8 +8625,9 @@ styleInject(css_248z);var Table = React__default["default"].forwardRef(function 
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
     var _c = useAutoUpdateState(initColumns), columns = _c[0], setColumns = _c[1];
-    var _d = useAutoUpdateState(initItems), items = _d[0], setItems = _d[1];
-    var _e = useAutoUpdateState(initPaging), paging = _e[0], setPaging = _e[1];
+    var _d = React.useState(), finalColumns = _d[0], setFinalColumns = _d[1];
+    var _e = useAutoUpdateState(initItems), items = _e[0], setItems = _e[1];
+    var _f = useAutoUpdateState(initPaging), paging = _f[0], setPaging = _f[1];
     var tableSx = useAutoUpdateState(React.useCallback(function () {
         var sx = {
             padding: typeof cellPadding === 'number' ? "".concat(cellPadding, "px") : cellPadding,
@@ -8634,6 +8638,10 @@ styleInject(css_248z);var Table = React__default["default"].forwardRef(function 
             '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
         };
     }, [cellPadding]))[0];
+    // Effect ----------------------------------------------------------------------------------------------------------
+    React.useEffect(function () {
+        setFinalColumns(columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter));
+    }, [columns]);
     // Commands --------------------------------------------------------------------------------------------------------
     React.useLayoutEffect(function () {
         if (ref) {
@@ -8664,13 +8672,13 @@ styleInject(css_248z);var Table = React__default["default"].forwardRef(function 
         }
     }, [ref, columns, items, paging]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return columns ? (React__default["default"].createElement(material.Paper, { className: 'ReactMuiTable', variant: 'outlined', style: { width: '100%' } },
+    return finalColumns ? (React__default["default"].createElement(material.Paper, { className: 'ReactMuiTable', variant: 'outlined', style: { width: '100%' } },
         React__default["default"].createElement(SimpleBar, { style: { height: height, minHeight: minHeight, maxHeight: maxHeight } },
             React__default["default"].createElement(material.Table, { stickyHeader: stickyHeader, sx: tableSx },
                 React__default["default"].createElement(material.TableHead, null,
-                    React__default["default"].createElement(material.TableRow, null, columns.map(function (column, idx) { return (React__default["default"].createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
-                React__default["default"].createElement(material.TableBody, { style: { paddingBottom: footerHeight || 65 } }, items ? (items.length > 0 ? (items.map(function (item, idx) { return (React__default["default"].createElement(StyledBodyRow, { className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), key: idx, hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined }, columns.map(function (column, columnIdx) { return (React__default["default"].createElement(TableBodyCell, { key: columnIdx, index: idx, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); }))); })) : (React__default["default"].createElement(StyledBodyRow, null,
-                    React__default["default"].createElement(material.TableCell, { colSpan: columns.length }, noData ? (noData) : (React__default["default"].createElement(StyledNoDataDiv, null,
+                    React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
+                React__default["default"].createElement(material.TableBody, { style: { paddingBottom: footerHeight || 65 } }, items ? (items.length > 0 ? (items.map(function (item, idx) { return (React__default["default"].createElement(StyledBodyRow, { className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), key: idx, hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined }, finalColumns.map(function (column, columnIdx) { return (React__default["default"].createElement(TableBodyCell, { key: columnIdx, index: idx, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); }))); })) : (React__default["default"].createElement(StyledBodyRow, null,
+                    React__default["default"].createElement(material.TableCell, { colSpan: finalColumns.length }, noData ? (noData) : (React__default["default"].createElement(StyledNoDataDiv, null,
                         React__default["default"].createElement("div", null,
                             React__default["default"].createElement(material.Icon, null, "error")),
                         React__default["default"].createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
@@ -8682,11 +8690,11 @@ styleInject(css_248z);var Table = React__default["default"].forwardRef(function 
                         backgroundColor: '#fff',
                     } },
                     React__default["default"].createElement(material.TableRow, null,
-                        React__default["default"].createElement(material.TableCell, { colSpan: columns.length, style: { borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' } },
+                        React__default["default"].createElement(material.TableCell, { colSpan: finalColumns.length, style: { borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' } },
                             React__default["default"].createElement(material.Stack, { alignItems: pagingAlign },
                                 React__default["default"].createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange })))))),
                 footer && (React__default["default"].createElement(material.TableFooter, null,
-                    React__default["default"].createElement(material.TableRow, null, columns.map(function (column, idx) { return (React__default["default"].createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); })))))))) : null;
+                    React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); })))))))) : null;
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default["default"].forwardRef(function (_a, ref) {

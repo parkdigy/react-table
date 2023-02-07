@@ -45,7 +45,7 @@ export interface TableColumn<T = TableItem> {
     onClick?(item: T, index: number): void;
 }
 export interface TableProps<T = TableItem> extends CommonSxProps {
-    columns?: TableColumn<T>[];
+    columns?: (TableColumn<T> | false | undefined | null)[];
     defaultAlign?: TableCellProps['align'];
     defaultEllipsis?: boolean;
     stickyHeader?: boolean;

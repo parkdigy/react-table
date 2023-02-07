@@ -54,7 +54,7 @@ export interface TableColumn<T = TableItem> {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableProps<T = TableItem> extends CommonSxProps {
-  columns?: TableColumn<T>[];
+  columns?: (TableColumn<T> | false | undefined | null)[];
   defaultAlign?: TableCellProps['align'];
   defaultEllipsis?: boolean;
   stickyHeader?: boolean;
