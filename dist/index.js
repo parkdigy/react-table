@@ -8466,7 +8466,7 @@ var TableCommonCell = function (_a) {
         }
     }, [type, column, onClick, item, index]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return (React__default["default"].createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis'), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
+    return (React__default["default"].createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 };
 var templateObject_1$1;var TableHeadCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
@@ -8479,11 +8479,21 @@ var templateObject_1$1;var TableHeadCell = function (_a) {
             return column.label;
         }
     }, [column]))[0];
-    return (React__default["default"].createElement(TableCommonCell, { type: 'head', column: column, defaultAlign: defaultAlign }, data));
-};var StyledButtonsBox = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: inline-flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: inline-flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
+    return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', column: column, defaultAlign: defaultAlign }, data));
+};var StyledButtonsBox = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
     // State -----------------------------------------------------------------------------------------------------------
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick;
+    var buttonsBoxJustifyContent = useAutoUpdateState(React.useCallback(function () {
+        switch (getTableColumnAlign(column, defaultAlign)) {
+            case 'center':
+                return 'center';
+            case 'right':
+                return 'end';
+            default:
+                return 'start';
+        }
+    }, [column, defaultAlign]))[0];
     var _b = React.useState(), data = _b[0], setData = _b[1];
     // Effect ----------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
@@ -8505,10 +8515,10 @@ var TableBodyCell = function (_a) {
                 }
                 break;
             case 'button':
-                data = React__default["default"].createElement(material.Box, { onClick: function (e) { return e.stopPropagation(); } }, data);
+                data = (React__default["default"].createElement(material.Box, { className: 'TableBoxyCell-button-box', onClick: function (e) { return e.stopPropagation(); } }, data));
                 break;
             case 'buttons':
-                data = React__default["default"].createElement(StyledButtonsBox, { onClick: function (e) { return e.stopPropagation(); } }, data);
+                data = (React__default["default"].createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: function (e) { return e.stopPropagation(); } }, data));
                 break;
         }
         switch (column.type) {
@@ -8519,7 +8529,7 @@ var TableBodyCell = function (_a) {
                     data = (React__default["default"].createElement("a", { href: data, target: '_blank', onClick: function (e) {
                             e.stopPropagation();
                         } },
-                        React__default["default"].createElement(material.Tooltip, __assign({ title: React__default["default"].createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
+                        React__default["default"].createElement(material.Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: React__default["default"].createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
                 }
                 break;
             case 'date':
@@ -8539,7 +8549,7 @@ var TableBodyCell = function (_a) {
                         tooltip = column.onGetTooltip(item, index);
                     }
                     if (tooltip) {
-                        data = (React__default["default"].createElement(material.Tooltip, __assign({ title: tooltip }, column.tooltipProps), React__default["default"].isValidElement(data) ? data : React__default["default"].createElement("span", null, data)));
+                        data = (React__default["default"].createElement(material.Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: tooltip }, column.tooltipProps), React__default["default"].isValidElement(data) ? data : React__default["default"].createElement("span", null, data)));
                     }
                 }
                 break;
@@ -8557,7 +8567,7 @@ var TableBodyCell = function (_a) {
         }
     }, [column, onClick]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return (React__default["default"].createElement(TableCommonCell, { type: 'body', column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, data));
+    return (React__default["default"].createElement(TableCommonCell, { type: 'body', className: 'TableBodyCell', column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, data));
 };
 var templateObject_1;var TableFooterCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
@@ -8570,7 +8580,7 @@ var templateObject_1;var TableFooterCell = function (_a) {
             return (_c = column.footer) === null || _c === void 0 ? void 0 : _c.value;
         }
     }, [column]))[0];
-    return (React__default["default"].createElement(TableCommonCell, { type: 'head', column: column, defaultAlign: defaultAlign, style: { borderTop: '1px solid rgba(224, 224, 224, 1)' } }, data));
+    return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableFooterCell', column: column, defaultAlign: defaultAlign, style: { borderTop: '1px solid rgba(224, 224, 224, 1)' } }, data));
 };var TablePagination = function (_a) {
     var className = _a.className, style = _a.style, sx = _a.sx, paging = _a.paging, align = _a.align, onChange = _a.onChange;
     return (React__default["default"].createElement(material.Stack, { alignItems: align },

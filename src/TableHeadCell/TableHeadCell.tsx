@@ -15,7 +15,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign }) =
   );
 
   return (
-    <TableCommonCell type='head' column={column} defaultAlign={defaultAlign}>
+    <TableCommonCell type='head' className='TableHeadCell' column={column} defaultAlign={defaultAlign}>
       {data}
     </TableCommonCell>
   );

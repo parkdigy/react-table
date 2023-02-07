@@ -1,13 +1,14 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Box, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
-import { numberWithThousandSeparator } from '../@util';
+import { getTableColumnAlign, numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import { useAutoUpdateState } from '@pdg/react-hook';
 
 const StyledButtonsBox = styled(Box)`
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   gap: 5px;
 `;
@@ -15,6 +16,18 @@ const StyledButtonsBox = styled(Box)`
 const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, defaultEllipsis, onClick }) => {
   // State -----------------------------------------------------------------------------------------------------------
 
+  const [buttonsBoxJustifyContent] = useAutoUpdateState<'start' | 'end' | 'center'>(
+    useCallback(() => {
+      switch (getTableColumnAlign(column, defaultAlign)) {
+        case 'center':
+          return 'center';
+        case 'right':
+          return 'end';
+        default:
+          return 'start';
+      }
+    }, [column, defaultAlign])
+  );
   const [data, setData] = useState<ReactNode>();
 
   // Effect ----------------------------------------------------------------------------------------------------------
@@ -36,10 +49,22 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
         }
         break;
       case 'button':
-        data = <Box onClick={(e) => e.stopPropagation()}>{data}</Box>;
+        data = (
+          <Box className='TableBoxyCell-button-box' onClick={(e) => e.stopPropagation()}>
+            {data}
+          </Box>
+        );
         break;
       case 'buttons':
-        data = <StyledButtonsBox onClick={(e) => e.stopPropagation()}>{data}</StyledButtonsBox>;
+        data = (
+          <StyledButtonsBox
+            className='TableBodyCell-buttons-box'
+            justifyContent={buttonsBoxJustifyContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {data}
+          </StyledButtonsBox>
+        );
         break;
     }
 
@@ -58,6 +83,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
               }}
             >
               <Tooltip
+                className='TableBodyCell-tooltip'
                 title={<div style={{ paddingTop: 3, paddingBottom: 3 }}>{img}</div>}
                 {...column.tooltipProps}
                 placement={placement}
@@ -86,7 +112,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
           }
           if (tooltip) {
             data = (
-              <Tooltip title={tooltip} {...column.tooltipProps}>
+              <Tooltip className='TableBodyCell-tooltip' title={tooltip} {...column.tooltipProps}>
                 {React.isValidElement(data) ? data : <span>{data}</span>}
               </Tooltip>
             );
@@ -116,6 +142,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
   return (
     <TableCommonCell
       type='body'
+      className='TableBodyCell'
       column={column}
       defaultAlign={defaultAlign}
       defaultEllipsis={defaultEllipsis}

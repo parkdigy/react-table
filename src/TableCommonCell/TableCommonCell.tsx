@@ -171,7 +171,12 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   return (
     <StyledTableCell
       align={align}
-      className={classNames(className, 'TableCommonCell', ellipsis && 'ellipsis')}
+      className={classNames(
+        className,
+        'TableCommonCell',
+        ellipsis && 'ellipsis',
+        column.type ? `column-type-${column.type}` : false
+      )}
       style={style}
       sx={sx}
       onClick={type === 'body' ? handleClick : undefined}
