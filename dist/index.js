@@ -8745,12 +8745,16 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
             '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
         };
     }, [cellPadding]))[0];
-    // Effect ----------------------------------------------------------------------------------------------------------
-    React.useEffect(function () {
-        setSortableItems(items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
+    // Function --------------------------------------------------------------------------------------------------------
+    var makeSortableItems = React.useCallback(function (items) {
+        return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
             var id = _a.id, item = __rest$1(_a, ["id"]);
             return __assign$1({ id: id == null ? index : id }, item);
-        }));
+        });
+    }, []);
+    // Effect ----------------------------------------------------------------------------------------------------------
+    React.useEffect(function () {
+        setSortableItems(makeSortableItems(items));
     }, [items]);
     React.useEffect(function () {
         setFinalColumns(columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter));
@@ -8775,6 +8779,9 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                     setItems(lastItems_1);
                     setPaging(lastPaging_1);
                 },
+                resetSort: function () {
+                    setSortableItems(makeSortableItems(lastItems_1));
+                },
             };
             if (typeof ref === 'function') {
                 ref(commands);
@@ -8783,7 +8790,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [ref, columns, items, paging]);
+    }, [ref, columns, items, paging, makeSortableItems]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleDragEnd = React.useCallback(function (event) {
         var active = event.active, over = event.over;

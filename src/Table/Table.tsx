@@ -127,14 +127,18 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       }, [cellPadding])
     );
 
+    // Function --------------------------------------------------------------------------------------------------------
+
+    const makeSortableItems = useCallback((items?: TableProps['items']) => {
+      return items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
+        return { id: id == null ? index : id, ...item };
+      });
+    }, []);
+
     // Effect ----------------------------------------------------------------------------------------------------------
 
     useEffect(() => {
-      setSortableItems(
-        items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
-          return { id: id == null ? index : id, ...item };
-        })
-      );
+      setSortableItems(makeSortableItems(items));
     }, [items]);
 
     useEffect(() => {
@@ -163,6 +167,9 @@ const Table = React.forwardRef<TableCommands, TableProps>(
             setItems(lastItems);
             setPaging(lastPaging);
           },
+          resetSort() {
+            setSortableItems(makeSortableItems(lastItems));
+          },
         };
 
         if (typeof ref === 'function') {
@@ -171,7 +178,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [ref, columns, items, paging]);
+    }, [ref, columns, items, paging, makeSortableItems]);
 
     // Event Handler ---------------------------------------------------------------------------------------------------
 

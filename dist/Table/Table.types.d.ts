@@ -78,4 +78,5 @@ export interface TableCommands {
     getItems(): TableProps['items'];
     getPaging(): TableProps['paging'];
     setItemsPaging(items: TableProps['items'], paging: TableProps['paging']): void;
+    resetSort(): void;
 }

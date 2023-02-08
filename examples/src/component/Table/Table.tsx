@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Table as _Table, TableItem } from '@pdg/react-table';
+import React, { useRef, useState } from 'react';
+import { Table as _Table, TableItem, TableCommands } from '@pdg/react-table';
 import { TableData } from '#ccomp';
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 
 const Table: React.FC = () => {
+  const tableRef = useRef<TableCommands>(null);
+
   const [sorting, setSorting] = useState(false);
 
   const handleClick = (item: TableItem) => {
@@ -23,8 +25,20 @@ const Table: React.FC = () => {
 
   return (
     <div>
-      {sorting && <Button style={{ marginBottom: 10 }}>변경된 순서 저장</Button>}
+      {sorting && (
+        <Grid container style={{ marginBottom: 10 }} spacing={1}>
+          <Grid item>
+            <Button>변경된 순서 저장</Button>
+          </Grid>
+          <Grid item>
+            <Button color='secondary' onClick={() => tableRef.current?.resetSort()}>
+              순서 초기화
+            </Button>
+          </Grid>
+        </Grid>
+      )}
       <_Table
+        ref={tableRef}
         defaultAlign='center'
         defaultEllipsis
         columns={TableData.columns}
