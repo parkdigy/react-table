@@ -8844,7 +8844,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default["default"].forwardRef(function (_a, ref) {
-    var hash = _a.hash, search = _a.search, table = _a.table, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
+    var hash = _a.hash, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
     var searchRef = React.useRef();
     var tableRef = React.useRef();
     //--------------------------------------------------------------------------------------------------------------------
@@ -9127,6 +9127,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                 React__default["default"].createElement(reactForm.SearchGroup, { hidden: true },
                     React__default["default"].createElement(reactForm.FormHidden, { name: 'page', value: 1 })),
                 searchInfo.searchGroups)),
+        betweenSearchTableComponent && React__default["default"].createElement(material.Grid, { item: true }, betweenSearchTableComponent),
         React__default["default"].createElement(material.Grid, { item: true },
             React__default["default"].createElement(Table, __assign$1({}, tableInfo.props, { ref: function (commands) {
                     if (tableInfo.ref) {

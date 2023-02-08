@@ -19,6 +19,7 @@ export interface SearchTableProps extends CommonSxProps {
     hash?: boolean;
     search?: SearchTableSearchProps;
     table: SearchTableTableProps;
+    betweenSearchTableComponent?: ReactNode;
     onGetData?(data: FormValueMap): Promise<SearchTableData>;
     onRequestHashChange?(hash: string): void;
 }

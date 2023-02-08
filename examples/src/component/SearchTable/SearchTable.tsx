@@ -122,6 +122,7 @@ const SearchTable = () => {
       </Search>
       <br />
       <_SearchTable
+        betweenSearchTableComponent={<div>betweenSearchTableComponent</div>}
         ref={searchTableRef}
         hash={hash}
         onGetData={handleGetData}

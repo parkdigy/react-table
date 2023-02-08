@@ -38,7 +38,7 @@ interface TableInfo {
 }
 
 const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
-  ({ hash, search, table, onGetData, onRequestHashChange }, ref) => {
+  ({ hash, search, table, betweenSearchTableComponent, onGetData, onRequestHashChange }, ref) => {
     const searchRef = useRef<SearchCommands>();
     const tableRef = useRef<TableCommands>();
 
@@ -363,6 +363,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
             {searchInfo.searchGroups}
           </Search>
         </Grid>
+        {betweenSearchTableComponent && <Grid item>{betweenSearchTableComponent}</Grid>}
         <Grid item>
           <Table
             {...tableInfo.props}
