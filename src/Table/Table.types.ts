@@ -74,9 +74,11 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
     style?: CommonSxProps['style'];
     sx?: CommonSxProps['sx'];
   };
+  sortable?: boolean;
   onClick?(item: T, index: number): void;
   onGetBodyRowSx?(item: T, index: number): CommonSxProps['sx'] | undefined;
   onPageChange?(page: number): void;
+  onSortChange?(items: T[]): void;
 }
 
 export const TableDefaultProps: Pick<TableProps, 'defaultAlign' | 'pagingAlign' | 'cellPadding'> = {

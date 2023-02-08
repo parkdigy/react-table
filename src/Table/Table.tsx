@@ -15,12 +15,27 @@ import SimpleBar from 'simplebar-react';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
+import TableBodyRow from '../TableBodyRow';
 import TableHeadCell from '../TableHeadCell';
-import TableBodyCell from '../TableBodyCell';
 import TableFooterCell from '../TableFooterCell';
 import TablePagination from '../TablePagination';
 import { useAutoUpdateState } from '@pdg/react-hook';
-
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import 'simplebar-react/dist/simplebar.min.css';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
@@ -46,12 +61,35 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       footer,
       noData,
       pagination,
+      sortable,
       onClick,
       onGetBodyRowSx,
       onPageChange,
+      onSortChange,
     },
     ref
   ) => {
+    // sortable --------------------------------------------------------------------------------------------------------
+
+    const sensors = useSensors(
+      useSensor(MouseSensor, {
+        // Require the mouse to move by 10 pixels before activating
+        activationConstraint: {
+          distance: 10,
+        },
+      }),
+      useSensor(TouchSensor, {
+        // Press delay of 250ms, with tolerance of 5px of movement
+        activationConstraint: {
+          delay: 250,
+          tolerance: 5,
+        },
+      }),
+      useSensor(KeyboardSensor, {
+        coordinateGetter: sortableKeyboardCoordinates,
+      })
+    );
+
     // State - footerHeight --------------------------------------------------------------------------------------------
 
     const [footerHeight, setFooterHeight] = useState<number | undefined>();
@@ -73,6 +111,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     const [columns, setColumns] = useAutoUpdateState<TableProps['columns']>(initColumns);
     const [finalColumns, setFinalColumns] = useState<TableColumn<TableItem>[]>();
     const [items, setItems] = useAutoUpdateState<TableProps['items']>(initItems);
+    const [sortableItems, setSortableItems] = useState<(TableItem & { id: number | string })[]>();
     const [paging, setPaging] = useAutoUpdateState<TableProps['paging']>(initPaging);
     const [tableSx] = useAutoUpdateState<TableProps['sx']>(
       useCallback(() => {
@@ -89,6 +128,14 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     );
 
     // Effect ----------------------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+      setSortableItems(
+        items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
+          return { id: id == null ? index : id, ...item };
+        })
+      );
+    }, [items]);
 
     useEffect(() => {
       setFinalColumns(columns?.filter(columnFilter));
@@ -126,100 +173,137 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       }
     }, [ref, columns, items, paging]);
 
+    // Event Handler ---------------------------------------------------------------------------------------------------
+
+    const handleDragEnd = useCallback(
+      (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        if (active && over) {
+          setSortableItems((items) => {
+            if (items) {
+              let oldIndex: number | null = null;
+              let newIndex: number | null = null;
+
+              items.find((item, idx) => {
+                if (item.id === active.id) {
+                  oldIndex = idx;
+                } else if (item.id === over.id) {
+                  newIndex = idx;
+                }
+                return oldIndex != null && newIndex != null;
+              });
+
+              if (oldIndex != null && newIndex != null) {
+                const finalItems = arrayMove(items, oldIndex, newIndex);
+                onSortChange && onSortChange(finalItems);
+                return finalItems;
+              } else {
+                return items;
+              }
+            } else {
+              return items;
+            }
+          });
+        }
+      },
+      [onSortChange]
+    );
+
     // Render ----------------------------------------------------------------------------------------------------------
 
     return finalColumns ? (
       <Paper className='ReactMuiTable' variant='outlined' style={{ width: '100%' }}>
         <SimpleBar style={{ height, minHeight, maxHeight }}>
-          <MuiTable stickyHeader={stickyHeader} sx={tableSx}>
-            <TableHead>
-              <TableRow>
-                {finalColumns.map((column, idx) => (
-                  <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ paddingBottom: footerHeight || 65 }}>
-              {items ? (
-                items.length > 0 ? (
-                  items.map((item, idx) => (
-                    <StyledBodyRow
-                      className={classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color')}
-                      key={idx}
-                      hover
-                      sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
-                    >
-                      {finalColumns.map((column: TableColumn, columnIdx) => (
-                        <TableBodyCell
-                          key={columnIdx}
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <MuiTable stickyHeader={stickyHeader} sx={tableSx}>
+              <TableHead>
+                <TableRow>
+                  {finalColumns.map((column, idx) => (
+                    <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody style={{ paddingBottom: footerHeight || 65 }}>
+                {sortableItems ? (
+                  sortableItems.length > 0 ? (
+                    <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
+                      {sortableItems.map((item, idx) => (
+                        <TableBodyRow
+                          key={item.id}
+                          className={classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color')}
+                          hover
+                          sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
+                          id={item.id}
                           index={idx}
-                          item={item}
                           defaultAlign={defaultAlign}
                           defaultEllipsis={defaultEllipsis}
-                          column={column}
+                          sortable={sortable}
+                          columns={finalColumns}
+                          item={item}
                           onClick={onClick}
                         />
                       ))}
+                    </SortableContext>
+                  ) : (
+                    <StyledBodyRow>
+                      <TableCell colSpan={finalColumns.length}>
+                        {noData ? (
+                          noData
+                        ) : (
+                          <StyledNoDataDiv>
+                            <div>
+                              <Icon>error</Icon>
+                            </div>
+                            <div>검색된 정보가 없습니다.</div>
+                          </StyledNoDataDiv>
+                        )}
+                      </TableCell>
                     </StyledBodyRow>
-                  ))
-                ) : (
-                  <StyledBodyRow>
-                    <TableCell colSpan={finalColumns.length}>
-                      {noData ? (
-                        noData
-                      ) : (
-                        <StyledNoDataDiv>
-                          <div>
-                            <Icon>error</Icon>
-                          </div>
-                          <div>검색된 정보가 없습니다.</div>
-                        </StyledNoDataDiv>
-                      )}
+                  )
+                ) : undefined}
+              </TableBody>
+              {paging && (
+                <TableFooter
+                  ref={footerHeightResizeDetector}
+                  sx={{
+                    left: 0,
+                    bottom: 0, // <-- KEY
+                    zIndex: 2,
+                    position: 'sticky',
+                    backgroundColor: '#fff',
+                  }}
+                >
+                  <TableRow>
+                    <TableCell
+                      colSpan={finalColumns.length}
+                      style={{ borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' }}
+                    >
+                      <Stack alignItems={pagingAlign}>
+                        <TablePagination
+                          className={pagination?.className}
+                          style={pagination?.style}
+                          sx={pagination?.sx}
+                          paging={paging}
+                          align={pagingAlign}
+                          onChange={onPageChange}
+                        />
+                      </Stack>
                     </TableCell>
-                  </StyledBodyRow>
-                )
-              ) : undefined}
-            </TableBody>
-            {paging && (
-              <TableFooter
-                ref={footerHeightResizeDetector}
-                sx={{
-                  left: 0,
-                  bottom: 0, // <-- KEY
-                  zIndex: 2,
-                  position: 'sticky',
-                  backgroundColor: '#fff',
-                }}
-              >
-                <TableRow>
-                  <TableCell
-                    colSpan={finalColumns.length}
-                    style={{ borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' }}
-                  >
-                    <Stack alignItems={pagingAlign}>
-                      <TablePagination
-                        className={pagination?.className}
-                        style={pagination?.style}
-                        sx={pagination?.sx}
-                        paging={paging}
-                        align={pagingAlign}
-                        onChange={onPageChange}
-                      />
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
-            )}
-            {footer && (
-              <TableFooter>
-                <TableRow>
-                  {finalColumns.map((column, idx) => (
-                    <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
-                  ))}
-                </TableRow>
-              </TableFooter>
-            )}
-          </MuiTable>
+                  </TableRow>
+                </TableFooter>
+              )}
+              {footer && (
+                <TableFooter>
+                  <TableRow>
+                    {finalColumns.map((column, idx) => (
+                      <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
+                    ))}
+                  </TableRow>
+                </TableFooter>
+              )}
+            </MuiTable>
+          </DndContext>
         </SimpleBar>
       </Paper>
     ) : null;
