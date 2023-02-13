@@ -9028,7 +9028,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             if (data)
                 getData(data);
         }
-    }, [hash, window.location.hash, getData]);
+    }, [window.location.hash]);
     //--------------------------------------------------------------------------------------------------------------------
     var hashChange = useCallback(function (params) {
         if (onRequestHashChange) {

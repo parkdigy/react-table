@@ -236,7 +236,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
         const data = hashToSearchValue();
         if (data) getData(data);
       }
-    }, [hash, window.location.hash, getData]);
+    }, [window.location.hash]);
 
     //--------------------------------------------------------------------------------------------------------------------
 
