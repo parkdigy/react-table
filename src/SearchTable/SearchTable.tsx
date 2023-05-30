@@ -9,6 +9,7 @@ import {
   SearchTableTableProps,
 } from './SearchTable.types';
 import {
+  FormCheckValueItemCommands,
   FormDateRangePickerCommands,
   FormDateValueItemCommands,
   FormHidden,
@@ -179,6 +180,16 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
             const itemCommands = commands.getItem(name);
             if (itemCommands) {
               switch (itemCommands.getType()) {
+                case 'FormCheckbox':
+                  if (notEmpty(value)) {
+                    const checkCommands = itemCommands as FormCheckValueItemCommands;
+                    if (value.toString() === itemCommands.getValue()?.toString()) {
+                      checkCommands.setChecked(true);
+                    } else if (value.toString() === checkCommands.getUncheckedValue()?.toString()) {
+                      checkCommands.setChecked(false);
+                    }
+                  }
+                  break;
                 case 'FormDatePicker':
                 case 'FormDateTimePicker':
                 case 'FormTimePicker':

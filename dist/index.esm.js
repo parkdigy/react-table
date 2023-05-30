@@ -8961,6 +8961,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             commands.resetAll();
             var hashValues_1 = deHash();
             Object.keys(hashValues_1).forEach(function (name) {
+                var _a, _b;
                 var value = hashValues_1[name];
                 if (name === 'page') {
                     commands.setValue(name, Number(value) || 1);
@@ -8969,6 +8970,17 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                     var itemCommands = commands.getItem(name);
                     if (itemCommands) {
                         switch (itemCommands.getType()) {
+                            case 'FormCheckbox':
+                                if (notEmpty(value)) {
+                                    var checkCommands = itemCommands;
+                                    if (value.toString() === ((_a = itemCommands.getValue()) === null || _a === void 0 ? void 0 : _a.toString())) {
+                                        checkCommands.setChecked(true);
+                                    }
+                                    else if (value.toString() === ((_b = checkCommands.getUncheckedValue()) === null || _b === void 0 ? void 0 : _b.toString())) {
+                                        checkCommands.setChecked(false);
+                                    }
+                                }
+                                break;
                             case 'FormDatePicker':
                             case 'FormDateTimePicker':
                             case 'FormTimePicker':
