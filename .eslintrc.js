@@ -16,7 +16,7 @@ module.exports = {
       presets: ['@babel/preset-react'],
     },
   },
-  plugins: ['react'],
+  plugins: ['react', 'react-hooks'],
   settings: {
     'import/resolver': 'webpack',
     react: {
@@ -33,6 +33,8 @@ module.exports = {
     'no-underscore-dangle': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['warn'],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
     'no-useless-constructor': ['warn'],
     'react/no-unused-state': ['warn'],
     'react/state-in-constructor': ['error', 'always'],

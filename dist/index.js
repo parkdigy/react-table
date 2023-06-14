@@ -8339,78 +8339,12 @@ var equal = function (v1, v2) {
         default:
             return column.align || defaultAlign;
     }
-}function useFirstSkipEffect(effect, deps) {
-    var firstRef = React.useRef(true);
-    React.useEffect(function () {
-        if (firstRef.current) {
-            firstRef.current = false;
-        }
-        else {
-            effect();
-        }
-    }, deps);
-}var isSame = function (v1, v2) {
-    if (v1 === v2)
-        return true;
-    if (typeof v1 !== typeof v2)
-        return false;
-    if (v1 == null || v2 == null)
-        return false;
-    if (Array.isArray(v1) && Array.isArray(v2)) {
-        if (v1.length !== v2.length)
-            return false;
-        for (var i = 0; i < v1.length; i += 1) {
-            if (v1[i] !== v2[i])
-                return false;
-        }
-    }
-    else {
-        return v1 === v2;
-    }
-    return true;
-};function useAutoUpdateState(p1, p2) {
-    var state = typeof p1 === 'function' ? undefined : p1;
-    var finalStateCallback = typeof p1 === 'function' ? p1 : p2;
-    var _a = React.useState(0), setUpdateKey = _a[1];
-    var _initState = React.useState(function () {
-        return finalStateCallback ? finalStateCallback(state) : state;
-    })[0];
-    var _state = React.useRef(_initState);
-    var forceUpdate = React.useCallback(function () {
-        setUpdateKey(function (updateKey) { return updateKey + 1; });
-    }, []);
-    useFirstSkipEffect(function () {
-        var newState = finalStateCallback ? finalStateCallback(state) : state;
-        if (!isSame(newState, _state.current)) {
-            _state.current = newState;
-            forceUpdate();
-        }
-    }, [state]);
-    useFirstSkipEffect(function () {
-        var newState = finalStateCallback ? finalStateCallback(_state.current) : _state.current;
-        if (!isSame(newState, _state.current)) {
-            _state.current = newState;
-            forceUpdate();
-        }
-    }, [finalStateCallback]);
-    var setState = React.useCallback(function (newState) {
-        var finalNewState = typeof newState === 'function' ? newState(_state.current) : newState;
-        if (!isSame(_state.current, finalNewState)) {
-            _state.current = finalNewState;
-            forceUpdate();
-        }
-    }, []);
-    return [_state.current, setState];
 }var StyledTableCell = material.styled(material.TableCell)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
 var TableCommonCell = function (_a) {
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
-    var align = useAutoUpdateState(React.useCallback(function () {
-        return getTableColumnAlign(column, defaultAlign);
-    }, [column, defaultAlign]))[0];
-    var ellipsis = useAutoUpdateState(React.useCallback(function () {
-        return column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis;
-    }, [initDefaultEllipsis, column]))[0];
-    var className = useAutoUpdateState(React.useCallback(function () {
+    var align = React.useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
+    var ellipsis = React.useMemo(function () { return (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis); }, [column, initDefaultEllipsis]);
+    var className = React.useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var className;
         var getClassName;
@@ -8436,8 +8370,8 @@ var TableCommonCell = function (_a) {
         else {
             return initClassName;
         }
-    }, [initClassName, column, item, index]))[0];
-    var style = useAutoUpdateState(React.useCallback(function () {
+    }, [column, index, initClassName, item, type]);
+    var style = React.useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var style;
         var getStyle;
@@ -8458,8 +8392,8 @@ var TableCommonCell = function (_a) {
                 break;
         }
         return __assign$1(__assign$1(__assign$1(__assign$1({}, initStyle), { width: column.width, minWidth: column.minWidth, cursor: type === 'body' && (column.onClick || onClick) ? 'pointer' : undefined }), style), getStyle);
-    }, [initStyle, column, onClick, item, index]))[0];
-    var sx = useAutoUpdateState(React.useCallback(function () {
+    }, [column, index, initStyle, item, onClick, type]);
+    var sx = React.useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var sx;
         var getSx;
@@ -8499,7 +8433,7 @@ var TableCommonCell = function (_a) {
                 }
             }
         }
-    }, [initSx, column, item, index]))[0];
+    }, [column, index, initSx, item, type]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = React.useCallback(function (e) {
         e.stopPropagation();
@@ -8520,9 +8454,9 @@ var TableCommonCell = function (_a) {
 };
 var templateObject_1$1;var StyledButtonsBox = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
-    // State -----------------------------------------------------------------------------------------------------------
+    // Memo --------------------------------------------------------------------------------------------------------------
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick;
-    var buttonsBoxJustifyContent = useAutoUpdateState(React.useCallback(function () {
+    var buttonsBoxJustifyContent = React.useMemo(function () {
         switch (getTableColumnAlign(column, defaultAlign)) {
             case 'center':
                 return 'center';
@@ -8531,7 +8465,8 @@ var TableBodyCell = function (_a) {
             default:
                 return 'start';
         }
-    }, [column, defaultAlign]))[0];
+    }, [column, defaultAlign]);
+    // State -----------------------------------------------------------------------------------------------------------
     var _b = React.useState(), data = _b[0], setData = _b[1];
     // Effect ----------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
@@ -8593,6 +8528,7 @@ var TableBodyCell = function (_a) {
                 break;
         }
         setData(data);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [item, column]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = React.useCallback(function (item, index) {
@@ -8625,22 +8561,21 @@ var TableBodyRow = function (_a) {
     var style = _a.style, 
     //--------------------------------------------------------------------------------------------------------------------
     id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable$1 = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, props = __rest$1(_a, ["style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick"]);
-    var finalStyle;
-    var sortableProps = {};
-    if (sortable$1) {
-        var _b = sortable.useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
-        finalStyle = __assign$1(__assign$1({}, style), { transform: CSS.Transform.toString(transform), transition: transition });
-        sortableProps = __assign$1(__assign$1({ ref: setNodeRef }, attributes), listeners);
-    }
-    else {
-        finalStyle = style;
-    }
+    var _b = sortable.useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
+    var finalStyle = React.useMemo(function () {
+        return sortable$1
+            ? __assign$1(__assign$1({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style;
+    }, [sortable$1, style, transform, transition]);
+    var sortableProps = React.useMemo(function () {
+        return sortable$1
+            ? __assign$1(__assign$1({ ref: setNodeRef }, attributes), listeners) : {};
+    }, [attributes, listeners, setNodeRef, sortable$1]);
     return (React__default["default"].createElement(StyledBodyRow, __assign$1({ style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default["default"].createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); })));
 };
 TableBodyRow.displayName = 'TableBodyRow';
 TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
-    var data = useAutoUpdateState(React.useCallback(function () {
+    var data = React.useMemo(function () {
         var _a, _b;
         if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
             return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
@@ -8648,11 +8583,11 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
         else {
             return column.label;
         }
-    }, [column]))[0];
+    }, [column]);
     return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', column: column, defaultAlign: defaultAlign }, data));
 };var TableFooterCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
-    var data = useAutoUpdateState(React.useCallback(function () {
+    var data = React.useMemo(function () {
         var _a, _b, _c;
         if ((_a = column.footer) === null || _a === void 0 ? void 0 : _a.onRender) {
             return (_b = column.footer) === null || _b === void 0 ? void 0 : _b.onRender();
@@ -8660,7 +8595,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
         else {
             return (_c = column.footer) === null || _c === void 0 ? void 0 : _c.value;
         }
-    }, [column]))[0];
+    }, [column]);
     return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableFooterCell', column: column, defaultAlign: defaultAlign, style: { borderTop: '1px solid rgba(224, 224, 224, 1)' } }, data));
 };var TablePagination = function (_a) {
     var className = _a.className, style = _a.style, sx = _a.sx, paging = _a.paging, align = _a.align, onChange = _a.onChange;
@@ -8669,7 +8604,69 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
                 if (onChange)
                     onChange(page);
             } })));
-};function styleInject(css, ref) {
+};var isSame = function (v1, v2) {
+    if (v1 === v2)
+        return true;
+    if (typeof v1 !== typeof v2)
+        return false;
+    if (v1 == null || v2 == null)
+        return false;
+    if (Array.isArray(v1) && Array.isArray(v2)) {
+        if (v1.length !== v2.length)
+            return false;
+        for (var i = 0; i < v1.length; i += 1) {
+            if (v1[i] !== v2[i])
+                return false;
+        }
+    }
+    else {
+        return v1 === v2;
+    }
+    return true;
+};function useFirstSkipLayoutEffect(effect, deps) {
+    var firstRef = React.useRef(true);
+    React.useLayoutEffect(function () {
+        if (firstRef.current) {
+            firstRef.current = false;
+        }
+        else {
+            effect();
+        }
+    }, deps);
+}function useAutoUpdateLayoutState(p1, p2) {
+    var state = typeof p1 === 'function' ? undefined : p1;
+    var finalStateCallback = typeof p1 === 'function' ? p1 : p2;
+    var _a = React.useState(0), setUpdateKey = _a[1];
+    var _initState = React.useState(function () {
+        return finalStateCallback ? finalStateCallback(state, 0) : state;
+    })[0];
+    var _state = React.useRef(_initState);
+    var forceUpdate = React.useCallback(function () {
+        setUpdateKey(function (updateKey) { return updateKey + 1; });
+    }, []);
+    useFirstSkipLayoutEffect(function () {
+        var newState = finalStateCallback ? finalStateCallback(state) : state;
+        if (!isSame(newState, _state.current)) {
+            _state.current = newState;
+            forceUpdate();
+        }
+    }, [state]);
+    useFirstSkipLayoutEffect(function () {
+        var newState = finalStateCallback ? finalStateCallback(_state.current) : _state.current;
+        if (!isSame(newState, _state.current)) {
+            _state.current = newState;
+            forceUpdate();
+        }
+    }, [finalStateCallback]);
+    var setState = React.useCallback(function (newState) {
+        var finalNewState = typeof newState === 'function' ? newState(_state.current) : newState;
+        if (!isSame(_state.current, finalNewState)) {
+            _state.current = finalNewState;
+            forceUpdate();
+        }
+    }, []);
+    return [_state.current, setState];
+}function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
 
@@ -8730,12 +8727,13 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         },
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
-    var _c = useAutoUpdateState(initColumns), columns = _c[0], setColumns = _c[1];
+    var _c = useAutoUpdateLayoutState(initColumns), columns = _c[0], setColumns = _c[1];
     var _d = React.useState(), finalColumns = _d[0], setFinalColumns = _d[1];
-    var _e = useAutoUpdateState(initItems), items = _e[0], setItems = _e[1];
+    var _e = useAutoUpdateLayoutState(initItems), items = _e[0], setItems = _e[1];
     var _f = React.useState(), sortableItems = _f[0], setSortableItems = _f[1];
-    var _g = useAutoUpdateState(initPaging), paging = _g[0], setPaging = _g[1];
-    var tableSx = useAutoUpdateState(React.useCallback(function () {
+    var _g = useAutoUpdateLayoutState(initPaging), paging = _g[0], setPaging = _g[1];
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var tableSx = React.useMemo(function () {
         var sx = {
             padding: typeof cellPadding === 'number' ? "".concat(cellPadding, "px") : cellPadding,
         };
@@ -8744,7 +8742,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
             '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
             '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
         };
-    }, [cellPadding]))[0];
+    }, [cellPadding]);
     // Function --------------------------------------------------------------------------------------------------------
     var makeSortableItems = React.useCallback(function (items) {
         return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
@@ -8755,6 +8753,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     // Effect ----------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
         setSortableItems(makeSortableItems(items));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
     React.useEffect(function () {
         setFinalColumns(columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter));
@@ -8790,7 +8789,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [ref, columns, items, paging, makeSortableItems]);
+    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleDragEnd = React.useCallback(function (event) {
         var active = event.active, over = event.over;
@@ -8889,6 +8888,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         else {
             setSearchInfo(getSearchInfo(search));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
     // tableInfo -------------------------------------------------------------------------------------------------------
     var tableInfoFirstUseEffect = React.useRef(true);
@@ -8900,6 +8900,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         else {
             setTableInfo(getTableInfo(table));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
     // Function - getData ----------------------------------------------------------------------------------------------
     var getData = React.useCallback(function (data) {
@@ -8908,44 +8909,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             onGetData(data).then(setTableData);
         }
     }, [onGetData]);
-    // Commands --------------------------------------------------------------------------------------------------------
-    React.useLayoutEffect(function () {
-        if (ref) {
-            var commands = {
-                reload: function (page) {
-                    var _a, _b, _c;
-                    var finalData;
-                    if (lastGetDataDataRef.current) {
-                        finalData = __assign$1({}, lastGetDataDataRef.current);
-                        if (page != null) {
-                            (_a = searchRef.current) === null || _a === void 0 ? void 0 : _a.setValue('page', page);
-                            finalData.page = page;
-                        }
-                    }
-                    else {
-                        if (hash) {
-                            hashToSearchValue();
-                        }
-                        if (page != null) {
-                            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
-                        }
-                        finalData = ((_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.getAllFormValue()) || {};
-                    }
-                    getData(finalData);
-                },
-                getLastLoadData: function () { return lastGetDataDataRef.current || {}; },
-                getSearch: function () { return searchRef.current; },
-                getTable: function () { return tableRef.current; },
-            };
-            if (typeof ref === 'function') {
-                ref(commands);
-            }
-            else {
-                ref.current = commands;
-            }
-        }
-    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData]);
-    //--------------------------------------------------------------------------------------------------------------------
+    // Function ----------------------------------------------------------------------------------------------------------
     var deHash = React.useCallback(function () {
         var values = {};
         var hash = window.location.hash.substring(1);
@@ -8954,7 +8918,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             return substring;
         });
         return values;
-    }, [window.location.hash]);
+    }, []);
     var hashToSearchValue = React.useCallback(function () {
         var commands = searchRef.current;
         if (commands) {
@@ -9033,13 +8997,51 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             return commands.getAllFormValue();
         }
     }, [searchRef, deHash]);
-    //------------------------------------------------------------------------------------------------------------------
+    // Commands --------------------------------------------------------------------------------------------------------
+    React.useLayoutEffect(function () {
+        if (ref) {
+            var commands = {
+                reload: function (page) {
+                    var _a, _b, _c;
+                    var finalData;
+                    if (lastGetDataDataRef.current) {
+                        finalData = __assign$1({}, lastGetDataDataRef.current);
+                        if (page != null) {
+                            (_a = searchRef.current) === null || _a === void 0 ? void 0 : _a.setValue('page', page);
+                            finalData.page = page;
+                        }
+                    }
+                    else {
+                        if (hash) {
+                            hashToSearchValue();
+                        }
+                        if (page != null) {
+                            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
+                        }
+                        finalData = ((_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.getAllFormValue()) || {};
+                    }
+                    getData(finalData);
+                },
+                getLastLoadData: function () { return lastGetDataDataRef.current || {}; },
+                getSearch: function () { return searchRef.current; },
+                getTable: function () { return tableRef.current; },
+            };
+            if (typeof ref === 'function') {
+                ref(commands);
+            }
+            else {
+                ref.current = commands;
+            }
+        }
+    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
+    //--------------------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
         if (hash) {
             var data = hashToSearchValue();
             if (data)
                 getData(data);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.location.hash]);
     //--------------------------------------------------------------------------------------------------------------------
     var hashChange = React.useCallback(function (params) {
@@ -9165,21 +9167,16 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
     variant: 'outlined',
     color: 'primary',
 };var TableIconDefaultProps = {};var TableIcon = React__default["default"].forwardRef(function (_a, ref) {
-    // State - children ------------------------------------------------------------------------------------------------
+    // Memo --------------------------------------------------------------------------------------------------------------
     var className = _a.className, initChildren = _a.children, props = __rest$1(_a, ["className", "children"]);
-    var children = useAutoUpdateState(React.useCallback(function () {
-        return initChildren.replace(/[A-Z]/g, function (letter, idx) { return "".concat(idx > 0 ? '_' : '').concat(letter.toLowerCase()); });
-    }, [initChildren]))[0];
+    var children = React.useMemo(function () { return initChildren.replace(/[A-Z]/g, function (letter, idx) { return "".concat(idx > 0 ? '_' : '').concat(letter.toLowerCase()); }); }, [initChildren]);
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default["default"].createElement(material.Icon, __assign$1({ ref: ref }, props, { className: classNames('TableIcon', className) }), children));
 });
 TableIcon.displayName = 'TableIcon';
 TableIcon.defaultProps = TableIconDefaultProps;var TableButton = React__default["default"].forwardRef(function (_a, ref) {
-    // State -----------------------------------------------------------------------------------------------------------
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest$1(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
-    var sx = useAutoUpdateState(React.useCallback(function () {
-        return __assign$1({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx);
-    }, [initSx]))[0];
+    var sx = React.useMemo(function () { return (__assign$1({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default["default"].createElement(material.Button, __assign$1({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React__default["default"].createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React__default["default"].createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
         icon && (React__default["default"].createElement(TableIcon, { fontSize: 'small', color: color }, icon)),

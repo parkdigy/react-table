@@ -1,16 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Icon } from '@mui/material';
 import { TableIconProps as Props, TableIconDefaultProps } from './TableIcon.types';
-import { useAutoUpdateState } from '@pdg/react-hook';
 
 const TableIcon = React.forwardRef<HTMLAnchorElement, Props>(({ className, children: initChildren, ...props }, ref) => {
-  // State - children ------------------------------------------------------------------------------------------------
+  // Memo --------------------------------------------------------------------------------------------------------------
 
-  const [children] = useAutoUpdateState<Props['children']>(
-    useCallback(() => {
-      return initChildren.replace(/[A-Z]/g, (letter, idx) => `${idx > 0 ? '_' : ''}${letter.toLowerCase()}`);
-    }, [initChildren])
+  const children = useMemo(
+    () => initChildren.replace(/[A-Z]/g, (letter, idx) => `${idx > 0 ? '_' : ''}${letter.toLowerCase()}`),
+    [initChildren]
   );
 
   // Render ----------------------------------------------------------------------------------------------------------

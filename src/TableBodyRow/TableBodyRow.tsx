@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { useMemo } from 'react';
 import { TableBodyRowProps as Props, TableBodyRowDefaultProps } from './TableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
@@ -31,26 +31,31 @@ const TableBodyRow: React.FC<Props> = ({
   onClick,
   ...props
 }) => {
-  let finalStyle: CSSProperties | undefined;
-  let sortableProps = {};
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
-  if (sortable) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const finalStyle = useMemo(
+    () =>
+      sortable
+        ? {
+            ...style,
+            transform: CSS.Transform.toString(transform),
+            transition,
+          }
+        : style,
+    [sortable, style, transform, transition]
+  );
 
-    finalStyle = {
-      ...style,
-      transform: CSS.Transform.toString(transform),
-      transition,
-    };
-
-    sortableProps = {
-      ref: setNodeRef,
-      ...attributes,
-      ...listeners,
-    };
-  } else {
-    finalStyle = style;
-  }
+  const sortableProps = useMemo(
+    () =>
+      sortable
+        ? {
+            ref: setNodeRef,
+            ...attributes,
+            ...listeners,
+          }
+        : {},
+    [attributes, listeners, setNodeRef, sortable]
+  );
 
   return (
     <StyledBodyRow style={finalStyle} {...props} {...sortableProps}>

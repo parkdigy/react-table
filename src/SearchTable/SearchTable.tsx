@@ -86,6 +86,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       } else {
         setSearchInfo(getSearchInfo(search));
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     // tableInfo -------------------------------------------------------------------------------------------------------
@@ -98,6 +99,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       } else {
         setTableInfo(getTableInfo(table));
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
 
     // Function - getData ----------------------------------------------------------------------------------------------
@@ -113,48 +115,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       [onGetData]
     );
 
-    // Commands --------------------------------------------------------------------------------------------------------
-
-    useLayoutEffect(() => {
-      if (ref) {
-        const commands: SearchTableCommands = {
-          reload: (page?: number) => {
-            let finalData: FormValueMap;
-            if (lastGetDataDataRef.current) {
-              finalData = { ...lastGetDataDataRef.current };
-              if (page != null) {
-                searchRef.current?.setValue('page', page);
-
-                finalData.page = page;
-              }
-            } else {
-              if (hash) {
-                hashToSearchValue();
-              }
-
-              if (page != null) {
-                searchRef.current?.setValue('page', page);
-              }
-
-              finalData = searchRef.current?.getAllFormValue() || {};
-            }
-
-            getData(finalData);
-          },
-          getLastLoadData: () => lastGetDataDataRef.current || {},
-          getSearch: () => searchRef.current,
-          getTable: () => tableRef.current,
-        };
-
-        if (typeof ref === 'function') {
-          ref(commands);
-        } else {
-          ref.current = commands;
-        }
-      }
-    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData]);
-
-    //--------------------------------------------------------------------------------------------------------------------
+    // Function ----------------------------------------------------------------------------------------------------------
 
     const deHash = useCallback((): HashValueMap => {
       const values: HashValueMap = {};
@@ -164,7 +125,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
         return substring;
       });
       return values;
-    }, [window.location.hash]);
+    }, []);
 
     const hashToSearchValue = useCallback((): FormValueMap | undefined => {
       const commands = searchRef.current;
@@ -240,13 +201,55 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       }
     }, [searchRef, deHash]);
 
-    //------------------------------------------------------------------------------------------------------------------
+    // Commands --------------------------------------------------------------------------------------------------------
+
+    useLayoutEffect(() => {
+      if (ref) {
+        const commands: SearchTableCommands = {
+          reload: (page?: number) => {
+            let finalData: FormValueMap;
+            if (lastGetDataDataRef.current) {
+              finalData = { ...lastGetDataDataRef.current };
+              if (page != null) {
+                searchRef.current?.setValue('page', page);
+
+                finalData.page = page;
+              }
+            } else {
+              if (hash) {
+                hashToSearchValue();
+              }
+
+              if (page != null) {
+                searchRef.current?.setValue('page', page);
+              }
+
+              finalData = searchRef.current?.getAllFormValue() || {};
+            }
+
+            getData(finalData);
+          },
+          getLastLoadData: () => lastGetDataDataRef.current || {},
+          getSearch: () => searchRef.current,
+          getTable: () => tableRef.current,
+        };
+
+        if (typeof ref === 'function') {
+          ref(commands);
+        } else {
+          ref.current = commands;
+        }
+      }
+    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
+
+    //--------------------------------------------------------------------------------------------------------------------
 
     useEffect(() => {
       if (hash) {
         const data = hashToSearchValue();
         if (data) getData(data);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.location.hash]);
 
     //--------------------------------------------------------------------------------------------------------------------

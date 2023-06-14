@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import {
   Table as MuiTable,
@@ -19,7 +19,7 @@ import TableBodyRow from '../TableBodyRow';
 import TableHeadCell from '../TableHeadCell';
 import TableFooterCell from '../TableFooterCell';
 import TablePagination from '../TablePagination';
-import { useAutoUpdateState } from '@pdg/react-hook';
+import { useAutoUpdateLayoutState } from '@pdg/react-hook';
 import {
   DndContext,
   closestCenter,
@@ -108,24 +108,25 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     // State -----------------------------------------------------------------------------------------------------------
 
-    const [columns, setColumns] = useAutoUpdateState<TableProps['columns']>(initColumns);
+    const [columns, setColumns] = useAutoUpdateLayoutState<TableProps['columns']>(initColumns);
     const [finalColumns, setFinalColumns] = useState<TableColumn<TableItem>[]>();
-    const [items, setItems] = useAutoUpdateState<TableProps['items']>(initItems);
+    const [items, setItems] = useAutoUpdateLayoutState<TableProps['items']>(initItems);
     const [sortableItems, setSortableItems] = useState<(TableItem & { id: number | string })[]>();
-    const [paging, setPaging] = useAutoUpdateState<TableProps['paging']>(initPaging);
-    const [tableSx] = useAutoUpdateState<TableProps['sx']>(
-      useCallback(() => {
-        const sx = {
-          padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding,
-        };
+    const [paging, setPaging] = useAutoUpdateLayoutState<TableProps['paging']>(initPaging);
 
-        return {
-          '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-          '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-          '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        };
-      }, [cellPadding])
-    );
+    // Memo --------------------------------------------------------------------------------------------------------------
+
+    const tableSx = useMemo(() => {
+      const sx = {
+        padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding,
+      };
+
+      return {
+        '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+        '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+        '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+      };
+    }, [cellPadding]);
 
     // Function --------------------------------------------------------------------------------------------------------
 
@@ -139,6 +140,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     useEffect(() => {
       setSortableItems(makeSortableItems(items));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
 
     useEffect(() => {
@@ -178,7 +180,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [ref, columns, items, paging, makeSortableItems]);
+    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging]);
 
     // Event Handler ---------------------------------------------------------------------------------------------------
 

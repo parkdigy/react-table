@@ -1,18 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Button } from '@mui/material';
 import { TableButtonProps as Props, TableButtonDefaultProps } from './TableButton.types';
 import TableIcon from '../TableIcon';
-import { useAutoUpdateState } from '@pdg/react-hook';
 
 const TableButton = React.forwardRef<HTMLButtonElement, Props>(
   ({ children, className, sx: initSx, color, icon, startIcon, endIcon, onClick, ...props }, ref) => {
-    // State -----------------------------------------------------------------------------------------------------------
-
-    const [sx] = useAutoUpdateState<Props['sx']>(
-      useCallback(() => {
-        return { minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7, ...initSx };
-      }, [initSx])
+    const sx = useMemo(
+      () => ({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7, ...initSx }),
+      [endIcon, initSx, startIcon]
     );
 
     // Render ----------------------------------------------------------------------------------------------------------

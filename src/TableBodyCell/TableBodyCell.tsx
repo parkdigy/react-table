@@ -1,11 +1,10 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
 import { getTableColumnAlign, numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
-import { useAutoUpdateState } from '@pdg/react-hook';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -14,20 +13,21 @@ const StyledButtonsBox = styled(Box)`
 `;
 
 const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, defaultEllipsis, onClick }) => {
+  // Memo --------------------------------------------------------------------------------------------------------------
+
+  const buttonsBoxJustifyContent = useMemo(() => {
+    switch (getTableColumnAlign(column, defaultAlign)) {
+      case 'center':
+        return 'center';
+      case 'right':
+        return 'end';
+      default:
+        return 'start';
+    }
+  }, [column, defaultAlign]);
+
   // State -----------------------------------------------------------------------------------------------------------
 
-  const [buttonsBoxJustifyContent] = useAutoUpdateState<'start' | 'end' | 'center'>(
-    useCallback(() => {
-      switch (getTableColumnAlign(column, defaultAlign)) {
-        case 'center':
-          return 'center';
-        case 'right':
-          return 'end';
-        default:
-          return 'start';
-      }
-    }, [column, defaultAlign])
-  );
   const [data, setData] = useState<ReactNode>();
 
   // Effect ----------------------------------------------------------------------------------------------------------
@@ -122,6 +122,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
     }
 
     setData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, column]);
 
   // Event Handler ---------------------------------------------------------------------------------------------------
