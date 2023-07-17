@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import classNames from 'classnames';
 import { TableBodyRowProps as Props, TableBodyRowDefaultProps } from './TableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
@@ -19,6 +20,7 @@ export const StyledBodyRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const TableBodyRow: React.FC<Props> = ({
+  className,
   style,
   //--------------------------------------------------------------------------------------------------------------------
   id,
@@ -29,6 +31,8 @@ const TableBodyRow: React.FC<Props> = ({
   columns,
   item,
   onClick,
+  // -------------------------------------------------------------------------------------------------------------------
+
   ...props
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
@@ -58,7 +62,7 @@ const TableBodyRow: React.FC<Props> = ({
   );
 
   return (
-    <StyledBodyRow style={finalStyle} {...props} {...sortableProps}>
+    <StyledBodyRow className={classNames('TableBodyRow', className)} style={finalStyle} {...props} {...sortableProps}>
       {columns.map((column: TableColumn, columnIdx) => (
         <TableBodyCell
           key={columnIdx}

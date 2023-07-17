@@ -66,6 +66,10 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       onGetBodyRowSx,
       onPageChange,
       onSortChange,
+      // ---------------------------------------------------------------------------------------------------------------
+      className,
+      style: initStyle,
+      sx,
     },
     ref
   ) => {
@@ -219,10 +223,14 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       [onSortChange]
     );
 
+    // Memo --------------------------------------------------------------------------------------------------------------
+
+    const style = useMemo(() => ({ width: '100%', ...initStyle }), [initStyle]);
+
     // Render ----------------------------------------------------------------------------------------------------------
 
     return finalColumns ? (
-      <Paper className='ReactMuiTable' variant='outlined' style={{ width: '100%' }}>
+      <Paper className={classNames('Table', className)} variant='outlined' style={style} sx={sx}>
         <SimpleBar style={{ height, minHeight, maxHeight }}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <MuiTable stickyHeader={stickyHeader} sx={tableSx}>

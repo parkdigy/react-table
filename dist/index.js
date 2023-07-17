@@ -8558,9 +8558,11 @@ var templateObject_1;var StyledBodyRow = material.styled(material.TableRow)(func
     });
 });
 var TableBodyRow = function (_a) {
-    var style = _a.style, 
+    var className = _a.className, style = _a.style, 
     //--------------------------------------------------------------------------------------------------------------------
-    id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable$1 = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, props = __rest$1(_a, ["style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick"]);
+    id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable$1 = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, 
+    // -------------------------------------------------------------------------------------------------------------------
+    props = __rest$1(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick"]);
     var _b = sortable.useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
     var finalStyle = React.useMemo(function () {
         return sortable$1
@@ -8570,7 +8572,7 @@ var TableBodyRow = function (_a) {
         return sortable$1
             ? __assign$1(__assign$1({ ref: setNodeRef }, attributes), listeners) : {};
     }, [attributes, listeners, setNodeRef, sortable$1]);
-    return (React__default["default"].createElement(StyledBodyRow, __assign$1({ style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default["default"].createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); })));
+    return (React__default["default"].createElement(StyledBodyRow, __assign$1({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default["default"].createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); })));
 };
 TableBodyRow.displayName = 'TableBodyRow';
 TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = function (_a) {
@@ -8600,7 +8602,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
 };var TablePagination = function (_a) {
     var className = _a.className, style = _a.style, sx = _a.sx, paging = _a.paging, align = _a.align, onChange = _a.onChange;
     return (React__default["default"].createElement(material.Stack, { alignItems: align },
-        React__default["default"].createElement(material.Pagination, { count: paging.last_page, page: paging.current_page, color: 'primary', className: className, style: style, sx: sx, onChange: function (e, page) {
+        React__default["default"].createElement(material.Pagination, { count: paging.last_page, page: paging.current_page, color: 'primary', className: classNames('TablePagination', className), style: style, sx: sx, onChange: function (e, page) {
                 if (onChange)
                     onChange(page);
             } })));
@@ -8697,7 +8699,9 @@ styleInject(css_248z);function columnFilter(v) {
 }
 var Table = React__default["default"].forwardRef(function (_a, ref) {
     // sortable --------------------------------------------------------------------------------------------------------
-    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange;
+    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, 
+    // ---------------------------------------------------------------------------------------------------------------
+    className = _a.className, initStyle = _a.style, sx = _a.sx;
     var sensors = core.useSensors(core.useSensor(core.MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
         activationConstraint: {
@@ -8822,8 +8826,10 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
             });
         }
     }, [onSortChange]);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var style = React.useMemo(function () { return (__assign$1({ width: '100%' }, initStyle)); }, [initStyle]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return finalColumns ? (React__default["default"].createElement(material.Paper, { className: 'ReactMuiTable', variant: 'outlined', style: { width: '100%' } },
+    return finalColumns ? (React__default["default"].createElement(material.Paper, { className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
         React__default["default"].createElement(SimpleBar, { style: { height: height, minHeight: minHeight, maxHeight: maxHeight } },
             React__default["default"].createElement(core.DndContext, { sensors: sensors, collisionDetection: core.closestCenter, onDragEnd: handleDragEnd },
                 React__default["default"].createElement(material.Table, { stickyHeader: stickyHeader, sx: tableSx },
@@ -8850,10 +8856,12 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default["default"].forwardRef(function (_a, ref) {
-    var hash = _a.hash, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
+    var color = _a.color, hash = _a.hash, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
+    // ---------------------------------------------------------------------------------------------------------------
+    className = _a.className, style = _a.style, sx = _a.sx;
     var searchRef = React.useRef();
     var tableRef = React.useRef();
-    //--------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
     var getSearchInfo = React.useCallback(function (search) {
         var searchInfo = {};
         if (search) {
@@ -9132,9 +9140,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
     }, [searchRef, hash, hashChange, getData, isFirstSearchSubmit]);
     //------------------------------------------------------------------------------------------------------------------
-    return (React__default["default"].createElement(material.Grid, { container: true, direction: 'column', spacing: 1 },
+    return (React__default["default"].createElement(material.Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: style, sx: sx },
         React__default["default"].createElement(material.Grid, { item: true, sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
-            React__default["default"].createElement(reactForm.Search, __assign$1({}, searchInfo.props, { ref: function (commands) {
+            React__default["default"].createElement(reactForm.Search, __assign$1({ color: color }, searchInfo.props, { ref: function (commands) {
                     if (searchInfo.ref) {
                         if (typeof searchInfo.ref === 'function') {
                             searchInfo.ref(commands);

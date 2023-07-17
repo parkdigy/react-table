@@ -13,7 +13,7 @@
     "@mui/material": "^5.13.5",
     "@mui/x-date-pickers": "^5.0.5",
     "@pdg/react-admin-layout": "^1.0.9",
-    "@pdg/react-form": "^1.0.24",
+    "@pdg/react-form": "^1.0.38",
     "@pdg/react-table": "file:..",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",

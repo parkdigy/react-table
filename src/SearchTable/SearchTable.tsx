@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
   SearchTableProps,
@@ -39,11 +40,26 @@ interface TableInfo {
 }
 
 const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
-  ({ hash, search, table, betweenSearchTableComponent, onGetData, onRequestHashChange }, ref) => {
+  (
+    {
+      color,
+      hash,
+      search,
+      table,
+      betweenSearchTableComponent,
+      onGetData,
+      onRequestHashChange,
+      // ---------------------------------------------------------------------------------------------------------------
+      className,
+      style,
+      sx,
+    },
+    ref
+  ) => {
     const searchRef = useRef<SearchCommands>();
     const tableRef = useRef<TableCommands>();
 
-    //--------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 
     const getSearchInfo = useCallback((search: SearchTableProps['search']) => {
       const searchInfo: SearchInfo = {};
@@ -354,9 +370,17 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
     //------------------------------------------------------------------------------------------------------------------
 
     return (
-      <Grid container direction='column' spacing={1}>
+      <Grid
+        container
+        direction='column'
+        spacing={1}
+        className={classNames('SearchTable', className)}
+        style={style}
+        sx={sx}
+      >
         <Grid item sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
           <Search
+            color={color}
             {...searchInfo.props}
             ref={(commands: SearchCommands) => {
               if (searchInfo.ref) {

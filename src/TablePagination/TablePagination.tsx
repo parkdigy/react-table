@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { TablePaginationProps } from './TablePagination.types';
 import { Pagination, Stack } from '@mui/material';
 
@@ -9,7 +10,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ className, style, sx,
         count={paging.last_page}
         page={paging.current_page}
         color='primary'
-        className={className}
+        className={classNames('TablePagination', className)}
         style={style}
         sx={sx}
         onChange={(e, page) => {
