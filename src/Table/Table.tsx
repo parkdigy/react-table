@@ -260,20 +260,22 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     }, [initStyle, fullHeight]);
 
     const simpleBarStyle = useMemo((): CSSProperties => {
+      const finalPagingHeight = paging && paging.total > 0 ? pagingHeight : undefined;
+
       if (fullHeight) {
         return {
-          height: (containerHeight || 0) - (pagingHeight || 0) - 2,
+          height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
           flex: 1,
           position: 'absolute',
           top: 1,
           left: 0,
           right: 0,
-          marginBottom: pagingHeight || 0,
+          marginBottom: finalPagingHeight || 0,
         };
       } else {
         return { height, minHeight, maxHeight, marginBottom: -1 };
       }
-    }, [containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+    }, [paging, containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
 
     const pagingStyle = useMemo((): CSSProperties => {
       const style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
@@ -354,7 +356,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
             </MuiTable>
           </DndContext>
         </SimpleBar>
-        {paging && (
+        {paging && paging.total > 0 && (
           <Stack ref={fullHeight ? pagingHeightResizeDetector : undefined} alignItems={pagingAlign} style={pagingStyle}>
             <TablePagination
               className={pagination?.className}

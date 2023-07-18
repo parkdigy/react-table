@@ -8850,21 +8850,22 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         }
     }, [initStyle, fullHeight]);
     var simpleBarStyle = React.useMemo(function () {
+        var finalPagingHeight = paging && paging.total > 0 ? pagingHeight : undefined;
         if (fullHeight) {
             return {
-                height: (containerHeight || 0) - (pagingHeight || 0) - 2,
+                height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
                 flex: 1,
                 position: 'absolute',
                 top: 1,
                 left: 0,
                 right: 0,
-                marginBottom: pagingHeight || 0,
+                marginBottom: finalPagingHeight || 0,
             };
         }
         else {
             return { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
         }
-    }, [containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+    }, [paging, containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
     var pagingStyle = React.useMemo(function () {
         var style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
         if (fullHeight) {
@@ -8886,7 +8887,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                             React__default["default"].createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
                     footer && (React__default["default"].createElement(material.TableFooter, null,
                         React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
-        paging && (React__default["default"].createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
+        paging && paging.total > 0 && (React__default["default"].createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
             React__default["default"].createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange }))))) : null;
 });
 Table.displayName = 'Table';
