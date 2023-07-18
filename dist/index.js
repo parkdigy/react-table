@@ -8841,6 +8841,8 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         }
     }, [onSortChange]);
     // Memo --------------------------------------------------------------------------------------------------------------
+    var isNoData = React.useMemo(function () { return !!sortableItems && sortableItems.length <= 0; }, [sortableItems]);
+    var finalPagingHeight = React.useMemo(function () { return (paging && paging.total > 0 ? pagingHeight || 0 : 0); }, [paging, pagingHeight]);
     var style = React.useMemo(function () {
         if (fullHeight) {
             return __assign$1(__assign$1({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' });
@@ -8850,7 +8852,6 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         }
     }, [initStyle, fullHeight]);
     var simpleBarStyle = React.useMemo(function () {
-        var finalPagingHeight = paging && paging.total > 0 ? pagingHeight : undefined;
         if (fullHeight) {
             return {
                 height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
@@ -8865,7 +8866,12 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         else {
             return { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
         }
-    }, [paging, containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+    }, [fullHeight, containerHeight, finalPagingHeight, height, minHeight, maxHeight]);
+    var tableStyle = React.useMemo(function () {
+        if (fullHeight && isNoData) {
+            return { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 };
+        }
+    }, [fullHeight, isNoData, containerHeight, finalPagingHeight]);
     var pagingStyle = React.useMemo(function () {
         var style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
         if (fullHeight) {
@@ -8877,15 +8883,15 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     return finalColumns ? (React__default["default"].createElement(material.Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
         React__default["default"].createElement(SimpleBar, { style: simpleBarStyle },
             React__default["default"].createElement(core.DndContext, { sensors: sensors, collisionDetection: core.closestCenter, onDragEnd: handleDragEnd },
-                React__default["default"].createElement(material.Table, { stickyHeader: stickyHeader, sx: tableSx },
+                React__default["default"].createElement(material.Table, { stickyHeader: !isNoData && stickyHeader, sx: tableSx, style: tableStyle },
                     React__default["default"].createElement(material.TableHead, null,
                         React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
                     React__default["default"].createElement(material.TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default["default"].createElement(sortable.SortableContext, { items: sortableItems, strategy: sortable.verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default["default"].createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable$1, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default["default"].createElement(StyledBodyRow$1, null,
-                        React__default["default"].createElement(material.TableCell, { colSpan: finalColumns.length }, noData ? (noData) : (React__default["default"].createElement(StyledNoDataDiv, null,
+                        React__default["default"].createElement(material.TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React__default["default"].createElement(StyledNoDataDiv, null,
                             React__default["default"].createElement("div", null,
                                 React__default["default"].createElement(material.Icon, null, "error")),
                             React__default["default"].createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
-                    footer && (React__default["default"].createElement(material.TableFooter, null,
+                    !isNoData && footer && (React__default["default"].createElement(material.TableFooter, null,
                         React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
         paging && paging.total > 0 && (React__default["default"].createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
             React__default["default"].createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange }))))) : null;

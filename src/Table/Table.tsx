@@ -242,6 +242,12 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     // Memo --------------------------------------------------------------------------------------------------------------
 
+    const isNoData = useMemo(() => !!sortableItems && sortableItems.length <= 0, [sortableItems]);
+    const finalPagingHeight = useMemo(
+      () => (paging && paging.total > 0 ? pagingHeight || 0 : 0),
+      [paging, pagingHeight]
+    );
+
     const style = useMemo((): CSSProperties => {
       if (fullHeight) {
         return {
@@ -260,8 +266,6 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     }, [initStyle, fullHeight]);
 
     const simpleBarStyle = useMemo((): CSSProperties => {
-      const finalPagingHeight = paging && paging.total > 0 ? pagingHeight : undefined;
-
       if (fullHeight) {
         return {
           height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
@@ -275,7 +279,13 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       } else {
         return { height, minHeight, maxHeight, marginBottom: -1 };
       }
-    }, [paging, containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+    }, [fullHeight, containerHeight, finalPagingHeight, height, minHeight, maxHeight]);
+
+    const tableStyle = useMemo((): CSSProperties | undefined => {
+      if (fullHeight && isNoData) {
+        return { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 };
+      }
+    }, [fullHeight, isNoData, containerHeight, finalPagingHeight]);
 
     const pagingStyle = useMemo((): CSSProperties => {
       const style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
@@ -297,7 +307,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       >
         <SimpleBar style={simpleBarStyle}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <MuiTable stickyHeader={stickyHeader} sx={tableSx}>
+            <MuiTable stickyHeader={!isNoData && stickyHeader} sx={tableSx} style={tableStyle}>
               <TableHead>
                 <TableRow>
                   {finalColumns.map((column, idx) => (
@@ -328,7 +338,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                     </SortableContext>
                   ) : (
                     <StyledBodyRow>
-                      <TableCell colSpan={finalColumns.length}>
+                      <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
                         {noData ? (
                           noData
                         ) : (
@@ -344,7 +354,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                   )
                 ) : undefined}
               </TableBody>
-              {footer && (
+              {!isNoData && footer && (
                 <TableFooter>
                   <TableRow>
                     {finalColumns.map((column, idx) => (
