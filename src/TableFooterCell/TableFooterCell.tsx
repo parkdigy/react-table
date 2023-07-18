@@ -12,13 +12,7 @@ const TableFooterCell: React.FC<TableFooterCellProps> = ({ column, defaultAlign 
   }, [column]);
 
   return (
-    <TableCommonCell
-      type='head'
-      className='TableFooterCell'
-      column={column}
-      defaultAlign={defaultAlign}
-      style={{ borderTop: '1px solid rgba(224, 224, 224, 1)' }}
-    >
+    <TableCommonCell type='head' className='TableFooterCell' column={column} defaultAlign={defaultAlign}>
       {data}
     </TableCommonCell>
   );

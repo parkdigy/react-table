@@ -1,9 +1,6 @@
 import { styled, TableRow, lighten } from '@mui/material';
 
 export const StyledBodyRow = styled(TableRow)(({ theme }) => ({
-  '&:last-child > .MuiTableCell-root': {
-    borderBottom: 0,
-  },
   '&.odd-color:nth-of-type(odd):not(:hover)': {
     backgroundColor: lighten(theme.palette.action.hover, 0.4),
   },

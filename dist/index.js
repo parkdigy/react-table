@@ -8228,9 +8228,6 @@ function useResizeDetector(props) {
 };var StyledBodyRow$1 = material.styled(material.TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
-        '&:last-child > .MuiTableCell-root': {
-            borderBottom: 0,
-        },
         '&.odd-color:nth-of-type(odd):not(:hover)': {
             backgroundColor: material.lighten(theme.palette.action.hover, 0.4),
         },
@@ -8546,9 +8543,6 @@ var TableBodyCell = function (_a) {
 var templateObject_1;var StyledBodyRow = material.styled(material.TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
-        '&:last-child > .MuiTableCell-root': {
-            borderBottom: 0,
-        },
         '&.odd-color:nth-of-type(odd):not(:hover)': {
             backgroundColor: material.lighten(theme.palette.action.hover, 0.4),
         },
@@ -8598,7 +8592,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
             return (_c = column.footer) === null || _c === void 0 ? void 0 : _c.value;
         }
     }, [column]);
-    return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableFooterCell', column: column, defaultAlign: defaultAlign, style: { borderTop: '1px solid rgba(224, 224, 224, 1)' } }, data));
+    return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableFooterCell', column: column, defaultAlign: defaultAlign }, data));
 };var TablePagination = function (_a) {
     var className = _a.className, style = _a.style, sx = _a.sx, paging = _a.paging, align = _a.align, onChange = _a.onChange;
     return (React__default["default"].createElement(material.Stack, { alignItems: align },
