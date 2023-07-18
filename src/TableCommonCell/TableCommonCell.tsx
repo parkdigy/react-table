@@ -31,8 +31,8 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   const align = useMemo(() => getTableColumnAlign(column, defaultAlign), [column, defaultAlign]);
 
   const ellipsis = useMemo(
-    () => (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis),
-    [column, initDefaultEllipsis]
+    () => type !== 'head' && (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis),
+    [type, column, initDefaultEllipsis]
   );
 
   const className = useMemo(() => {

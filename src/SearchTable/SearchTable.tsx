@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
@@ -44,6 +44,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
     {
       color,
       hash,
+      fullHeight,
       search,
       table,
       betweenSearchTableComponent,
@@ -51,7 +52,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       onRequestHashChange,
       // ---------------------------------------------------------------------------------------------------------------
       className,
-      style,
+      style: initStyle,
       sx,
     },
     ref
@@ -367,6 +368,22 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
       [searchRef, hash, hashChange, getData, isFirstSearchSubmit]
     );
 
+    // Memo --------------------------------------------------------------------------------------------------------------
+
+    const style = useMemo((): CSSProperties | undefined => {
+      if (fullHeight) {
+        return { ...initStyle, flex: 1, display: 'flex' };
+      } else {
+        return initStyle;
+      }
+    }, [initStyle, fullHeight]);
+
+    const tableContainerStyle = useMemo((): CSSProperties | undefined => {
+      if (fullHeight) {
+        return { flex: 1, display: 'flex', flexDirection: 'column' };
+      }
+    }, [fullHeight]);
+
     //------------------------------------------------------------------------------------------------------------------
 
     return (
@@ -402,9 +419,10 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
           </Search>
         </Grid>
         {betweenSearchTableComponent && <Grid item>{betweenSearchTableComponent}</Grid>}
-        <Grid item>
+        <Grid item style={tableContainerStyle}>
           <Table
             {...tableInfo.props}
+            fullHeight={fullHeight}
             ref={(commands: TableCommands) => {
               if (tableInfo.ref) {
                 if (typeof tableInfo.ref === 'function') {

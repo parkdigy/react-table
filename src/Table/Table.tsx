@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import {
   Table as MuiTable,
@@ -55,6 +55,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       height,
       minHeight,
       maxHeight,
+      fullHeight,
       showOddColor,
       showEvenColor,
       cellPadding,
@@ -94,18 +95,34 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       })
     );
 
-    // State - footerHeight --------------------------------------------------------------------------------------------
+    // State - containerHeight -------------------------------------------------------------------------------------------
 
-    const [footerHeight, setFooterHeight] = useState<number | undefined>();
+    const [containerHeight, setContainerHeight] = useState<number | undefined>();
 
-    const { ref: footerHeightResizeDetector } = useResizeDetector({
+    const { ref: containerHeightDetector } = useResizeDetector({
       handleHeight: true,
       handleWidth: false,
       onResize() {
-        if (footerHeightResizeDetector.current) {
-          setFooterHeight(footerHeightResizeDetector.current.getBoundingClientRect().height);
+        if (containerHeightDetector.current) {
+          setContainerHeight(containerHeightDetector.current.getBoundingClientRect().height);
         } else {
-          setFooterHeight(undefined);
+          setContainerHeight(undefined);
+        }
+      },
+    });
+
+    // State - footerHeight --------------------------------------------------------------------------------------------
+
+    const [pagingHeight, setPagingHeight] = useState<number | undefined>();
+
+    const { ref: pagingHeightResizeDetector } = useResizeDetector({
+      handleHeight: true,
+      handleWidth: false,
+      onResize() {
+        if (pagingHeightResizeDetector.current) {
+          setPagingHeight(pagingHeightResizeDetector.current.getBoundingClientRect().height);
+        } else {
+          setPagingHeight(undefined);
         }
       },
     });
@@ -225,13 +242,58 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     // Memo --------------------------------------------------------------------------------------------------------------
 
-    const style = useMemo(() => ({ width: '100%', ...initStyle }), [initStyle]);
+    const style = useMemo((): CSSProperties => {
+      if (fullHeight) {
+        return {
+          width: '100%',
+          ...initStyle,
+          flex: 1,
+          justifyContent: 'flex-end',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+        };
+      } else {
+        return { width: '100%', ...initStyle };
+      }
+    }, [initStyle, fullHeight]);
+
+    const simpleBarStyle = useMemo((): CSSProperties => {
+      if (fullHeight) {
+        return {
+          height: (containerHeight || 0) - (pagingHeight || 0) - 2,
+          flex: 1,
+          position: 'absolute',
+          top: 1,
+          left: 0,
+          right: 0,
+          marginBottom: pagingHeight || 0,
+        };
+      } else {
+        return { height, minHeight, maxHeight, marginBottom: -1 };
+      }
+    }, [containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+
+    const pagingStyle = useMemo((): CSSProperties => {
+      const style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+      if (fullHeight) {
+        return { position: 'sticky', ...style };
+      }
+      return style;
+    }, [fullHeight]);
 
     // Render ----------------------------------------------------------------------------------------------------------
 
     return finalColumns ? (
-      <Paper className={classNames('Table', className)} variant='outlined' style={style} sx={sx}>
-        <SimpleBar style={{ height, minHeight, maxHeight }}>
+      <Paper
+        ref={fullHeight ? containerHeightDetector : undefined}
+        className={classNames('Table', className)}
+        variant='outlined'
+        style={style}
+        sx={sx}
+      >
+        <SimpleBar style={simpleBarStyle}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <MuiTable stickyHeader={stickyHeader} sx={tableSx}>
               <TableHead>
@@ -241,7 +303,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody style={{ paddingBottom: footerHeight || 65 }}>
+              <TableBody>
                 {sortableItems ? (
                   sortableItems.length > 0 ? (
                     <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
@@ -280,36 +342,6 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                   )
                 ) : undefined}
               </TableBody>
-              {paging && (
-                <TableFooter
-                  ref={footerHeightResizeDetector}
-                  sx={{
-                    left: 0,
-                    bottom: 0, // <-- KEY
-                    zIndex: 2,
-                    position: 'sticky',
-                    backgroundColor: '#fff',
-                  }}
-                >
-                  <TableRow>
-                    <TableCell
-                      colSpan={finalColumns.length}
-                      style={{ borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' }}
-                    >
-                      <Stack alignItems={pagingAlign}>
-                        <TablePagination
-                          className={pagination?.className}
-                          style={pagination?.style}
-                          sx={pagination?.sx}
-                          paging={paging}
-                          align={pagingAlign}
-                          onChange={onPageChange}
-                        />
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              )}
               {footer && (
                 <TableFooter>
                   <TableRow>
@@ -322,6 +354,18 @@ const Table = React.forwardRef<TableCommands, TableProps>(
             </MuiTable>
           </DndContext>
         </SimpleBar>
+        {paging && (
+          <Stack ref={fullHeight ? pagingHeightResizeDetector : undefined} alignItems={pagingAlign} style={pagingStyle}>
+            <TablePagination
+              className={pagination?.className}
+              style={pagination?.style}
+              sx={pagination?.sx}
+              paging={paging}
+              align={pagingAlign}
+              onChange={onPageChange}
+            />
+          </Stack>
+        )}
       </Paper>
     ) : null;
   }

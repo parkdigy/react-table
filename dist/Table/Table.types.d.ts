@@ -55,6 +55,7 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
     height?: string | number;
     maxHeight?: string | number;
     minHeight?: string | number;
+    fullHeight?: boolean;
     showOddColor?: boolean;
     showEvenColor?: boolean;
     cellPadding?: string | number;

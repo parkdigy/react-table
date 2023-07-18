@@ -24,7 +24,7 @@ const Table: React.FC = () => {
   //--------------------------------------------------------------------------------------------------------------------
 
   return (
-    <div>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {sorting && (
         <Grid container style={{ marginBottom: 10 }} spacing={1}>
           <Grid item>
@@ -41,6 +41,8 @@ const Table: React.FC = () => {
         ref={tableRef}
         defaultAlign='center'
         defaultEllipsis
+        stickyHeader
+        fullHeight
         columns={TableData.columns}
         items={TableData.items}
         paging={TableData.paging}

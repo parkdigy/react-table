@@ -106,7 +106,7 @@ const SearchTable = () => {
   //--------------------------------------------------------------------------------------------------------------------
 
   return (
-    <>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <Search>
         <SearchGroup>
           <FormCheckbox
@@ -125,12 +125,13 @@ const SearchTable = () => {
         betweenSearchTableComponent={<div>betweenSearchTableComponent</div>}
         ref={searchTableRef}
         hash={hash}
+        fullHeight
         onGetData={handleGetData}
         onRequestHashChange={handleRequestHashChange}
         search={search}
         table={table}
       />
-    </>
+    </div>
   );
 };
 

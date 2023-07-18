@@ -17,6 +17,7 @@ export interface SearchTableTableProps<T = TableItem> extends Omit<TableProps<T>
 export interface SearchTableProps extends CommonSxProps {
     color?: SearchProps['color'];
     hash?: boolean;
+    fullHeight?: boolean;
     search?: SearchTableSearchProps;
     table: SearchTableTableProps;
     betweenSearchTableComponent?: ReactNode;

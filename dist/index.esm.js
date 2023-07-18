@@ -8343,7 +8343,7 @@ var equal = function (v1, v2) {
 var TableCommonCell = function (_a) {
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
     var align = useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
-    var ellipsis = useMemo(function () { return (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis); }, [column, initDefaultEllipsis]);
+    var ellipsis = useMemo(function () { return type !== 'head' && (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis); }, [type, column, initDefaultEllipsis]);
     var className = useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var className;
@@ -8699,7 +8699,7 @@ styleInject(css_248z);function columnFilter(v) {
 }
 var Table = React__default.forwardRef(function (_a, ref) {
     // sortable --------------------------------------------------------------------------------------------------------
-    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, 
+    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, 
     // ---------------------------------------------------------------------------------------------------------------
     className = _a.className, initStyle = _a.style, sx = _a.sx;
     var sensors = useSensors(useSensor(MouseSensor, {
@@ -8716,26 +8716,40 @@ var Table = React__default.forwardRef(function (_a, ref) {
     }), useSensor(KeyboardSensor, {
         coordinateGetter: sortableKeyboardCoordinates,
     }));
-    // State - footerHeight --------------------------------------------------------------------------------------------
-    var _b = useState(), footerHeight = _b[0], setFooterHeight = _b[1];
-    var footerHeightResizeDetector = useResizeDetector({
+    // State - containerHeight -------------------------------------------------------------------------------------------
+    var _b = useState(), containerHeight = _b[0], setContainerHeight = _b[1];
+    var containerHeightDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
         onResize: function () {
-            if (footerHeightResizeDetector.current) {
-                setFooterHeight(footerHeightResizeDetector.current.getBoundingClientRect().height);
+            if (containerHeightDetector.current) {
+                setContainerHeight(containerHeightDetector.current.getBoundingClientRect().height);
             }
             else {
-                setFooterHeight(undefined);
+                setContainerHeight(undefined);
+            }
+        },
+    }).ref;
+    // State - footerHeight --------------------------------------------------------------------------------------------
+    var _c = useState(), pagingHeight = _c[0], setPagingHeight = _c[1];
+    var pagingHeightResizeDetector = useResizeDetector({
+        handleHeight: true,
+        handleWidth: false,
+        onResize: function () {
+            if (pagingHeightResizeDetector.current) {
+                setPagingHeight(pagingHeightResizeDetector.current.getBoundingClientRect().height);
+            }
+            else {
+                setPagingHeight(undefined);
             }
         },
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
-    var _c = useAutoUpdateLayoutState(initColumns), columns = _c[0], setColumns = _c[1];
-    var _d = useState(), finalColumns = _d[0], setFinalColumns = _d[1];
-    var _e = useAutoUpdateLayoutState(initItems), items = _e[0], setItems = _e[1];
-    var _f = useState(), sortableItems = _f[0], setSortableItems = _f[1];
-    var _g = useAutoUpdateLayoutState(initPaging), paging = _g[0], setPaging = _g[1];
+    var _d = useAutoUpdateLayoutState(initColumns), columns = _d[0], setColumns = _d[1];
+    var _e = useState(), finalColumns = _e[0], setFinalColumns = _e[1];
+    var _f = useAutoUpdateLayoutState(initItems), items = _f[0], setItems = _f[1];
+    var _g = useState(), sortableItems = _g[0], setSortableItems = _g[1];
+    var _h = useAutoUpdateLayoutState(initPaging), paging = _h[0], setPaging = _h[1];
     // Memo --------------------------------------------------------------------------------------------------------------
     var tableSx = useMemo(function () {
         var sx = {
@@ -8827,38 +8841,59 @@ var Table = React__default.forwardRef(function (_a, ref) {
         }
     }, [onSortChange]);
     // Memo --------------------------------------------------------------------------------------------------------------
-    var style = useMemo(function () { return (__assign$1({ width: '100%' }, initStyle)); }, [initStyle]);
+    var style = useMemo(function () {
+        if (fullHeight) {
+            return __assign$1(__assign$1({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' });
+        }
+        else {
+            return __assign$1({ width: '100%' }, initStyle);
+        }
+    }, [initStyle, fullHeight]);
+    var simpleBarStyle = useMemo(function () {
+        if (fullHeight) {
+            return {
+                height: (containerHeight || 0) - (pagingHeight || 0) - 2,
+                flex: 1,
+                position: 'absolute',
+                top: 1,
+                left: 0,
+                right: 0,
+                marginBottom: pagingHeight || 0,
+            };
+        }
+        else {
+            return { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
+        }
+    }, [containerHeight, fullHeight, height, maxHeight, minHeight, pagingHeight]);
+    var pagingStyle = useMemo(function () {
+        var style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+        if (fullHeight) {
+            return __assign$1({ position: 'sticky' }, style);
+        }
+        return style;
+    }, [fullHeight]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return finalColumns ? (React__default.createElement(Paper, { className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
-        React__default.createElement(SimpleBar, { style: { height: height, minHeight: minHeight, maxHeight: maxHeight } },
+    return finalColumns ? (React__default.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
+        React__default.createElement(SimpleBar, { style: simpleBarStyle },
             React__default.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
                 React__default.createElement(Table$1, { stickyHeader: stickyHeader, sx: tableSx },
                     React__default.createElement(TableHead, null,
                         React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
-                    React__default.createElement(TableBody, { style: { paddingBottom: footerHeight || 65 } }, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default.createElement(StyledBodyRow$1, null,
+                    React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default.createElement(StyledBodyRow$1, null,
                         React__default.createElement(TableCell, { colSpan: finalColumns.length }, noData ? (noData) : (React__default.createElement(StyledNoDataDiv, null,
                             React__default.createElement("div", null,
                                 React__default.createElement(Icon, null, "error")),
                             React__default.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
-                    paging && (React__default.createElement(TableFooter, { ref: footerHeightResizeDetector, sx: {
-                            left: 0,
-                            bottom: 0,
-                            zIndex: 2,
-                            position: 'sticky',
-                            backgroundColor: '#fff',
-                        } },
-                        React__default.createElement(TableRow, null,
-                            React__default.createElement(TableCell, { colSpan: finalColumns.length, style: { borderBottom: 0, borderTop: '1px solid rgba(224, 224, 224, 1)' } },
-                                React__default.createElement(Stack, { alignItems: pagingAlign },
-                                    React__default.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange })))))),
                     footer && (React__default.createElement(TableFooter, null,
-                        React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))))) : null;
+                        React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
+        paging && (React__default.createElement(Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
+            React__default.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange }))))) : null;
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default.forwardRef(function (_a, ref) {
-    var color = _a.color, hash = _a.hash, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
+    var color = _a.color, hash = _a.hash, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
     // ---------------------------------------------------------------------------------------------------------------
-    className = _a.className, style = _a.style, sx = _a.sx;
+    className = _a.className, initStyle = _a.style, sx = _a.sx;
     var searchRef = useRef();
     var tableRef = useRef();
     //------------------------------------------------------------------------------------------------------------------
@@ -9139,6 +9174,20 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             }
         }
     }, [searchRef, hash, hashChange, getData, isFirstSearchSubmit]);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var style = useMemo(function () {
+        if (fullHeight) {
+            return __assign$1(__assign$1({}, initStyle), { flex: 1, display: 'flex' });
+        }
+        else {
+            return initStyle;
+        }
+    }, [initStyle, fullHeight]);
+    var tableContainerStyle = useMemo(function () {
+        if (fullHeight) {
+            return { flex: 1, display: 'flex', flexDirection: 'column' };
+        }
+    }, [fullHeight]);
     //------------------------------------------------------------------------------------------------------------------
     return (React__default.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: style, sx: sx },
         React__default.createElement(Grid, { item: true, sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
@@ -9157,8 +9206,8 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                     React__default.createElement(FormHidden, { name: 'page', value: 1 })),
                 searchInfo.searchGroups)),
         betweenSearchTableComponent && React__default.createElement(Grid, { item: true }, betweenSearchTableComponent),
-        React__default.createElement(Grid, { item: true },
-            React__default.createElement(Table, __assign$1({}, tableInfo.props, { ref: function (commands) {
+        React__default.createElement(Grid, { item: true, style: tableContainerStyle },
+            React__default.createElement(Table, __assign$1({}, tableInfo.props, { fullHeight: fullHeight, ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
                             tableInfo.ref(commands);
