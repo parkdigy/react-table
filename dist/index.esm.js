@@ -8891,7 +8891,8 @@ var Table = React__default.forwardRef(function (_a, ref) {
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default.forwardRef(function (_a, ref) {
-    var color = _a.color, hash = _a.hash, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
+    var _b, _c;
+    var color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
     // ---------------------------------------------------------------------------------------------------------------
     className = _a.className, initStyle = _a.style, sx = _a.sx;
     var searchRef = useRef();
@@ -8919,11 +8920,11 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
     // Ref -------------------------------------------------------------------------------------------------------------
     var lastGetDataDataRef = useRef({});
     // State -----------------------------------------------------------------------------------------------------------
-    var _b = useState(true), isFirstSearchSubmit = _b[0], setIsFirstSearchSubmit = _b[1];
-    var _c = useState(), tableData = _c[0], setTableData = _c[1];
+    var _d = useState(true), isFirstSearchSubmit = _d[0], setIsFirstSearchSubmit = _d[1];
+    var _e = useState(), tableData = _e[0], setTableData = _e[1];
     // searchInfo ------------------------------------------------------------------------------------------------------
     var searchInfoFirstUseEffect = useRef(true);
-    var _d = useState(function () { return getSearchInfo(search); }), searchInfo = _d[0], setSearchInfo = _d[1];
+    var _f = useState(function () { return getSearchInfo(search); }), searchInfo = _f[0], setSearchInfo = _f[1];
     useEffect(function () {
         if (searchInfoFirstUseEffect.current) {
             searchInfoFirstUseEffect.current = false;
@@ -8935,7 +8936,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
     }, [search]);
     // tableInfo -------------------------------------------------------------------------------------------------------
     var tableInfoFirstUseEffect = useRef(true);
-    var _e = useState(function () { return getTableInfo(table); }), tableInfo = _e[0], setTableInfo = _e[1];
+    var _g = useState(function () { return getTableInfo(table); }), tableInfo = _g[0], setTableInfo = _g[1];
     useEffect(function () {
         if (tableInfoFirstUseEffect.current) {
             tableInfoFirstUseEffect.current = false;
@@ -9207,7 +9208,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                 searchInfo.searchGroups)),
         betweenSearchTableComponent && React__default.createElement(Grid, { item: true }, betweenSearchTableComponent),
         React__default.createElement(Grid, { item: true, style: tableContainerStyle },
-            React__default.createElement(Table, __assign$1({}, tableInfo.props, { fullHeight: fullHeight, ref: function (commands) {
+            React__default.createElement(Table, __assign$1({}, tableInfo.props, { stickyHeader: stickyHeader || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.stickyHeader), fullHeight: fullHeight || ((_c = tableInfo.props) === null || _c === void 0 ? void 0 : _c.fullHeight), ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
                             tableInfo.ref(commands);

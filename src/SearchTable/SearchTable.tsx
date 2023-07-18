@@ -44,6 +44,7 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
     {
       color,
       hash,
+      stickyHeader,
       fullHeight,
       search,
       table,
@@ -422,7 +423,8 @@ const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
         <Grid item style={tableContainerStyle}>
           <Table
             {...tableInfo.props}
-            fullHeight={fullHeight}
+            stickyHeader={stickyHeader || tableInfo.props?.stickyHeader}
+            fullHeight={fullHeight || tableInfo.props?.fullHeight}
             ref={(commands: TableCommands) => {
               if (tableInfo.ref) {
                 if (typeof tableInfo.ref === 'function') {

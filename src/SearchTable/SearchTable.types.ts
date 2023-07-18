@@ -22,6 +22,7 @@ export interface SearchTableTableProps<T = TableItem>
 export interface SearchTableProps extends CommonSxProps {
   color?: SearchProps['color'];
   hash?: boolean;
+  stickyHeader?: boolean;
   fullHeight?: boolean;
   search?: SearchTableSearchProps;
   table: SearchTableTableProps;
