@@ -5,6 +5,7 @@ import { getTableColumnAlign, numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
+import useTableState from '../TableContext/useTableState';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -13,6 +14,10 @@ const StyledButtonsBox = styled(Box)`
 `;
 
 const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, defaultEllipsis, onClick }) => {
+  // Use ---------------------------------------------------------------------------------------------------------------
+
+  const { menuOpen } = useTableState();
+
   // Memo --------------------------------------------------------------------------------------------------------------
 
   const buttonsBoxJustifyContent = useMemo(() => {
@@ -50,7 +55,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
         break;
       case 'button':
         data = (
-          <Box className='TableBoxyCell-button-box' onClick={(e) => e.stopPropagation()}>
+          <Box className='TableBoxyCell-button-box' onClick={menuOpen ? undefined : (e) => e.stopPropagation()}>
             {data}
           </Box>
         );
@@ -60,7 +65,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
           <StyledButtonsBox
             className='TableBodyCell-buttons-box'
             justifyContent={buttonsBoxJustifyContent}
-            onClick={(e) => e.stopPropagation()}
+            onClick={menuOpen ? undefined : (e) => e.stopPropagation()}
           >
             {data}
           </StyledButtonsBox>
@@ -78,9 +83,13 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
             <a
               href={data}
               target='_blank'
-              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                e.stopPropagation();
-              }}
+              onClick={
+                menuOpen
+                  ? undefined
+                  : (e: React.MouseEvent<HTMLAnchorElement>) => {
+                      e.stopPropagation();
+                    }
+              }
             >
               <Tooltip
                 className='TableBodyCell-tooltip'
@@ -122,8 +131,7 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
     }
 
     setData(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item, column]);
+  }, [item, column, index, buttonsBoxJustifyContent, menuOpen]);
 
   // Event Handler ---------------------------------------------------------------------------------------------------
 

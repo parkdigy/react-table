@@ -37,6 +37,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import 'simplebar-react/dist/simplebar.min.css';
+import TableContextProvider from '../TableContextProvider';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
@@ -94,6 +95,11 @@ const Table = React.forwardRef<TableCommands, TableProps>(
         coordinateGetter: sortableKeyboardCoordinates,
       })
     );
+
+    // State -------------------------------------------------------------------------------------------------------------
+
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
 
     // State - containerHeight -------------------------------------------------------------------------------------------
 
@@ -298,87 +304,109 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     // Render ----------------------------------------------------------------------------------------------------------
 
     return finalColumns ? (
-      <Paper
-        ref={fullHeight ? containerHeightDetector : undefined}
-        className={classNames('Table', className)}
-        variant='outlined'
-        style={style}
-        sx={sx}
+      <TableContextProvider
+        value={{
+          menuOpen,
+          openMenuId,
+          setMenuOpen: (newMenuOpen, newOpenMenuId) => {
+            if (newMenuOpen) {
+              setMenuOpen(newMenuOpen);
+              setOpenMenuId(newOpenMenuId);
+            } else {
+              if (openMenuId === newOpenMenuId) {
+                setMenuOpen(false);
+                setOpenMenuId(undefined);
+              }
+            }
+          },
+        }}
       >
-        <SimpleBar style={simpleBarStyle}>
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <MuiTable stickyHeader={!isNoData && stickyHeader} sx={tableSx} style={tableStyle}>
-              <TableHead>
-                <TableRow>
-                  {finalColumns.map((column, idx) => (
-                    <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortableItems ? (
-                  sortableItems.length > 0 ? (
-                    <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
-                      {sortableItems.map((item, idx) => (
-                        <TableBodyRow
-                          key={item.id}
-                          className={classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color')}
-                          hover
-                          sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
-                          id={item.id}
-                          index={idx}
-                          defaultAlign={defaultAlign}
-                          defaultEllipsis={defaultEllipsis}
-                          sortable={sortable}
-                          columns={finalColumns}
-                          item={item}
-                          onClick={onClick}
-                        />
-                      ))}
-                    </SortableContext>
-                  ) : (
-                    <StyledBodyRow>
-                      <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
-                        {noData ? (
-                          noData
-                        ) : (
-                          <StyledNoDataDiv>
-                            <div>
-                              <Icon>error</Icon>
-                            </div>
-                            <div>검색된 정보가 없습니다.</div>
-                          </StyledNoDataDiv>
-                        )}
-                      </TableCell>
-                    </StyledBodyRow>
-                  )
-                ) : undefined}
-              </TableBody>
-              {!isNoData && footer && (
-                <TableFooter>
+        <Paper
+          ref={fullHeight ? containerHeightDetector : undefined}
+          className={classNames('Table', className)}
+          variant='outlined'
+          style={style}
+          sx={sx}
+        >
+          <SimpleBar style={simpleBarStyle}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <MuiTable stickyHeader={!isNoData && stickyHeader} sx={tableSx} style={tableStyle}>
+                <TableHead>
                   <TableRow>
                     {finalColumns.map((column, idx) => (
-                      <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
+                      <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
                     ))}
                   </TableRow>
-                </TableFooter>
-              )}
-            </MuiTable>
-          </DndContext>
-        </SimpleBar>
-        {paging && paging.total > 0 && (
-          <Stack ref={fullHeight ? pagingHeightResizeDetector : undefined} alignItems={pagingAlign} style={pagingStyle}>
-            <TablePagination
-              className={pagination?.className}
-              style={pagination?.style}
-              sx={pagination?.sx}
-              paging={paging}
-              align={pagingAlign}
-              onChange={onPageChange}
-            />
-          </Stack>
-        )}
-      </Paper>
+                </TableHead>
+                <TableBody>
+                  {sortableItems ? (
+                    sortableItems.length > 0 ? (
+                      <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
+                        {sortableItems.map((item, idx) => (
+                          <TableBodyRow
+                            key={item.id}
+                            className={classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color')}
+                            hover
+                            sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
+                            id={item.id}
+                            index={idx}
+                            defaultAlign={defaultAlign}
+                            defaultEllipsis={defaultEllipsis}
+                            sortable={sortable}
+                            columns={finalColumns}
+                            item={item}
+                            onClick={onClick}
+                          />
+                        ))}
+                      </SortableContext>
+                    ) : (
+                      <StyledBodyRow>
+                        <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
+                          {noData ? (
+                            noData
+                          ) : (
+                            <StyledNoDataDiv>
+                              <div>
+                                <Icon>error</Icon>
+                              </div>
+                              <div>검색된 정보가 없습니다.</div>
+                            </StyledNoDataDiv>
+                          )}
+                        </TableCell>
+                      </StyledBodyRow>
+                    )
+                  ) : undefined}
+                </TableBody>
+                {!isNoData && footer && (
+                  <TableFooter>
+                    <TableRow>
+                      {finalColumns.map((column, idx) => (
+                        <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
+                      ))}
+                    </TableRow>
+                  </TableFooter>
+                )}
+              </MuiTable>
+            </DndContext>
+          </SimpleBar>
+          {paging && paging.total > 0 && (
+            <Stack
+              ref={fullHeight ? pagingHeightResizeDetector : undefined}
+              alignItems={pagingAlign}
+              style={pagingStyle}
+            >
+              <TablePagination
+                className={pagination?.className}
+                style={pagination?.style}
+                sx={pagination?.sx}
+                paging={paging}
+                align={pagingAlign}
+                onChange={onPageChange}
+              />
+            </Stack>
+          )}
+        </Paper>
+      </TableContextProvider>
     ) : null;
   }
 );

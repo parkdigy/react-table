@@ -4,6 +4,7 @@ import { TableCell, styled } from '@mui/material';
 import { TableCommonCellProps } from './TableCommonCell.types';
 import { getTableColumnAlign } from '../@util';
 import { CommonSxProps } from '../@types';
+import useTableState from '../TableContext/useTableState';
 
 const StyledTableCell = styled(TableCell)`
   &.ellipsis {
@@ -28,10 +29,21 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   item,
   onClick,
 }) => {
+  // Use ---------------------------------------------------------------------------------------------------------------
+
+  const { menuOpen } = useTableState();
+
+  // Memo --------------------------------------------------------------------------------------------------------------
+
   const align = useMemo(() => getTableColumnAlign(column, defaultAlign), [column, defaultAlign]);
 
   const ellipsis = useMemo(
-    () => type !== 'head' && (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis),
+    () =>
+      type !== 'head' &&
+      column.type !== 'img' &&
+      column.type !== 'button' &&
+      column.type !== 'buttons' &&
+      (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis),
     [type, column, initDefaultEllipsis]
   );
 
@@ -138,19 +150,21 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLTableCellElement>) => {
-      e.stopPropagation();
+      if (!menuOpen) {
+        e.stopPropagation();
 
-      if (type === 'body') {
-        if (item != null && index != null) {
-          if (column.onClick) {
-            column.onClick(item, index);
-          } else {
-            if (onClick) onClick(item, index);
+        if (type === 'body') {
+          if (item != null && index != null) {
+            if (column.onClick) {
+              column.onClick(item, index);
+            } else {
+              if (onClick) onClick(item, index);
+            }
           }
         }
       }
     },
-    [type, column, onClick, item, index]
+    [menuOpen, type, item, index, column, onClick]
   );
 
   // Render ----------------------------------------------------------------------------------------------------------

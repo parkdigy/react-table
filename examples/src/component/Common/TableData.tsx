@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, MenuItem, MenuList, styled } from '@mui/material';
 import { TableColumn, TableItem, TableButton } from '@pdg/react-table';
 import data from './data.json';
+import { TableMenuButton } from '../../../../src';
 
 const StyledHeaderTag = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -95,7 +96,7 @@ const columns: TableColumn[] = [
   },
   {
     type: 'buttons',
-    align: 'right',
+    align: 'center',
     width: 100,
     onRender() {
       return (
@@ -103,6 +104,26 @@ const columns: TableColumn[] = [
           <TableButton icon='Link' />
           <TableButton icon='Delete' color='error' />
         </>
+      );
+    },
+  },
+  {
+    type: 'button',
+    align: 'right',
+    width: 50,
+    onRender() {
+      return (
+        <TableMenuButton
+          icon='MoreVert'
+          variant='text'
+          placement='bottom-end'
+          menuList={
+            <MenuList>
+              <MenuItem onClick={() => ll('edit')}>수정하기</MenuItem>
+              <MenuItem onClick={() => ll('remove')}>삭제하기</MenuItem>
+            </MenuList>
+          }
+        />
       );
     },
   },

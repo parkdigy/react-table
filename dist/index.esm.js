@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,useMemo,useCallback}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
+import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,createContext,useContext,useMemo,useCallback,useId}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button,Popper,Grow,ClickAwayListener}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -8336,11 +8336,31 @@ var equal = function (v1, v2) {
         default:
             return column.align || defaultAlign;
     }
+}var TableContextDefaultValue = {
+    menuOpen: false,
+    openMenuId: undefined,
+    // eslint-disable-next-line
+    setMenuOpen: function () { },
+};var TableContext = createContext(TableContextDefaultValue);function useTableState() {
+    var value = useContext(TableContext);
+    if (value === undefined) {
+        throw new Error('useFormState should be used within TableContext.Provider');
+    }
+    return value;
 }var StyledTableCell = styled(TableCell)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
 var TableCommonCell = function (_a) {
+    // Use ---------------------------------------------------------------------------------------------------------------
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
+    var menuOpen = useTableState().menuOpen;
+    // Memo --------------------------------------------------------------------------------------------------------------
     var align = useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
-    var ellipsis = useMemo(function () { return type !== 'head' && (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis); }, [type, column, initDefaultEllipsis]);
+    var ellipsis = useMemo(function () {
+        return type !== 'head' &&
+            column.type !== 'img' &&
+            column.type !== 'button' &&
+            column.type !== 'buttons' &&
+            (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis);
+    }, [type, column, initDefaultEllipsis]);
     var className = useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var className;
@@ -8433,26 +8453,30 @@ var TableCommonCell = function (_a) {
     }, [column, index, initSx, item, type]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = useCallback(function (e) {
-        e.stopPropagation();
-        if (type === 'body') {
-            if (item != null && index != null) {
-                if (column.onClick) {
-                    column.onClick(item, index);
-                }
-                else {
-                    if (onClick)
-                        onClick(item, index);
+        if (!menuOpen) {
+            e.stopPropagation();
+            if (type === 'body') {
+                if (item != null && index != null) {
+                    if (column.onClick) {
+                        column.onClick(item, index);
+                    }
+                    else {
+                        if (onClick)
+                            onClick(item, index);
+                    }
                 }
             }
         }
-    }, [type, column, onClick, item, index]);
+    }, [menuOpen, type, item, index, column, onClick]);
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default.createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 };
 var templateObject_1$1;var StyledButtonsBox = styled(Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
-    // Memo --------------------------------------------------------------------------------------------------------------
+    // Use ---------------------------------------------------------------------------------------------------------------
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick;
+    var menuOpen = useTableState().menuOpen;
+    // Memo --------------------------------------------------------------------------------------------------------------
     var buttonsBoxJustifyContent = useMemo(function () {
         switch (getTableColumnAlign(column, defaultAlign)) {
             case 'center':
@@ -8485,10 +8509,10 @@ var TableBodyCell = function (_a) {
                 }
                 break;
             case 'button':
-                data = (React__default.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: function (e) { return e.stopPropagation(); } }, data));
+                data = (React__default.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
             case 'buttons':
-                data = (React__default.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: function (e) { return e.stopPropagation(); } }, data));
+                data = (React__default.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
         }
         switch (column.type) {
@@ -8496,9 +8520,11 @@ var TableBodyCell = function (_a) {
                 {
                     var img = React__default.createElement("img", { src: data, style: { maxWidth: '100%', verticalAlign: 'middle' }, alt: '' });
                     var placement = ((_a = column.tooltipProps) === null || _a === void 0 ? void 0 : _a.placement) ? (_b = column.tooltipProps) === null || _b === void 0 ? void 0 : _b.placement : 'left';
-                    data = (React__default.createElement("a", { href: data, target: '_blank', onClick: function (e) {
-                            e.stopPropagation();
-                        } },
+                    data = (React__default.createElement("a", { href: data, target: '_blank', onClick: menuOpen
+                            ? undefined
+                            : function (e) {
+                                e.stopPropagation();
+                            } },
                         React__default.createElement(Tooltip, __assign$1({ className: 'TableBodyCell-tooltip', title: React__default.createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
                 }
                 break;
@@ -8525,8 +8551,7 @@ var TableBodyCell = function (_a) {
                 break;
         }
         setData(data);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [item, column]);
+    }, [item, column, index, buttonsBoxJustifyContent, menuOpen]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = useCallback(function (item, index) {
         if (column.onClick) {
@@ -8688,7 +8713,10 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
     style.appendChild(document.createTextNode(css));
   }
 }var css_248z = "[data-simplebar]{position:relative;flex-direction:column;flex-wrap:wrap;justify-content:flex-start;align-content:flex-start;align-items:flex-start}.simplebar-wrapper{overflow:hidden;width:inherit;height:inherit;max-width:inherit;max-height:inherit}.simplebar-mask{direction:inherit;position:absolute;overflow:hidden;padding:0;margin:0;left:0;top:0;bottom:0;right:0;width:auto!important;height:auto!important;z-index:0}.simplebar-offset{direction:inherit!important;box-sizing:inherit!important;resize:none!important;position:absolute;top:0;left:0;bottom:0;right:0;padding:0;margin:0;-webkit-overflow-scrolling:touch}.simplebar-content-wrapper{direction:inherit;box-sizing:border-box!important;position:relative;display:block;height:100%;width:auto;max-width:100%;max-height:100%;scrollbar-width:none;-ms-overflow-style:none}.simplebar-content-wrapper::-webkit-scrollbar,.simplebar-hide-scrollbar::-webkit-scrollbar{width:0;height:0}.simplebar-content:after,.simplebar-content:before{content:' ';display:table}.simplebar-placeholder{max-height:100%;max-width:100%;width:100%;pointer-events:none}.simplebar-height-auto-observer-wrapper{box-sizing:inherit!important;height:100%;width:100%;max-width:1px;position:relative;float:left;max-height:1px;overflow:hidden;z-index:-1;padding:0;margin:0;pointer-events:none;flex-grow:inherit;flex-shrink:0;flex-basis:0}.simplebar-height-auto-observer{box-sizing:inherit;display:block;opacity:0;position:absolute;top:0;left:0;height:1000%;width:1000%;min-height:1px;min-width:1px;overflow:hidden;pointer-events:none;z-index:-1}.simplebar-track{z-index:1;position:absolute;right:0;bottom:0;pointer-events:none;overflow:hidden}[data-simplebar].simplebar-dragging .simplebar-content{pointer-events:none;user-select:none;-webkit-user-select:none}[data-simplebar].simplebar-dragging .simplebar-track{pointer-events:all}.simplebar-scrollbar{position:absolute;left:0;right:0;min-height:10px}.simplebar-scrollbar:before{position:absolute;content:'';background:#000;border-radius:7px;left:2px;right:2px;opacity:0;transition:opacity .2s .5s linear}.simplebar-scrollbar.simplebar-visible:before{opacity:.5;transition-delay:0s;transition-duration:0s}.simplebar-track.simplebar-vertical{top:0;width:11px}.simplebar-scrollbar:before{top:2px;bottom:2px;left:2px;right:2px}.simplebar-track.simplebar-horizontal{left:0;height:11px}.simplebar-track.simplebar-horizontal .simplebar-scrollbar{right:auto;left:0;top:0;bottom:0;min-height:0;min-width:10px;width:auto}[data-simplebar-direction=rtl] .simplebar-track.simplebar-vertical{right:auto;left:0}.simplebar-dummy-scrollbar-size{direction:rtl;position:fixed;opacity:0;visibility:hidden;height:500px;width:500px;overflow-y:hidden;overflow-x:scroll;-ms-overflow-style:scrollbar!important}.simplebar-dummy-scrollbar-size>div{width:200%;height:200%;margin:10px 0}.simplebar-hide-scrollbar{position:fixed;left:0;visibility:hidden;overflow-y:scroll;scrollbar-width:none;-ms-overflow-style:none}\n";
-styleInject(css_248z);function columnFilter(v) {
+styleInject(css_248z);var TableContextProvider = function (_a) {
+    var children = _a.children, value = _a.value;
+    return React__default.createElement(TableContext.Provider, { value: value }, children);
+};function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
 var Table = React__default.forwardRef(function (_a, ref) {
@@ -8710,8 +8738,11 @@ var Table = React__default.forwardRef(function (_a, ref) {
     }), useSensor(KeyboardSensor, {
         coordinateGetter: sortableKeyboardCoordinates,
     }));
+    // State -------------------------------------------------------------------------------------------------------------
+    var _b = useState(false), menuOpen = _b[0], setMenuOpen = _b[1];
+    var _c = useState(undefined), openMenuId = _c[0], setOpenMenuId = _c[1];
     // State - containerHeight -------------------------------------------------------------------------------------------
-    var _b = useState(), containerHeight = _b[0], setContainerHeight = _b[1];
+    var _d = useState(), containerHeight = _d[0], setContainerHeight = _d[1];
     var containerHeightDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -8725,7 +8756,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State - footerHeight --------------------------------------------------------------------------------------------
-    var _c = useState(), pagingHeight = _c[0], setPagingHeight = _c[1];
+    var _e = useState(), pagingHeight = _e[0], setPagingHeight = _e[1];
     var pagingHeightResizeDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -8739,11 +8770,11 @@ var Table = React__default.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
-    var _d = useAutoUpdateLayoutState(initColumns), columns = _d[0], setColumns = _d[1];
-    var _e = useState(), finalColumns = _e[0], setFinalColumns = _e[1];
-    var _f = useAutoUpdateLayoutState(initItems), items = _f[0], setItems = _f[1];
-    var _g = useState(), sortableItems = _g[0], setSortableItems = _g[1];
-    var _h = useAutoUpdateLayoutState(initPaging), paging = _h[0], setPaging = _h[1];
+    var _f = useAutoUpdateLayoutState(initColumns), columns = _f[0], setColumns = _f[1];
+    var _g = useState(), finalColumns = _g[0], setFinalColumns = _g[1];
+    var _h = useAutoUpdateLayoutState(initItems), items = _h[0], setItems = _h[1];
+    var _j = useState(), sortableItems = _j[0], setSortableItems = _j[1];
+    var _k = useAutoUpdateLayoutState(initPaging), paging = _k[0], setPaging = _k[1];
     // Memo --------------------------------------------------------------------------------------------------------------
     var tableSx = useMemo(function () {
         var sx = {
@@ -8874,21 +8905,37 @@ var Table = React__default.forwardRef(function (_a, ref) {
         return style;
     }, [fullHeight]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return finalColumns ? (React__default.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
-        React__default.createElement(SimpleBar, { style: simpleBarStyle },
-            React__default.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
-                React__default.createElement(Table$1, { stickyHeader: !isNoData && stickyHeader, sx: tableSx, style: tableStyle },
-                    React__default.createElement(TableHead, null,
-                        React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
-                    React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default.createElement(StyledBodyRow$1, null,
-                        React__default.createElement(TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React__default.createElement(StyledNoDataDiv, null,
-                            React__default.createElement("div", null,
-                                React__default.createElement(Icon, null, "error")),
-                            React__default.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
-                    !isNoData && footer && (React__default.createElement(TableFooter, null,
-                        React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
-        paging && paging.total > 0 && (React__default.createElement(Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
-            React__default.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange }))))) : null;
+    return finalColumns ? (React__default.createElement(TableContextProvider, { value: {
+            menuOpen: menuOpen,
+            openMenuId: openMenuId,
+            setMenuOpen: function (newMenuOpen, newOpenMenuId) {
+                if (newMenuOpen) {
+                    setMenuOpen(newMenuOpen);
+                    setOpenMenuId(newOpenMenuId);
+                }
+                else {
+                    if (openMenuId === newOpenMenuId) {
+                        setMenuOpen(false);
+                        setOpenMenuId(undefined);
+                    }
+                }
+            },
+        } },
+        React__default.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
+            React__default.createElement(SimpleBar, { style: simpleBarStyle },
+                React__default.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
+                    React__default.createElement(Table$1, { stickyHeader: !isNoData && stickyHeader, sx: tableSx, style: tableStyle },
+                        React__default.createElement(TableHead, null,
+                            React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
+                        React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default.createElement(StyledBodyRow$1, null,
+                            React__default.createElement(TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React__default.createElement(StyledNoDataDiv, null,
+                                React__default.createElement("div", null,
+                                    React__default.createElement(Icon, null, "error")),
+                                React__default.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
+                        !isNoData && footer && (React__default.createElement(TableFooter, null,
+                            React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
+            paging && paging.total > 0 && (React__default.createElement(Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
+                React__default.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange })))))) : null;
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default.forwardRef(function (_a, ref) {
@@ -9242,4 +9289,93 @@ TableIcon.defaultProps = TableIconDefaultProps;var TableButton = React__default.
         children));
 });
 TableButton.displayName = 'TableButton';
-TableButton.defaultProps = TableButtonDefaultProps;export{SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps};//# sourceMappingURL=index.esm.js.map
+TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultProps = {
+    variant: 'outlined',
+    color: 'primary',
+    placement: 'bottom',
+};var TableMenuButton = React__default.forwardRef(function (_a, ref) {
+    // ID ----------------------------------------------------------------------------------------------------------------
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, menuList = _a.menuList, props = __rest$1(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "placement", "menuList"]);
+    var buttonId = useId();
+    var menuId = useId();
+    // Use ---------------------------------------------------------------------------------------------------------------
+    var _b = useTableState(), menuOpen = _b.menuOpen, openMenuId = _b.openMenuId, setMenuOpen = _b.setMenuOpen;
+    // Ref ---------------------------------------------------------------------------------------------------------------
+    var anchorRef = useRef();
+    // State -------------------------------------------------------------------------------------------------------------
+    var _c = useState(false), open = _c[0], setOpen = _c[1];
+    // Effect ------------------------------------------------------------------------------------------------------------
+    useEffect(function () {
+        if (open && menuOpen && openMenuId !== menuId) {
+            setOpen(false);
+        }
+    }, [menuId, menuOpen, open, openMenuId]);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var sx = useMemo(function () { return (__assign$1({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
+    // Event Handler -----------------------------------------------------------------------------------------------------
+    var handleClick = useCallback(function () {
+        setOpen(function (old) { return !old; });
+        if (!open) {
+            setMenuOpen(true, menuId);
+        }
+        else {
+            setMenuOpen(false, menuId);
+        }
+    }, [menuId, open, setMenuOpen]);
+    var handleClose = useCallback(function () {
+        if (open) {
+            setOpen(false);
+            setMenuOpen(false, menuId);
+        }
+    }, [menuId, open, setMenuOpen]);
+    var handleListKeyDown = useCallback(function (event) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            if (open) {
+                setOpen(false);
+                setMenuOpen(false, menuId);
+            }
+        }
+        else if (event.key === 'Escape') {
+            if (open) {
+                setOpen(false);
+                setMenuOpen(false, menuId);
+            }
+        }
+    }, [menuId, open, setMenuOpen]);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var finalMenuList = useMemo(function () {
+        return React__default.cloneElement(menuList, {
+            autoFocusItem: open,
+            id: menuId,
+            'aria-labelledby': buttonId,
+            onKeyDown: handleListKeyDown,
+            // onClick: handleClose,
+        });
+    }, [buttonId, handleListKeyDown, menuId, menuList, open]);
+    // Render ----------------------------------------------------------------------------------------------------------
+    return (React__default.createElement("span", null,
+        React__default.createElement(Button, __assign$1({ ref: function (r) {
+                if (ref) {
+                    if (typeof ref === 'function') {
+                        ref(r);
+                    }
+                    else {
+                        ref.current = r;
+                    }
+                }
+                anchorRef.current = r;
+            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React__default.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React__default.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
+            icon && (React__default.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
+            children),
+        React__default.createElement(Popper, { open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true }, function (_a) {
+            var TransitionProps = _a.TransitionProps, placement = _a.placement;
+            return (React__default.createElement(Grow, __assign$1({}, TransitionProps, { style: {
+                    transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',
+                } }),
+                React__default.createElement(Paper, null,
+                    React__default.createElement(ClickAwayListener, { onClickAway: handleClose }, finalMenuList))));
+        })));
+});
+TableMenuButton.displayName = 'TableMenuButton';
+TableMenuButton.defaultProps = TableMenuButtonDefaultProps;export{SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};//# sourceMappingURL=index.esm.js.map
