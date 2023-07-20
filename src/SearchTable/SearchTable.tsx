@@ -20,7 +20,7 @@ import {
   SearchCommands,
   SearchGroup,
 } from '@pdg/react-form';
-import { Table, TableCommands } from '../Table';
+import { Table, TableCommands, TableItem } from '../Table';
 import { equal, notEmpty } from '../@util';
 import dayjs from 'dayjs';
 
@@ -39,7 +39,13 @@ interface TableInfo {
   props?: Omit<SearchTableTableProps, 'ref'>;
 }
 
-const SearchTable = React.forwardRef<SearchTableCommands, SearchTableProps>(
+interface WithForwardRefType<T = TableItem> extends React.FC<SearchTableProps<T>> {
+  <T = TableItem>(props: SearchTableProps<T> & React.RefAttributes<SearchTableCommands<T>>): ReturnType<
+    React.FC<SearchTableProps<T>>
+  >;
+}
+
+const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, SearchTableProps>(
   (
     {
       color,

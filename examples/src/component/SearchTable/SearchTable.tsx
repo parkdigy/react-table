@@ -18,13 +18,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
 import { TableData } from '#ccomp';
+import { TTableDataItem } from '../Common/TableData';
 
 const SearchTable = () => {
   const navigate = useNavigate();
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  const searchTableRef = useRef<SearchTableCommands>(null);
+  const searchTableRef = useRef<SearchTableCommands<TTableDataItem>>(null);
 
   //--------------------------------------------------------------------------------------------------------------------
 
@@ -90,7 +91,7 @@ const SearchTable = () => {
 
   const handleGetData = useCallback((params: FormValueMap) => {
     ll('handleGetData', params);
-    return new Promise<SearchTableData>((resolve) => {
+    return new Promise<SearchTableData<TTableDataItem>>((resolve) => {
       resolve({ items: TableData.items, paging: TableData.paging });
     });
   }, []);
@@ -121,7 +122,7 @@ const SearchTable = () => {
         </SearchGroup>
       </Search>
       <br />
-      <_SearchTable
+      <_SearchTable<TTableDataItem>
         betweenSearchTableComponent={<div>betweenSearchTableComponent</div>}
         ref={searchTableRef}
         hash={hash}
