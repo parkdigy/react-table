@@ -83,9 +83,9 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
         id: menuId,
         'aria-labelledby': buttonId,
         onKeyDown: handleListKeyDown,
-        // onClick: handleClose,
+        onClick: handleClose,
       });
-    }, [buttonId, handleListKeyDown, menuId, menuList, open]);
+    }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
 
     // Render ----------------------------------------------------------------------------------------------------------
 

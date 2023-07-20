@@ -9350,9 +9350,9 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             id: menuId,
             'aria-labelledby': buttonId,
             onKeyDown: handleListKeyDown,
-            // onClick: handleClose,
+            onClick: handleClose,
         });
-    }, [buttonId, handleListKeyDown, menuId, menuList, open]);
+    }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default.createElement("span", null,
         React__default.createElement(Button, __assign$1({ ref: function (r) {
