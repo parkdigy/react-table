@@ -1,4 +1,4 @@
-import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import {
   Table as MuiTable,
@@ -16,7 +16,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
 import TableBodyRow from '../TableBodyRow';
-import TableHeadCell from '../TableHeadCell';
+import TableHeadCell, { TableHeadCellCommands } from '../TableHeadCell';
 import TableFooterCell from '../TableFooterCell';
 import TablePagination from '../TablePagination';
 import { useAutoUpdateLayoutState } from '@pdg/react-hook';
@@ -38,12 +38,36 @@ import {
 } from '@dnd-kit/sortable';
 import 'simplebar-react/dist/simplebar.min.css';
 import TableContextProvider from '../TableContextProvider';
+import { v4 as uuid } from 'uuid';
+import { TableBodyCellCommands } from '../TableBodyCell';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
 }
 
-const Table = React.forwardRef<TableCommands, TableProps>(
+type TLocalBodyData = Record<
+  string | number,
+  {
+    item: TableItem;
+    columns: Record<
+      string,
+      {
+        column: TableColumn;
+        checked: boolean;
+        checkDisabled: boolean;
+        commands?: TableBodyCellCommands;
+      }
+    >;
+  }
+>;
+
+type TLocalHeaderData = Record<string, { column: TableColumn; checked: boolean; commands?: TableHeadCellCommands }>;
+
+interface WithForwardRefType<T = TableItem> extends React.FC<TableProps<T>> {
+  <T = TableItem>(props: TableProps<T> & React.RefAttributes<TableCommands<T>>): ReturnType<React.FC<TableProps<T>>>;
+}
+
+const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
   (
     {
       columns: initColumns,
@@ -68,6 +92,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
       onGetBodyRowSx,
       onPageChange,
       onSortChange,
+      onCheckChange,
       // ---------------------------------------------------------------------------------------------------------------
       className,
       style: initStyle,
@@ -75,6 +100,13 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     },
     ref
   ) => {
+    // Ref ---------------------------------------------------------------------------------------------------------------
+
+    const localHeaderDataRef = useRef<TLocalHeaderData>({});
+    const localBodyDataRef = useRef<TLocalBodyData>({});
+    const updateHeadCheckTimer = useRef<NodeJS.Timer>();
+    const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timer | undefined>>({});
+
     // sortable --------------------------------------------------------------------------------------------------------
 
     const sensors = useSensors(
@@ -159,20 +191,150 @@ const Table = React.forwardRef<TableCommands, TableProps>(
 
     const makeSortableItems = useCallback((items?: TableProps['items']) => {
       return items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
-        return { id: id == null ? index : id, ...item };
+        return { id: id == null ? `${uuid()}_${index}` : id, ...item };
       });
     }, []);
+
+    const updateHeadCheck = useCallback((column: TableColumn) => {
+      if (updateHeadCheckTimer.current) {
+        clearTimeout(updateHeadCheckTimer.current);
+        updateHeadCheckTimer.current = undefined;
+      }
+
+      const headColumnData = localHeaderDataRef.current[column.id];
+      if (headColumnData) {
+        updateHeadCheckTimer.current = setTimeout(() => {
+          updateHeadCheckTimer.current = undefined;
+
+          const allChecked = !Object.keys(localBodyDataRef.current).find((key) => {
+            const columnData = localBodyDataRef.current[key].columns[column.id];
+            if (columnData) {
+              if (!columnData.checkDisabled) {
+                return !columnData.checked;
+              }
+            }
+          });
+
+          headColumnData.commands?.setChecked(allChecked);
+        }, 100);
+      }
+    }, []);
+
+    const getCheckedItems = useCallback((columnId: string): TableItem[] => {
+      const checkedItems: TableItem[] = [];
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        const itemData = localBodyDataRef.current[key];
+        const columnData = itemData.columns[columnId];
+        if (columnData) {
+          if (columnData.checked) {
+            checkedItems.push(itemData.item);
+          }
+        }
+      });
+      return checkedItems;
+    }, []);
+
+    const stopHeadCheckTimer = useCallback(() => {
+      if (updateHeadCheckTimer.current) {
+        clearTimeout(updateHeadCheckTimer.current);
+        updateHeadCheckTimer.current = undefined;
+      }
+    }, []);
+
+    const clearFireOnCheckChangeTimer = useCallback(() => {
+      Object.keys(fireOnCheckChangeTimer.current).forEach((key) => {
+        if (fireOnCheckChangeTimer.current[key]) {
+          clearTimeout(fireOnCheckChangeTimer.current[key]);
+        }
+      });
+      fireOnCheckChangeTimer.current = {};
+    }, []);
+
+    const fireOnCheckChange = useCallback(
+      (columnId: string) => {
+        if (fireOnCheckChangeTimer.current[columnId]) {
+          clearTimeout(fireOnCheckChangeTimer.current[columnId]);
+          fireOnCheckChangeTimer.current[columnId] = undefined;
+        }
+        if (onCheckChange) {
+          fireOnCheckChangeTimer.current[columnId] = setTimeout(() => {
+            fireOnCheckChangeTimer.current[columnId] = undefined;
+
+            onCheckChange && onCheckChange(columnId, getCheckedItems(columnId));
+          }, 100);
+        }
+      },
+      [getCheckedItems, onCheckChange]
+    );
 
     // Effect ----------------------------------------------------------------------------------------------------------
 
     useEffect(() => {
+      return () => {
+        stopHeadCheckTimer();
+        clearFireOnCheckChangeTimer();
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      stopHeadCheckTimer();
+      clearFireOnCheckChangeTimer();
+
       setSortableItems(makeSortableItems(items));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
 
     useEffect(() => {
+      stopHeadCheckTimer();
+      clearFireOnCheckChangeTimer();
+
       setFinalColumns(columns?.filter(columnFilter));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columns]);
+
+    useLayoutEffect(() => {
+      clearFireOnCheckChangeTimer();
+
+      if (sortableItems) {
+        localBodyDataRef.current = sortableItems.reduce<TLocalBodyData>((res, item) => {
+          res[item.id] = {
+            item,
+            columns: {},
+          };
+
+          if (finalColumns) {
+            finalColumns.forEach((c) => {
+              const columnId = (c as TableColumn).id;
+
+              if (localBodyDataRef.current[item.id]?.columns[columnId]) {
+                res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
+              } else {
+                res[item.id].columns[columnId] = {
+                  column: c,
+                  checked: false,
+                  checkDisabled: false,
+                };
+              }
+            });
+          }
+          return res;
+        }, {});
+      } else {
+        localBodyDataRef.current = {};
+      }
+    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer]);
+
+    useLayoutEffect(() => {
+      if (finalColumns) {
+        localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData>((res, c) => {
+          res[(c as TableColumn).id] = { column: c, checked: false };
+          return res;
+        }, {});
+      } else {
+        localHeaderDataRef.current = {};
+      }
+    }, [finalColumns]);
 
     // Commands --------------------------------------------------------------------------------------------------------
 
@@ -199,6 +361,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
           resetSort() {
             setSortableItems(makeSortableItems(lastItems));
           },
+          getCheckedItems,
         };
 
         if (typeof ref === 'function') {
@@ -207,7 +370,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging]);
+    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging, getCheckedItems]);
 
     // Event Handler ---------------------------------------------------------------------------------------------------
 
@@ -244,6 +407,111 @@ const Table = React.forwardRef<TableCommands, TableProps>(
         }
       },
       [onSortChange]
+    );
+
+    const handleHeadCheckChange = useCallback((column: TableColumn, checked: boolean) => {
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        const data = localBodyDataRef.current[key].columns[column.id];
+        if (data) {
+          if (!data.checkDisabled) {
+            data.commands?.setChecked(checked);
+          }
+        }
+      });
+    }, []);
+
+    const handleBodyCheckChange = useCallback(
+      (item: TableItem, column: TableColumn) => {
+        updateHeadCheck(column);
+      },
+      [updateHeadCheck]
+    );
+
+    // TableContext Function ---------------------------------------------------------------------------------------------
+
+    const TableContextSetMenuOpen = useCallback(
+      (newMenuOpen: boolean, newOpenMenuId: string | undefined) => {
+        if (newMenuOpen) {
+          setMenuOpen(newMenuOpen);
+          setOpenMenuId(newOpenMenuId);
+        } else {
+          if (openMenuId === newOpenMenuId) {
+            setMenuOpen(false);
+            setOpenMenuId(undefined);
+          }
+        }
+      },
+      [openMenuId]
+    );
+
+    const TableContextSetItemColumnChecked = useCallback(
+      (item: TableItem, column: TableColumn, checked: boolean) => {
+        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        if (data) {
+          data.checked = checked;
+          fireOnCheckChange(column.id);
+        }
+      },
+      [fireOnCheckChange]
+    );
+
+    const TableContextSetItemColumnCheckDisabled = useCallback(
+      (item: TableItem, column: TableColumn, disabled: boolean) => {
+        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        if (data) {
+          data.checkDisabled = disabled;
+        }
+      },
+      []
+    );
+
+    const TableContextSetItemColumnCommands = useCallback(
+      (item: TableItem, column: TableColumn, commands: TableBodyCellCommands) => {
+        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        if (data) {
+          data.commands = commands;
+        }
+      },
+      []
+    );
+
+    const TableContextSetHeadColumnChecked = useCallback((column: TableColumn, checked: boolean) => {
+      const data = localHeaderDataRef.current[column.id];
+      if (data) {
+        data.checked = checked;
+      }
+    }, []);
+
+    const TableContextSetHeadColumnCommands = useCallback((column: TableColumn, commands: TableHeadCellCommands) => {
+      const data = localHeaderDataRef.current[column.id];
+      if (data) {
+        data.commands = commands;
+      }
+    }, []);
+
+    // Memo --------------------------------------------------------------------------------------------------------------
+
+    const tableContextValue = useMemo(
+      () => ({
+        menuOpen,
+        openMenuId,
+        setMenuOpen: TableContextSetMenuOpen,
+        setItemColumnChecked: TableContextSetItemColumnChecked,
+        setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
+        setItemColumnCommands: TableContextSetItemColumnCommands,
+        setHeadColumnChecked: TableContextSetHeadColumnChecked,
+        setHeadColumnCommands: TableContextSetHeadColumnCommands,
+      }),
+      [
+        TableContextSetHeadColumnChecked,
+        TableContextSetHeadColumnCommands,
+        TableContextSetItemColumnCheckDisabled,
+        TableContextSetItemColumnChecked,
+        TableContextSetItemColumnCommands,
+        TableContextSetMenuOpen,
+        menuOpen,
+        openMenuId,
+      ]
     );
 
     // Memo --------------------------------------------------------------------------------------------------------------
@@ -304,23 +572,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
     // Render ----------------------------------------------------------------------------------------------------------
 
     return finalColumns ? (
-      <TableContextProvider
-        value={{
-          menuOpen,
-          openMenuId,
-          setMenuOpen: (newMenuOpen, newOpenMenuId) => {
-            if (newMenuOpen) {
-              setMenuOpen(newMenuOpen);
-              setOpenMenuId(newOpenMenuId);
-            } else {
-              if (openMenuId === newOpenMenuId) {
-                setMenuOpen(false);
-                setOpenMenuId(undefined);
-              }
-            }
-          },
-        }}
-      >
+      <TableContextProvider value={tableContextValue}>
         <Paper
           ref={fullHeight ? containerHeightDetector : undefined}
           className={classNames('Table', className)}
@@ -334,7 +586,12 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                 <TableHead>
                   <TableRow>
                     {finalColumns.map((column, idx) => (
-                      <TableHeadCell key={idx} column={column} defaultAlign={defaultAlign} />
+                      <TableHeadCell
+                        key={idx}
+                        column={column}
+                        defaultAlign={defaultAlign}
+                        onCheckChange={handleHeadCheckChange}
+                      />
                     ))}
                   </TableRow>
                 </TableHead>
@@ -356,6 +613,7 @@ const Table = React.forwardRef<TableCommands, TableProps>(
                             columns={finalColumns}
                             item={item}
                             onClick={onClick}
+                            onCheckChange={handleBodyCheckChange}
                           />
                         ))}
                       </SortableContext>

@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, styled, Tooltip } from '@mui/material';
+import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
 import { getTableColumnAlign, numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
@@ -13,10 +13,60 @@ const StyledButtonsBox = styled(Box)`
   gap: 5px;
 `;
 
-const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, defaultEllipsis, onClick }) => {
+const TableBodyCell: React.FC<Props> = ({
+  item,
+  index,
+  column,
+  defaultAlign,
+  defaultEllipsis,
+  onClick,
+  onCheckChange,
+}) => {
   // Use ---------------------------------------------------------------------------------------------------------------
 
-  const { menuOpen } = useTableState();
+  const { menuOpen, setItemColumnChecked, setItemColumnCheckDisabled, setItemColumnCommands } = useTableState();
+
+  // State -------------------------------------------------------------------------------------------------------------
+
+  const [checked, setChecked] = useState(false);
+  const [checkDisabled, setCheckDisabled] = useState(false);
+
+  // Effect ------------------------------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (column.type === 'check') {
+      setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
+      setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
+    }
+
+    setItemColumnCommands(item, column, {
+      setChecked(checked: boolean) {
+        if (column.type === 'check') {
+          setChecked(checked);
+        }
+      },
+      setCheckDisabled(disabled: boolean) {
+        if (column.type === 'check') {
+          setCheckDisabled(disabled);
+        }
+      },
+    });
+  }, [column, item, setItemColumnCommands]);
+
+  useEffect(() => {
+    if (column.type === 'check') {
+      setItemColumnChecked(item, column, checked);
+      column.onCheckChange && column.onCheckChange(item, checked);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checked]);
+
+  useEffect(() => {
+    if (column.type === 'check') {
+      setItemColumnCheckDisabled(item, column, checkDisabled);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkDisabled]);
 
   // Memo --------------------------------------------------------------------------------------------------------------
 
@@ -31,20 +81,16 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
     }
   }, [column, defaultAlign]);
 
-  // State -----------------------------------------------------------------------------------------------------------
-
-  const [data, setData] = useState<ReactNode>();
-
-  // Effect ----------------------------------------------------------------------------------------------------------
-
-  useEffect(() => {
+  const data = useMemo(() => {
     let data;
-    if (column.onRender) {
-      data = column.onRender(item, index);
-    } else if (column.name) {
-      data = item[column.name];
-    } else {
-      data = undefined;
+    if (column.type !== 'check') {
+      if (column.onRender) {
+        data = column.onRender(item, index);
+      } else if (column.name) {
+        data = item[column.name];
+      } else {
+        data = undefined;
+      }
     }
 
     switch (column.type) {
@@ -52,6 +98,20 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
         if (typeof data === 'string' || typeof data === 'number') {
           data = numberWithThousandSeparator(data);
         }
+        break;
+      case 'check':
+        data = (
+          <Box className='TableBoxyCell-check-box' onClick={menuOpen ? undefined : (e) => e.stopPropagation()}>
+            <Checkbox
+              checked={checked}
+              disabled={checkDisabled}
+              onChange={(e, newChecked) => {
+                setChecked(newChecked);
+                onCheckChange && onCheckChange(item, column, newChecked);
+              }}
+            />
+          </Box>
+        );
         break;
       case 'button':
         data = (
@@ -130,8 +190,8 @@ const TableBodyCell: React.FC<Props> = ({ item, index, column, defaultAlign, def
         break;
     }
 
-    setData(data);
-  }, [item, column, index, buttonsBoxJustifyContent, menuOpen]);
+    return data;
+  }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
 
   // Event Handler ---------------------------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@
   },
   "items": [
     {
-      "id": 12,
+      "board_id": 12,
       "title": "제품없이 홍보 아이디어 검증하기",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -17,10 +17,11 @@
       "category_name": "홍보",
       "category_color": "#43c650",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 11,
+      "board_id": 11,
       "title": "B2B 의미와 고객 성공",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -34,10 +35,11 @@
       "category_name": "세일즈",
       "category_color": "#e410b9",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 10,
+      "board_id": 10,
       "title": "잠재고객을 끌어당기는 방법",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -52,10 +54,11 @@
       "category_name": "세일즈",
       "category_color": "#e410b9",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 9,
+      "board_id": 9,
       "title": "스타트업 홍보 성장을 위한 커브 곡선",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -71,10 +74,11 @@
       "category_name": "홍보",
       "category_color": "#43c650",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 8,
+      "board_id": 8,
       "title": "광고 매체 성과측정 방법",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -90,10 +94,11 @@
       "category_name": "마케팅",
       "category_color": "#ff9000",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 7,
+      "board_id": 7,
       "title": "기업 고객 여정과 고객 지도",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -108,10 +113,11 @@
       "category_name": "홍보",
       "category_color": "#43c650",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 6,
+      "board_id": 6,
       "title": "인바운드와 아웃바운드 마케팅의 차이",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -127,10 +133,11 @@
       "category_name": "세일즈",
       "category_color": "#e410b9",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 5,
+      "board_id": 5,
       "title": "스타트업을 위한 실행 가능 제품",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -145,10 +152,11 @@
       "category_name": "홍보",
       "category_color": "#43c650",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "비노출"
     },
     {
-      "id": 4,
+      "board_id": 4,
       "title": "리드발굴을 위한 SQL 로의 전환",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -164,10 +172,11 @@
       "category_name": "세일즈",
       "category_color": "#e410b9",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "비노출"
     },
     {
-      "id": 3,
+      "board_id": 3,
       "title": "애드테크 광고를 확장하는 힘",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -182,10 +191,11 @@
       "category_name": "마케팅",
       "category_color": "#ff9000",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 2,
+      "board_id": 2,
       "title": "테이블 공식 런칭",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -201,10 +211,11 @@
       "category_name": "TEAM",
       "category_color": "#0362dd",
       "create_admin_user_name": "홍길동",
+      "create_admin_user_email": "hong@a.com",
       "status_name": "노출"
     },
     {
-      "id": 1,
+      "board_id": 1,
       "title": "영업 플랫폼, 테이블 소개",
       "title_img_url": "https://i.imgur.com/8wB5w2W.jpg",
       "tags": [
@@ -218,6 +229,7 @@
       "category_name": "TEAM",
       "category_color": "#0362dd",
       "create_admin_user_name": "김태희",
+      "create_admin_user_email": "taehee@a.com",
       "status_name": "노출"
     }
   ],

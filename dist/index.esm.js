@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,createContext,useContext,useMemo,useCallback,useId}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button,Popper,Grow,ClickAwayListener}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
+import*as React from'react';import React__default,{useRef,useEffect,cloneElement,useState,isValidElement,createRef,PureComponent,useLayoutEffect,createContext,useContext,useMemo,useCallback,useId}from'react';import {styled,TableRow,lighten,TableCell,Box,Checkbox,Tooltip,Stack,Pagination,Paper,Table as Table$1,TableHead,TableBody,Icon,TableFooter,Grid,Button,Popper,Grow,ClickAwayListener}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -8339,8 +8339,14 @@ var equal = function (v1, v2) {
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
-    // eslint-disable-next-line
+    /* eslint-disable */
     setMenuOpen: function () { },
+    setItemColumnChecked: function () { },
+    setItemColumnCheckDisabled: function () { },
+    setItemColumnCommands: function () { },
+    setHeadColumnChecked: function () { },
+    setHeadColumnCommands: function () { },
+    /* eslint-enable */
 };var TableContext = createContext(TableContextDefaultValue);function useTableState() {
     var value = useContext(TableContext);
     if (value === undefined) {
@@ -8453,7 +8459,11 @@ var TableCommonCell = function (_a) {
     }, [column, index, initSx, item, type]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = useCallback(function (e) {
-        if (!menuOpen) {
+        if (!menuOpen &&
+            column.type !== 'check' &&
+            column.type !== 'button' &&
+            column.type !== 'buttons' &&
+            column.type !== 'img') {
             e.stopPropagation();
             if (type === 'body') {
                 if (item != null && index != null) {
@@ -8474,8 +8484,43 @@ var TableCommonCell = function (_a) {
 var templateObject_1$1;var StyledButtonsBox = styled(Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
-    var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick;
-    var menuOpen = useTableState().menuOpen;
+    var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
+    var _b = useTableState(), menuOpen = _b.menuOpen, setItemColumnChecked = _b.setItemColumnChecked, setItemColumnCheckDisabled = _b.setItemColumnCheckDisabled, setItemColumnCommands = _b.setItemColumnCommands;
+    // State -------------------------------------------------------------------------------------------------------------
+    var _c = useState(false), checked = _c[0], setChecked = _c[1];
+    var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
+    // Effect ------------------------------------------------------------------------------------------------------------
+    useEffect(function () {
+        if (column.type === 'check') {
+            setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
+            setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
+        }
+        setItemColumnCommands(item, column, {
+            setChecked: function (checked) {
+                if (column.type === 'check') {
+                    setChecked(checked);
+                }
+            },
+            setCheckDisabled: function (disabled) {
+                if (column.type === 'check') {
+                    setCheckDisabled(disabled);
+                }
+            },
+        });
+    }, [column, item, setItemColumnCommands]);
+    useEffect(function () {
+        if (column.type === 'check') {
+            setItemColumnChecked(item, column, checked);
+            column.onCheckChange && column.onCheckChange(item, checked);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checked]);
+    useEffect(function () {
+        if (column.type === 'check') {
+            setItemColumnCheckDisabled(item, column, checkDisabled);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checkDisabled]);
     // Memo --------------------------------------------------------------------------------------------------------------
     var buttonsBoxJustifyContent = useMemo(function () {
         switch (getTableColumnAlign(column, defaultAlign)) {
@@ -8487,26 +8532,32 @@ var TableBodyCell = function (_a) {
                 return 'start';
         }
     }, [column, defaultAlign]);
-    // State -----------------------------------------------------------------------------------------------------------
-    var _b = useState(), data = _b[0], setData = _b[1];
-    // Effect ----------------------------------------------------------------------------------------------------------
-    useEffect(function () {
+    var data = useMemo(function () {
         var _a, _b;
         var data;
-        if (column.onRender) {
-            data = column.onRender(item, index);
-        }
-        else if (column.name) {
-            data = item[column.name];
-        }
-        else {
-            data = undefined;
+        if (column.type !== 'check') {
+            if (column.onRender) {
+                data = column.onRender(item, index);
+            }
+            else if (column.name) {
+                data = item[column.name];
+            }
+            else {
+                data = undefined;
+            }
         }
         switch (column.type) {
             case 'number':
                 if (typeof data === 'string' || typeof data === 'number') {
                     data = numberWithThousandSeparator(data);
                 }
+                break;
+            case 'check':
+                data = (React__default.createElement(Box, { className: 'TableBoxyCell-check-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } },
+                    React__default.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
+                            setChecked(newChecked);
+                            onCheckChange && onCheckChange(item, column, newChecked);
+                        } })));
                 break;
             case 'button':
                 data = (React__default.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
@@ -8550,8 +8601,8 @@ var TableBodyCell = function (_a) {
                 }
                 break;
         }
-        setData(data);
-    }, [item, column, index, buttonsBoxJustifyContent, menuOpen]);
+        return data;
+    }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleClick = useCallback(function (item, index) {
         if (column.onClick) {
@@ -8579,9 +8630,9 @@ var templateObject_1;var StyledBodyRow = styled(TableRow)(function (_a) {
 var TableBodyRow = function (_a) {
     var className = _a.className, style = _a.style, 
     //--------------------------------------------------------------------------------------------------------------------
-    id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, 
+    id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, 
     // -------------------------------------------------------------------------------------------------------------------
-    props = __rest$1(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick"]);
+    props = __rest$1(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange"]);
     var _b = useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
     var finalStyle = useMemo(function () {
         return sortable
@@ -8591,20 +8642,49 @@ var TableBodyRow = function (_a) {
         return sortable
             ? __assign$1(__assign$1({ ref: setNodeRef }, attributes), listeners) : {};
     }, [attributes, listeners, setNodeRef, sortable]);
-    return (React__default.createElement(StyledBodyRow, __assign$1({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default.createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick })); })));
+    return (React__default.createElement(StyledBodyRow, __assign$1({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default.createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
 };
 TableBodyRow.displayName = 'TableBodyRow';
 TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = function (_a) {
-    var column = _a.column, defaultAlign = _a.defaultAlign;
+    // Use ---------------------------------------------------------------------------------------------------------------
+    var column = _a.column, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
+    var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
+    // State -------------------------------------------------------------------------------------------------------------
+    var _c = useState(false), checked = _c[0], setChecked = _c[1];
+    // Effect ------------------------------------------------------------------------------------------------------------
+    useEffect(function () {
+        if (column.type === 'check') {
+            setHeadColumnChecked(column, checked);
+        }
+    }, [column, checked, setHeadColumnChecked]);
+    useEffect(function () {
+        setHeadColumnCommands(column, {
+            setChecked: function (checked) {
+                if (column.type === 'check') {
+                    setChecked(checked);
+                }
+            },
+        });
+    }, [setHeadColumnCommands, column]);
+    // Memo --------------------------------------------------------------------------------------------------------------
     var data = useMemo(function () {
         var _a, _b;
-        if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
-            return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+        if (column.type === 'check') {
+            return (React__default.createElement(Checkbox, { checked: checked, onChange: function (e, newChecked) {
+                    setChecked(newChecked);
+                    onCheckChange && onCheckChange(column, newChecked);
+                } }));
         }
         else {
-            return column.label;
+            if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
+                return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+            }
+            else {
+                return column.label;
+            }
         }
-    }, [column]);
+    }, [checked, column, onCheckChange]);
+    // Render ------------------------------------------------------------------------------------------------------------
     return (React__default.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', column: column, defaultAlign: defaultAlign }, data));
 };var TableFooterCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
@@ -8716,14 +8796,76 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
 styleInject(css_248z);var TableContextProvider = function (_a) {
     var children = _a.children, value = _a.value;
     return React__default.createElement(TableContext.Provider, { value: value }, children);
-};function columnFilter(v) {
+};// Unique ID creation requires a high quality random # generator. In the browser we therefore
+// require the crypto API and do not support built-in fallback to lower quality random number
+// generators (like Math.random()).
+let getRandomValues;
+const rnds8 = new Uint8Array(16);
+function rng() {
+  // lazy load so that environments that need to polyfill have a chance to do so
+  if (!getRandomValues) {
+    // getRandomValues needs to be invoked in a context where "this" is a Crypto implementation.
+    getRandomValues = typeof crypto !== 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+
+    if (!getRandomValues) {
+      throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
+    }
+  }
+
+  return getRandomValues(rnds8);
+}/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+
+const byteToHex = [];
+
+for (let i = 0; i < 256; ++i) {
+  byteToHex.push((i + 0x100).toString(16).slice(1));
+}
+
+function unsafeStringify(arr, offset = 0) {
+  // Note: Be careful editing this code!  It's been tuned for performance
+  // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
+  return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+}const randomUUID = typeof crypto !== 'undefined' && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var native = {
+  randomUUID
+};function v4(options, buf, offset) {
+  if (native.randomUUID && !buf && !options) {
+    return native.randomUUID();
+  }
+
+  options = options || {};
+  const rnds = options.random || (options.rng || rng)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+
+  if (buf) {
+    offset = offset || 0;
+
+    for (let i = 0; i < 16; ++i) {
+      buf[offset + i] = rnds[i];
+    }
+
+    return buf;
+  }
+
+  return unsafeStringify(rnds);
+}function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
 var Table = React__default.forwardRef(function (_a, ref) {
-    // sortable --------------------------------------------------------------------------------------------------------
-    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, 
+    // Ref ---------------------------------------------------------------------------------------------------------------
+    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, stickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
     // ---------------------------------------------------------------------------------------------------------------
     className = _a.className, initStyle = _a.style, sx = _a.sx;
+    var localHeaderDataRef = useRef({});
+    var localBodyDataRef = useRef({});
+    var updateHeadCheckTimer = useRef();
+    var fireOnCheckChangeTimer = useRef({});
+    // sortable --------------------------------------------------------------------------------------------------------
     var sensors = useSensors(useSensor(MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
         activationConstraint: {
@@ -8790,17 +8932,132 @@ var Table = React__default.forwardRef(function (_a, ref) {
     var makeSortableItems = useCallback(function (items) {
         return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
             var id = _a.id, item = __rest$1(_a, ["id"]);
-            return __assign$1({ id: id == null ? index : id }, item);
+            return __assign$1({ id: id == null ? "".concat(v4(), "_").concat(index) : id }, item);
         });
     }, []);
+    var updateHeadCheck = useCallback(function (column) {
+        if (updateHeadCheckTimer.current) {
+            clearTimeout(updateHeadCheckTimer.current);
+            updateHeadCheckTimer.current = undefined;
+        }
+        var headColumnData = localHeaderDataRef.current[column.id];
+        if (headColumnData) {
+            updateHeadCheckTimer.current = setTimeout(function () {
+                var _a;
+                updateHeadCheckTimer.current = undefined;
+                var allChecked = !Object.keys(localBodyDataRef.current).find(function (key) {
+                    var columnData = localBodyDataRef.current[key].columns[column.id];
+                    if (columnData) {
+                        if (!columnData.checkDisabled) {
+                            return !columnData.checked;
+                        }
+                    }
+                });
+                (_a = headColumnData.commands) === null || _a === void 0 ? void 0 : _a.setChecked(allChecked);
+            }, 100);
+        }
+    }, []);
+    var getCheckedItems = useCallback(function (columnId) {
+        var checkedItems = [];
+        Object.keys(localBodyDataRef.current).forEach(function (key) {
+            var itemData = localBodyDataRef.current[key];
+            var columnData = itemData.columns[columnId];
+            if (columnData) {
+                if (columnData.checked) {
+                    checkedItems.push(itemData.item);
+                }
+            }
+        });
+        return checkedItems;
+    }, []);
+    var stopHeadCheckTimer = useCallback(function () {
+        if (updateHeadCheckTimer.current) {
+            clearTimeout(updateHeadCheckTimer.current);
+            updateHeadCheckTimer.current = undefined;
+        }
+    }, []);
+    var clearFireOnCheckChangeTimer = useCallback(function () {
+        Object.keys(fireOnCheckChangeTimer.current).forEach(function (key) {
+            if (fireOnCheckChangeTimer.current[key]) {
+                clearTimeout(fireOnCheckChangeTimer.current[key]);
+            }
+        });
+        fireOnCheckChangeTimer.current = {};
+    }, []);
+    var fireOnCheckChange = useCallback(function (columnId) {
+        if (fireOnCheckChangeTimer.current[columnId]) {
+            clearTimeout(fireOnCheckChangeTimer.current[columnId]);
+            fireOnCheckChangeTimer.current[columnId] = undefined;
+        }
+        if (onCheckChange) {
+            fireOnCheckChangeTimer.current[columnId] = setTimeout(function () {
+                fireOnCheckChangeTimer.current[columnId] = undefined;
+                onCheckChange && onCheckChange(columnId, getCheckedItems(columnId));
+            }, 100);
+        }
+    }, [getCheckedItems, onCheckChange]);
     // Effect ----------------------------------------------------------------------------------------------------------
     useEffect(function () {
+        return function () {
+            stopHeadCheckTimer();
+            clearFireOnCheckChangeTimer();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    useEffect(function () {
+        stopHeadCheckTimer();
+        clearFireOnCheckChangeTimer();
         setSortableItems(makeSortableItems(items));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
     useEffect(function () {
+        stopHeadCheckTimer();
+        clearFireOnCheckChangeTimer();
         setFinalColumns(columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columns]);
+    useLayoutEffect(function () {
+        clearFireOnCheckChangeTimer();
+        if (sortableItems) {
+            localBodyDataRef.current = sortableItems.reduce(function (res, item) {
+                res[item.id] = {
+                    item: item,
+                    columns: {},
+                };
+                if (finalColumns) {
+                    finalColumns.forEach(function (c) {
+                        var _a;
+                        var columnId = c.id;
+                        if ((_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[columnId]) {
+                            res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
+                        }
+                        else {
+                            res[item.id].columns[columnId] = {
+                                column: c,
+                                checked: false,
+                                checkDisabled: false,
+                            };
+                        }
+                    });
+                }
+                return res;
+            }, {});
+        }
+        else {
+            localBodyDataRef.current = {};
+        }
+    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer]);
+    useLayoutEffect(function () {
+        if (finalColumns) {
+            localHeaderDataRef.current = finalColumns.reduce(function (res, c) {
+                res[c.id] = { column: c, checked: false };
+                return res;
+            }, {});
+        }
+        else {
+            localHeaderDataRef.current = {};
+        }
+    }, [finalColumns]);
     // Commands --------------------------------------------------------------------------------------------------------
     useLayoutEffect(function () {
         if (ref) {
@@ -8824,6 +9081,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 resetSort: function () {
                     setSortableItems(makeSortableItems(lastItems_1));
                 },
+                getCheckedItems: getCheckedItems,
             };
             if (typeof ref === 'function') {
                 ref(commands);
@@ -8832,7 +9090,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging]);
+    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging, getCheckedItems]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleDragEnd = useCallback(function (event) {
         var active = event.active, over = event.over;
@@ -8865,6 +9123,87 @@ var Table = React__default.forwardRef(function (_a, ref) {
             });
         }
     }, [onSortChange]);
+    var handleHeadCheckChange = useCallback(function (column, checked) {
+        Object.keys(localBodyDataRef.current).forEach(function (key) {
+            var _a;
+            var data = localBodyDataRef.current[key].columns[column.id];
+            if (data) {
+                if (!data.checkDisabled) {
+                    (_a = data.commands) === null || _a === void 0 ? void 0 : _a.setChecked(checked);
+                }
+            }
+        });
+    }, []);
+    var handleBodyCheckChange = useCallback(function (item, column) {
+        updateHeadCheck(column);
+    }, [updateHeadCheck]);
+    // TableContext Function ---------------------------------------------------------------------------------------------
+    var TableContextSetMenuOpen = useCallback(function (newMenuOpen, newOpenMenuId) {
+        if (newMenuOpen) {
+            setMenuOpen(newMenuOpen);
+            setOpenMenuId(newOpenMenuId);
+        }
+        else {
+            if (openMenuId === newOpenMenuId) {
+                setMenuOpen(false);
+                setOpenMenuId(undefined);
+            }
+        }
+    }, [openMenuId]);
+    var TableContextSetItemColumnChecked = useCallback(function (item, column, checked) {
+        var _a;
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        if (data) {
+            data.checked = checked;
+            fireOnCheckChange(column.id);
+        }
+    }, [fireOnCheckChange]);
+    var TableContextSetItemColumnCheckDisabled = useCallback(function (item, column, disabled) {
+        var _a;
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        if (data) {
+            data.checkDisabled = disabled;
+        }
+    }, []);
+    var TableContextSetItemColumnCommands = useCallback(function (item, column, commands) {
+        var _a;
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        if (data) {
+            data.commands = commands;
+        }
+    }, []);
+    var TableContextSetHeadColumnChecked = useCallback(function (column, checked) {
+        var data = localHeaderDataRef.current[column.id];
+        if (data) {
+            data.checked = checked;
+        }
+    }, []);
+    var TableContextSetHeadColumnCommands = useCallback(function (column, commands) {
+        var data = localHeaderDataRef.current[column.id];
+        if (data) {
+            data.commands = commands;
+        }
+    }, []);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var tableContextValue = useMemo(function () { return ({
+        menuOpen: menuOpen,
+        openMenuId: openMenuId,
+        setMenuOpen: TableContextSetMenuOpen,
+        setItemColumnChecked: TableContextSetItemColumnChecked,
+        setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
+        setItemColumnCommands: TableContextSetItemColumnCommands,
+        setHeadColumnChecked: TableContextSetHeadColumnChecked,
+        setHeadColumnCommands: TableContextSetHeadColumnCommands,
+    }); }, [
+        TableContextSetHeadColumnChecked,
+        TableContextSetHeadColumnCommands,
+        TableContextSetItemColumnCheckDisabled,
+        TableContextSetItemColumnChecked,
+        TableContextSetItemColumnCommands,
+        TableContextSetMenuOpen,
+        menuOpen,
+        openMenuId,
+    ]);
     // Memo --------------------------------------------------------------------------------------------------------------
     var isNoData = useMemo(function () { return !!sortableItems && sortableItems.length <= 0; }, [sortableItems]);
     var finalPagingHeight = useMemo(function () { return (paging && paging.total > 0 ? pagingHeight || 0 : 0); }, [paging, pagingHeight]);
@@ -8905,29 +9244,14 @@ var Table = React__default.forwardRef(function (_a, ref) {
         return style;
     }, [fullHeight]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return finalColumns ? (React__default.createElement(TableContextProvider, { value: {
-            menuOpen: menuOpen,
-            openMenuId: openMenuId,
-            setMenuOpen: function (newMenuOpen, newOpenMenuId) {
-                if (newMenuOpen) {
-                    setMenuOpen(newMenuOpen);
-                    setOpenMenuId(newOpenMenuId);
-                }
-                else {
-                    if (openMenuId === newOpenMenuId) {
-                        setMenuOpen(false);
-                        setOpenMenuId(undefined);
-                    }
-                }
-            },
-        } },
+    return finalColumns ? (React__default.createElement(TableContextProvider, { value: tableContextValue },
         React__default.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className), variant: 'outlined', style: style, sx: sx },
             React__default.createElement(SimpleBar, { style: simpleBarStyle },
                 React__default.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
                     React__default.createElement(Table$1, { stickyHeader: !isNoData && stickyHeader, sx: tableSx, style: tableStyle },
                         React__default.createElement(TableHead, null,
-                            React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))),
-                        React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick })); }))) : (React__default.createElement(StyledBodyRow$1, null,
+                            React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange })); }))),
+                        React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React__default.createElement(StyledBodyRow$1, null,
                             React__default.createElement(TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React__default.createElement(StyledNoDataDiv, null,
                                 React__default.createElement("div", null,
                                     React__default.createElement(Icon, null, "error")),

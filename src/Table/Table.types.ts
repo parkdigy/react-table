@@ -12,7 +12,8 @@ export interface TableItem {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableColumn<T = TableItem> {
-  type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'buttons';
+  id: string;
+  type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'buttons' | 'check';
   label?: ReactNode;
   name?: string;
   align?: TableCellProps['align'];
@@ -49,6 +50,9 @@ export interface TableColumn<T = TableItem> {
   onGetTooltip?(item: T, index: number): ReactNode;
   onRender?(item: T, index: number): ReactNode;
   onClick?(item: T, index: number): void;
+  onInitChecked?(item: T): boolean;
+  onCheckDisabled?(item: T): boolean;
+  onCheckChange?(item: T, checked: boolean): void;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -80,6 +84,7 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
   onGetBodyRowSx?(item: T, index: number): CommonSxProps['sx'] | undefined;
   onPageChange?(page: number): void;
   onSortChange?(items: T[]): void;
+  onCheckChange?(columnId: string, items: T[]): void;
 }
 
 export const TableDefaultProps: Pick<TableProps, 'defaultAlign' | 'pagingAlign' | 'cellPadding'> = {
@@ -90,11 +95,12 @@ export const TableDefaultProps: Pick<TableProps, 'defaultAlign' | 'pagingAlign' 
 
 //--------------------------------------------------------------------------------------------------------------------
 
-export interface TableCommands {
-  getColumns(): TableProps['columns'];
-  setColumns(columns: TableProps['columns']): void;
-  getItems(): TableProps['items'];
-  getPaging(): TableProps['paging'];
-  setItemsPaging(items: TableProps['items'], paging: TableProps['paging']): void;
+export interface TableCommands<T = TableItem> {
+  getColumns(): TableProps<T>['columns'];
+  setColumns(columns: TableProps<T>['columns']): void;
+  getItems(): TableProps<T>['items'];
+  getPaging(): TableProps<T>['paging'];
+  setItemsPaging(items: TableProps<T>['items'], paging: TableProps<T>['paging']): void;
   resetSort(): void;
+  getCheckedItems(columnId: string): T[];
 }

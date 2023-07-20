@@ -150,7 +150,13 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLTableCellElement>) => {
-      if (!menuOpen) {
+      if (
+        !menuOpen &&
+        column.type !== 'check' &&
+        column.type !== 'button' &&
+        column.type !== 'buttons' &&
+        column.type !== 'img'
+      ) {
         e.stopPropagation();
 
         if (type === 'body') {

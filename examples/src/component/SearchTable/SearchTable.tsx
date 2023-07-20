@@ -16,7 +16,7 @@ import {
   FormTimePicker,
 } from '@pdg/react-form';
 import { useNavigate } from 'react-router-dom';
-import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '@pdg/react-table';
+import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
 import { TableData } from '#ccomp';
 
 const SearchTable = () => {

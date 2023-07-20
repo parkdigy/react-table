@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, MenuItem, MenuList, styled } from '@mui/material';
-import { TableColumn, TableItem, TableButton } from '@pdg/react-table';
 import data from './data.json';
-import { TableMenuButton } from '../../../../src';
+import { TableProps, TableItem, TableButton, TableMenuButton } from '../../../../src';
 
 const StyledHeaderTag = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -17,9 +16,33 @@ const StyledTag = styled(Box)(({ theme }) => ({
   fontSize: '0.7rem',
 }));
 
-const columns: TableColumn[] = [
-  { label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
+export interface TTableDataItem {
+  board_id: number;
+  title: string;
+  title_img_url: string;
+  tags: string[];
+  status: string;
+  view_count: number;
+  create_date: string;
+  category_name: string;
+  category_color: string;
+  create_admin_user_name: string;
+  create_admin_user_email: string;
+  status_name: string;
+}
+
+const columns: TableProps<TTableDataItem>['columns'] = [
   {
+    id: 'check',
+    type: 'check',
+    width: 50,
+    onCheckDisabled(item: TTableDataItem): boolean {
+      return item.board_id === 12;
+    },
+  },
+  { id: 'id', label: 'ID', name: 'board_id', width: 100, footer: { value: '합계' } },
+  {
+    id: 'category',
     label: '카테고리',
     width: 150,
     align: 'left',
@@ -28,11 +51,13 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'title_img_url',
     type: 'img',
     name: 'title_img_url',
     width: 80,
   },
   {
+    id: 'title',
     label: (
       <>
         <Box>제목</Box>
@@ -52,6 +77,7 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'view_count',
     label: '조회수',
     type: 'number',
     name: 'view_count',
@@ -63,11 +89,13 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'status',
     label: '상태',
     name: 'status_name',
     width: 80,
   },
   {
+    id: 'create_admin_user',
     label: '등록자',
     name: 'create_admin_user_name',
     width: 80,
@@ -79,6 +107,7 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'create_date',
     label: '등록일자',
     name: 'create_date',
     type: 'date',
@@ -86,6 +115,7 @@ const columns: TableColumn[] = [
     width: 160,
   },
   {
+    id: 'button',
     type: 'button',
     label: '수정',
     align: 'center',
@@ -95,6 +125,7 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'buttons',
     type: 'buttons',
     align: 'center',
     width: 100,
@@ -108,6 +139,7 @@ const columns: TableColumn[] = [
     },
   },
   {
+    id: 'menu',
     type: 'button',
     align: 'right',
     width: 50,
@@ -129,7 +161,7 @@ const columns: TableColumn[] = [
   },
 ];
 
-const TableData = {
+const TableData: Pick<TableProps<TTableDataItem>, 'columns' | 'items' | 'paging'> = {
   columns,
   items: data.items,
   paging: data.paging,

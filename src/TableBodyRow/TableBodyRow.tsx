@@ -28,8 +28,8 @@ const TableBodyRow: React.FC<Props> = ({
   columns,
   item,
   onClick,
+  onCheckChange,
   // -------------------------------------------------------------------------------------------------------------------
-
   ...props
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
@@ -69,6 +69,7 @@ const TableBodyRow: React.FC<Props> = ({
           defaultEllipsis={defaultEllipsis}
           column={column}
           onClick={onClick}
+          onCheckChange={onCheckChange}
         />
       ))}
     </StyledBodyRow>

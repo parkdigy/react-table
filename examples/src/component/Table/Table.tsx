@@ -1,32 +1,44 @@
-import React, { useRef, useState } from 'react';
-import { Table as _Table, TableItem, TableCommands } from '@pdg/react-table';
+import React, { useCallback, useRef, useState } from 'react';
+import { Table as _Table, TableCommands } from '../../../../src';
 import { TableData } from '#ccomp';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
+import { TTableDataItem } from '../Common/TableData';
 
 const Table: React.FC = () => {
-  const tableRef = useRef<TableCommands>(null);
+  const tableRef = useRef<TableCommands<TTableDataItem>>(null);
 
   const [sorting, setSorting] = useState(false);
 
-  const handleClick = (item: TableItem) => {
+  const handleClick = useCallback((item: TTableDataItem) => {
     ll(item);
-  };
+  }, []);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     ll('handlePageChange', page);
-  };
+  }, []);
 
-  const handleSortChange = (items: TableItem[]) => {
+  const handleSortChange = useCallback((items: TTableDataItem[]) => {
     setSorting(true);
-    ll(items);
-  };
+    ll('handleSortChange', items);
+  }, []);
+
+  const handleCheckChange = useCallback((columnId: string, items: TTableDataItem[]) => {
+    ll('handleCheckChange', columnId, items);
+  }, []);
+
+  const handleGetCheckedItems = useCallback(() => {
+    ll(tableRef.current?.getCheckedItems('check'));
+  }, []);
 
   //--------------------------------------------------------------------------------------------------------------------
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <Stack style={{ height: '100%' }} spacing={1}>
+      <div>
+        <Button onClick={handleGetCheckedItems}>체크된 아이템 가져오기</Button>
+      </div>
       {sorting && (
-        <Grid container style={{ marginBottom: 10 }} spacing={1}>
+        <Grid container spacing={1}>
           <Grid item>
             <Button>변경된 순서 저장</Button>
           </Grid>
@@ -37,7 +49,7 @@ const Table: React.FC = () => {
           </Grid>
         </Grid>
       )}
-      <_Table
+      <_Table<TTableDataItem>
         ref={tableRef}
         defaultAlign='center'
         defaultEllipsis
@@ -52,8 +64,9 @@ const Table: React.FC = () => {
         onClick={handleClick}
         onPageChange={handlePageChange}
         onSortChange={handleSortChange}
+        onCheckChange={handleCheckChange}
       />
-    </div>
+    </Stack>
   );
 };
 
