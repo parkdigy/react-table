@@ -9220,10 +9220,10 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     var simpleBarStyle = React.useMemo(function () {
         if (fullHeight) {
             return {
-                height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
+                height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
                 flex: 1,
                 position: 'absolute',
-                top: 1,
+                top: 0,
                 left: 0,
                 right: 0,
                 marginBottom: finalPagingHeight || 0,

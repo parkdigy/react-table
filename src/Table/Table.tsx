@@ -543,10 +543,10 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     const simpleBarStyle = useMemo((): CSSProperties => {
       if (fullHeight) {
         return {
-          height: (containerHeight || 0) - (finalPagingHeight || 0) - 2,
+          height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
           flex: 1,
           position: 'absolute',
-          top: 1,
+          top: 0,
           left: 0,
           right: 0,
           marginBottom: finalPagingHeight || 0,
