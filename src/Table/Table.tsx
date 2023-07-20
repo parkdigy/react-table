@@ -76,7 +76,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       pagingAlign,
       defaultAlign,
       defaultEllipsis,
-      stickyHeader,
+      stickyHeader: initStickyHeader,
       height,
       minHeight,
       maxHeight,
@@ -521,6 +521,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       () => (paging && paging.total > 0 ? pagingHeight || 0 : 0),
       [paging, pagingHeight]
     );
+    const stickyHeader = useMemo(() => !isNoData && initStickyHeader, [initStickyHeader, isNoData]);
 
     const style = useMemo((): CSSProperties => {
       if (fullHeight) {
@@ -575,14 +576,22 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       <TableContextProvider value={tableContextValue}>
         <Paper
           ref={fullHeight ? containerHeightDetector : undefined}
-          className={classNames('Table', className)}
+          className={classNames(
+            'Table',
+            className,
+            !!stickyHeader && 'sticky-header',
+            !!fullHeight && 'full-height',
+            !!showOddColor && 'odd-color',
+            !!showEvenColor && 'even-color',
+            !!sortable && 'sortable'
+          )}
           variant='outlined'
           style={style}
           sx={sx}
         >
           <SimpleBar style={simpleBarStyle}>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <MuiTable stickyHeader={!isNoData && stickyHeader} sx={tableSx} style={tableStyle}>
+              <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
                 <TableHead>
                   <TableRow>
                     {finalColumns.map((column, idx) => (

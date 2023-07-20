@@ -39,6 +39,9 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     onCheckDisabled(item: TTableDataItem): boolean {
       return item.board_id === 12;
     },
+    onHide(item: TTableDataItem): boolean {
+      return item.board_id === 12;
+    },
   },
   { id: 'id', label: 'ID', name: 'board_id', width: 100, footer: { value: '합계' } },
   {

@@ -70,6 +70,8 @@ const TableBodyCell: React.FC<Props> = ({
 
   // Memo --------------------------------------------------------------------------------------------------------------
 
+  const isHidden = useMemo(() => (column.onHide ? column.onHide(item, index) : false), [column, index, item]);
+
   const buttonsBoxJustifyContent = useMemo(() => {
     switch (getTableColumnAlign(column, defaultAlign)) {
       case 'center':
@@ -219,7 +221,7 @@ const TableBodyCell: React.FC<Props> = ({
       index={index}
       onClick={column.onClick || onClick ? handleClick : undefined}
     >
-      {data}
+      {!isHidden && data}
     </TableCommonCell>
   );
 };

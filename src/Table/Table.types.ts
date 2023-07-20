@@ -47,6 +47,7 @@ export interface TableColumn<T = TableItem> {
   onGetClassName?(item: T, index: number): CommonSxProps['className'];
   onGetStyle?(item: T, index: number): CommonSxProps['style'];
   onGetSx?(item: T, index: number): CommonSxProps['sx'];
+  onHide?(item: T, index: number): boolean;
   onGetTooltip?(item: T, index: number): ReactNode;
   onRender?(item: T, index: number): ReactNode;
   onClick?(item: T, index: number): void;
