@@ -17,7 +17,7 @@ const StyledTag = styled(Box)(({ theme }) => ({
 }));
 
 export interface TTableDataItem {
-  board_id: number;
+  id: number;
   title: string;
   title_img_url: string;
   tags: string[];
@@ -37,10 +37,10 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     type: 'check',
     width: 50,
     onCheckDisabled(item: TTableDataItem): boolean {
-      return item.board_id === 12;
+      return item.id === 12;
     },
     onHide(item: TTableDataItem): boolean {
-      return item.board_id === 12;
+      return item.id === 12;
     },
   },
   { id: 'id', label: 'ID', name: 'board_id', width: 100, footer: { value: '합계' } },
@@ -164,7 +164,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
   },
 ];
 
-const TableData: Pick<TableProps<TTableDataItem>, 'columns' | 'items' | 'paging'> = {
+const TableData: Required<Pick<TableProps<TTableDataItem>, 'columns' | 'items' | 'paging'>> = {
   columns,
   items: data.items,
   paging: data.paging,

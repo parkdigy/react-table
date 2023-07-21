@@ -9008,6 +9008,18 @@ var Table = React__default.forwardRef(function (_a, ref) {
     useEffect(function () {
         stopHeadCheckTimer();
         clearFireOnCheckChangeTimer();
+        Object.keys(localHeaderDataRef.current).forEach(function (key) {
+            var _a;
+            if (localHeaderDataRef.current[key].column.type === 'check') {
+                (_a = localHeaderDataRef.current[key].commands) === null || _a === void 0 ? void 0 : _a.setChecked(false);
+            }
+        });
+        Object.keys(localBodyDataRef.current).forEach(function (key) {
+            Object.keys(localBodyDataRef.current[key].columns).forEach(function (cKey) {
+                var _a;
+                (_a = localBodyDataRef.current[key].columns[cKey].commands) === null || _a === void 0 ? void 0 : _a.setChecked(false);
+            });
+        });
         setSortableItems(makeSortableItems(items));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);

@@ -281,6 +281,18 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
 
+      Object.keys(localHeaderDataRef.current).forEach((key) => {
+        if (localHeaderDataRef.current[key].column.type === 'check') {
+          localHeaderDataRef.current[key].commands?.setChecked(false);
+        }
+      });
+
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
+          localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
+        });
+      });
+
       setSortableItems(makeSortableItems(items));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
