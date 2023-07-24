@@ -206,15 +206,27 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         updateHeadCheckTimer.current = setTimeout(() => {
           updateHeadCheckTimer.current = undefined;
 
-          const allChecked = !Object.keys(localBodyDataRef.current).find((key) => {
+          const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
             const columnData = localBodyDataRef.current[key].columns[column.id];
             if (columnData) {
               if (!columnData.checkDisabled) {
-                return !columnData.checked;
+                return true;
               }
             }
           });
 
+          const allChecked =
+            enabledCheckExists &&
+            !Object.keys(localBodyDataRef.current).find((key) => {
+              const columnData = localBodyDataRef.current[key].columns[column.id];
+              if (columnData) {
+                if (!columnData.checkDisabled) {
+                  return !columnData.checked;
+                }
+              }
+            });
+
+          headColumnData.commands?.setCheckDisabled(!enabledCheckExists);
           headColumnData.commands?.setChecked(allChecked);
         }, 100);
       }
@@ -472,9 +484,10 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         const data = localBodyDataRef.current[item.id]?.columns[column.id];
         if (data) {
           data.checkDisabled = disabled;
+          updateHeadCheck(column);
         }
       },
-      []
+      [updateHeadCheck]
     );
 
     const TableContextSetItemColumnCommands = useCallback(

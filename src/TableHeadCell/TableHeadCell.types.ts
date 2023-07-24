@@ -2,6 +2,7 @@ import { TableColumn, TableProps } from '../Table/Table.types';
 
 export interface TableHeadCellCommands {
   setChecked(checked: boolean): void;
+  setCheckDisabled(checkDisabled: boolean): void;
 }
 
 export interface TableHeadCellProps {

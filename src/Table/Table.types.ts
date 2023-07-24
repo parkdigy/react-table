@@ -54,6 +54,7 @@ export interface TableColumn<T = TableItem> {
   onInitChecked?(item: T): boolean;
   onCheckDisabled?(item: T): boolean;
   onCheckChange?(item: T, checked: boolean): void;
+  onCheckDisabledChange?(item: T, checkDisabled: boolean): void;
 }
 
 //--------------------------------------------------------------------------------------------------------------------

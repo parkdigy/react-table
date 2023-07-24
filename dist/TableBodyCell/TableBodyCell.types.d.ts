@@ -1,7 +1,7 @@
 import { TableColumn, TableItem, TableProps } from '../Table/Table.types';
 export interface TableBodyCellCommands {
-    setCheckDisabled(disabled: boolean): void;
     setChecked(checked: boolean): void;
+    setCheckDisabled(disabled: boolean): void;
 }
 export interface TableBodyCellProps {
     index: number;

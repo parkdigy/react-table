@@ -48,6 +48,7 @@ export interface TableColumn<T = TableItem> {
     onInitChecked?(item: T): boolean;
     onCheckDisabled?(item: T): boolean;
     onCheckChange?(item: T, checked: boolean): void;
+    onCheckDisabledChange?(item: T, checkDisabled: boolean): void;
 }
 export interface TableProps<T = TableItem> extends CommonSxProps {
     columns?: (TableColumn<T> | false | undefined | null)[];

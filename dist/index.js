@@ -8517,7 +8517,15 @@ var TableBodyCell = function (_a) {
     }, [checked]);
     React.useEffect(function () {
         if (column.type === 'check') {
+            setItemColumnChecked(item, column, checked);
+            column.onCheckChange && column.onCheckChange(item, checked);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checked]);
+    React.useEffect(function () {
+        if (column.type === 'check') {
             setItemColumnCheckDisabled(item, column, checkDisabled);
+            column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checkDisabled]);
@@ -8652,6 +8660,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
     var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
     // State -------------------------------------------------------------------------------------------------------------
     var _c = React.useState(false), checked = _c[0], setChecked = _c[1];
+    var _d = React.useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
     // Effect ------------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
         if (column.type === 'check') {
@@ -8665,13 +8674,18 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
                     setChecked(checked);
                 }
             },
+            setCheckDisabled: function (checkDisabled) {
+                if (column.type === 'check') {
+                    setCheckDisabled(checkDisabled);
+                }
+            },
         });
     }, [setHeadColumnCommands, column]);
     // Memo --------------------------------------------------------------------------------------------------------------
     var data = React.useMemo(function () {
         var _a, _b;
         if (column.type === 'check') {
-            return (React__default["default"].createElement(material.Checkbox, { checked: checked, onChange: function (e, newChecked) {
+            return (React__default["default"].createElement(material.Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
                     setChecked(newChecked);
                     onCheckChange && onCheckChange(column, newChecked);
                 } }));
@@ -8684,7 +8698,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
                 return column.label;
             }
         }
-    }, [checked, column, onCheckChange]);
+    }, [checkDisabled, checked, column, onCheckChange]);
     // Render ------------------------------------------------------------------------------------------------------------
     return (React__default["default"].createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', column: column, defaultAlign: defaultAlign }, data));
 };var TableFooterCell = function (_a) {
@@ -8944,17 +8958,27 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         var headColumnData = localHeaderDataRef.current[column.id];
         if (headColumnData) {
             updateHeadCheckTimer.current = setTimeout(function () {
-                var _a;
+                var _a, _b;
                 updateHeadCheckTimer.current = undefined;
-                var allChecked = !Object.keys(localBodyDataRef.current).find(function (key) {
+                var enabledCheckExists = !!Object.keys(localBodyDataRef.current).find(function (key) {
                     var columnData = localBodyDataRef.current[key].columns[column.id];
                     if (columnData) {
                         if (!columnData.checkDisabled) {
-                            return !columnData.checked;
+                            return true;
                         }
                     }
                 });
-                (_a = headColumnData.commands) === null || _a === void 0 ? void 0 : _a.setChecked(allChecked);
+                var allChecked = enabledCheckExists &&
+                    !Object.keys(localBodyDataRef.current).find(function (key) {
+                        var columnData = localBodyDataRef.current[key].columns[column.id];
+                        if (columnData) {
+                            if (!columnData.checkDisabled) {
+                                return !columnData.checked;
+                            }
+                        }
+                    });
+                (_a = headColumnData.commands) === null || _a === void 0 ? void 0 : _a.setCheckDisabled(!enabledCheckExists);
+                (_b = headColumnData.commands) === null || _b === void 0 ? void 0 : _b.setChecked(allChecked);
             }, 100);
         }
     }, []);
@@ -9176,8 +9200,9 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
         var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
         if (data) {
             data.checkDisabled = disabled;
+            updateHeadCheck(column);
         }
-    }, []);
+    }, [updateHeadCheck]);
     var TableContextSetItemColumnCommands = React.useCallback(function (item, column, commands) {
         var _a;
         var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];

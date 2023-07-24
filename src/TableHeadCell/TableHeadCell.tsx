@@ -12,6 +12,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
   // State -------------------------------------------------------------------------------------------------------------
 
   const [checked, setChecked] = useState(false);
+  const [checkDisabled, setCheckDisabled] = useState(false);
 
   // Effect ------------------------------------------------------------------------------------------------------------
 
@@ -28,6 +29,11 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
           setChecked(checked);
         }
       },
+      setCheckDisabled(checkDisabled: boolean) {
+        if (column.type === 'check') {
+          setCheckDisabled(checkDisabled);
+        }
+      },
     });
   }, [setHeadColumnCommands, column]);
 
@@ -38,6 +44,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
       return (
         <Checkbox
           checked={checked}
+          disabled={checkDisabled}
           onChange={(e, newChecked) => {
             setChecked(newChecked);
             onCheckChange && onCheckChange(column, newChecked);
@@ -51,7 +58,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
         return column.label;
       }
     }
-  }, [checked, column, onCheckChange]);
+  }, [checkDisabled, checked, column, onCheckChange]);
 
   // Render ------------------------------------------------------------------------------------------------------------
 
