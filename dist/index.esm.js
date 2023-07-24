@@ -9706,7 +9706,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React__default.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React__default.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
             icon && (React__default.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
             children),
-        React__default.createElement(Popper, { open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
+        React__default.createElement(Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
             return (React__default.createElement(Grow, __assign$1({}, TransitionProps, { style: {
                     transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',

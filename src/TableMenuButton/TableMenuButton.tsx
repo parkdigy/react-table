@@ -152,6 +152,7 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           {children}
         </Button>
         <Popper
+          className='TableMenuButton-Popper'
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
