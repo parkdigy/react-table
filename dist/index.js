@@ -9633,7 +9633,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
     placement: 'bottom',
 };var TableMenuButton = React__default["default"].forwardRef(function (_a, ref) {
     // ID ----------------------------------------------------------------------------------------------------------------
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, menuList = _a.menuList, props = __rest$1(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "placement", "menuList"]);
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest$1(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "placement", "inModal", "zIndex", "menuList"]);
     var buttonId = React.useId();
     var menuId = React.useId();
     // Use ---------------------------------------------------------------------------------------------------------------
@@ -9706,7 +9706,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React__default["default"].createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React__default["default"].createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
             icon && (React__default["default"].createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
             children),
-        React__default["default"].createElement(material.Popper, { open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true }, function (_a) {
+        React__default["default"].createElement(material.Popper, { open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
             return (React__default["default"].createElement(material.Grow, __assign$1({}, TransitionProps, { style: {
                     transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',

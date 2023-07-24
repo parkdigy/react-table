@@ -7,6 +7,8 @@ export interface TableMenuButtonProps extends Omit<ButtonProps, 'size' | 'startI
   startIcon?: string;
   endIcon?: string;
   placement?: PopperPlacementType;
+  inModal?: boolean;
+  zIndex?: number;
   menuList: ReactElement;
 }
 

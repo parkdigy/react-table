@@ -151,7 +151,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
         <TableMenuButton
           icon='MoreVert'
           variant='text'
-          placement='bottom-end'
+          placement='left'
           menuList={
             <MenuList>
               <MenuItem onClick={() => ll('edit')}>수정하기</MenuItem>

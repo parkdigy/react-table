@@ -6,7 +6,23 @@ import TableIcon from '../TableIcon';
 import useTableState from '../TableContext/useTableState';
 
 const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
-  ({ children, className, sx: initSx, color, icon, startIcon, endIcon, placement, menuList, ...props }, ref) => {
+  (
+    {
+      children,
+      className,
+      sx: initSx,
+      color,
+      icon,
+      startIcon,
+      endIcon,
+      placement,
+      inModal,
+      zIndex,
+      menuList,
+      ...props
+    },
+    ref
+  ) => {
     // ID ----------------------------------------------------------------------------------------------------------------
 
     const buttonId = useId();
@@ -135,7 +151,14 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           )}
           {children}
         </Button>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} placement={placement} transition>
+        <Popper
+          open={open}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement={placement}
+          transition
+          style={{ zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex }}
+        >
           {({ TransitionProps, placement }) => {
             return (
               <Grow
