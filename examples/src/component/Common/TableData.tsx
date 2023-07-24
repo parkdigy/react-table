@@ -43,7 +43,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
       return item.id === 12;
     },
   },
-  { id: 'id', label: 'ID', name: 'board_id', width: 100, footer: { value: '합계' } },
+  { id: 'id', label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
   {
     id: 'category',
     label: '카테고리',

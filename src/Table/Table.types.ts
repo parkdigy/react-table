@@ -22,6 +22,7 @@ export interface TableColumn<T = TableItem> {
   ellipsis?: boolean;
   dateFormat?: string;
   tooltipProps?: Omit<TooltipProps, 'children' | 'title'>;
+  display?: { xs?: boolean; sm?: boolean; md?: boolean; lg?: boolean; xl?: boolean };
   head?: {
     className?: CommonSxProps['className'];
     style?: CommonSxProps['style'];

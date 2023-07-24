@@ -8420,6 +8420,7 @@ var TableCommonCell = function (_a) {
         var _a, _b, _c, _d, _e, _f;
         var sx;
         var getSx;
+        var displaySx;
         switch (type) {
             case 'head':
                 sx = (_a = column.head) === null || _a === void 0 ? void 0 : _a.sx;
@@ -8436,6 +8437,20 @@ var TableCommonCell = function (_a) {
                 getSx = ((_e = column.footer) === null || _e === void 0 ? void 0 : _e.onGetSx) ? (_f = column.footer) === null || _f === void 0 ? void 0 : _f.onGetSx() : undefined;
                 break;
         }
+        if (column.display) {
+            var display = {};
+            if (column.display.xs !== undefined)
+                display.xs = column.display.xs ? 'table-cell' : 'none';
+            if (column.display.sm !== undefined)
+                display.sm = column.display.sm ? 'table-cell' : 'none';
+            if (column.display.md !== undefined)
+                display.md = column.display.md ? 'table-cell' : 'none';
+            if (column.display.lg !== undefined)
+                display.lg = column.display.lg ? 'table-cell' : 'none';
+            if (column.display.xl !== undefined)
+                display.xl = column.display.xl ? 'table-cell' : 'none';
+            displaySx = { display: display };
+        }
         var sxList = [];
         if (getSx)
             sxList.push(getSx);
@@ -8443,6 +8458,8 @@ var TableCommonCell = function (_a) {
             sxList.push(sx);
         if (initSx)
             sxList.push(initSx);
+        if (displaySx)
+            sxList.push(displaySx);
         if (sxList.length > 0) {
             if (sxList.length === 1) {
                 return sxList[0];

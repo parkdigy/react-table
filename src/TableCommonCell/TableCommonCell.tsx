@@ -109,6 +109,7 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   const sx = useMemo(() => {
     let sx: CommonSxProps['sx'];
     let getSx: CommonSxProps['sx'];
+    let displaySx: CommonSxProps['sx'];
 
     switch (type) {
       case 'head':
@@ -127,10 +128,28 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
         break;
     }
 
+    if (column.display) {
+      type DisplayValue = 'none' | 'table-cell';
+      const display: {
+        xs?: DisplayValue;
+        sm?: DisplayValue;
+        md?: DisplayValue;
+        lg?: DisplayValue;
+        xl?: DisplayValue;
+      } = {};
+      if (column.display.xs !== undefined) display.xs = column.display.xs ? 'table-cell' : 'none';
+      if (column.display.sm !== undefined) display.sm = column.display.sm ? 'table-cell' : 'none';
+      if (column.display.md !== undefined) display.md = column.display.md ? 'table-cell' : 'none';
+      if (column.display.lg !== undefined) display.lg = column.display.lg ? 'table-cell' : 'none';
+      if (column.display.xl !== undefined) display.xl = column.display.xl ? 'table-cell' : 'none';
+      displaySx = { display };
+    }
+
     const sxList = [];
     if (getSx) sxList.push(getSx);
     if (sx) sxList.push(sx);
     if (initSx) sxList.push(initSx);
+    if (displaySx) sxList.push(displaySx);
 
     if (sxList.length > 0) {
       if (sxList.length === 1) {
