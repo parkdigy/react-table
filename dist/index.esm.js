@@ -9750,8 +9750,53 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             children),
         React__default.createElement(Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
+            var placements = placement.split('-');
+            var transformOrigin = '';
+            if (placements[0] === 'left') {
+                transformOrigin = 'right';
+                // if (placements.length > 1) {
+                //   if (placements[1] === 'start') {
+                //     transformOrigin += ' top';
+                //   } else if (placements[1] === 'end') {
+                //     transformOrigin += ' bottom';
+                //   }
+                // }
+            }
+            else if (placements[0] === 'right') {
+                transformOrigin = 'left';
+                // if (placements.length > 1) {
+                //   if (placements[1] === 'start') {
+                //     transformOrigin += ' top';
+                //   } else if (placements[1] === 'end') {
+                //     transformOrigin += ' bottom';
+                //   }
+                // }
+            }
+            else if (placements[0] === 'top') {
+                transformOrigin = 'bottom';
+                // if (placements.length > 1) {
+                //   if (placements[1] === 'start') {
+                //     transformOrigin += ' left';
+                //   } else if (placements[1] === 'end') {
+                //     transformOrigin += ' right';
+                //   }
+                // }
+            }
+            else if (placements[0] === 'bottom') {
+                transformOrigin = 'top';
+                // if (placements.length > 1) {
+                //   if (placements[1] === 'start') {
+                //     transformOrigin += ' left';
+                //   } else if (placements[1] === 'end') {
+                //     transformOrigin += ' right';
+                //   }
+                // }
+            }
+            else {
+                transformOrigin = 'top';
+            }
             return (React__default.createElement(Grow, __assign$1({}, TransitionProps, { style: {
-                    transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',
+                    transformOrigin: transformOrigin,
                 } }),
                 React__default.createElement(Paper, null,
                     React__default.createElement(ClickAwayListener, { onClickAway: handleClose }, finalMenuList))));

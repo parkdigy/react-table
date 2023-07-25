@@ -161,11 +161,53 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           style={{ zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex }}
         >
           {({ TransitionProps, placement }) => {
+            const placements = placement.split('-');
+            let transformOrigin = '';
+            if (placements[0] === 'left') {
+              transformOrigin = 'right';
+              // if (placements.length > 1) {
+              //   if (placements[1] === 'start') {
+              //     transformOrigin += ' top';
+              //   } else if (placements[1] === 'end') {
+              //     transformOrigin += ' bottom';
+              //   }
+              // }
+            } else if (placements[0] === 'right') {
+              transformOrigin = 'left';
+              // if (placements.length > 1) {
+              //   if (placements[1] === 'start') {
+              //     transformOrigin += ' top';
+              //   } else if (placements[1] === 'end') {
+              //     transformOrigin += ' bottom';
+              //   }
+              // }
+            } else if (placements[0] === 'top') {
+              transformOrigin = 'bottom';
+              // if (placements.length > 1) {
+              //   if (placements[1] === 'start') {
+              //     transformOrigin += ' left';
+              //   } else if (placements[1] === 'end') {
+              //     transformOrigin += ' right';
+              //   }
+              // }
+            } else if (placements[0] === 'bottom') {
+              transformOrigin = 'top';
+              // if (placements.length > 1) {
+              //   if (placements[1] === 'start') {
+              //     transformOrigin += ' left';
+              //   } else if (placements[1] === 'end') {
+              //     transformOrigin += ' right';
+              //   }
+              // }
+            } else {
+              transformOrigin = 'top';
+            }
+
             return (
               <Grow
                 {...TransitionProps}
                 style={{
-                  transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  transformOrigin,
                 }}
               >
                 <Paper>
