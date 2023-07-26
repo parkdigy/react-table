@@ -78,6 +78,9 @@ const columns: TableProps<TTableDataItem>['columns'] = [
         </>
       );
     },
+    onGetTooltip(item) {
+      return item.title;
+    },
   },
   {
     id: 'view_count',

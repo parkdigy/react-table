@@ -8615,17 +8615,15 @@ var TableBodyCell = function (_a) {
                     data = dayjs(data, column.dateFormat).format('YYYY-MM-DD HH:mm:ss');
                 }
                 break;
-            default:
-                {
-                    var tooltip = void 0;
-                    if (column.onGetTooltip) {
-                        tooltip = column.onGetTooltip(item, index);
-                    }
-                    if (tooltip) {
-                        data = (React__default.createElement(Tooltip, __assign$1({ className: 'TableBodyCell-tooltip', title: tooltip }, column.tooltipProps), React__default.isValidElement(data) ? data : React__default.createElement("span", null, data)));
-                    }
-                }
-                break;
+        }
+        if (column.type !== 'img') {
+            var tooltip = void 0;
+            if (column.onGetTooltip) {
+                tooltip = column.onGetTooltip(item, index);
+            }
+            if (tooltip) {
+                data = (React__default.createElement(Tooltip, __assign$1({ className: 'TableBodyCell-tooltip', title: tooltip }, column.tooltipProps), React__default.isValidElement(data) ? (data.type === React__default.Fragment ? (React__default.createElement("span", null, data)) : (data)) : (React__default.createElement("span", null, data))));
+            }
         }
         return data;
     }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);

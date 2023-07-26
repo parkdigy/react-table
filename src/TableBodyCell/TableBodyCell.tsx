@@ -184,23 +184,29 @@ const TableBodyCell: React.FC<Props> = ({
           data = dayjs(data, column.dateFormat).format('YYYY-MM-DD HH:mm:ss');
         }
         break;
-      default:
-        {
-          let tooltip: ReactNode;
-          if (column.onGetTooltip) {
-            tooltip = column.onGetTooltip(item, index);
-          }
-          if (tooltip) {
-            data = (
-              <Tooltip className='TableBodyCell-tooltip' title={tooltip} {...column.tooltipProps}>
-                {React.isValidElement(data) ? data : <span>{data}</span>}
-              </Tooltip>
-            );
-          }
-        }
-        break;
     }
 
+    if (column.type !== 'img') {
+      let tooltip: ReactNode;
+      if (column.onGetTooltip) {
+        tooltip = column.onGetTooltip(item, index);
+      }
+      if (tooltip) {
+        data = (
+          <Tooltip className='TableBodyCell-tooltip' title={tooltip} {...column.tooltipProps}>
+            {React.isValidElement(data) ? (
+              data.type === React.Fragment ? (
+                <span>{data}</span>
+              ) : (
+                data
+              )
+            ) : (
+              <span>{data}</span>
+            )}
+          </Tooltip>
+        );
+      }
+    }
     return data;
   }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
 
