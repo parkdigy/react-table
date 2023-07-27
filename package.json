@@ -44,7 +44,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.5",
     "@mui/x-date-pickers": "^5.0.0",
-    "@pdg/react-form": "^1.0.38",
+    "@pdg/react-form": "^1.0.45",
     "@types/react": "^17.0.0 || ^18.0.0",
     "dayjs": "^1.0.0",
     "react": "^17.0.0 || ^18.0.0",

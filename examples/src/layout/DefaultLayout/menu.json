@@ -19,5 +19,12 @@
     "depth": 1,
     "uri": "/search_table",
     "icon": "TableChart"
+  },
+  {
+    "id": "info_table",
+    "name": "Info Table",
+    "depth": 1,
+    "uri": "/info_table",
+    "icon": "DragIndicator"
   }
 ]
