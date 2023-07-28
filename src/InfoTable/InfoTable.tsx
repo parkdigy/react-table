@@ -26,7 +26,19 @@ const InfoTable: WithType = ({
   info,
   items,
 }: Props) => {
-  const xs = useMemo(() => 12 / cols, [cols]);
+  const sizeProps = useMemo(() => {
+    const value: { xs?: number; sm?: number; md?: number; lg?: number; xl?: number } = {};
+    if (typeof cols === 'number') {
+      value.xs = 12 / cols;
+    } else {
+      if (cols.xs) value.xs = 12 / cols.xs;
+      if (cols.sm) value.sm = 12 / cols.sm;
+      if (cols.md) value.md = 12 / cols.md;
+      if (cols.lg) value.lg = 12 / cols.lg;
+      if (cols.xl) value.xl = 12 / cols.xl;
+    }
+    return value;
+  }, [cols]);
 
   return (
     <Grid container spacing={spacing} className={classNames('InfoTable', className)} style={style} sx={sx}>
@@ -43,7 +55,7 @@ const InfoTable: WithType = ({
           if (item.onRender) data = item.onRender(info);
 
           return (
-            <Grid key={idx} item xs={item.xs || xs} className={item.className} style={item.style} sx={item.sx}>
+            <Grid key={idx} item {...sizeProps} className={item.className} style={item.style} sx={item.sx}>
               <Label
                 className={classNames(labelClassName, item.labelClassName)}
                 style={{ ...item.labelStyle, ...labelStyle }}

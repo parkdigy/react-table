@@ -21,7 +21,7 @@ const InfoTable = () => {
   return (
     <div>
       <_InfoTable<Info>
-        cols={3}
+        cols={{ xs: 2, sm: 2, md: 3 }}
         labelColor='primary'
         info={info}
         items={[

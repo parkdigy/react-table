@@ -26,8 +26,18 @@ export interface InfoTableItem<T = InfoTableInfo> {
 
 export type InfoTableItems<T = InfoTableInfo> = (InfoTableItem<T> | false | undefined | null)[];
 
+export type InfoTableCols = 1 | 2 | 3 | 4 | 6 | 12;
+
 export interface InfoTableProps<T = InfoTableInfo> {
-  cols: 1 | 2 | 3 | 4 | 6 | 12;
+  cols:
+    | InfoTableCols
+    | {
+        xs?: InfoTableCols;
+        sm?: InfoTableCols;
+        md?: InfoTableCols;
+        lg?: InfoTableCols;
+        xl?: InfoTableCols;
+      };
   spacing?: GridProps['spacing'];
   className?: string;
   style?: CommonSxProps['style'];

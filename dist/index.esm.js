@@ -9836,7 +9836,25 @@ var Value = styled(Box)(templateObject_2 || (templateObject_2 = __makeTemplateOb
 var ValueEllipsis = styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
 var templateObject_1, templateObject_2, templateObject_3;var InfoTable = function (_a) {
     var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items;
-    var xs = useMemo(function () { return 12 / cols; }, [cols]);
+    var sizeProps = useMemo(function () {
+        var value = {};
+        if (typeof cols === 'number') {
+            value.xs = 12 / cols;
+        }
+        else {
+            if (cols.xs)
+                value.xs = 12 / cols.xs;
+            if (cols.sm)
+                value.sm = 12 / cols.sm;
+            if (cols.md)
+                value.md = 12 / cols.md;
+            if (cols.lg)
+                value.lg = 12 / cols.lg;
+            if (cols.xl)
+                value.xl = 12 / cols.xl;
+        }
+        return value;
+    }, [cols]);
     return (React__default.createElement(Grid, { container: true, spacing: spacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
         if (item) {
             var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
@@ -9848,7 +9866,7 @@ var templateObject_1, templateObject_2, templateObject_3;var InfoTable = functio
             var data = item.name !== undefined ? info[item.name] : undefined;
             if (item.onRender)
                 data = item.onRender(info);
-            return (React__default.createElement(Grid, { key: idx, item: true, xs: item.xs || xs, className: item.className, style: item.style, sx: item.sx },
+            return (React__default.createElement(Grid, __assign$1({ key: idx, item: true }, sizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
                 React__default.createElement(Value, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx }, item.ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
         }
