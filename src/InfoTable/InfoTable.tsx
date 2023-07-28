@@ -14,6 +14,8 @@ interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
 const InfoTable: WithType = ({
   cols,
   spacing,
+  columnSpacing,
+  rowSpacing,
   className,
   style,
   sx,
@@ -45,7 +47,15 @@ const InfoTable: WithType = ({
   }, [cols]);
 
   return (
-    <Grid container spacing={spacing} className={classNames('InfoTable', className)} style={style} sx={sx}>
+    <Grid
+      container
+      spacing={spacing}
+      columnSpacing={columnSpacing}
+      rowSpacing={rowSpacing}
+      className={classNames('InfoTable', className)}
+      style={style}
+      sx={sx}
+    >
       {items.map((item, idx) => {
         if (item) {
           const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);

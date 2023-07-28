@@ -24,6 +24,7 @@ const InfoTable = () => {
         cols={{ xs: 2, sm: 2, md: 3 }}
         labelColor='primary'
         info={info}
+        rowSpacing={3}
         ellipsis
         valueUnderline
         items={[

@@ -41,6 +41,8 @@ export interface InfoTableProps<T = InfoTableInfo> {
         xl?: InfoTableCols;
     };
     spacing?: GridProps['spacing'];
+    columnSpacing?: GridProps['spacing'];
+    rowSpacing?: GridProps['spacing'];
     className?: string;
     style?: CommonSxProps['style'];
     sx?: CommonSxProps['sx'];
@@ -57,4 +59,4 @@ export interface InfoTableProps<T = InfoTableInfo> {
     items: InfoTableItems<T>;
     onCopyToClipboard?(item: InfoTableItem<T>, text: string): void;
 }
-export declare const InfoTableDefaultProps: Pick<InfoTableProps, 'spacing' | 'labelColor'>;
+export declare const InfoTableDefaultProps: Pick<InfoTableProps, 'spacing' | 'columnSpacing' | 'rowSpacing' | 'labelColor'>;

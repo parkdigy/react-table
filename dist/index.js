@@ -9830,6 +9830,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
 TableMenuButton.displayName = 'TableMenuButton';
 TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultProps = {
     spacing: 2,
+    rowSpacing: 3,
     labelColor: 'primary',
 };var Label = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
 var ValueWrap = material.styled(material.Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"], ["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"])));
@@ -10102,7 +10103,7 @@ _defineProperty(CopyToClipboard$1, "defaultProps", {
 
 CopyToClipboard.CopyToClipboard = CopyToClipboard;
 var lib = CopyToClipboard;var InfoTable = function (_a) {
-    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
+    var cols = _a.cols, spacing = _a.spacing, columnSpacing = _a.columnSpacing, rowSpacing = _a.rowSpacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
     var sizeProps = React.useMemo(function () {
         var value = {};
         if (typeof cols === 'number') {
@@ -10122,7 +10123,7 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
         }
         return value;
     }, [cols]);
-    return (React__default["default"].createElement(material.Grid, { container: true, spacing: spacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
+    return (React__default["default"].createElement(material.Grid, { container: true, spacing: spacing, columnSpacing: columnSpacing, rowSpacing: rowSpacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
         if (item) {
             var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
             var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
