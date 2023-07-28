@@ -1,34 +1,13 @@
-import { Grid, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
-export const StyledItemLabelWrap = styled(Grid)`
-  display: flex;
-  flex-direction: column;
+export const Label = styled(Box)`
+  font-size: 12px;
+  font-weight: bold;
 `;
 
-export const StyledItemLabel = styled('div')`
-  flex: 1;
-  background-color: #dfdfdf;
-  display: flex;
-  flex-direction: column;
-  padding: 5px 10px;
-  font-weight: 500;
-`;
+export const Value = styled(Box)``;
 
-export const StyledItemValueWrap = styled(Grid)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-export const StyledItemValue = styled('div')`
-  flex: 1;
-  background-color: #f8f8f8;
-  display: flex;
-  flex-direction: column;
-  padding: 5px 10px;
-`;
-
-export const StyledEllipsisValue = styled('div')`
+export const ValueEllipsis = styled('div')`
   position: relative;
   overflow: hidden;
   text-overflow: ellipsis;

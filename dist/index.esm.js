@@ -8236,8 +8236,8 @@ function useResizeDetector(props) {
         },
     });
 });
-var StyledNoDataDiv = styled('div')(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
-var templateObject_1$2;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__*/Object.freeze({
+var StyledNoDataDiv = styled('div')(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
+var templateObject_1$3;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__*/Object.freeze({
   Translate: {
     toString(transform) {
       if (!transform) {
@@ -8336,6 +8336,33 @@ var equal = function (v1, v2) {
         default:
             return column.align || defaultAlign;
     }
+}
+function combineSx() {
+    var sx = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        sx[_i] = arguments[_i];
+    }
+    var finalSx = [];
+    if (Array.isArray(finalSx)) {
+        sx.forEach(function (v) { return v && finalSx.push.apply(finalSx, (Array.isArray(v) ? v : [v])); });
+    }
+    return finalSx;
+}
+function typographyColorToSxColor(color) {
+    if (typeof color === 'string') {
+        if (['primary', 'secondary', 'info', 'warning', 'error'].includes(color)) {
+            return "".concat(color, ".main");
+        }
+        else if (color === 'text') {
+            return 'text.primary';
+        }
+        else {
+            return color;
+        }
+    }
+    else {
+        return color;
+    }
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
@@ -8353,7 +8380,7 @@ var equal = function (v1, v2) {
         throw new Error('useFormState should be used within TableContext.Provider');
     }
     return value;
-}var StyledTableCell = styled(TableCell)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
+}var StyledTableCell = styled(TableCell)(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
 var TableCommonCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
@@ -8498,7 +8525,7 @@ var TableCommonCell = function (_a) {
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default.createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 };
-var templateObject_1$1;var StyledButtonsBox = styled(Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
+var templateObject_1$2;var StyledButtonsBox = styled(Box)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
@@ -8640,7 +8667,7 @@ var TableBodyCell = function (_a) {
     // Render ----------------------------------------------------------------------------------------------------------
     return (React__default.createElement(TableCommonCell, { type: 'body', className: 'TableBodyCell', column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, !isHidden && data));
 };
-var templateObject_1;var StyledBodyRow = styled(TableRow)(function (_a) {
+var templateObject_1$1;var StyledBodyRow = styled(TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
         '&.odd-color:nth-of-type(odd):not(:hover)': {
@@ -9801,4 +9828,25 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
         })));
 });
 TableMenuButton.displayName = 'TableMenuButton';
-TableMenuButton.defaultProps = TableMenuButtonDefaultProps;export{SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};//# sourceMappingURL=index.esm.js.map
+TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultProps = {
+    spacing: 1,
+    labelColor: 'primary',
+};var Label = styled(Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
+var Value = styled(Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject([""], [""])));
+var ValueEllipsis = styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
+var templateObject_1, templateObject_2, templateObject_3;var InfoTable = function (_a) {
+    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, info = _a.info, items = _a.items;
+    var xs = useMemo(function () { return 12 / cols; }, [cols]);
+    return (React__default.createElement(Grid, { container: true, spacing: spacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
+        var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
+        var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
+        var data = info[item.name];
+        if (item.onRender)
+            data = item.onRender(info);
+        return (React__default.createElement(Grid, { key: idx, item: true, xs: item.xs || xs },
+            React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
+            React__default.createElement(Value, { className: item.valueClassName, style: item.valueStyle, sx: item.valueSx }, item.ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
+    })));
+};
+InfoTable.displayName = 'InfoTable';
+InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};//# sourceMappingURL=index.esm.js.map

@@ -10,24 +10,30 @@ interface Info {
 }
 
 const info: Info = {
-  id: 123,
-  name: '장동건',
+  id: 1,
+  name: 'Steve Park',
   tel: '010-0000-0000',
   address: '서울시 강남구 대치동 123-123 aoiweoa iejaopwegijaw pegijawoijaepogia jwpegoijawe',
-  url: 'https://www.google.com apoj aweiojgpaweogij apwegij apweigjaw pegi',
+  url: 'https://www.google.com',
 };
 
 const InfoTable = () => {
   return (
     <div>
       <_InfoTable<Info>
-        labelXs={1}
-        valueXs={3}
+        cols={3}
+        labelColor='primary'
         info={info}
         items={[
-          { label: 'ID', name: 'id' },
+          {
+            label: 'ID',
+            name: 'id',
+            onRender(info) {
+              return info.id;
+            },
+          },
           { label: '이름', name: 'name' },
-          { label: '전화번호', name: 'tel' },
+          { label: '전화번호', name: 'tel', labelColor: 'secondary' },
           { label: '주소', name: 'address', ellipsis: true },
           { label: 'URL', name: 'url' },
         ]}
