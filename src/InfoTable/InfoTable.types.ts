@@ -21,7 +21,12 @@ export interface InfoTableItem<T = InfoTableInfo> {
   valueStyle?: CommonSxProps['style'];
   valueSx?: CommonSxProps['sx'];
   xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
   onRender?(info: T): ReactNode;
+  onRenderEmpty?(info: T): ReactNode;
 }
 
 export type InfoTableItems<T = InfoTableInfo> = (InfoTableItem<T> | false | undefined | null)[];
@@ -49,6 +54,7 @@ export interface InfoTableProps<T = InfoTableInfo> {
   valueClassName?: string;
   valueStyle?: CommonSxProps['style'];
   valueSx?: CommonSxProps['sx'];
+  ellipsis?: boolean;
   valueUnderline?: boolean;
   info: T;
   items: InfoTableItems<T>;

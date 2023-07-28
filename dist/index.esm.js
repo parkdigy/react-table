@@ -9835,7 +9835,7 @@ TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultP
 var Value = styled(Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-top: 3px;\n"], ["\n  margin-top: 3px;\n"])));
 var ValueEllipsis = styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
 var templateObject_1, templateObject_2, templateObject_3;var InfoTable = function (_a) {
-    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items;
+    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items;
     var sizeProps = useMemo(function () {
         var value = {};
         if (typeof cols === 'number') {
@@ -9863,12 +9863,25 @@ var templateObject_1, templateObject_2, templateObject_3;var InfoTable = functio
             var valueUnderlineStyle = valueUnderline
                 ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
                 : undefined;
+            var finalSizeProps = __assign$1({}, sizeProps);
+            if (item.xs)
+                finalSizeProps.xs = item.xs;
+            if (item.sm)
+                finalSizeProps.sm = item.sm;
+            if (item.md)
+                finalSizeProps.md = item.md;
+            if (item.lg)
+                finalSizeProps.lg = item.lg;
+            if (item.xl)
+                finalSizeProps.xl = item.xl;
             var data = item.name !== undefined ? info[item.name] : undefined;
             if (item.onRender)
                 data = item.onRender(info);
-            return (React__default.createElement(Grid, __assign$1({ key: idx, item: true }, sizeProps, { className: item.className, style: item.style, sx: item.sx }),
+            if (empty(data))
+                data = item.onRenderEmpty ? item.onRenderEmpty(info) : React__default.createElement(React__default.Fragment, null, "\u00A0");
+            return (React__default.createElement(Grid, __assign$1({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
-                React__default.createElement(Value, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx }, item.ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
+                React__default.createElement(Value, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx }, item.ellipsis || ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
         }
     })));
 };

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { InfoTableProps as Props, InfoTableDefaultProps, InfoTableInfo } from './InfoTable.types';
 import { Label, Value, ValueEllipsis } from './InfoTable.style';
 import { Grid } from '@mui/material';
-import { combineSx, typographyColorToSxColor } from '../@util';
+import { combineSx, empty, typographyColorToSxColor } from '../@util';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
   <T = InfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
@@ -22,6 +22,7 @@ const InfoTable: WithType = ({
   valueClassName,
   valueStyle,
   valueSx,
+  ellipsis,
   valueUnderline,
   info,
   items,
@@ -51,11 +52,19 @@ const InfoTable: WithType = ({
             ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
             : undefined;
 
+          const finalSizeProps = { ...sizeProps };
+          if (item.xs) finalSizeProps.xs = item.xs;
+          if (item.sm) finalSizeProps.sm = item.sm;
+          if (item.md) finalSizeProps.md = item.md;
+          if (item.lg) finalSizeProps.lg = item.lg;
+          if (item.xl) finalSizeProps.xl = item.xl;
+
           let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
           if (item.onRender) data = item.onRender(info);
+          if (empty(data)) data = item.onRenderEmpty ? item.onRenderEmpty(info) : <>&nbsp;</>;
 
           return (
-            <Grid key={idx} item {...sizeProps} className={item.className} style={item.style} sx={item.sx}>
+            <Grid key={idx} item {...finalSizeProps} className={item.className} style={item.style} sx={item.sx}>
               <Label
                 className={classNames(labelClassName, item.labelClassName)}
                 style={{ ...item.labelStyle, ...labelStyle }}
@@ -68,7 +77,7 @@ const InfoTable: WithType = ({
                 style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
                 sx={finalValueSx}
               >
-                {item.ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
+                {item.ellipsis || ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
               </Value>
             </Grid>
           );

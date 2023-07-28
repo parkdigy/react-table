@@ -24,6 +24,8 @@ const InfoTable = () => {
         cols={{ xs: 2, sm: 2, md: 3 }}
         labelColor='primary'
         info={info}
+        ellipsis
+        valueUnderline
         items={[
           {
             label: 'ID',
