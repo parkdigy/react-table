@@ -30,7 +30,7 @@ const InfoTable: WithType = ({
         const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
         const finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
 
-        let data: ReactNode = info[item.name];
+        let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
         if (item.onRender) data = item.onRender(info);
 
         return (

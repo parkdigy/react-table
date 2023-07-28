@@ -9840,7 +9840,7 @@ var templateObject_1, templateObject_2, templateObject_3;var InfoTable = functio
     return (React__default.createElement(Grid, { container: true, spacing: spacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
         var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
         var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
-        var data = info[item.name];
+        var data = item.name !== undefined ? info[item.name] : undefined;
         if (item.onRender)
             data = item.onRender(info);
         return (React__default.createElement(Grid, { key: idx, item: true, xs: item.xs || xs },

@@ -6,7 +6,7 @@ export interface InfoTableInfo {
 }
 export interface InfoTableItem<T = InfoTableInfo> {
     label: ReactNode;
-    name: keyof T;
+    name?: keyof T;
     ellipsis?: boolean;
     labelClassName?: string;
     labelColor?: TypographyProps['color'];
