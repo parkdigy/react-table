@@ -21,7 +21,7 @@ export interface InfoTableItem<T = InfoTableInfo> {
     xs?: number;
     onRender?(info: T): ReactNode;
 }
-export declare type InfoTableItems<T = InfoTableInfo> = InfoTableItem<T>[];
+export declare type InfoTableItems<T = InfoTableInfo> = (InfoTableItem<T> | false | undefined | null)[];
 export interface InfoTableProps<T = InfoTableInfo> {
     cols: 1 | 2 | 3 | 4 | 6 | 12;
     spacing?: GridProps['spacing'];

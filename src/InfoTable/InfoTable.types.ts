@@ -24,7 +24,7 @@ export interface InfoTableItem<T = InfoTableInfo> {
   onRender?(info: T): ReactNode;
 }
 
-export type InfoTableItems<T = InfoTableInfo> = InfoTableItem<T>[];
+export type InfoTableItems<T = InfoTableInfo> = (InfoTableItem<T> | false | undefined | null)[];
 
 export interface InfoTableProps<T = InfoTableInfo> {
   cols: 1 | 2 | 3 | 4 | 6 | 12;

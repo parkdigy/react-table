@@ -31,34 +31,36 @@ const InfoTable: WithType = ({
   return (
     <Grid container spacing={spacing} className={classNames('InfoTable', className)} style={style} sx={sx}>
       {items.map((item, idx) => {
-        const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
-        const finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
-        const finalValueSx = combineSx(valueSx, item.valueSx);
-        const valueUnderlineStyle = valueUnderline
-          ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
-          : undefined;
+        if (item) {
+          const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
+          const finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
+          const finalValueSx = combineSx(valueSx, item.valueSx);
+          const valueUnderlineStyle = valueUnderline
+            ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
+            : undefined;
 
-        let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
-        if (item.onRender) data = item.onRender(info);
+          let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
+          if (item.onRender) data = item.onRender(info);
 
-        return (
-          <Grid key={idx} item xs={item.xs || xs} className={item.className} style={item.style} sx={item.sx}>
-            <Label
-              className={classNames(labelClassName, item.labelClassName)}
-              style={{ ...item.labelStyle, ...labelStyle }}
-              sx={finalLabelSx}
-            >
-              {item.label}
-            </Label>
-            <Value
-              className={classNames(valueClassName, item.valueClassName)}
-              style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
-              sx={finalValueSx}
-            >
-              {item.ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
-            </Value>
-          </Grid>
-        );
+          return (
+            <Grid key={idx} item xs={item.xs || xs} className={item.className} style={item.style} sx={item.sx}>
+              <Label
+                className={classNames(labelClassName, item.labelClassName)}
+                style={{ ...item.labelStyle, ...labelStyle }}
+                sx={finalLabelSx}
+              >
+                {item.label}
+              </Label>
+              <Value
+                className={classNames(valueClassName, item.valueClassName)}
+                style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
+                sx={finalValueSx}
+              >
+                {item.ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
+              </Value>
+            </Grid>
+          );
+        }
       })}
     </Grid>
   );
