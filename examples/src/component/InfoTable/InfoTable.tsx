@@ -13,7 +13,7 @@ const info: Info = {
   id: 1,
   name: 'Steve Park',
   tel: '010-0000-0000',
-  address: '서울시 강남구 대치동 123-123 aoiweoa iejaopwegijaw pegijawoijaepogia jwpegoijawe',
+  address: '서울시 강남구 대치동 123-123',
   url: 'https://www.google.com',
 };
 
@@ -36,8 +36,8 @@ const InfoTable = () => {
           },
           { label: '이름', name: 'name' },
           { label: '전화번호', name: 'tel', labelColor: 'secondary' },
-          { label: '주소', name: 'address' },
-          { label: 'URL', name: 'url' },
+          { label: '주소', name: 'address', clipboard: true },
+          { label: 'URL', name: 'url', clipboard: true },
         ]}
       />
     </div>

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { BoxProps, GridProps, TypographyProps } from '@mui/material';
+import { BoxProps, GridProps, IconButtonProps, TypographyProps } from '@mui/material';
 import { CommonSxProps } from '../@types';
 export interface InfoTableInfo {
     [key: string]: any;
@@ -23,6 +23,10 @@ export interface InfoTableItem<T = InfoTableInfo> {
     md?: number;
     lg?: number;
     xl?: number;
+    clipboard?: boolean;
+    clipboardIcon?: string;
+    clipboardText?: string;
+    clipboardProps?: Omit<IconButtonProps, 'children'>;
     onRender?(info: T): ReactNode;
     onRenderEmpty?(info: T): ReactNode;
 }

@@ -1,9 +1,11 @@
 import React, { ReactNode, useMemo } from 'react';
 import classNames from 'classnames';
 import { InfoTableProps as Props, InfoTableDefaultProps, InfoTableInfo } from './InfoTable.types';
-import { Label, Value, ValueEllipsis } from './InfoTable.style';
+import { ClipboardIconButton, Label, Value, ValueClipboard, ValueEllipsis, ValueWrap } from './InfoTable.style';
 import { Grid } from '@mui/material';
-import { combineSx, empty, typographyColorToSxColor } from '../@util';
+import { combineSx, empty, notEmpty, typographyColorToSxColor } from '../@util';
+import TableIcon from '../TableIcon';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
   <T = InfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
@@ -59,9 +61,11 @@ const InfoTable: WithType = ({
           if (item.lg) finalSizeProps.lg = item.lg;
           if (item.xl) finalSizeProps.xl = item.xl;
 
-          let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
+          let data: ReactNode | string = item.name !== undefined ? info[item.name] : undefined;
           if (item.onRender) data = item.onRender(info);
           if (empty(data)) data = item.onRenderEmpty ? item.onRenderEmpty(info) : <>&nbsp;</>;
+
+          const copyToClipboardText = item.clipboardText || (typeof data === 'string' ? data : '');
 
           return (
             <Grid key={idx} item {...finalSizeProps} className={item.className} style={item.style} sx={item.sx}>
@@ -72,13 +76,22 @@ const InfoTable: WithType = ({
               >
                 {item.label}
               </Label>
-              <Value
+              <ValueWrap
                 className={classNames(valueClassName, item.valueClassName)}
                 style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
                 sx={finalValueSx}
               >
-                {item.ellipsis || ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
-              </Value>
+                {item.ellipsis || ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : <Value>{data}</Value>}
+                {item.clipboard && notEmpty(copyToClipboardText) && (
+                  <ValueClipboard>
+                    <CopyToClipboard text={copyToClipboardText}>
+                      <ClipboardIconButton size='small' {...item.clipboardProps}>
+                        <TableIcon>{item.clipboardIcon || 'ContentPaste'}</TableIcon>
+                      </ClipboardIconButton>
+                    </CopyToClipboard>
+                  </ValueClipboard>
+                )}
+              </ValueWrap>
             </Grid>
           );
         }
