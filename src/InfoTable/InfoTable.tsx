@@ -19,6 +19,10 @@ const InfoTable: WithType = ({
   labelColor,
   labelStyle,
   labelSx,
+  valueClassName,
+  valueStyle,
+  valueSx,
+  valueUnderline,
   info,
   items,
 }: Props) => {
@@ -29,12 +33,16 @@ const InfoTable: WithType = ({
       {items.map((item, idx) => {
         const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
         const finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
+        const finalValueSx = combineSx(valueSx, item.valueSx);
+        const valueUnderlineStyle = valueUnderline
+          ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
+          : undefined;
 
         let data: ReactNode = item.name !== undefined ? info[item.name] : undefined;
         if (item.onRender) data = item.onRender(info);
 
         return (
-          <Grid key={idx} item xs={item.xs || xs}>
+          <Grid key={idx} item xs={item.xs || xs} className={item.className} style={item.style} sx={item.sx}>
             <Label
               className={classNames(labelClassName, item.labelClassName)}
               style={{ ...item.labelStyle, ...labelStyle }}
@@ -42,7 +50,11 @@ const InfoTable: WithType = ({
             >
               {item.label}
             </Label>
-            <Value className={item.valueClassName} style={item.valueStyle} sx={item.valueSx}>
+            <Value
+              className={classNames(valueClassName, item.valueClassName)}
+              style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
+              sx={finalValueSx}
+            >
               {item.ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : data}
             </Value>
           </Grid>

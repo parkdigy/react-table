@@ -34,7 +34,7 @@ const InfoTable = () => {
           },
           { label: '이름', name: 'name' },
           { label: '전화번호', name: 'tel', labelColor: 'secondary' },
-          { label: '주소', name: 'address', ellipsis: true },
+          { label: '주소', name: 'address' },
           { label: 'URL', name: 'url' },
         ]}
       />

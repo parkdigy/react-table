@@ -9829,23 +9829,27 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
 });
 TableMenuButton.displayName = 'TableMenuButton';
 TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultProps = {
-    spacing: 1,
+    spacing: 2,
     labelColor: 'primary',
 };var Label = styled(Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
-var Value = styled(Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject([""], [""])));
+var Value = styled(Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-top: 3px;\n"], ["\n  margin-top: 3px;\n"])));
 var ValueEllipsis = styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
 var templateObject_1, templateObject_2, templateObject_3;var InfoTable = function (_a) {
-    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, info = _a.info, items = _a.items;
+    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items;
     var xs = useMemo(function () { return 12 / cols; }, [cols]);
     return (React__default.createElement(Grid, { container: true, spacing: spacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
         var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
         var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
+        var finalValueSx = combineSx(valueSx, item.valueSx);
+        var valueUnderlineStyle = valueUnderline
+            ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
+            : undefined;
         var data = item.name !== undefined ? info[item.name] : undefined;
         if (item.onRender)
             data = item.onRender(info);
-        return (React__default.createElement(Grid, { key: idx, item: true, xs: item.xs || xs },
+        return (React__default.createElement(Grid, { key: idx, item: true, xs: item.xs || xs, className: item.className, style: item.style, sx: item.sx },
             React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
-            React__default.createElement(Value, { className: item.valueClassName, style: item.valueStyle, sx: item.valueSx }, item.ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
+            React__default.createElement(Value, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx }, item.ellipsis ? React__default.createElement(ValueEllipsis, null, data) : data)));
     })));
 };
 InfoTable.displayName = 'InfoTable';

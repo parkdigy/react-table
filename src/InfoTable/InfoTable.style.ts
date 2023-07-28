@@ -5,7 +5,9 @@ export const Label = styled(Box)`
   font-weight: bold;
 `;
 
-export const Value = styled(Box)``;
+export const Value = styled(Box)`
+  margin-top: 3px;
+`;
 
 export const ValueEllipsis = styled('div')`
   position: relative;

@@ -8,6 +8,9 @@ export interface InfoTableItem<T = InfoTableInfo> {
     label: ReactNode;
     name?: keyof T;
     ellipsis?: boolean;
+    className?: string;
+    style?: CommonSxProps['style'];
+    sx?: BoxProps['sx'];
     labelClassName?: string;
     labelColor?: TypographyProps['color'];
     labelStyle?: CommonSxProps['style'];
@@ -29,6 +32,10 @@ export interface InfoTableProps<T = InfoTableInfo> {
     labelColor?: TypographyProps['color'];
     labelStyle?: CommonSxProps['style'];
     labelSx?: BoxProps['sx'];
+    valueClassName?: string;
+    valueStyle?: CommonSxProps['style'];
+    valueSx?: CommonSxProps['sx'];
+    valueUnderline?: boolean;
     info: T;
     items: InfoTableItems<T>;
 }
