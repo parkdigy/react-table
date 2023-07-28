@@ -10146,7 +10146,7 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
                 data = item.onRender(info);
             if (empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React__default.createElement(React__default.Fragment, null, "\u00A0");
-            var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : '');
+            var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
             return (React__default.createElement(Grid, __assign$1({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
                 React__default.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },

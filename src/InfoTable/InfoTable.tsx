@@ -62,11 +62,12 @@ const InfoTable: WithType = ({
           if (item.lg) finalSizeProps.lg = item.lg;
           if (item.xl) finalSizeProps.xl = item.xl;
 
-          let data: ReactNode | string = item.name !== undefined ? info[item.name] : undefined;
+          let data: ReactNode | string | number = item.name !== undefined ? info[item.name] : undefined;
           if (item.onRender) data = item.onRender(info);
           if (empty(data)) data = item.onRenderEmpty ? item.onRenderEmpty(info) : <>&nbsp;</>;
 
-          const copyToClipboardText = item.clipboardText || (typeof data === 'string' ? data : '');
+          const copyToClipboardText =
+            item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
 
           return (
             <Grid key={idx} item {...finalSizeProps} className={item.className} style={item.style} sx={item.sx}>
