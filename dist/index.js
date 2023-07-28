@@ -10153,7 +10153,7 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
                     item.ellipsis || ellipsis ? React__default["default"].createElement(ValueEllipsis, null, data) : React__default["default"].createElement(Value, null, data),
                     item.clipboard && notEmpty(copyToClipboardText) && (React__default["default"].createElement(ValueClipboard, null,
                         React__default["default"].createElement(lib.CopyToClipboard, { text: copyToClipboardText },
-                            React__default["default"].createElement(ClipboardIconButton, __assign$1({ size: 'small' }, item.clipboardProps),
+                            React__default["default"].createElement(ClipboardIconButton, __assign$1({ size: 'small', color: 'primary' }, item.clipboardProps),
                                 React__default["default"].createElement(TableIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
         }
     })));

@@ -85,7 +85,7 @@ const InfoTable: WithType = ({
                 {item.clipboard && notEmpty(copyToClipboardText) && (
                   <ValueClipboard>
                     <CopyToClipboard text={copyToClipboardText}>
-                      <ClipboardIconButton size='small' {...item.clipboardProps}>
+                      <ClipboardIconButton size='small' color='primary' {...item.clipboardProps}>
                         <TableIcon>{item.clipboardIcon || 'ContentPaste'}</TableIcon>
                       </ClipboardIconButton>
                     </CopyToClipboard>
