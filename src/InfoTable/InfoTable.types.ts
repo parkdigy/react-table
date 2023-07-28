@@ -62,6 +62,7 @@ export interface InfoTableProps<T = InfoTableInfo> {
   valueUnderline?: boolean;
   info: T;
   items: InfoTableItems<T>;
+  onCopyToClipboard?(item: InfoTableItem<T>, text: string): void;
 }
 
 export const InfoTableDefaultProps: Pick<InfoTableProps, 'spacing' | 'labelColor'> = {

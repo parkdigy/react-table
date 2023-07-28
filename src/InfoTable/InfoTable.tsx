@@ -28,6 +28,7 @@ const InfoTable: WithType = ({
   valueUnderline,
   info,
   items,
+  onCopyToClipboard,
 }: Props) => {
   const sizeProps = useMemo(() => {
     const value: { xs?: number; sm?: number; md?: number; lg?: number; xl?: number } = {};
@@ -84,7 +85,10 @@ const InfoTable: WithType = ({
                 {item.ellipsis || ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : <Value>{data}</Value>}
                 {item.clipboard && notEmpty(copyToClipboardText) && (
                   <ValueClipboard>
-                    <CopyToClipboard text={copyToClipboardText}>
+                    <CopyToClipboard
+                      text={copyToClipboardText}
+                      onCopy={onCopyToClipboard ? () => onCopyToClipboard(item, copyToClipboardText) : undefined}
+                    >
                       <ClipboardIconButton size='small' color='primary' {...item.clipboardProps}>
                         <TableIcon>{item.clipboardIcon || 'ContentPaste'}</TableIcon>
                       </ClipboardIconButton>

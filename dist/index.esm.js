@@ -10102,7 +10102,7 @@ _defineProperty(CopyToClipboard$1, "defaultProps", {
 
 CopyToClipboard.CopyToClipboard = CopyToClipboard;
 var lib = CopyToClipboard;var InfoTable = function (_a) {
-    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items;
+    var cols = _a.cols, spacing = _a.spacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
     var sizeProps = useMemo(function () {
         var value = {};
         if (typeof cols === 'number') {
@@ -10146,13 +10146,13 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
                 data = item.onRender(info);
             if (empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React__default.createElement(React__default.Fragment, null, "\u00A0");
-            var copyToClipboardText = item.clipboardText || (typeof data === 'string' ? data : '');
+            var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : '');
             return (React__default.createElement(Grid, __assign$1({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React__default.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$1(__assign$1({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
                 React__default.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign$1(__assign$1(__assign$1({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React__default.createElement(ValueEllipsis, null, data) : React__default.createElement(Value, null, data),
-                    item.clipboard && notEmpty(copyToClipboardText) && (React__default.createElement(ValueClipboard, null,
-                        React__default.createElement(lib.CopyToClipboard, { text: copyToClipboardText },
+                    item.clipboard && notEmpty(copyToClipboardText_1) && (React__default.createElement(ValueClipboard, null,
+                        React__default.createElement(lib.CopyToClipboard, { text: copyToClipboardText_1, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText_1); } : undefined },
                             React__default.createElement(ClipboardIconButton, __assign$1({ size: 'small', color: 'primary' }, item.clipboardProps),
                                 React__default.createElement(TableIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
         }
