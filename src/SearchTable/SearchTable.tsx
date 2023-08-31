@@ -231,6 +231,10 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       if (ref) {
         const commands: SearchTableCommands = {
           reload: (page?: number) => {
+            if (page != null) {
+              tableRef.current?.scrollToTop();
+            }
+
             let finalData: FormValueMap;
             if (lastGetDataDataRef.current) {
               finalData = { ...lastGetDataDataRef.current };
@@ -357,6 +361,8 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
 
     const handleSearchSubmit = useCallback(
       (data: FormValueMap) => {
+        tableRef.current?.scrollToTop();
+
         if (isFirstSearchSubmit) {
           setIsFirstSearchSubmit(false);
           if (!hash) {

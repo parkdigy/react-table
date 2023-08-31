@@ -9520,12 +9520,15 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         if (ref) {
             var commands = {
                 reload: function (page) {
-                    var _a, _b, _c;
+                    var _a, _b, _c, _d;
+                    if (page != null) {
+                        (_a = tableRef.current) === null || _a === void 0 ? void 0 : _a.scrollToTop();
+                    }
                     var finalData;
                     if (lastGetDataDataRef.current) {
                         finalData = __assign$1({}, lastGetDataDataRef.current);
                         if (page != null) {
-                            (_a = searchRef.current) === null || _a === void 0 ? void 0 : _a.setValue('page', page);
+                            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
                             finalData.page = page;
                         }
                     }
@@ -9534,9 +9537,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                             hashToSearchValue();
                         }
                         if (page != null) {
-                            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
+                            (_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.setValue('page', page);
                         }
-                        finalData = ((_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.getAllFormValue()) || {};
+                        finalData = ((_d = searchRef.current) === null || _d === void 0 ? void 0 : _d.getAllFormValue()) || {};
                     }
                     getData(finalData);
                 },
@@ -9631,7 +9634,8 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
     }, [searchRef, hash, hashChange, getData]);
     var handleSearchSubmit = React.useCallback(function (data) {
-        var _a;
+        var _a, _b;
+        (_a = tableRef.current) === null || _a === void 0 ? void 0 : _a.scrollToTop();
         if (isFirstSearchSubmit) {
             setIsFirstSearchSubmit(false);
             if (!hash) {
@@ -9639,7 +9643,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             }
         }
         else {
-            (_a = searchRef.current) === null || _a === void 0 ? void 0 : _a.setValue('page', 1);
+            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', 1);
             var finalData = __assign$1(__assign$1({}, data), { page: 1 });
             if (hash) {
                 hashChange(finalData);

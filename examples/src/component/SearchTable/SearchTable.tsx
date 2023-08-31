@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   FormToggleButtonGroup,
   FormText,
@@ -19,7 +19,6 @@ import { useNavigate } from 'react-router-dom';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
 import { TableData } from '#ccomp';
 import { TTableDataItem } from '../Common/TableData';
-import { TableProps } from '@pdg/react-table';
 
 const SearchTable = () => {
   const navigate = useNavigate();
@@ -70,7 +69,7 @@ const SearchTable = () => {
           <SearchButton
             icon='download'
             onClick={() => {
-              searchTableRef.current?.reload();
+              searchTableRef.current?.reload(1);
             }}
           />
           <SearchButton startIcon='add' variant='contained'>
