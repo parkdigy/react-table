@@ -8922,6 +8922,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     var localBodyDataRef = React.useRef({});
     var updateHeadCheckTimer = React.useRef();
     var fireOnCheckChangeTimer = React.useRef({});
+    var simpleBarRef = React.useRef(null);
     // sortable --------------------------------------------------------------------------------------------------------
     var sensors = core.useSensors(core.useSensor(core.MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
@@ -9063,6 +9064,10 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
             }, 100);
         }
     }, [getCheckedItems, onCheckChange]);
+    var simpleBarScrollToTop = React.useCallback(function () {
+        var _a, _b;
+        (_b = (_a = simpleBarRef.current) === null || _a === void 0 ? void 0 : _a.getScrollElement()) === null || _b === void 0 ? void 0 : _b.scrollTo({ top: 0 });
+    }, []);
     // Effect ----------------------------------------------------------------------------------------------------------
     React.useEffect(function () {
         return function () {
@@ -9161,6 +9166,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                     setSortableItems(makeSortableItems(lastItems_1));
                 },
                 getCheckedItems: getCheckedItems,
+                scrollToTop: simpleBarScrollToTop,
             };
             if (typeof ref === 'function') {
                 ref(commands);
@@ -9169,7 +9175,18 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging, getCheckedItems]);
+    }, [
+        ref,
+        columns,
+        items,
+        paging,
+        makeSortableItems,
+        setColumns,
+        setItems,
+        setPaging,
+        getCheckedItems,
+        simpleBarScrollToTop,
+    ]);
     // Event Handler ---------------------------------------------------------------------------------------------------
     var handleDragEnd = React.useCallback(function (event) {
         var active = event.active, over = event.over;
@@ -9216,6 +9233,10 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     var handleBodyCheckChange = React.useCallback(function (item, column) {
         updateHeadCheck(column);
     }, [updateHeadCheck]);
+    var handlePageChange = React.useCallback(function (page) {
+        simpleBarScrollToTop();
+        onPageChange && onPageChange(page);
+    }, [onPageChange, simpleBarScrollToTop]);
     // TableContext Function ---------------------------------------------------------------------------------------------
     var TableContextSetMenuOpen = React.useCallback(function (newMenuOpen, newOpenMenuId) {
         if (newMenuOpen) {
@@ -9327,7 +9348,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
     // Render ----------------------------------------------------------------------------------------------------------
     return finalColumns ? (React__default["default"].createElement(TableContextProvider, { value: tableContextValue },
         React__default["default"].createElement(material.Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className, !!stickyHeader && 'sticky-header', !!fullHeight && 'full-height', !!showOddColor && 'odd-color', !!showEvenColor && 'even-color', !!sortable$1 && 'sortable'), variant: 'outlined', style: style, sx: sx },
-            React__default["default"].createElement(SimpleBar, { style: simpleBarStyle },
+            React__default["default"].createElement(SimpleBar, { ref: simpleBarRef, style: simpleBarStyle },
                 React__default["default"].createElement(core.DndContext, { sensors: sensors, collisionDetection: core.closestCenter, onDragEnd: handleDragEnd },
                     React__default["default"].createElement(material.Table, { stickyHeader: stickyHeader, sx: tableSx, style: tableStyle },
                         React__default["default"].createElement(material.TableHead, null,
@@ -9340,7 +9361,7 @@ var Table = React__default["default"].forwardRef(function (_a, ref) {
                         !isNoData && footer && (React__default["default"].createElement(material.TableFooter, null,
                             React__default["default"].createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React__default["default"].createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
             paging && paging.total > 0 && (React__default["default"].createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
-                React__default["default"].createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: onPageChange })))))) : null;
+                React__default["default"].createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })))))) : null;
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React__default["default"].forwardRef(function (_a, ref) {

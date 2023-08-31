@@ -1,20 +1,53 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Table as _Table, TableCommands } from '../../../../src';
 import { TableData } from '#ccomp';
 import { Button, Grid, Stack } from '@mui/material';
 import { TTableDataItem } from '../Common/TableData';
+import { TableProps } from '../../../../src';
 
 const Table: React.FC = () => {
+  // Ref ---------------------------------------------------------------------------------------------------------------
+
   const tableRef = useRef<TableCommands<TTableDataItem>>(null);
 
+  // State -------------------------------------------------------------------------------------------------------------
+
   const [sorting, setSorting] = useState(false);
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState<TTableDataItem[]>();
+  const [paging, setPaging] = useState<TableProps['paging']>();
+
+  // Effect ------------------------------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    const total = TableData.items.length;
+    const perPage = 10;
+    const lastPage = Math.ceil(total / perPage);
+    const startIndex = (page - 1) * perPage;
+    const lastIndex = Math.min(startIndex + (perPage - 1), total - 1);
+
+    const newItems: TTableDataItem[] = [];
+    for (let i = startIndex; i <= lastIndex; i += 1) {
+      newItems.push(TableData.items[i]);
+    }
+
+    setItems(newItems);
+    setPaging({
+      current_page: page,
+      per_page: perPage,
+      last_page: lastPage,
+      total,
+    });
+  }, [page]);
+
+  // Event Handler -----------------------------------------------------------------------------------------------------
 
   const handleClick = useCallback((item: TTableDataItem) => {
     ll(item);
   }, []);
 
   const handlePageChange = useCallback((page: number) => {
-    ll('handlePageChange', page);
+    setPage(page);
   }, []);
 
   const handleSortChange = useCallback((items: TTableDataItem[]) => {
@@ -30,7 +63,7 @@ const Table: React.FC = () => {
     ll(tableRef.current?.getCheckedItems('check'));
   }, []);
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // Render ------------------------------------------------------------------------------------------------------------
 
   return (
     <Stack style={{ height: '100%' }} spacing={1}>
@@ -49,23 +82,25 @@ const Table: React.FC = () => {
           </Grid>
         </Grid>
       )}
-      <_Table<TTableDataItem>
-        ref={tableRef}
-        defaultAlign='center'
-        defaultEllipsis
-        stickyHeader
-        fullHeight
-        columns={TableData.columns}
-        items={TableData.items}
-        paging={TableData.paging}
-        showEvenColor
-        footer
-        sortable
-        onClick={handleClick}
-        onPageChange={handlePageChange}
-        onSortChange={handleSortChange}
-        onCheckChange={handleCheckChange}
-      />
+      {items && paging && (
+        <_Table<TTableDataItem>
+          ref={tableRef}
+          defaultAlign='center'
+          defaultEllipsis
+          stickyHeader
+          fullHeight
+          columns={TableData.columns}
+          items={items}
+          paging={paging}
+          showEvenColor
+          footer
+          sortable
+          onClick={handleClick}
+          onPageChange={handlePageChange}
+          onSortChange={handleSortChange}
+          onCheckChange={handleCheckChange}
+        />
+      )}
     </Stack>
   );
 };

@@ -106,6 +106,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     const localBodyDataRef = useRef<TLocalBodyData>({});
     const updateHeadCheckTimer = useRef<NodeJS.Timer>();
     const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timer | undefined>>({});
+    const simpleBarRef = useRef<SimpleBar>(null);
 
     // sortable --------------------------------------------------------------------------------------------------------
 
@@ -279,6 +280,10 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [getCheckedItems, onCheckChange]
     );
 
+    const simpleBarScrollToTop = useCallback(() => {
+      simpleBarRef.current?.getScrollElement()?.scrollTo({ top: 0 });
+    }, []);
+
     // Effect ----------------------------------------------------------------------------------------------------------
 
     useEffect(() => {
@@ -386,6 +391,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
             setSortableItems(makeSortableItems(lastItems));
           },
           getCheckedItems,
+          scrollToTop: simpleBarScrollToTop,
         };
 
         if (typeof ref === 'function') {
@@ -394,7 +400,18 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [ref, columns, items, paging, makeSortableItems, setColumns, setItems, setPaging, getCheckedItems]);
+    }, [
+      ref,
+      columns,
+      items,
+      paging,
+      makeSortableItems,
+      setColumns,
+      setItems,
+      setPaging,
+      getCheckedItems,
+      simpleBarScrollToTop,
+    ]);
 
     // Event Handler ---------------------------------------------------------------------------------------------------
 
@@ -449,6 +466,14 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         updateHeadCheck(column);
       },
       [updateHeadCheck]
+    );
+
+    const handlePageChange = useCallback(
+      (page: number) => {
+        simpleBarScrollToTop();
+        onPageChange && onPageChange(page);
+      },
+      [onPageChange, simpleBarScrollToTop]
     );
 
     // TableContext Function ---------------------------------------------------------------------------------------------
@@ -614,7 +639,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           style={style}
           sx={sx}
         >
-          <SimpleBar style={simpleBarStyle}>
+          <SimpleBar ref={simpleBarRef} style={simpleBarStyle}>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
                 <TableHead>
@@ -693,7 +718,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
                 sx={pagination?.sx}
                 paging={paging}
                 align={pagingAlign}
-                onChange={onPageChange}
+                onChange={handlePageChange}
               />
             </Stack>
           )}

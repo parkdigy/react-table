@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FormToggleButtonGroup,
   FormText,
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
 import { TableData } from '#ccomp';
 import { TTableDataItem } from '../Common/TableData';
+import { TableProps } from '@pdg/react-table';
 
 const SearchTable = () => {
   const navigate = useNavigate();
@@ -90,9 +91,27 @@ const SearchTable = () => {
   //--------------------------------------------------------------------------------------------------------------------
 
   const handleGetData = useCallback((params: FormValueMap) => {
-    ll('handleGetData', params);
     return new Promise<SearchTableData<TTableDataItem>>((resolve) => {
-      resolve({ items: TableData.items, paging: TableData.paging });
+      const page = params.page as number;
+      const total = TableData.items.length;
+      const perPage = 10;
+      const lastPage = Math.ceil(total / perPage);
+      const startIndex = (page - 1) * perPage;
+      const lastIndex = Math.min(startIndex + (perPage - 1), total - 1);
+
+      const items: TTableDataItem[] = [];
+      for (let i = startIndex; i <= lastIndex; i += 1) {
+        items.push(TableData.items[i]);
+      }
+
+      const paging = {
+        current_page: page,
+        per_page: perPage,
+        last_page: lastPage,
+        total,
+      };
+
+      resolve({ items, paging });
     });
   }, []);
 

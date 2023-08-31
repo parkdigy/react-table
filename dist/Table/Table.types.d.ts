@@ -95,4 +95,5 @@ export interface TableCommands<T = TableItem> {
     setItemsPaging(items: TableProps<T>['items'], paging: TableProps<T>['paging']): void;
     resetSort(): void;
     getCheckedItems(columnId: string): T[];
+    scrollToTop(): void;
 }
