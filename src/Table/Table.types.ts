@@ -11,6 +11,15 @@ export interface TableItem {
 
 //--------------------------------------------------------------------------------------------------------------------
 
+export interface TableHeaderColumn {
+  colSpan?: number;
+  rowSpan?: number;
+  label?: ReactNode;
+  align?: TableCellProps['align'];
+}
+
+type TableHeaderColumnValue = TableHeaderColumn | false | undefined | null;
+
 export interface TableColumn<T = TableItem> {
   id: string;
   type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'buttons' | 'check';
@@ -61,6 +70,7 @@ export interface TableColumn<T = TableItem> {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableProps<T = TableItem> extends CommonSxProps {
+  headerRows?: TableHeaderColumnValue[] | TableHeaderColumnValue[][];
   columns?: (TableColumn<T> | false | undefined | null)[];
   defaultAlign?: TableCellProps['align'];
   defaultEllipsis?: boolean;

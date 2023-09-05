@@ -89,6 +89,7 @@ const Table: React.FC = () => {
           defaultEllipsis
           stickyHeader
           fullHeight
+          headerRows={[{ colSpan: 2 }, { colSpan: 3, label: '카테고리/제목/조회수', align: 'center' }]}
           columns={TableData.columns}
           items={items}
           paging={paging}
