@@ -79,7 +79,7 @@ const SearchTable = () => {
       </>
     ),
   });
-  const [table] = useState({
+  const [table] = useState<SearchTableProps<TTableDataItem>['table']>({
     columns: TableData.columns,
     stickyHeader: true,
     onClick: (item: any) => {

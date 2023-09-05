@@ -9,6 +9,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { SourceMapDevToolPlugin } = require('webpack');
 
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -104,6 +105,9 @@ const options = {
       : {},
   },
   plugins: [
+    new SourceMapDevToolPlugin({
+      filename: '[file].map',
+    }),
     new WebpackShellPluginNext({
       onBuildStart: {
         scripts: preBuildScripts,
@@ -161,6 +165,14 @@ const options = {
             },
           },
         ],
+      },
+      {
+        test: /\.m?js$/,
+        enforce: 'pre',
+        resolve: {
+          fullySpecified: false,
+        },
+        use: ['source-map-loader'],
       },
       {
         test: /\.html$/,

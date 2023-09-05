@@ -12,6 +12,7 @@ import {
   Icon,
 } from '@mui/material';
 import SimpleBar from 'simplebar-react';
+import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
@@ -104,9 +105,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const localHeaderDataRef = useRef<TLocalHeaderData>({});
     const localBodyDataRef = useRef<TLocalBodyData>({});
-    const updateHeadCheckTimer = useRef<NodeJS.Timer>();
-    const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timer | undefined>>({});
-    const simpleBarRef = useRef<SimpleBar>(null);
+    const updateHeadCheckTimer = useRef<NodeJS.Timeout>();
+    const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
+    const simpleBarRef = useRef<SimpleBarCore>(null);
 
     // sortable --------------------------------------------------------------------------------------------------------
 
