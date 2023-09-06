@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react';
 import { TableTopHeadProps as Props, TableTopHeadDefaultProps, TableTopHeadRowColumnValue } from './TableTopHead.types';
 import { styled, TableCell, TableHead, TableRow, useTheme } from '@mui/material';
 import { useResizeDetector } from 'react-resize-detector';
+import { TableTopHeadCaptionRow } from './TableTopHead.style';
 
 const BottomLine = styled('div')`
   height: 1px;
@@ -11,7 +12,7 @@ const BottomLine = styled('div')`
   bottom: 0;
 `;
 
-const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) => {
+const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightChange }) => {
   // Use ---------------------------------------------------------------------------------------------------------------
 
   const theme = useTheme();
@@ -19,6 +20,7 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) =
   // Ref ---------------------------------------------------------------------------------------------------------------
 
   const headRef = useRef<HTMLTableSectionElement>(null);
+  const captionRef = useRef<HTMLTableRowElement>(null);
   const row1Ref = useRef<HTMLTableRowElement>(null);
   const row2Ref = useRef<HTMLTableRowElement>(null);
   const row3Ref = useRef<HTMLTableRowElement>(null);
@@ -26,6 +28,11 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) =
   // ResizeDetector ----------------------------------------------------------------------------------------------------
 
   const { height: headHeight } = useResizeDetector({ targetRef: headRef, handleWidth: false, handleHeight: true });
+  const { height: captionHeight } = useResizeDetector({
+    targetRef: captionRef,
+    handleWidth: false,
+    handleHeight: true,
+  });
   const { height: row1Height } = useResizeDetector({ targetRef: row1Ref, handleWidth: false, handleHeight: true });
   const { height: row2Height } = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true });
   const { height: row3Height } = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true });
@@ -36,6 +43,16 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) =
   }, [headHeight]);
 
   // Function ----------------------------------------------------------------------------------------------------------
+
+  const captionRow = useMemo(
+    () =>
+      !!caption && (
+        <TableTopHeadCaptionRow ref={captionRef} className='TableTopHeadCaptionRow'>
+          <TableCell colSpan={columnLength}>{caption}</TableCell>
+        </TableTopHeadCaptionRow>
+      ),
+    [caption, columnLength]
+  );
 
   const makeRowCells = useCallback(
     (row: TableTopHeadRowColumnValue[], top?: number) => {
@@ -57,7 +74,7 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) =
               </TableCell>
             )
         )
-        .filter((cell) => !!cell) as React.JSX.Element[];
+        .filter((cell) => !!cell) as ReactNode[];
 
       if (cells.length < columnLength) {
         cells.push(
@@ -71,43 +88,53 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, onHeightChange }) =
 
   // Render ------------------------------------------------------------------------------------------------------------
 
-  if (!rows || rows.length === 0) return null;
+  if ((!rows || rows.length === 0) && caption === null) return null;
 
-  if (Array.isArray(rows[0])) {
-    return (
-      <TableHead className='TableTopHead' ref={headRef}>
-        {rows.map((row, idx) => {
-          let ref: React.Ref<HTMLTableRowElement> | undefined = undefined;
-          let top: number | undefined = undefined;
+  if (rows) {
+    if (Array.isArray(rows[0])) {
+      return (
+        <TableHead className='TableTopHead' ref={headRef}>
+          {captionRow}
+          {rows.map((row, idx) => {
+            let ref: React.Ref<HTMLTableRowElement> | undefined = undefined;
+            let top: number | undefined = undefined;
 
-          switch (idx) {
-            case 0:
-              ref = row1Ref;
-              top = 0;
-              break;
-            case 1:
-              ref = row2Ref;
-              top = row1Height;
-              break;
-            case 2:
-              ref = row3Ref;
-              top = row2Height;
-              break;
-            case 3:
-              top = row3Height;
-          }
-          return (
-            <TableRow key={idx} ref={ref}>
-              {makeRowCells(row as TableTopHeadRowColumnValue[], top)}
-            </TableRow>
-          );
-        })}
-      </TableHead>
-    );
+            switch (idx) {
+              case 0:
+                ref = row1Ref;
+                top = captionHeight;
+                break;
+              case 1:
+                ref = row2Ref;
+                top = (captionHeight || 0) + (row1Height || 0);
+                break;
+              case 2:
+                ref = row3Ref;
+                top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
+                break;
+              case 3:
+                top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+            }
+            return (
+              <TableRow key={idx} ref={ref} className='TableTopHeadRow'>
+                {makeRowCells(row as TableTopHeadRowColumnValue[], top)}
+              </TableRow>
+            );
+          })}
+        </TableHead>
+      );
+    } else {
+      return (
+        <TableHead className='TableTopHead' ref={headRef}>
+          {captionRow}
+          <TableRow className='TableTopHeadRow'>{makeRowCells(rows as TableTopHeadRowColumnValue[])}</TableRow>
+        </TableHead>
+      );
+    }
   } else {
     return (
       <TableHead className='TableTopHead' ref={headRef}>
-        <TableRow>{makeRowCells(rows as TableTopHeadRowColumnValue[])}</TableRow>
+        {captionRow}
       </TableHead>
     );
   }

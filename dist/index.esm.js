@@ -3252,18 +3252,33 @@ var native = {
   }
 
   return unsafeStringify(rnds);
-}var TableTopHeadDefaultProps = {};var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
+}var TableTopHeadDefaultProps = {};var TableTopHeadCaptionRow = styled(TableRow)(function (_a) {
+    var theme = _a.theme;
+    return ({
+        '> th': {
+            backgroundColor: theme.palette.grey.A100,
+            textAlign: 'center',
+            fontWeight: 700,
+        },
+    });
+});var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 var TableTopHead = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
-    var columnLength = _a.columnLength, rows = _a.rows, onHeightChange = _a.onHeightChange;
+    var columnLength = _a.columnLength, rows = _a.rows, caption = _a.caption, onHeightChange = _a.onHeightChange;
     var theme = useTheme();
     // Ref ---------------------------------------------------------------------------------------------------------------
     var headRef = useRef(null);
+    var captionRef = useRef(null);
     var row1Ref = useRef(null);
     var row2Ref = useRef(null);
     var row3Ref = useRef(null);
     // ResizeDetector ----------------------------------------------------------------------------------------------------
     var headHeight = useResizeDetector({ targetRef: headRef, handleWidth: false, handleHeight: true }).height;
+    var captionHeight = useResizeDetector({
+        targetRef: captionRef,
+        handleWidth: false,
+        handleHeight: true,
+    }).height;
     var row1Height = useResizeDetector({ targetRef: row1Ref, handleWidth: false, handleHeight: true }).height;
     var row2Height = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true }).height;
     var row3Height = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true }).height;
@@ -3272,6 +3287,10 @@ var TableTopHead = function (_a) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headHeight]);
     // Function ----------------------------------------------------------------------------------------------------------
+    var captionRow = useMemo(function () {
+        return !!caption && (React__default.createElement(TableTopHeadCaptionRow, { ref: captionRef, className: 'TableTopHeadCaptionRow' },
+            React__default.createElement(TableCell, { colSpan: columnLength }, caption)));
+    }, [caption, columnLength]);
     var makeRowCells = useCallback(function (row, top) {
         var cells = row
             .map(function (info, idx) {
@@ -3289,34 +3308,42 @@ var TableTopHead = function (_a) {
         return cells;
     }, [columnLength, theme.palette.divider]);
     // Render ------------------------------------------------------------------------------------------------------------
-    if (!rows || rows.length === 0)
+    if ((!rows || rows.length === 0) && caption === null)
         return null;
-    if (Array.isArray(rows[0])) {
-        return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef }, rows.map(function (row, idx) {
-            var ref = undefined;
-            var top = undefined;
-            switch (idx) {
-                case 0:
-                    ref = row1Ref;
-                    top = 0;
-                    break;
-                case 1:
-                    ref = row2Ref;
-                    top = row1Height;
-                    break;
-                case 2:
-                    ref = row3Ref;
-                    top = row2Height;
-                    break;
-                case 3:
-                    top = row3Height;
-            }
-            return (React__default.createElement(TableRow, { key: idx, ref: ref }, makeRowCells(row, top)));
-        })));
+    if (rows) {
+        if (Array.isArray(rows[0])) {
+            return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef },
+                captionRow,
+                rows.map(function (row, idx) {
+                    var ref = undefined;
+                    var top = undefined;
+                    switch (idx) {
+                        case 0:
+                            ref = row1Ref;
+                            top = captionHeight;
+                            break;
+                        case 1:
+                            ref = row2Ref;
+                            top = (captionHeight || 0) + (row1Height || 0);
+                            break;
+                        case 2:
+                            ref = row3Ref;
+                            top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
+                            break;
+                        case 3:
+                            top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+                    }
+                    return (React__default.createElement(TableRow, { key: idx, ref: ref, className: 'TableTopHeadRow' }, makeRowCells(row, top)));
+                })));
+        }
+        else {
+            return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef },
+                captionRow,
+                React__default.createElement(TableRow, { className: 'TableTopHeadRow' }, makeRowCells(rows))));
+        }
     }
     else {
-        return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef },
-            React__default.createElement(TableRow, null, makeRowCells(rows))));
+        return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef }, captionRow));
     }
 };
 TableTopHead.displayName = 'TableTopHead';
@@ -3326,7 +3353,7 @@ var templateObject_1$1;function columnFilter(v) {
 }
 var Table = React__default.forwardRef(function (_a, ref) {
     // Ref ---------------------------------------------------------------------------------------------------------------
-    var topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
+    var caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
     // ---------------------------------------------------------------------------------------------------------------
     className = _a.className, initStyle = _a.style, sx = _a.sx;
     var localHeaderDataRef = useRef({});
@@ -3758,8 +3785,8 @@ var Table = React__default.forwardRef(function (_a, ref) {
         return style;
     }, [fullHeight]);
     var tableTopHead = useMemo(function () {
-        return finalColumns && (React__default.createElement(TableTopHead, { columnLength: finalColumns.length, rows: topHeadRows, onHeightChange: setTopHeadHeight }));
-    }, [finalColumns, topHeadRows]);
+        return finalColumns && (React__default.createElement(TableTopHead, { columnLength: finalColumns.length, caption: caption, rows: topHeadRows, onHeightChange: setTopHeadHeight }));
+    }, [caption, finalColumns, topHeadRows]);
     var tableHead = useMemo(function () {
         return finalColumns && (React__default.createElement(TableHead, null,
             React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: stickyHeader ? topHeadHeight : undefined, onCheckChange: handleHeadCheckChange })); }))));

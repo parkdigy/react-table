@@ -13,6 +13,7 @@ export type TableTopHeadRowColumnValue = TableTopHeadRowColumn | false | undefin
 export interface TableTopHeadProps {
   columnLength: number;
   rows?: TableTopHeadRowColumnValue[] | TableTopHeadRowColumnValue[][];
+  caption?: ReactNode;
   onHeightChange?(height: number): void;
 }
 

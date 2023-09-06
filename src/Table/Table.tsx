@@ -72,6 +72,7 @@ interface WithForwardRefType<T = TableItem> extends React.FC<TableProps<T>> {
 const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
   (
     {
+      caption,
       topHeadRows,
       columns: initColumns,
       items: initItems,
@@ -627,9 +628,14 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     const tableTopHead = useMemo(
       () =>
         finalColumns && (
-          <TableTopHead columnLength={finalColumns.length} rows={topHeadRows} onHeightChange={setTopHeadHeight} />
+          <TableTopHead
+            columnLength={finalColumns.length}
+            caption={caption}
+            rows={topHeadRows}
+            onHeightChange={setTopHeadHeight}
+          />
         ),
-      [finalColumns, topHeadRows]
+      [caption, finalColumns, topHeadRows]
     );
 
     const tableHead = useMemo(

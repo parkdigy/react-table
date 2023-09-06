@@ -62,6 +62,7 @@ export interface TableColumn<T = TableItem> {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableProps<T = TableItem> extends CommonSxProps {
+  caption?: ReactNode;
   topHeadRows?: TableTopHeadProps['rows'];
   columns?: (TableColumn<T> | false | undefined | null)[];
   defaultAlign?: TableCellProps['align'];
