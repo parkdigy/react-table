@@ -3037,55 +3037,7 @@ var TableBodyRow = function (_a) {
     return (React__default.createElement(StyledBodyRow, __assign$3({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React__default.createElement(TableBodyCell, { key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
 };
 TableBodyRow.displayName = 'TableBodyRow';
-TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = function (_a) {
-    // Use ---------------------------------------------------------------------------------------------------------------
-    var column = _a.column, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
-    var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
-    // State -------------------------------------------------------------------------------------------------------------
-    var _c = useState(false), checked = _c[0], setChecked = _c[1];
-    var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
-    // Effect ------------------------------------------------------------------------------------------------------------
-    useEffect(function () {
-        if (column.type === 'check') {
-            setHeadColumnChecked(column, checked);
-        }
-    }, [column, checked, setHeadColumnChecked]);
-    useEffect(function () {
-        setHeadColumnCommands(column, {
-            setChecked: function (checked) {
-                if (column.type === 'check') {
-                    setChecked(checked);
-                }
-            },
-            setCheckDisabled: function (checkDisabled) {
-                if (column.type === 'check') {
-                    setCheckDisabled(checkDisabled);
-                }
-            },
-        });
-    }, [setHeadColumnCommands, column]);
-    // Memo --------------------------------------------------------------------------------------------------------------
-    var style = useMemo(function () { return (top !== undefined ? { top: top } : undefined); }, [top]);
-    var data = useMemo(function () {
-        var _a, _b;
-        if (column.type === 'check') {
-            return (React__default.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
-                    setChecked(newChecked);
-                    onCheckChange && onCheckChange(column, newChecked);
-                } }));
-        }
-        else {
-            if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
-                return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
-            }
-            else {
-                return column.label;
-            }
-        }
-    }, [checkDisabled, checked, column, onCheckChange]);
-    // Render ------------------------------------------------------------------------------------------------------------
-    return (React__default.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: style, column: column, defaultAlign: defaultAlign }, data));
-};var TableFooterCell = function (_a) {
+TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
     var data = useMemo(function () {
         var _a, _b, _c;
@@ -3261,19 +3213,65 @@ var native = {
             fontWeight: 700,
         },
     });
-});var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
+});var TableHeadCell = function (_a) {
+    // Use ---------------------------------------------------------------------------------------------------------------
+    var column = _a.column, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
+    var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
+    // State -------------------------------------------------------------------------------------------------------------
+    var _c = useState(false), checked = _c[0], setChecked = _c[1];
+    var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
+    // Effect ------------------------------------------------------------------------------------------------------------
+    useEffect(function () {
+        if (column.type === 'check') {
+            setHeadColumnChecked(column, checked);
+        }
+    }, [column, checked, setHeadColumnChecked]);
+    useEffect(function () {
+        setHeadColumnCommands(column, {
+            setChecked: function (checked) {
+                if (column.type === 'check') {
+                    setChecked(checked);
+                }
+            },
+            setCheckDisabled: function (checkDisabled) {
+                if (column.type === 'check') {
+                    setCheckDisabled(checkDisabled);
+                }
+            },
+        });
+    }, [setHeadColumnCommands, column]);
+    // Memo --------------------------------------------------------------------------------------------------------------
+    var style = useMemo(function () { return (top !== undefined ? { top: top } : undefined); }, [top]);
+    var data = useMemo(function () {
+        var _a, _b;
+        if (column.type === 'check') {
+            return (React__default.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
+                    setChecked(newChecked);
+                    onCheckChange && onCheckChange(column, newChecked);
+                } }));
+        }
+        else {
+            if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
+                return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+            }
+            else {
+                return column.label;
+            }
+        }
+    }, [checkDisabled, checked, column, onCheckChange]);
+    // Render ------------------------------------------------------------------------------------------------------------
+    return (React__default.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: style, column: column, defaultAlign: defaultAlign }, data));
+};var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 var TableTopHead = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
-    var columnLength = _a.columnLength, rows = _a.rows, caption = _a.caption, onHeightChange = _a.onHeightChange;
+    var columns = _a.columns, rows = _a.rows, caption = _a.caption, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
     var theme = useTheme();
     // Ref ---------------------------------------------------------------------------------------------------------------
-    var headRef = useRef(null);
     var captionRef = useRef(null);
     var row1Ref = useRef(null);
     var row2Ref = useRef(null);
     var row3Ref = useRef(null);
     // ResizeDetector ----------------------------------------------------------------------------------------------------
-    var headHeight = useResizeDetector({ targetRef: headRef, handleWidth: false, handleHeight: true }).height;
     var captionHeight = useResizeDetector({
         targetRef: captionRef,
         handleWidth: false,
@@ -3282,15 +3280,11 @@ var TableTopHead = function (_a) {
     var row1Height = useResizeDetector({ targetRef: row1Ref, handleWidth: false, handleHeight: true }).height;
     var row2Height = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true }).height;
     var row3Height = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true }).height;
-    useEffect(function () {
-        onHeightChange && onHeightChange(headHeight || 0);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headHeight]);
     // Function ----------------------------------------------------------------------------------------------------------
     var captionRow = useMemo(function () {
         return !!caption && (React__default.createElement(TableTopHeadCaptionRow, { ref: captionRef, className: 'TableTopHeadCaptionRow' },
-            React__default.createElement(TableCell, { colSpan: columnLength }, caption)));
-    }, [caption, columnLength]);
+            React__default.createElement(TableCell, { colSpan: columns.length }, caption)));
+    }, [caption, columns]);
     var makeRowCells = useCallback(function (row, top) {
         var cells = row
             .map(function (info, idx) {
@@ -3302,17 +3296,21 @@ var TableTopHead = function (_a) {
                 info.label != null && React__default.createElement(BottomLine, { style: { backgroundColor: theme.palette.divider } })));
         })
             .filter(function (cell) { return !!cell; });
-        if (cells.length < columnLength) {
-            cells.push(React__default.createElement(TableCell, { key: columnLength, colSpan: columnLength - cells.length, style: { top: top, borderBottom: 0 } }));
+        if (cells.length < columns.length) {
+            cells.push(React__default.createElement(TableCell, { key: columns.length, colSpan: columns.length - cells.length, style: { top: top, borderBottom: 0 } }));
         }
         return cells;
-    }, [columnLength, theme.palette.divider]);
+    }, [columns, theme.palette.divider]);
+    var columnRow = useMemo(function () {
+        var top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+        return (React__default.createElement(TableRow, null, columns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
+    }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
     // Render ------------------------------------------------------------------------------------------------------------
     if ((!rows || rows.length === 0) && caption === null)
         return null;
     if (rows) {
         if (Array.isArray(rows[0])) {
-            return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef },
+            return (React__default.createElement(TableHead, { className: 'TableHead' },
                 captionRow,
                 rows.map(function (row, idx) {
                     var ref = undefined;
@@ -3333,17 +3331,18 @@ var TableTopHead = function (_a) {
                         case 3:
                             top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
                     }
-                    return (React__default.createElement(TableRow, { key: idx, ref: ref, className: 'TableTopHeadRow' }, makeRowCells(row, top)));
+                    return (React__default.createElement(TableRow, { key: idx, ref: ref, className: 'TableHeadRow' }, makeRowCells(row, top)));
                 })));
         }
         else {
-            return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef },
+            return (React__default.createElement(TableHead, { className: 'TableHead' },
                 captionRow,
-                React__default.createElement(TableRow, { className: 'TableTopHeadRow' }, makeRowCells(rows, captionHeight))));
+                React__default.createElement(TableRow, { ref: row1Ref, className: 'TableHeadRow' }, makeRowCells(rows, captionHeight)),
+                columnRow));
         }
     }
     else {
-        return (React__default.createElement(TableHead, { className: 'TableTopHead', ref: headRef }, captionRow));
+        return React__default.createElement(TableHead, { className: 'TableHead' }, captionRow);
     }
 };
 TableTopHead.displayName = 'TableTopHead';
@@ -3379,9 +3378,8 @@ var Table = React__default.forwardRef(function (_a, ref) {
     // State -------------------------------------------------------------------------------------------------------------
     var _b = useState(false), menuOpen = _b[0], setMenuOpen = _b[1];
     var _c = useState(undefined), openMenuId = _c[0], setOpenMenuId = _c[1];
-    var _d = useState(0), topHeadHeight = _d[0], setTopHeadHeight = _d[1];
     // State - containerHeight -------------------------------------------------------------------------------------------
-    var _e = useState(), containerHeight = _e[0], setContainerHeight = _e[1];
+    var _d = useState(), containerHeight = _d[0], setContainerHeight = _d[1];
     var containerHeightDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -3395,7 +3393,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State - footerHeight --------------------------------------------------------------------------------------------
-    var _f = useState(), pagingHeight = _f[0], setPagingHeight = _f[1];
+    var _e = useState(), pagingHeight = _e[0], setPagingHeight = _e[1];
     var pagingHeightResizeDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -3409,11 +3407,11 @@ var Table = React__default.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
-    var _g = useAutoUpdateLayoutState(initColumns), columns = _g[0], setColumns = _g[1];
-    var _h = useState(), finalColumns = _h[0], setFinalColumns = _h[1];
-    var _j = useAutoUpdateLayoutState(initItems), items = _j[0], setItems = _j[1];
-    var _k = useState(), sortableItems = _k[0], setSortableItems = _k[1];
-    var _l = useAutoUpdateLayoutState(initPaging), paging = _l[0], setPaging = _l[1];
+    var _f = useAutoUpdateLayoutState(initColumns), columns = _f[0], setColumns = _f[1];
+    var _g = useState(), finalColumns = _g[0], setFinalColumns = _g[1];
+    var _h = useAutoUpdateLayoutState(initItems), items = _h[0], setItems = _h[1];
+    var _j = useState(), sortableItems = _j[0], setSortableItems = _j[1];
+    var _k = useAutoUpdateLayoutState(initPaging), paging = _k[0], setPaging = _k[1];
     // Memo --------------------------------------------------------------------------------------------------------------
     var tableSx = useMemo(function () {
         var sx = {
@@ -3785,12 +3783,8 @@ var Table = React__default.forwardRef(function (_a, ref) {
         return style;
     }, [fullHeight]);
     var tableTopHead = useMemo(function () {
-        return finalColumns && (React__default.createElement(TableTopHead, { columnLength: finalColumns.length, caption: caption, rows: topHeadRows, onHeightChange: setTopHeadHeight }));
-    }, [caption, finalColumns, topHeadRows]);
-    var tableHead = useMemo(function () {
-        return finalColumns && (React__default.createElement(TableHead, null,
-            React__default.createElement(TableRow, null, finalColumns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: stickyHeader ? topHeadHeight : undefined, onCheckChange: handleHeadCheckChange })); }))));
-    }, [defaultAlign, finalColumns, handleHeadCheckChange, stickyHeader, topHeadHeight]);
+        return finalColumns && (React__default.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
+    }, [caption, defaultAlign, finalColumns, handleHeadCheckChange, topHeadRows]);
     var tableBody = useMemo(function () {
         return finalColumns && (React__default.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React__default.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React__default.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React__default.createElement(StyledBodyRow$1, null,
             React__default.createElement(TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React__default.createElement(StyledNoDataDiv, null,
@@ -3840,7 +3834,6 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 React__default.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
                     React__default.createElement(Table$1, { stickyHeader: stickyHeader, sx: tableSx, style: tableStyle },
                         tableTopHead,
-                        tableHead,
                         tableBody,
                         tableFooter))),
             tablePaging))) : null;

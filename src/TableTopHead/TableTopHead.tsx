@@ -1,8 +1,9 @@
-import React, { ReactNode, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { ReactNode, useCallback, useMemo, useRef } from 'react';
 import { TableTopHeadProps as Props, TableTopHeadDefaultProps, TableTopHeadRowColumnValue } from './TableTopHead.types';
 import { styled, TableCell, TableHead, TableRow, useTheme } from '@mui/material';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableTopHeadCaptionRow } from './TableTopHead.style';
+import TableHeadCell from '../TableHeadCell';
 
 const BottomLine = styled('div')`
   height: 1px;
@@ -12,14 +13,13 @@ const BottomLine = styled('div')`
   bottom: 0;
 `;
 
-const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightChange }) => {
+const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, onCheckChange }) => {
   // Use ---------------------------------------------------------------------------------------------------------------
 
   const theme = useTheme();
 
   // Ref ---------------------------------------------------------------------------------------------------------------
 
-  const headRef = useRef<HTMLTableSectionElement>(null);
   const captionRef = useRef<HTMLTableRowElement>(null);
   const row1Ref = useRef<HTMLTableRowElement>(null);
   const row2Ref = useRef<HTMLTableRowElement>(null);
@@ -27,7 +27,6 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
 
   // ResizeDetector ----------------------------------------------------------------------------------------------------
 
-  const { height: headHeight } = useResizeDetector({ targetRef: headRef, handleWidth: false, handleHeight: true });
   const { height: captionHeight } = useResizeDetector({
     targetRef: captionRef,
     handleWidth: false,
@@ -37,21 +36,16 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
   const { height: row2Height } = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true });
   const { height: row3Height } = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true });
 
-  useEffect(() => {
-    onHeightChange && onHeightChange(headHeight || 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headHeight]);
-
   // Function ----------------------------------------------------------------------------------------------------------
 
   const captionRow = useMemo(
     () =>
       !!caption && (
         <TableTopHeadCaptionRow ref={captionRef} className='TableTopHeadCaptionRow'>
-          <TableCell colSpan={columnLength}>{caption}</TableCell>
+          <TableCell colSpan={columns.length}>{caption}</TableCell>
         </TableTopHeadCaptionRow>
       ),
-    [caption, columnLength]
+    [caption, columns]
   );
 
   const makeRowCells = useCallback(
@@ -76,15 +70,33 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
         )
         .filter((cell) => !!cell) as ReactNode[];
 
-      if (cells.length < columnLength) {
+      if (cells.length < columns.length) {
         cells.push(
-          <TableCell key={columnLength} colSpan={columnLength - cells.length} style={{ top, borderBottom: 0 }} />
+          <TableCell key={columns.length} colSpan={columns.length - cells.length} style={{ top, borderBottom: 0 }} />
         );
       }
       return cells;
     },
-    [columnLength, theme.palette.divider]
+    [columns, theme.palette.divider]
   );
+
+  const columnRow = useMemo(() => {
+    const top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+
+    return (
+      <TableRow>
+        {columns.map((column, idx) => (
+          <TableHeadCell
+            key={idx}
+            column={column}
+            defaultAlign={defaultAlign}
+            top={top}
+            onCheckChange={onCheckChange}
+          />
+        ))}
+      </TableRow>
+    );
+  }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
 
   // Render ------------------------------------------------------------------------------------------------------------
 
@@ -93,7 +105,7 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
   if (rows) {
     if (Array.isArray(rows[0])) {
       return (
-        <TableHead className='TableTopHead' ref={headRef}>
+        <TableHead className='TableHead'>
           {captionRow}
           {rows.map((row, idx) => {
             let ref: React.Ref<HTMLTableRowElement> | undefined = undefined;
@@ -116,7 +128,7 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
                 top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
             }
             return (
-              <TableRow key={idx} ref={ref} className='TableTopHeadRow'>
+              <TableRow key={idx} ref={ref} className='TableHeadRow'>
                 {makeRowCells(row as TableTopHeadRowColumnValue[], top)}
               </TableRow>
             );
@@ -125,20 +137,17 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
       );
     } else {
       return (
-        <TableHead className='TableTopHead' ref={headRef}>
+        <TableHead className='TableHead'>
           {captionRow}
-          <TableRow className='TableTopHeadRow'>
+          <TableRow ref={row1Ref} className='TableHeadRow'>
             {makeRowCells(rows as TableTopHeadRowColumnValue[], captionHeight)}
           </TableRow>
+          {columnRow}
         </TableHead>
       );
     }
   } else {
-    return (
-      <TableHead className='TableTopHead' ref={headRef}>
-        {captionRow}
-      </TableHead>
-    );
+    return <TableHead className='TableHead'>{captionRow}</TableHead>;
   }
 };
 

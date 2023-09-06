@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { TableCellProps } from '@mui/material';
+import { TableColumn, TableProps } from '../Table/Table.types';
 
 export interface TableTopHeadRowColumn {
   colSpan?: number;
@@ -11,10 +12,11 @@ export interface TableTopHeadRowColumn {
 export type TableTopHeadRowColumnValue = TableTopHeadRowColumn | false | undefined | null;
 
 export interface TableTopHeadProps {
-  columnLength: number;
-  rows?: TableTopHeadRowColumnValue[] | TableTopHeadRowColumnValue[][];
   caption?: ReactNode;
-  onHeightChange?(height: number): void;
+  rows?: TableTopHeadRowColumnValue[] | TableTopHeadRowColumnValue[][];
+  columns: TableColumn[];
+  defaultAlign: TableProps['defaultAlign'];
+  onCheckChange(column: TableColumn, checked: boolean): void;
 }
 
 export const TableTopHeadDefaultProps = {};

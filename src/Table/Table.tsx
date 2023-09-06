@@ -1,23 +1,13 @@
 import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import {
-  Table as MuiTable,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Paper,
-  Stack,
-  TableFooter,
-  Icon,
-} from '@mui/material';
+import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon } from '@mui/material';
 import SimpleBar from 'simplebar-react';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
 import TableBodyRow from '../TableBodyRow';
-import TableHeadCell, { TableHeadCellCommands } from '../TableHeadCell';
+import { TableHeadCellCommands } from '../TableHeadCell';
 import TableFooterCell from '../TableFooterCell';
 import TablePagination from '../TablePagination';
 import { useAutoUpdateLayoutState } from '@pdg/react-hook';
@@ -137,7 +127,6 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
-    const [topHeadHeight, setTopHeadHeight] = useState(0);
 
     // State - containerHeight -------------------------------------------------------------------------------------------
 
@@ -629,33 +618,14 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       () =>
         finalColumns && (
           <TableTopHead
-            columnLength={finalColumns.length}
             caption={caption}
             rows={topHeadRows}
-            onHeightChange={setTopHeadHeight}
+            columns={finalColumns}
+            defaultAlign={defaultAlign}
+            onCheckChange={handleHeadCheckChange}
           />
         ),
-      [caption, finalColumns, topHeadRows]
-    );
-
-    const tableHead = useMemo(
-      () =>
-        finalColumns && (
-          <TableHead>
-            <TableRow>
-              {finalColumns.map((column, idx) => (
-                <TableHeadCell
-                  key={idx}
-                  column={column}
-                  defaultAlign={defaultAlign}
-                  top={stickyHeader ? topHeadHeight : undefined}
-                  onCheckChange={handleHeadCheckChange}
-                />
-              ))}
-            </TableRow>
-          </TableHead>
-        ),
-      [defaultAlign, finalColumns, handleHeadCheckChange, stickyHeader, topHeadHeight]
+      [caption, defaultAlign, finalColumns, handleHeadCheckChange, topHeadRows]
     );
 
     const tableBody = useMemo(
@@ -786,7 +756,6 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
                 {tableTopHead}
-                {tableHead}
                 {tableBody}
                 {tableFooter}
               </MuiTable>
