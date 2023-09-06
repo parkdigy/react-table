@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { TableCellProps, TooltipProps } from '@mui/material';
 import { TablePaginationProps } from '../TablePagination/TablePagination.types';
 import { CommonSxProps } from '../@types';
+import { TableTopHeadProps } from '../TableTopHead';
 export interface TableItem {
     [key: string]: any;
 }
@@ -58,6 +59,7 @@ export interface TableColumn<T = TableItem> {
     onCheckDisabledChange?(item: T, checkDisabled: boolean): void;
 }
 export interface TableProps<T = TableItem> extends CommonSxProps {
+    topHeadRows?: TableTopHeadProps['rows'];
     columns?: (TableColumn<T> | false | undefined | null)[];
     defaultAlign?: TableCellProps['align'];
     defaultEllipsis?: boolean;

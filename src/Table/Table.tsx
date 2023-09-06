@@ -14,7 +14,7 @@ import {
 import SimpleBar from 'simplebar-react';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
-import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem, TableHeaderColumn } from './Table.types';
+import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
 import TableBodyRow from '../TableBodyRow';
 import TableHeadCell, { TableHeadCellCommands } from '../TableHeadCell';
@@ -41,6 +41,7 @@ import 'simplebar-react/dist/simplebar.min.css';
 import TableContextProvider from '../TableContextProvider';
 import { v4 as uuid } from 'uuid';
 import { TableBodyCellCommands } from '../TableBodyCell';
+import TableTopHead from '../TableTopHead';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
@@ -71,7 +72,7 @@ interface WithForwardRefType<T = TableItem> extends React.FC<TableProps<T>> {
 const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
   (
     {
-      headerRows,
+      topHeadRows,
       columns: initColumns,
       items: initItems,
       paging: initPaging,
@@ -135,6 +136,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
+    const [topHeadHeight, setTopHeadHeight] = useState(0);
 
     // State - containerHeight -------------------------------------------------------------------------------------------
 
@@ -622,34 +624,13 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       return style;
     }, [fullHeight]);
 
-    const tableAdditionalHead = useMemo(() => {
-      if (finalColumns && headerRows && headerRows.length > 0) {
-        if (Array.isArray(headerRows[0])) {
-          //
-        } else {
-          return (
-            <TableHead>
-              <TableRow>
-                {headerRows.map(
-                  (info, idx) =>
-                    !!info &&
-                    !Array.isArray(info) && (
-                      <TableCell
-                        key={idx}
-                        colSpan={info.colSpan}
-                        align={info.align}
-                        style={{ visibility: info.label === undefined ? 'hidden' : undefined }}
-                      >
-                        {info.label}
-                      </TableCell>
-                    )
-                )}
-              </TableRow>
-            </TableHead>
-          );
-        }
-      }
-    }, [finalColumns, headerRows]);
+    const tableTopHead = useMemo(
+      () =>
+        finalColumns && (
+          <TableTopHead columnLength={finalColumns.length} rows={topHeadRows} onHeightChange={setTopHeadHeight} />
+        ),
+      [finalColumns, topHeadRows]
+    );
 
     const tableHead = useMemo(
       () =>
@@ -661,13 +642,14 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
                   key={idx}
                   column={column}
                   defaultAlign={defaultAlign}
+                  top={stickyHeader ? topHeadHeight : undefined}
                   onCheckChange={handleHeadCheckChange}
                 />
               ))}
             </TableRow>
           </TableHead>
         ),
-      [defaultAlign, finalColumns, handleHeadCheckChange]
+      [defaultAlign, finalColumns, handleHeadCheckChange, stickyHeader, topHeadHeight]
     );
 
     const tableBody = useMemo(
@@ -797,7 +779,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           <SimpleBar ref={simpleBarRef} style={simpleBarStyle}>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
-                {tableAdditionalHead}
+                {tableTopHead}
                 {tableHead}
                 {tableBody}
                 {tableFooter}

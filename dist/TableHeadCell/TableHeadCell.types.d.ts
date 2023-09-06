@@ -6,5 +6,6 @@ export interface TableHeadCellCommands {
 export interface TableHeadCellProps {
     column: TableColumn;
     defaultAlign?: TableProps['defaultAlign'];
+    top?: number;
     onCheckChange(column: TableColumn, checked: boolean): void;
 }

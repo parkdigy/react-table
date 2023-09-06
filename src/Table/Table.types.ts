@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { TableCellProps, TooltipProps } from '@mui/material';
 import { TablePaginationProps } from '../TablePagination/TablePagination.types';
 import { CommonSxProps } from '../@types';
+import { TableTopHeadProps } from '../TableTopHead';
 
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -10,15 +11,6 @@ export interface TableItem {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-
-export interface TableHeaderColumn {
-  colSpan?: number;
-  rowSpan?: number;
-  label?: ReactNode;
-  align?: TableCellProps['align'];
-}
-
-type TableHeaderColumnValue = TableHeaderColumn | false | undefined | null;
 
 export interface TableColumn<T = TableItem> {
   id: string;
@@ -70,7 +62,7 @@ export interface TableColumn<T = TableItem> {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableProps<T = TableItem> extends CommonSxProps {
-  headerRows?: TableHeaderColumnValue[] | TableHeaderColumnValue[][];
+  topHeadRows?: TableTopHeadProps['rows'];
   columns?: (TableColumn<T> | false | undefined | null)[];
   defaultAlign?: TableCellProps['align'];
   defaultEllipsis?: boolean;

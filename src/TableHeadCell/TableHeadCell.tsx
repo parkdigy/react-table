@@ -4,7 +4,7 @@ import TableCommonCell from '../TableCommonCell';
 import { Checkbox } from '@mui/material';
 import useTableState from '../TableContext/useTableState';
 
-const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onCheckChange }) => {
+const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top, onCheckChange }) => {
   // Use ---------------------------------------------------------------------------------------------------------------
 
   const { setHeadColumnChecked, setHeadColumnCommands } = useTableState();
@@ -39,6 +39,8 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
 
   // Memo --------------------------------------------------------------------------------------------------------------
 
+  const style = useMemo(() => (top !== undefined ? { top } : undefined), [top]);
+
   const data = useMemo(() => {
     if (column.type === 'check') {
       return (
@@ -63,7 +65,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, onC
   // Render ------------------------------------------------------------------------------------------------------------
 
   return (
-    <TableCommonCell type='head' className='TableHeadCell' column={column} defaultAlign={defaultAlign}>
+    <TableCommonCell type='head' className='TableHeadCell' style={style} column={column} defaultAlign={defaultAlign}>
       {data}
     </TableCommonCell>
   );

@@ -1,4 +1,4 @@
-'use strict';var dayjs=require('dayjs'),dayjsIsSameOrAfter=require('dayjs/plugin/isSameOrAfter'),dayjsIsSameOrBefore=require('dayjs/plugin/isSameOrBefore'),dayjsIsBetween=require('dayjs/plugin/isBetween'),React=require('react'),material=require('@mui/material'),reactDom=require('react-dom'),sortable=require('@dnd-kit/sortable'),core=require('@dnd-kit/core'),reactForm=require('@pdg/react-form');function _interopNamespaceDefault(e){var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n.default=e;return Object.freeze(n)}var React__namespace=/*#__PURE__*/_interopNamespaceDefault(React);/******************************************************************************
+'use strict';var React=require('react'),material=require('@mui/material'),reactDom=require('react-dom'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),core=require('@dnd-kit/core'),reactForm=require('@pdg/react-form');function _interopNamespaceDefault(e){var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n.default=e;return Object.freeze(n)}var React__namespace=/*#__PURE__*/_interopNamespaceDefault(React);/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -2577,8 +2577,8 @@ var isDOMElement = function (element) {
         },
     });
 });
-var StyledNoDataDiv = material.styled('div')(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
-var templateObject_1$3;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__*/Object.freeze({
+var StyledNoDataDiv = material.styled('div')(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
+var templateObject_1$4;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__*/Object.freeze({
   Translate: {
     toString(transform) {
       if (!transform) {
@@ -2721,7 +2721,7 @@ function typographyColorToSxColor(color) {
         throw new Error('useFormState should be used within TableContext.Provider');
     }
     return value;
-}var StyledTableCell = material.styled(material.TableCell)(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
+}var StyledTableCell = material.styled(material.TableCell)(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
 var TableCommonCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
@@ -2866,7 +2866,7 @@ var TableCommonCell = function (_a) {
     // Render ----------------------------------------------------------------------------------------------------------
     return (React.createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 };
-var templateObject_1$2;var StyledButtonsBox = material.styled(material.Box)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
+var templateObject_1$3;var StyledButtonsBox = material.styled(material.Box)(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
@@ -3008,7 +3008,7 @@ var TableBodyCell = function (_a) {
     // Render ----------------------------------------------------------------------------------------------------------
     return (React.createElement(TableCommonCell, { type: 'body', className: 'TableBodyCell', column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, !isHidden && data));
 };
-var templateObject_1$1;var StyledBodyRow = material.styled(material.TableRow)(function (_a) {
+var templateObject_1$2;var StyledBodyRow = material.styled(material.TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
         '&.odd-color:nth-of-type(odd):not(:hover)': {
@@ -3039,7 +3039,7 @@ var TableBodyRow = function (_a) {
 TableBodyRow.displayName = 'TableBodyRow';
 TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = function (_a) {
     // Use ---------------------------------------------------------------------------------------------------------------
-    var column = _a.column, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
+    var column = _a.column, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
     var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
     // State -------------------------------------------------------------------------------------------------------------
     var _c = React.useState(false), checked = _c[0], setChecked = _c[1];
@@ -3065,6 +3065,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
         });
     }, [setHeadColumnCommands, column]);
     // Memo --------------------------------------------------------------------------------------------------------------
+    var style = React.useMemo(function () { return (top !== undefined ? { top: top } : undefined); }, [top]);
     var data = React.useMemo(function () {
         var _a, _b;
         if (column.type === 'check') {
@@ -3083,7 +3084,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableHeadCell = functio
         }
     }, [checkDisabled, checked, column, onCheckChange]);
     // Render ------------------------------------------------------------------------------------------------------------
-    return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', column: column, defaultAlign: defaultAlign }, data));
+    return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: style, column: column, defaultAlign: defaultAlign }, data));
 };var TableFooterCell = function (_a) {
     var column = _a.column, defaultAlign = _a.defaultAlign;
     var data = React.useMemo(function () {
@@ -3251,12 +3252,81 @@ var native = {
   }
 
   return unsafeStringify(rnds);
-}function columnFilter(v) {
+}var TableTopHeadDefaultProps = {};var BottomLine = material.styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
+var TableTopHead = function (_a) {
+    // Use ---------------------------------------------------------------------------------------------------------------
+    var columnLength = _a.columnLength, rows = _a.rows, onHeightChange = _a.onHeightChange;
+    var theme = material.useTheme();
+    // Ref ---------------------------------------------------------------------------------------------------------------
+    var headRef = React.useRef(null);
+    var row1Ref = React.useRef(null);
+    var row2Ref = React.useRef(null);
+    var row3Ref = React.useRef(null);
+    // ResizeDetector ----------------------------------------------------------------------------------------------------
+    var headHeight = useResizeDetector({ targetRef: headRef, handleWidth: false, handleHeight: true }).height;
+    var row1Height = useResizeDetector({ targetRef: row1Ref, handleWidth: false, handleHeight: true }).height;
+    var row2Height = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true }).height;
+    var row3Height = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true }).height;
+    React.useEffect(function () {
+        onHeightChange && onHeightChange(headHeight || 0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [headHeight]);
+    // Function ----------------------------------------------------------------------------------------------------------
+    var makeRowCells = React.useCallback(function (row, top) {
+        var cells = row
+            .map(function (info, idx) {
+            return !!info && (React.createElement(material.TableCell, { key: idx, colSpan: info.colSpan, align: info.align, style: {
+                    top: top,
+                    borderBottom: 0,
+                } },
+                info.label,
+                info.label != null && React.createElement(BottomLine, { style: { backgroundColor: theme.palette.divider } })));
+        })
+            .filter(function (cell) { return !!cell; });
+        if (cells.length < columnLength) {
+            cells.push(React.createElement(material.TableCell, { key: columnLength, colSpan: columnLength - cells.length, style: { top: top, borderBottom: 0 } }));
+        }
+        return cells;
+    }, [columnLength, theme.palette.divider]);
+    // Render ------------------------------------------------------------------------------------------------------------
+    if (!rows || rows.length === 0)
+        return null;
+    if (Array.isArray(rows[0])) {
+        return (React.createElement(material.TableHead, { className: 'TableTopHead', ref: headRef }, rows.map(function (row, idx) {
+            var ref = undefined;
+            var top = undefined;
+            switch (idx) {
+                case 0:
+                    ref = row1Ref;
+                    top = 0;
+                    break;
+                case 1:
+                    ref = row2Ref;
+                    top = row1Height;
+                    break;
+                case 2:
+                    ref = row3Ref;
+                    top = row2Height;
+                    break;
+                case 3:
+                    top = row3Height;
+            }
+            return (React.createElement(material.TableRow, { key: idx, ref: ref }, makeRowCells(row, top)));
+        })));
+    }
+    else {
+        return (React.createElement(material.TableHead, { className: 'TableTopHead', ref: headRef },
+            React.createElement(material.TableRow, null, makeRowCells(rows))));
+    }
+};
+TableTopHead.displayName = 'TableTopHead';
+TableTopHead.defaultProps = TableTopHeadDefaultProps;
+var templateObject_1$1;function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
 var Table = React.forwardRef(function (_a, ref) {
     // Ref ---------------------------------------------------------------------------------------------------------------
-    var initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
+    var topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
     // ---------------------------------------------------------------------------------------------------------------
     className = _a.className, initStyle = _a.style, sx = _a.sx;
     var localHeaderDataRef = React.useRef({});
@@ -3282,8 +3352,9 @@ var Table = React.forwardRef(function (_a, ref) {
     // State -------------------------------------------------------------------------------------------------------------
     var _b = React.useState(false), menuOpen = _b[0], setMenuOpen = _b[1];
     var _c = React.useState(undefined), openMenuId = _c[0], setOpenMenuId = _c[1];
+    var _d = React.useState(0), topHeadHeight = _d[0], setTopHeadHeight = _d[1];
     // State - containerHeight -------------------------------------------------------------------------------------------
-    var _d = React.useState(), containerHeight = _d[0], setContainerHeight = _d[1];
+    var _e = React.useState(), containerHeight = _e[0], setContainerHeight = _e[1];
     var containerHeightDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -3297,7 +3368,7 @@ var Table = React.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State - footerHeight --------------------------------------------------------------------------------------------
-    var _e = React.useState(), pagingHeight = _e[0], setPagingHeight = _e[1];
+    var _f = React.useState(), pagingHeight = _f[0], setPagingHeight = _f[1];
     var pagingHeightResizeDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -3311,11 +3382,11 @@ var Table = React.forwardRef(function (_a, ref) {
         },
     }).ref;
     // State -----------------------------------------------------------------------------------------------------------
-    var _f = useAutoUpdateLayoutState(initColumns), columns = _f[0], setColumns = _f[1];
-    var _g = React.useState(), finalColumns = _g[0], setFinalColumns = _g[1];
-    var _h = useAutoUpdateLayoutState(initItems), items = _h[0], setItems = _h[1];
-    var _j = React.useState(), sortableItems = _j[0], setSortableItems = _j[1];
-    var _k = useAutoUpdateLayoutState(initPaging), paging = _k[0], setPaging = _k[1];
+    var _g = useAutoUpdateLayoutState(initColumns), columns = _g[0], setColumns = _g[1];
+    var _h = React.useState(), finalColumns = _h[0], setFinalColumns = _h[1];
+    var _j = useAutoUpdateLayoutState(initItems), items = _j[0], setItems = _j[1];
+    var _k = React.useState(), sortableItems = _k[0], setSortableItems = _k[1];
+    var _l = useAutoUpdateLayoutState(initPaging), paging = _l[0], setPaging = _l[1];
     // Memo --------------------------------------------------------------------------------------------------------------
     var tableSx = React.useMemo(function () {
         var sx = {
@@ -3686,23 +3757,66 @@ var Table = React.forwardRef(function (_a, ref) {
         }
         return style;
     }, [fullHeight]);
+    var tableTopHead = React.useMemo(function () {
+        return finalColumns && (React.createElement(TableTopHead, { columnLength: finalColumns.length, rows: topHeadRows, onHeightChange: setTopHeadHeight }));
+    }, [finalColumns, topHeadRows]);
+    var tableHead = React.useMemo(function () {
+        return finalColumns && (React.createElement(material.TableHead, null,
+            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: stickyHeader ? topHeadHeight : undefined, onCheckChange: handleHeadCheckChange })); }))));
+    }, [defaultAlign, finalColumns, handleHeadCheckChange, stickyHeader, topHeadHeight]);
+    var tableBody = React.useMemo(function () {
+        return finalColumns && (React.createElement(material.TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(sortable.SortableContext, { items: sortableItems, strategy: sortable.verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable$1, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React.createElement(StyledBodyRow$1, null,
+            React.createElement(material.TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React.createElement(StyledNoDataDiv, null,
+                React.createElement("div", null,
+                    React.createElement(material.Icon, null, "error")),
+                React.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined));
+    }, [
+        defaultAlign,
+        defaultEllipsis,
+        finalColumns,
+        handleBodyCheckChange,
+        noData,
+        onClick,
+        onGetBodyRowSx,
+        showEvenColor,
+        showOddColor,
+        sortable$1,
+        sortableItems,
+    ]);
+    var tableFooter = React.useMemo(function () {
+        return finalColumns &&
+            !isNoData &&
+            footer && (React.createElement(material.TableFooter, null,
+            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))));
+    }, [defaultAlign, finalColumns, footer, isNoData]);
+    var tablePaging = React.useMemo(function () {
+        return finalColumns &&
+            paging &&
+            paging.total > 0 && (React.createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
+            React.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })));
+    }, [
+        finalColumns,
+        fullHeight,
+        handlePageChange,
+        pagination === null || pagination === void 0 ? void 0 : pagination.className,
+        pagination === null || pagination === void 0 ? void 0 : pagination.style,
+        pagination === null || pagination === void 0 ? void 0 : pagination.sx,
+        paging,
+        pagingAlign,
+        pagingHeightResizeDetector,
+        pagingStyle,
+    ]);
     // Render ----------------------------------------------------------------------------------------------------------
     return finalColumns ? (React.createElement(TableContextProvider, { value: tableContextValue },
         React.createElement(material.Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className, !!stickyHeader && 'sticky-header', !!fullHeight && 'full-height', !!showOddColor && 'odd-color', !!showEvenColor && 'even-color', !!sortable$1 && 'sortable'), variant: 'outlined', style: style, sx: sx },
             React.createElement(SimpleBar, { ref: simpleBarRef, style: simpleBarStyle },
                 React.createElement(core.DndContext, { sensors: sensors, collisionDetection: core.closestCenter, onDragEnd: handleDragEnd },
                     React.createElement(material.Table, { stickyHeader: stickyHeader, sx: tableSx, style: tableStyle },
-                        React.createElement(material.TableHead, null,
-                            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange })); }))),
-                        React.createElement(material.TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(sortable.SortableContext, { items: sortableItems, strategy: sortable.verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color'), hover: true, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable$1, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React.createElement(StyledBodyRow$1, null,
-                            React.createElement(material.TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React.createElement(StyledNoDataDiv, null,
-                                React.createElement("div", null,
-                                    React.createElement(material.Icon, null, "error")),
-                                React.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."))))))) : undefined),
-                        !isNoData && footer && (React.createElement(material.TableFooter, null,
-                            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))))))),
-            paging && paging.total > 0 && (React.createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
-                React.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })))))) : null;
+                        tableTopHead,
+                        tableHead,
+                        tableBody,
+                        tableFooter))),
+            tablePaging))) : null;
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React.forwardRef(function (_a, ref) {
@@ -4526,6 +4640,4 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
     })));
 };
 InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;dayjs.extend(dayjsIsSameOrAfter);
-dayjs.extend(dayjsIsSameOrBefore);
-dayjs.extend(dayjsIsBetween);exports.InfoTable=InfoTable;exports.InfoTableDefaultProps=InfoTableDefaultProps;exports.SearchTable=SearchTable;exports.SearchTableDefaultProps=SearchTableDefaultProps;exports.Table=Table;exports.TableButton=TableButton;exports.TableButtonDefaultProps=TableButtonDefaultProps;exports.TableDefaultProps=TableDefaultProps;exports.TableIcon=TableIcon;exports.TableIconDefaultProps=TableIconDefaultProps;exports.TableMenuButton=TableMenuButton;exports.TableMenuButtonDefaultProps=TableMenuButtonDefaultProps;//# sourceMappingURL=index.js.map
+InfoTable.defaultProps = InfoTableDefaultProps;exports.InfoTable=InfoTable;exports.InfoTableDefaultProps=InfoTableDefaultProps;exports.SearchTable=SearchTable;exports.SearchTableDefaultProps=SearchTableDefaultProps;exports.Table=Table;exports.TableButton=TableButton;exports.TableButtonDefaultProps=TableButtonDefaultProps;exports.TableDefaultProps=TableDefaultProps;exports.TableIcon=TableIcon;exports.TableIconDefaultProps=TableIconDefaultProps;exports.TableMenuButton=TableMenuButton;exports.TableMenuButtonDefaultProps=TableMenuButtonDefaultProps;//# sourceMappingURL=index.js.map
