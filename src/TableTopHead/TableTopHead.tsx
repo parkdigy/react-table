@@ -127,7 +127,9 @@ const TableTopHead: React.FC<Props> = ({ columnLength, rows, caption, onHeightCh
       return (
         <TableHead className='TableTopHead' ref={headRef}>
           {captionRow}
-          <TableRow className='TableTopHeadRow'>{makeRowCells(rows as TableTopHeadRowColumnValue[])}</TableRow>
+          <TableRow className='TableTopHeadRow'>
+            {makeRowCells(rows as TableTopHeadRowColumnValue[], captionHeight)}
+          </TableRow>
         </TableHead>
       );
     }

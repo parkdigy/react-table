@@ -3339,7 +3339,7 @@ var TableTopHead = function (_a) {
         else {
             return (React.createElement(material.TableHead, { className: 'TableTopHead', ref: headRef },
                 captionRow,
-                React.createElement(material.TableRow, { className: 'TableTopHeadRow' }, makeRowCells(rows))));
+                React.createElement(material.TableRow, { className: 'TableTopHeadRow' }, makeRowCells(rows, captionHeight))));
         }
     }
     else {
