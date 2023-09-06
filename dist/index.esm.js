@@ -3306,8 +3306,6 @@ var TableTopHead = function (_a) {
         return (React__default.createElement(TableRow, null, columns.map(function (column, idx) { return (React__default.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
     }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
     // Render ------------------------------------------------------------------------------------------------------------
-    if ((!rows || rows.length === 0) && caption === null)
-        return null;
     if (rows) {
         if (Array.isArray(rows[0])) {
             return (React__default.createElement(TableHead, { className: 'TableHead' },
@@ -3342,7 +3340,9 @@ var TableTopHead = function (_a) {
         }
     }
     else {
-        return React__default.createElement(TableHead, { className: 'TableHead' }, captionRow);
+        return (React__default.createElement(TableHead, { className: 'TableHead' },
+            captionRow,
+            columnRow));
     }
 };
 TableTopHead.displayName = 'TableTopHead';

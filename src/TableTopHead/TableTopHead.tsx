@@ -100,8 +100,6 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
 
   // Render ------------------------------------------------------------------------------------------------------------
 
-  if ((!rows || rows.length === 0) && caption === null) return null;
-
   if (rows) {
     if (Array.isArray(rows[0])) {
       return (
@@ -147,7 +145,12 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
       );
     }
   } else {
-    return <TableHead className='TableHead'>{captionRow}</TableHead>;
+    return (
+      <TableHead className='TableHead'>
+        {captionRow}
+        {columnRow}
+      </TableHead>
+    );
   }
 };
 
