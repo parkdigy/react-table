@@ -7,13 +7,13 @@ import {
   FormSelect,
   Search,
   FormCheckbox,
-  FormSelectItem,
-  FormToggleButtonGroupItem,
   SearchButton,
   FormDateRangePicker,
   FormDatePicker,
   FormDateTimePicker,
   FormTimePicker,
+  FormSelectItems,
+  FormToggleButtonGroupItems,
 } from '@pdg/react-form';
 import { useNavigate } from 'react-router-dom';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
@@ -30,7 +30,7 @@ const SearchTable = () => {
   //--------------------------------------------------------------------------------------------------------------------
 
   const handleSelectLoadItems = useCallback(() => {
-    return new Promise<FormSelectItem[]>((resolve) => {
+    return new Promise<FormSelectItems<'' | number>>((resolve) => {
       setTimeout(() => {
         resolve([lv('전체', ''), lv('거래처 1', 1), lv('거래처 2', 2), lv('거래처 3', 3)]);
       }, 500);
@@ -38,7 +38,7 @@ const SearchTable = () => {
   }, []);
 
   const handleToggleButtonGroupLoadItems = useCallback(() => {
-    return new Promise<FormToggleButtonGroupItem[]>((resolve) => {
+    return new Promise<FormToggleButtonGroupItems<'' | number>>((resolve) => {
       setTimeout(() => {
         resolve([lv('전체', ''), lv('1', 1), lv('2', 2), lv('3', 3)]);
       }, 500);
@@ -53,8 +53,8 @@ const SearchTable = () => {
       <>
         <SearchGroup max>
           <FormText name='keyword' label='검색어' />
-          <FormSelect name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
-          <FormToggleButtonGroup
+          <FormSelect<'' | number> name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
+          <FormToggleButtonGroup<'' | number>
             name='FormToggleButtonGroup'
             value=''
             notAllowEmptyValue

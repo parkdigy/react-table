@@ -40,9 +40,9 @@ interface TableInfo {
 }
 
 interface WithForwardRefType<T = TableItem> extends React.FC<SearchTableProps<T>> {
-  <T = TableItem>(props: SearchTableProps<T> & React.RefAttributes<SearchTableCommands<T>>): ReturnType<
-    React.FC<SearchTableProps<T>>
-  >;
+  <T = TableItem>(
+    props: SearchTableProps<T> & React.RefAttributes<SearchTableCommands<T>>
+  ): ReturnType<React.FC<SearchTableProps<T>>>;
 }
 
 const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, SearchTableProps>(
@@ -167,7 +167,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
               switch (itemCommands.getType()) {
                 case 'FormCheckbox':
                   if (notEmpty(value)) {
-                    const checkCommands = itemCommands as FormCheckValueItemCommands;
+                    const checkCommands = itemCommands as FormCheckValueItemCommands<any>;
                     if (value.toString() === itemCommands.getValue()?.toString()) {
                       checkCommands.setChecked(true);
                     } else if (value.toString() === checkCommands.getUncheckedValue()?.toString()) {
