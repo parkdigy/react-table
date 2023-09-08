@@ -53,8 +53,8 @@ const SearchTable = () => {
       <>
         <SearchGroup max>
           <FormText name='keyword' label='검색어' />
-          <FormSelect<'' | number> name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
-          <FormToggleButtonGroup<'' | number>
+          <FormSelect name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
+          <FormToggleButtonGroup
             name='FormToggleButtonGroup'
             value=''
             notAllowEmptyValue
