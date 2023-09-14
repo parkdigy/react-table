@@ -57,7 +57,11 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
       if (column.head?.onRender) {
         return column.head?.onRender();
       } else {
-        return column.label;
+        if (typeof column.label === 'string') {
+          return <div dangerouslySetInnerHTML={{ __html: column.label }} />;
+        } else {
+          return column.label;
+        }
       }
     }
   }, [checkDisabled, checked, column, onCheckChange]);

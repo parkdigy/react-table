@@ -3255,7 +3255,12 @@ var native = {
                 return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
             }
             else {
-                return column.label;
+                if (typeof column.label === 'string') {
+                    return React.createElement("div", { dangerouslySetInnerHTML: { __html: column.label } });
+                }
+                else {
+                    return column.label;
+                }
             }
         }
     }, [checkDisabled, checked, column, onCheckChange]);
