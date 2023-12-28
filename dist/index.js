@@ -2902,13 +2902,6 @@ var TableBodyCell = function (_a) {
     }, [checked]);
     React.useEffect(function () {
         if (column.type === 'check') {
-            setItemColumnChecked(item, column, checked);
-            column.onCheckChange && column.onCheckChange(item, checked);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checked]);
-    React.useEffect(function () {
-        if (column.type === 'check') {
             setItemColumnCheckDisabled(item, column, checkDisabled);
             column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
         }
