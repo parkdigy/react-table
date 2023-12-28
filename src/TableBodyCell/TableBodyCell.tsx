@@ -28,6 +28,7 @@ const TableBodyCell: React.FC<Props> = ({
 
   // State -------------------------------------------------------------------------------------------------------------
 
+  const [initialized, setInitialized] = useState(false);
   const [checked, setChecked] = useState(false);
   const [checkDisabled, setCheckDisabled] = useState(false);
 
@@ -37,6 +38,7 @@ const TableBodyCell: React.FC<Props> = ({
     if (column.type === 'check') {
       setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
       setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
+      setInitialized(true);
     }
 
     setItemColumnCommands(item, column, {
@@ -56,7 +58,9 @@ const TableBodyCell: React.FC<Props> = ({
   useEffect(() => {
     if (column.type === 'check') {
       setItemColumnChecked(item, column, checked);
-      column.onCheckChange && column.onCheckChange(item, checked);
+      if (initialized) {
+        column.onCheckChange && column.onCheckChange(item, checked);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checked]);

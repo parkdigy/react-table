@@ -40,7 +40,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
       return item.id === 12;
     },
     onCheckChange(item: TTableDataItem, checked: boolean) {
-      ll(item, checked);
+      ll('onCheckChange', item.id, checked);
     },
     onHide(item: TTableDataItem): boolean {
       return item.id === 12;

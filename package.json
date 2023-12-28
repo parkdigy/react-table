@@ -1,7 +1,7 @@
 {
   "name": "@pdg/react-table",
   "title": "React Table",
-  "version": "1.0.54",
+  "version": "1.0.55",
   "description": "React Table",
   "type": "module",
   "types": "dist/index.d.ts",
