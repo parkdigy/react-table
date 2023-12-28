@@ -2872,15 +2872,13 @@ var TableBodyCell = function (_a) {
     var item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
     var _b = useTableState(), menuOpen = _b.menuOpen, setItemColumnChecked = _b.setItemColumnChecked, setItemColumnCheckDisabled = _b.setItemColumnCheckDisabled, setItemColumnCommands = _b.setItemColumnCommands;
     // State -------------------------------------------------------------------------------------------------------------
-    var _c = useState(false), initialized = _c[0], setInitialized = _c[1];
-    var _d = useState(false), checked = _d[0], setChecked = _d[1];
-    var _e = useState(false), checkDisabled = _e[0], setCheckDisabled = _e[1];
+    var _c = useState(false), checked = _c[0], setChecked = _c[1];
+    var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
     // Effect ------------------------------------------------------------------------------------------------------------
     useEffect(function () {
         if (column.type === 'check') {
             setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
             setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
-            setInitialized(true);
         }
         setItemColumnCommands(item, column, {
             setChecked: function (checked) {
@@ -2898,9 +2896,6 @@ var TableBodyCell = function (_a) {
     useEffect(function () {
         if (column.type === 'check') {
             setItemColumnChecked(item, column, checked);
-            if (initialized) {
-                column.onCheckChange && column.onCheckChange(item, checked);
-            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checked]);
@@ -2947,6 +2942,7 @@ var TableBodyCell = function (_a) {
                 data = (React__default.createElement(Box, { className: 'TableBoxyCell-check-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } },
                     React__default.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
                             setChecked(newChecked);
+                            column.onCheckChange && column.onCheckChange(item, newChecked);
                             onCheckChange && onCheckChange(item, column, newChecked);
                         } })));
                 break;

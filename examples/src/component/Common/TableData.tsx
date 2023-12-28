@@ -39,6 +39,9 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     onCheckDisabled(item: TTableDataItem): boolean {
       return item.id === 12;
     },
+    onInitChecked(item: TTableDataItem): boolean {
+      return item.id % 2 === 0;
+    },
     onCheckChange(item: TTableDataItem, checked: boolean) {
       ll('onCheckChange', item.id, checked);
     },
