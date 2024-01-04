@@ -3971,27 +3971,73 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                             case 'FormDateRangePicker':
                                 {
                                     var dateRangePickerCommands = itemCommands;
-                                    var itemName = dateRangePickerCommands.getName();
-                                    var startNameSuffix = dateRangePickerCommands.getFormValueStartNameSuffix();
-                                    var endNameSuffix = dateRangePickerCommands.getFormValueEndNameSuffix();
+                                    var fromName = dateRangePickerCommands.getFormValueFromName();
+                                    var toName = dateRangePickerCommands.getFormValueToName();
                                     var format = dateRangePickerCommands.getFormValueFormat();
-                                    if (name === "".concat(itemName).concat(startNameSuffix)) {
+                                    if (name === fromName) {
                                         if (notEmpty(value)) {
                                             var startValue = dayjs(value, format);
-                                            dateRangePickerCommands.setStartValue(startValue.isValid() ? startValue : null);
+                                            dateRangePickerCommands.setFromValue(startValue.isValid() ? startValue : null);
                                         }
                                         else {
-                                            dateRangePickerCommands.setStartValue(null);
+                                            dateRangePickerCommands.setFromValue(null);
                                         }
                                     }
-                                    else if (name === "".concat(itemName).concat(endNameSuffix)) {
+                                    else if (name === toName) {
                                         if (notEmpty(value)) {
                                             var endValue = dayjs(value, format);
-                                            dateRangePickerCommands.setEndValue(endValue.isValid() ? endValue : null);
+                                            dateRangePickerCommands.setToValue(endValue.isValid() ? endValue : null);
                                         }
                                         else {
-                                            dateRangePickerCommands.setEndValue(null);
+                                            dateRangePickerCommands.setToValue(null);
                                         }
+                                    }
+                                }
+                                break;
+                            case 'FormYearRangePicker':
+                                {
+                                    var dateRangePickerCommands = itemCommands;
+                                    var fromName = dateRangePickerCommands.getFormValueFromName();
+                                    var toName = dateRangePickerCommands.getFormValueToName();
+                                    if (name === fromName) {
+                                        dateRangePickerCommands.setFromValue(notEmpty(value) ? Number(value) : null);
+                                    }
+                                    else if (name === toName) {
+                                        dateRangePickerCommands.setToValue(notEmpty(value) ? Number(value) : null);
+                                    }
+                                }
+                                break;
+                            case 'FormMonthPicker':
+                                {
+                                    var monthCommands = itemCommands;
+                                    var yearName = monthCommands.getFormValueYearName();
+                                    var monthName = monthCommands.getFormValueMonthName();
+                                    if (name === yearName) {
+                                        monthCommands.setYear(notEmpty(value) ? Number(value) : null);
+                                    }
+                                    else if (name === monthName) {
+                                        monthCommands.setMonth(notEmpty(value) ? Number(value) : null);
+                                    }
+                                }
+                                break;
+                            case 'FormMonthRangePicker':
+                                {
+                                    var monthRangeCommands = itemCommands;
+                                    var fromYearName = monthRangeCommands.getFormValueFromYearName();
+                                    var fromMonthName = monthRangeCommands.getFormValueFromMonthName();
+                                    var toYearName = monthRangeCommands.getFormValueToYearName();
+                                    var toMonthName = monthRangeCommands.getFormValueToMonthName();
+                                    if (name === fromYearName) {
+                                        monthRangeCommands.setFromYear(notEmpty(value) ? Number(value) : null);
+                                    }
+                                    else if (name === fromMonthName) {
+                                        monthRangeCommands.setFromMonth(notEmpty(value) ? Number(value) : null);
+                                    }
+                                    else if (name === toYearName) {
+                                        monthRangeCommands.setToYear(notEmpty(value) ? Number(value) : null);
+                                    }
+                                    else if (name === toMonthName) {
+                                        monthRangeCommands.setToMonth(notEmpty(value) ? Number(value) : null);
                                     }
                                 }
                                 break;
@@ -4072,15 +4118,61 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                             var resetValue = null;
                             switch (itemCommands.getType()) {
                                 case 'FormDateRangePicker':
+                                case 'FormYearRangePicker':
                                     {
+                                        var commands = itemCommands;
                                         var itemName = itemCommands.getName();
-                                        var startSuffix = itemCommands.getFormValueStartNameSuffix();
-                                        var endSuffix = itemCommands.getFormValueEndNameSuffix();
-                                        if (name === "".concat(itemName).concat(startSuffix)) {
-                                            resetValue = searchRef.current.getFormReset(itemName, startSuffix);
+                                        var fromName = commands.getFormValueFromName();
+                                        var fromSuffix = commands.getFormValueFromNameSuffix();
+                                        var toName = commands.getFormValueToName();
+                                        var toSuffix = commands.getFormValueToNameSuffix();
+                                        if (name === fromName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, fromSuffix);
                                         }
-                                        else if (name === "".concat(itemName).concat(endSuffix)) {
-                                            resetValue = searchRef.current.getFormReset(itemName, endSuffix);
+                                        else if (name === toName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, toSuffix);
+                                        }
+                                    }
+                                    break;
+                                case 'FormMonthPicker':
+                                    {
+                                        var commands = itemCommands;
+                                        var itemName = commands.getName();
+                                        var yearName = commands.getFormValueYearName();
+                                        var yearSuffix = commands.getFormValueYearNameSuffix();
+                                        var monthName = commands.getFormValueMonthName();
+                                        var monthSuffix = commands.getFormValueMonthNameSuffix();
+                                        if (name === yearName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, yearSuffix);
+                                        }
+                                        else if (name === monthName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, monthSuffix);
+                                        }
+                                    }
+                                    break;
+                                case 'FormMonthRangePicker':
+                                    {
+                                        var commands = itemCommands;
+                                        var itemName = commands.getName();
+                                        var fromYearName = commands.getFormValueFromYearName();
+                                        var fromYearSuffix = commands.getFormValueFromYearNameSuffix();
+                                        var fromMonthName = commands.getFormValueFromMonthName();
+                                        var fromMonthSuffix = commands.getFormValueFromMonthNameSuffix();
+                                        var toYearName = commands.getFormValueToYearName();
+                                        var toYearSuffix = commands.getFormValueToYearNameSuffix();
+                                        var toMonthName = commands.getFormValueToMonthName();
+                                        var toMonthSuffix = commands.getFormValueToMonthNameSuffix();
+                                        if (name === fromYearName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, fromYearSuffix);
+                                        }
+                                        else if (name === fromMonthName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, fromMonthSuffix);
+                                        }
+                                        else if (name === toYearName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, toYearSuffix);
+                                        }
+                                        else if (name === toMonthName) {
+                                            resetValue = searchRef.current.getFormReset(itemName, toMonthSuffix);
                                         }
                                     }
                                     break;
@@ -4088,7 +4180,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     resetValue = searchRef.current.getFormReset(name);
                                     break;
                             }
-                            if (resetValue != null && !equal(resetValue, value)) {
+                            if (resetValue != null && !equal(resetValue, value) && typeof value !== 'object') {
                                 hashes_1.push("".concat(name, "=").concat(encodeURIComponent(value)));
                             }
                         }

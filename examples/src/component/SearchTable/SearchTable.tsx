@@ -14,6 +14,10 @@ import {
   FormTimePicker,
   FormSelectItems,
   FormToggleButtonGroupItems,
+  FormYearPicker,
+  FormYearRangePicker,
+  FormMonthPicker,
+  FormMonthRangePicker,
 } from '@pdg/react-form';
 import { useNavigate } from 'react-router-dom';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
@@ -60,10 +64,19 @@ const SearchTable = () => {
             notAllowEmptyValue
             onLoadItems={handleToggleButtonGroupLoadItems}
           />
-          <FormDateRangePicker name='FormDateRangePicker' startLabel='조회기간' endLabel='조회기간' inputWidth={120} />
+          <FormYearPicker name='FormYearPicker' label='조회년도' />
+          <FormMonthPicker name='FormMonthPicker' label='조회월' />
           <FormDatePicker name='FormDatePicker' label='조회일자' width={120} />
           <FormTimePicker name='FormTimePicker' label='조회시간' time='minute' width={80} />
           <FormDateTimePicker name='FormDateTimePicker' label='조회일시' time='minute' />
+          <FormYearRangePicker name='FormYearRangePicker' startLabel='조회기간(년)' endLabel='조회기간(년)' />
+          <FormMonthRangePicker name='FormMonthRangePicker' startLabel='조회기간(월)' endLabel='조회기간(월)' />
+          <FormDateRangePicker
+            name='FormDateRangePicker'
+            startLabel='조회기간(일)'
+            endLabel='조회기간(일)'
+            inputWidth={120}
+          />
         </SearchGroup>
         <SearchGroup align='right'>
           <SearchButton
