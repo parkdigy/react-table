@@ -16,6 +16,7 @@ export interface TableColumn<T = TableItem> {
     minWidth?: string | number;
     ellipsis?: boolean;
     dateFormat?: string;
+    hideAllCheck?: boolean;
     tooltipProps?: Omit<TooltipProps, 'children' | 'title'>;
     display?: {
         xs?: boolean;

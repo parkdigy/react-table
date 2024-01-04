@@ -3255,7 +3255,7 @@ var native = {
     var data = React.useMemo(function () {
         var _a, _b;
         if (column.type === 'check') {
-            return (React.createElement(material.Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
+            return column.hideAllCheck ? null : (React.createElement(material.Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
                     setChecked(newChecked);
                     onCheckChange && onCheckChange(column, newChecked);
                 } }));

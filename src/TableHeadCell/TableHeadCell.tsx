@@ -43,7 +43,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
 
   const data = useMemo(() => {
     if (column.type === 'check') {
-      return (
+      return column.hideAllCheck ? null : (
         <Checkbox
           checked={checked}
           disabled={checkDisabled}
