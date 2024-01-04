@@ -69,12 +69,12 @@ const SearchTable = () => {
           <FormDatePicker name='FormDatePicker' label='조회일자' width={120} />
           <FormTimePicker name='FormTimePicker' label='조회시간' time='minute' width={80} />
           <FormDateTimePicker name='FormDateTimePicker' label='조회일시' time='minute' />
-          <FormYearRangePicker name='FormYearRangePicker' startLabel='조회기간(년)' endLabel='조회기간(년)' />
-          <FormMonthRangePicker name='FormMonthRangePicker' startLabel='조회기간(월)' endLabel='조회기간(월)' />
+          <FormYearRangePicker name='FormYearRangePicker' fromLabel='조회기간(년)' toLabel='조회기간(년)' />
+          <FormMonthRangePicker name='FormMonthRangePicker' fromLabel='조회기간(월)' toLabel='조회기간(월)' />
           <FormDateRangePicker
             name='FormDateRangePicker'
-            startLabel='조회기간(일)'
-            endLabel='조회기간(일)'
+            fromLabel='조회기간(일)'
+            toLabel='조회기간(일)'
             inputWidth={120}
           />
         </SearchGroup>
