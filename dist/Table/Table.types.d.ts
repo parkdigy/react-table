@@ -59,10 +59,11 @@ export interface TableColumn<T = TableItem> {
     onCheckChange?(item: T, checked: boolean): void;
     onCheckDisabledChange?(item: T, checkDisabled: boolean): void;
 }
+export type TableColumns<T = TableItem> = (TableColumn<T> | false | undefined | null)[];
 export interface TableProps<T = TableItem> extends CommonSxProps {
     caption?: ReactNode;
     topHeadRows?: TableTopHeadProps['rows'];
-    columns?: (TableColumn<T> | false | undefined | null)[];
+    columns?: TableColumns<T>;
     defaultAlign?: TableCellProps['align'];
     defaultEllipsis?: boolean;
     stickyHeader?: boolean;
