@@ -40,10 +40,11 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   const ellipsis = useMemo(
     () =>
       type !== 'head' &&
-      column.type !== 'img' &&
-      column.type !== 'button' &&
-      column.type !== 'buttons' &&
-      (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis),
+      (column.ellipsis ||
+        (column.type !== 'img' &&
+          column.type !== 'button' &&
+          column.type !== 'buttons' &&
+          (column.ellipsis == null ? !!initDefaultEllipsis : false))),
     [type, column, initDefaultEllipsis]
   );
 
@@ -175,7 +176,6 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
         !menuOpen &&
         column.type !== 'check' &&
         column.type !== 'button' &&
-        column.type !== 'button-ellipsis' &&
         column.type !== 'buttons' &&
         column.type !== 'img'
       ) {

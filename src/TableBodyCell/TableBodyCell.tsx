@@ -117,7 +117,6 @@ const TableBodyCell: React.FC<Props> = ({
         );
         break;
       case 'button':
-      case 'button-ellipsis':
         data = (
           <Box className='TableBoxyCell-button-box' onClick={menuOpen ? undefined : (e) => e.stopPropagation()}>
             {data}

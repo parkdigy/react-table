@@ -8,7 +8,7 @@ export interface TableItem {
 }
 export interface TableColumn<T = TableItem> {
     id: string;
-    type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'button-ellipsis' | 'buttons' | 'check';
+    type?: 'text' | 'number' | 'date' | 'datetime' | 'img' | 'button' | 'buttons' | 'check';
     label?: ReactNode;
     name?: string;
     align?: TableCellProps['align'];

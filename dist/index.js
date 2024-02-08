@@ -2747,10 +2747,11 @@ var TableCommonCell = function (_a) {
     var align = React.useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
     var ellipsis = React.useMemo(function () {
         return type !== 'head' &&
-            column.type !== 'img' &&
-            column.type !== 'button' &&
-            column.type !== 'buttons' &&
-            (column.ellipsis != null ? column.ellipsis : !!initDefaultEllipsis);
+            (column.ellipsis ||
+                (column.type !== 'img' &&
+                    column.type !== 'button' &&
+                    column.type !== 'buttons' &&
+                    (column.ellipsis == null ? !!initDefaultEllipsis : false)));
     }, [type, column, initDefaultEllipsis]);
     var className = React.useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
@@ -2864,7 +2865,6 @@ var TableCommonCell = function (_a) {
         if (!menuOpen &&
             column.type !== 'check' &&
             column.type !== 'button' &&
-            column.type !== 'button-ellipsis' &&
             column.type !== 'buttons' &&
             column.type !== 'img') {
             e.stopPropagation();
@@ -2965,7 +2965,6 @@ var TableBodyCell = function (_a) {
                         } })));
                 break;
             case 'button':
-            case 'button-ellipsis':
                 data = (React.createElement(material.Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
             case 'buttons':
