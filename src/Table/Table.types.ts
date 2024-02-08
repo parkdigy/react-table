@@ -27,7 +27,7 @@ export interface TableColumn<T = TableItem> {
     | 'buttons'
     | 'check';
   label?: ReactNode;
-  name?: string;
+  name?: keyof T;
   align?: TableCellProps['align'];
   width?: string | number;
   minWidth?: string | number;

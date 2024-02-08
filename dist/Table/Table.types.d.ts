@@ -10,7 +10,7 @@ export interface TableColumn<T = TableItem> {
     id?: string;
     type?: 'text' | 'number' | 'tel' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'img' | 'button' | 'buttons' | 'check';
     label?: ReactNode;
-    name?: string;
+    name?: keyof T;
     align?: TableCellProps['align'];
     width?: string | number;
     minWidth?: string | number;
