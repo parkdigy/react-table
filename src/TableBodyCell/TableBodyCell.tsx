@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
-import { getTableColumnAlign, numberWithThousandSeparator } from '../@util';
+import { getTableColumnAlign, getTelAutoDash, numberWithThousandSeparator } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
@@ -101,6 +101,11 @@ const TableBodyCell: React.FC<Props> = ({
           data = numberWithThousandSeparator(data);
         }
         break;
+      case 'tel':
+        if (typeof data === 'string') {
+          data = getTelAutoDash(data);
+        }
+        break;
       case 'check':
         data = (
           <Box className='TableBoxyCell-check-box' onClick={menuOpen ? undefined : (e) => e.stopPropagation()}>
@@ -173,7 +178,38 @@ const TableBodyCell: React.FC<Props> = ({
         break;
       case 'datetime':
         if (data) {
-          data = dayjs(data, column.dateFormat).format('YYYY-MM-DD HH:mm:ss');
+          const dt = dayjs(data, column.dateFormat);
+          data = (
+            <>
+              <span>{dt.format('YYYY-MM-DD')}</span>
+              {column.dateTwoLine ? <br /> : ' '}
+              <span style={{ opacity: 0.5 }}>{dt.format('HH:mm:ss')}</span>
+            </>
+          );
+        }
+        break;
+      case 'date-hour':
+        if (data) {
+          const dt = dayjs(data, column.dateFormat);
+          data = (
+            <>
+              <span>{dt.format('YYYY-MM-DD')}</span>
+              {column.dateTwoLine ? <br /> : ' '}
+              <span style={{ opacity: 0.5 }}>{dt.format('HH시')}</span>
+            </>
+          );
+        }
+        break;
+      case 'date-minute':
+        if (data) {
+          const dt = dayjs(data, column.dateFormat);
+          data = (
+            <>
+              <span>{dt.format('YYYY-MM-DD')}</span>
+              {column.dateTwoLine ? <br /> : ' '}
+              <span style={{ opacity: 0.5 }}>{dt.format('HH시 MM분')}</span>
+            </>
+          );
         }
         break;
     }

@@ -86,7 +86,6 @@ const Table: React.FC = () => {
         <_Table<TTableDataItem>
           ref={tableRef}
           defaultAlign='center'
-          defaultEllipsis
           stickyHeader
           fullHeight
           caption='게시판 목록'

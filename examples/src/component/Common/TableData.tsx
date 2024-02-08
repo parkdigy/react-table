@@ -122,9 +122,10 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     id: 'create_date',
     label: '등록일자',
     name: 'create_date',
-    type: 'date',
+    type: 'datetime',
     align: 'center',
-    width: 160,
+    width: 100,
+    dateTwoLine: true,
   },
   {
     id: 'button',

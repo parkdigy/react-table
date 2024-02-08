@@ -4,3 +4,4 @@ export { ll, nextTick };
 export * from './compare';
 export * from './number';
 export * from './table';
+export * from './tel';

@@ -2721,6 +2721,72 @@ function typographyColorToSxColor(color) {
     else {
         return color;
     }
+}function getTelAutoDash(tel) {
+    if (tel == null)
+        return null;
+    var str = tel.replace(/[^0-9*]/g, '');
+    var isLastDash = tel.substr(tel.length - 1, 1) === '-';
+    if (str.substr(0, 1) !== '0' && !['15', '16', '18'].includes(str.substr(0, 2))) {
+        return tel;
+    }
+    var tmp = '';
+    var preLen;
+    switch (str.substr(0, 2)) {
+        case '02':
+            preLen = 2;
+            break;
+        case '15':
+        case '16':
+        case '18':
+            preLen = 4;
+            break;
+        default:
+            preLen = 3;
+    }
+    if (['15', '16', '18'].includes(str.substr(0, 2))) {
+        if (str.length <= preLen) {
+            tmp = str;
+        }
+        else if (str.length <= preLen + 4) {
+            tmp += str.substr(0, preLen);
+            tmp += '-';
+            tmp += str.substr(preLen);
+        }
+        else {
+            tmp = str;
+        }
+    }
+    else if (str.length <= preLen) {
+        tmp = str;
+    }
+    else if (str.length <= preLen + 3) {
+        tmp += str.substr(0, preLen);
+        tmp += '-';
+        tmp += str.substr(preLen);
+    }
+    else if (str.length <= preLen + 7) {
+        tmp += str.substr(0, preLen);
+        tmp += '-';
+        tmp += str.substr(preLen, 3);
+        tmp += '-';
+        tmp += str.substr(preLen + 3);
+    }
+    else if (str.length <= preLen + 8) {
+        tmp += str.substr(0, preLen);
+        tmp += '-';
+        tmp += str.substr(preLen, 4);
+        tmp += '-';
+        tmp += str.substr(preLen + 4);
+    }
+    else {
+        tmp = str;
+    }
+    if (isLastDash) {
+        if (str.length === preLen) {
+            tmp += '-';
+        }
+    }
+    return tmp;
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
@@ -2956,6 +3022,11 @@ var TableBodyCell = function (_a) {
                     data = numberWithThousandSeparator(data);
                 }
                 break;
+            case 'tel':
+                if (typeof data === 'string') {
+                    data = getTelAutoDash(data);
+                }
+                break;
             case 'check':
                 data = (React__default.createElement(Box, { className: 'TableBoxyCell-check-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } },
                     React__default.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
@@ -2991,7 +3062,29 @@ var TableBodyCell = function (_a) {
                 break;
             case 'datetime':
                 if (data) {
-                    data = dayjs(data, column.dateFormat).format('YYYY-MM-DD HH:mm:ss');
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React__default.createElement(React__default.Fragment, null,
+                        React__default.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React__default.createElement("br", null) : ' ',
+                        React__default.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH:mm:ss'))));
+                }
+                break;
+            case 'date-hour':
+                if (data) {
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React__default.createElement(React__default.Fragment, null,
+                        React__default.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React__default.createElement("br", null) : ' ',
+                        React__default.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시'))));
+                }
+                break;
+            case 'date-minute':
+                if (data) {
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React__default.createElement(React__default.Fragment, null,
+                        React__default.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React__default.createElement("br", null) : ' ',
+                        React__default.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시 MM분'))));
                 }
                 break;
         }
