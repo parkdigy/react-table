@@ -7,7 +7,7 @@ export interface TableItem {
     [key: string]: any;
 }
 export interface TableColumn<T = TableItem> {
-    id: string;
+    id?: string;
     type?: 'text' | 'number' | 'tel' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'img' | 'button' | 'buttons' | 'check';
     label?: ReactNode;
     name?: string;

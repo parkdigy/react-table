@@ -3459,6 +3459,7 @@ TableTopHead.defaultProps = TableTopHeadDefaultProps;
 var templateObject_1$1;function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
+var _columnId = 0;
 var Table = React__default.forwardRef(function (_a, ref) {
     // Ref ---------------------------------------------------------------------------------------------------------------
     var caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowSx = _a.onGetBodyRowSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
@@ -3469,6 +3470,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
     var updateHeadCheckTimer = useRef();
     var fireOnCheckChangeTimer = useRef({});
     var simpleBarRef = useRef(null);
+    var finalColumnsIdRef = useRef([]);
     // sortable --------------------------------------------------------------------------------------------------------
     var sensors = useSensors(useSensor(MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
@@ -3539,18 +3541,28 @@ var Table = React__default.forwardRef(function (_a, ref) {
             return __assign$3({ id: id == null ? "".concat(v4(), "_").concat(index) : id }, item);
         });
     }, []);
+    var getFinalColumnId = useCallback(function (column) {
+        if (finalColumns && finalColumnsIdRef.current) {
+            var idx = finalColumns.indexOf(column);
+            return finalColumnsIdRef.current[idx];
+        }
+        else {
+            return '';
+        }
+    }, [finalColumns]);
     var updateHeadCheck = useCallback(function (column) {
         if (updateHeadCheckTimer.current) {
             clearTimeout(updateHeadCheckTimer.current);
             updateHeadCheckTimer.current = undefined;
         }
-        var headColumnData = localHeaderDataRef.current[column.id];
+        var columnId = getFinalColumnId(column);
+        var headColumnData = localHeaderDataRef.current[columnId];
         if (headColumnData) {
             updateHeadCheckTimer.current = setTimeout(function () {
                 var _a, _b;
                 updateHeadCheckTimer.current = undefined;
                 var enabledCheckExists = !!Object.keys(localBodyDataRef.current).find(function (key) {
-                    var columnData = localBodyDataRef.current[key].columns[column.id];
+                    var columnData = localBodyDataRef.current[key].columns[columnId];
                     if (columnData) {
                         if (!columnData.checkDisabled) {
                             return true;
@@ -3559,7 +3571,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 });
                 var allChecked = enabledCheckExists &&
                     !Object.keys(localBodyDataRef.current).find(function (key) {
-                        var columnData = localBodyDataRef.current[key].columns[column.id];
+                        var columnData = localBodyDataRef.current[key].columns[columnId];
                         if (columnData) {
                             if (!columnData.checkDisabled) {
                                 return !columnData.checked;
@@ -3570,7 +3582,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 (_b = headColumnData.commands) === null || _b === void 0 ? void 0 : _b.setChecked(allChecked);
             }, 100);
         }
-    }, []);
+    }, [getFinalColumnId]);
     var getCheckedItems = useCallback(function (columnId) {
         var checkedItems = [];
         Object.keys(localBodyDataRef.current).forEach(function (key) {
@@ -3643,7 +3655,17 @@ var Table = React__default.forwardRef(function (_a, ref) {
     useEffect(function () {
         stopHeadCheckTimer();
         clearFireOnCheckChangeTimer();
-        setFinalColumns(columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter));
+        var newFinalColumns = columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter);
+        setFinalColumns(newFinalColumns);
+        finalColumnsIdRef.current = newFinalColumns === null || newFinalColumns === void 0 ? void 0 : newFinalColumns.map(function (col) {
+            if (col.id) {
+                return col.id;
+            }
+            else {
+                _columnId += 1;
+                return "$c$".concat(_columnId, "$");
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columns]);
     useLayoutEffect(function () {
@@ -3657,7 +3679,7 @@ var Table = React__default.forwardRef(function (_a, ref) {
                 if (finalColumns) {
                     finalColumns.forEach(function (c) {
                         var _a;
-                        var columnId = c.id;
+                        var columnId = getFinalColumnId(c);
                         if ((_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[columnId]) {
                             res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
                         }
@@ -3676,18 +3698,18 @@ var Table = React__default.forwardRef(function (_a, ref) {
         else {
             localBodyDataRef.current = {};
         }
-    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer]);
+    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId]);
     useLayoutEffect(function () {
         if (finalColumns) {
             localHeaderDataRef.current = finalColumns.reduce(function (res, c) {
-                res[c.id] = { column: c, checked: false };
+                res[getFinalColumnId(c)] = { column: c, checked: false };
                 return res;
             }, {});
         }
         else {
             localHeaderDataRef.current = {};
         }
-    }, [finalColumns]);
+    }, [finalColumns, getFinalColumnId]);
     // Commands --------------------------------------------------------------------------------------------------------
     useLayoutEffect(function () {
         if (ref) {
@@ -3768,14 +3790,14 @@ var Table = React__default.forwardRef(function (_a, ref) {
     var handleHeadCheckChange = useCallback(function (column, checked) {
         Object.keys(localBodyDataRef.current).forEach(function (key) {
             var _a;
-            var data = localBodyDataRef.current[key].columns[column.id];
+            var data = localBodyDataRef.current[key].columns[getFinalColumnId(column)];
             if (data) {
                 if (!data.checkDisabled) {
                     (_a = data.commands) === null || _a === void 0 ? void 0 : _a.setChecked(checked);
                 }
             }
         });
-    }, []);
+    }, [getFinalColumnId]);
     var handleBodyCheckChange = useCallback(function (item, column) {
         updateHeadCheck(column);
     }, [updateHeadCheck]);
@@ -3798,39 +3820,40 @@ var Table = React__default.forwardRef(function (_a, ref) {
     }, [openMenuId]);
     var TableContextSetItemColumnChecked = useCallback(function (item, column, checked) {
         var _a;
-        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        var columnId = getFinalColumnId(column);
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[columnId];
         if (data) {
             data.checked = checked;
-            fireOnCheckChange(column.id);
+            fireOnCheckChange(columnId);
         }
-    }, [fireOnCheckChange]);
+    }, [fireOnCheckChange, getFinalColumnId]);
     var TableContextSetItemColumnCheckDisabled = useCallback(function (item, column, disabled) {
         var _a;
-        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[getFinalColumnId(column)];
         if (data) {
             data.checkDisabled = disabled;
             updateHeadCheck(column);
         }
-    }, [updateHeadCheck]);
+    }, [getFinalColumnId, updateHeadCheck]);
     var TableContextSetItemColumnCommands = useCallback(function (item, column, commands) {
         var _a;
-        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[column.id];
+        var data = (_a = localBodyDataRef.current[item.id]) === null || _a === void 0 ? void 0 : _a.columns[getFinalColumnId(column)];
         if (data) {
             data.commands = commands;
         }
-    }, []);
+    }, [getFinalColumnId]);
     var TableContextSetHeadColumnChecked = useCallback(function (column, checked) {
-        var data = localHeaderDataRef.current[column.id];
+        var data = localHeaderDataRef.current[getFinalColumnId(column)];
         if (data) {
             data.checked = checked;
         }
-    }, []);
+    }, [getFinalColumnId]);
     var TableContextSetHeadColumnCommands = useCallback(function (column, commands) {
-        var data = localHeaderDataRef.current[column.id];
+        var data = localHeaderDataRef.current[getFinalColumnId(column)];
         if (data) {
             data.commands = commands;
         }
-    }, []);
+    }, [getFinalColumnId]);
     // Memo --------------------------------------------------------------------------------------------------------------
     var tableContextValue = useMemo(function () { return ({
         menuOpen: menuOpen,

@@ -49,9 +49,8 @@ const columns: TableProps<TTableDataItem>['columns'] = [
       return item.id === 12;
     },
   },
-  { id: 'id', label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
+  { label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
   {
-    id: 'category',
     label: '카테고리',
     width: 150,
     align: 'left',
@@ -60,13 +59,11 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'title_img_url',
     type: 'img',
     name: 'title_img_url',
     width: 80,
   },
   {
-    id: 'title',
     label: (
       <>
         <Box>제목</Box>
@@ -89,7 +86,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'view_count',
     label: '조회수',
     type: 'number',
     name: 'view_count',
@@ -101,13 +97,11 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'status',
     label: '상태',
     name: 'status_name',
     width: 80,
   },
   {
-    id: 'create_admin_user',
     label: '등록자',
     name: 'create_admin_user_name',
     width: 80,
@@ -119,7 +113,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'create_date',
     label: '등록일자',
     name: 'create_date',
     type: 'datetime',
@@ -128,7 +121,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     dateTwoLine: true,
   },
   {
-    id: 'button',
     type: 'button',
     label: '수정',
     align: 'center',
@@ -138,7 +130,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'buttons',
     type: 'buttons',
     align: 'center',
     width: 100,
@@ -152,7 +143,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
-    id: 'menu',
     type: 'button',
     align: 'right',
     width: 50,

@@ -59,6 +59,8 @@ interface WithForwardRefType<T = TableItem> extends React.FC<TableProps<T>> {
   <T = TableItem>(props: TableProps<T> & React.RefAttributes<TableCommands<T>>): ReturnType<React.FC<TableProps<T>>>;
 }
 
+let _columnId = 0;
+
 const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
   (
     {
@@ -101,6 +103,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     const updateHeadCheckTimer = useRef<NodeJS.Timeout>();
     const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
     const simpleBarRef = useRef<SimpleBarCore>(null);
+    const finalColumnsIdRef = useRef<string[] | undefined>([]);
 
     // sortable --------------------------------------------------------------------------------------------------------
 
@@ -190,42 +193,59 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       });
     }, []);
 
-    const updateHeadCheck = useCallback((column: TableColumn) => {
-      if (updateHeadCheckTimer.current) {
-        clearTimeout(updateHeadCheckTimer.current);
-        updateHeadCheckTimer.current = undefined;
-      }
+    const getFinalColumnId = useCallback(
+      (column: TableColumn) => {
+        if (finalColumns && finalColumnsIdRef.current) {
+          const idx = finalColumns.indexOf(column);
+          return finalColumnsIdRef.current[idx];
+        } else {
+          return '';
+        }
+      },
+      [finalColumns]
+    );
 
-      const headColumnData = localHeaderDataRef.current[column.id];
-      if (headColumnData) {
-        updateHeadCheckTimer.current = setTimeout(() => {
+    const updateHeadCheck = useCallback(
+      (column: TableColumn) => {
+        if (updateHeadCheckTimer.current) {
+          clearTimeout(updateHeadCheckTimer.current);
           updateHeadCheckTimer.current = undefined;
+        }
 
-          const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
-            const columnData = localBodyDataRef.current[key].columns[column.id];
-            if (columnData) {
-              if (!columnData.checkDisabled) {
-                return true;
-              }
-            }
-          });
+        const columnId = getFinalColumnId(column);
 
-          const allChecked =
-            enabledCheckExists &&
-            !Object.keys(localBodyDataRef.current).find((key) => {
-              const columnData = localBodyDataRef.current[key].columns[column.id];
+        const headColumnData = localHeaderDataRef.current[columnId];
+        if (headColumnData) {
+          updateHeadCheckTimer.current = setTimeout(() => {
+            updateHeadCheckTimer.current = undefined;
+
+            const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
+              const columnData = localBodyDataRef.current[key].columns[columnId];
               if (columnData) {
                 if (!columnData.checkDisabled) {
-                  return !columnData.checked;
+                  return true;
                 }
               }
             });
 
-          headColumnData.commands?.setCheckDisabled(!enabledCheckExists);
-          headColumnData.commands?.setChecked(allChecked);
-        }, 100);
-      }
-    }, []);
+            const allChecked =
+              enabledCheckExists &&
+              !Object.keys(localBodyDataRef.current).find((key) => {
+                const columnData = localBodyDataRef.current[key].columns[columnId];
+                if (columnData) {
+                  if (!columnData.checkDisabled) {
+                    return !columnData.checked;
+                  }
+                }
+              });
+
+            headColumnData.commands?.setCheckDisabled(!enabledCheckExists);
+            headColumnData.commands?.setChecked(allChecked);
+          }, 100);
+        }
+      },
+      [getFinalColumnId]
+    );
 
     const getCheckedItems = useCallback((columnId: string): TableItem[] => {
       const checkedItems: TableItem[] = [];
@@ -312,7 +332,16 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
 
-      setFinalColumns(columns?.filter(columnFilter));
+      const newFinalColumns = columns?.filter(columnFilter);
+      setFinalColumns(newFinalColumns);
+      finalColumnsIdRef.current = newFinalColumns?.map((col) => {
+        if (col.id) {
+          return col.id;
+        } else {
+          _columnId += 1;
+          return `$c$${_columnId}$`;
+        }
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columns]);
 
@@ -328,7 +357,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
           if (finalColumns) {
             finalColumns.forEach((c) => {
-              const columnId = (c as TableColumn).id;
+              const columnId = getFinalColumnId(c);
 
               if (localBodyDataRef.current[item.id]?.columns[columnId]) {
                 res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
@@ -346,18 +375,18 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       } else {
         localBodyDataRef.current = {};
       }
-    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer]);
+    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId]);
 
     useLayoutEffect(() => {
       if (finalColumns) {
         localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData>((res, c) => {
-          res[(c as TableColumn).id] = { column: c, checked: false };
+          res[getFinalColumnId(c)] = { column: c, checked: false };
           return res;
         }, {});
       } else {
         localHeaderDataRef.current = {};
       }
-    }, [finalColumns]);
+    }, [finalColumns, getFinalColumnId]);
 
     // Commands --------------------------------------------------------------------------------------------------------
 
@@ -444,16 +473,19 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [onSortChange]
     );
 
-    const handleHeadCheckChange = useCallback((column: TableColumn, checked: boolean) => {
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        const data = localBodyDataRef.current[key].columns[column.id];
-        if (data) {
-          if (!data.checkDisabled) {
-            data.commands?.setChecked(checked);
+    const handleHeadCheckChange = useCallback(
+      (column: TableColumn, checked: boolean) => {
+        Object.keys(localBodyDataRef.current).forEach((key) => {
+          const data = localBodyDataRef.current[key].columns[getFinalColumnId(column)];
+          if (data) {
+            if (!data.checkDisabled) {
+              data.commands?.setChecked(checked);
+            }
           }
-        }
-      });
-    }, []);
+        });
+      },
+      [getFinalColumnId]
+    );
 
     const handleBodyCheckChange = useCallback(
       (item: TableItem, column: TableColumn) => {
@@ -489,49 +521,56 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const TableContextSetItemColumnChecked = useCallback(
       (item: TableItem, column: TableColumn, checked: boolean) => {
-        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        const columnId = getFinalColumnId(column);
+        const data = localBodyDataRef.current[item.id]?.columns[columnId];
         if (data) {
           data.checked = checked;
-          fireOnCheckChange(column.id);
+          fireOnCheckChange(columnId);
         }
       },
-      [fireOnCheckChange]
+      [fireOnCheckChange, getFinalColumnId]
     );
 
     const TableContextSetItemColumnCheckDisabled = useCallback(
       (item: TableItem, column: TableColumn, disabled: boolean) => {
-        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        const data = localBodyDataRef.current[item.id]?.columns[getFinalColumnId(column)];
         if (data) {
           data.checkDisabled = disabled;
           updateHeadCheck(column);
         }
       },
-      [updateHeadCheck]
+      [getFinalColumnId, updateHeadCheck]
     );
 
     const TableContextSetItemColumnCommands = useCallback(
       (item: TableItem, column: TableColumn, commands: TableBodyCellCommands) => {
-        const data = localBodyDataRef.current[item.id]?.columns[column.id];
+        const data = localBodyDataRef.current[item.id]?.columns[getFinalColumnId(column)];
         if (data) {
           data.commands = commands;
         }
       },
-      []
+      [getFinalColumnId]
     );
 
-    const TableContextSetHeadColumnChecked = useCallback((column: TableColumn, checked: boolean) => {
-      const data = localHeaderDataRef.current[column.id];
-      if (data) {
-        data.checked = checked;
-      }
-    }, []);
+    const TableContextSetHeadColumnChecked = useCallback(
+      (column: TableColumn, checked: boolean) => {
+        const data = localHeaderDataRef.current[getFinalColumnId(column)];
+        if (data) {
+          data.checked = checked;
+        }
+      },
+      [getFinalColumnId]
+    );
 
-    const TableContextSetHeadColumnCommands = useCallback((column: TableColumn, commands: TableHeadCellCommands) => {
-      const data = localHeaderDataRef.current[column.id];
-      if (data) {
-        data.commands = commands;
-      }
-    }, []);
+    const TableContextSetHeadColumnCommands = useCallback(
+      (column: TableColumn, commands: TableHeadCellCommands) => {
+        const data = localHeaderDataRef.current[getFinalColumnId(column)];
+        if (data) {
+          data.commands = commands;
+        }
+      },
+      [getFinalColumnId]
+    );
 
     // Memo --------------------------------------------------------------------------------------------------------------
 

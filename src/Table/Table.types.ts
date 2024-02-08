@@ -13,7 +13,7 @@ export interface TableItem {
 //--------------------------------------------------------------------------------------------------------------------
 
 export interface TableColumn<T = TableItem> {
-  id: string;
+  id?: string;
   type?:
     | 'text'
     | 'number'
