@@ -25,6 +25,8 @@ export interface TableColumn<T = TableItem> {
   hideAllCheck?: boolean;
   tooltipProps?: Omit<TooltipProps, 'children' | 'title'>;
   display?: { xs?: boolean; sm?: boolean; md?: boolean; lg?: boolean; xl?: boolean };
+  paddingLeft?: number;
+  paddingRight?: number;
   head?: {
     className?: CommonSxProps['className'];
     style?: CommonSxProps['style'];

@@ -101,6 +101,8 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
       width: column.width,
       minWidth: column.minWidth,
       cursor: type === 'body' && (column.onClick || onClick) ? 'pointer' : undefined,
+      paddingLeft: column.paddingLeft,
+      paddingRight: column.paddingRight,
       ...style,
       ...getStyle,
     };

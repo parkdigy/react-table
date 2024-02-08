@@ -25,6 +25,8 @@ export interface TableColumn<T = TableItem> {
         lg?: boolean;
         xl?: boolean;
     };
+    paddingLeft?: number;
+    paddingRight?: number;
     head?: {
         className?: CommonSxProps['className'];
         style?: CommonSxProps['style'];

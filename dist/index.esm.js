@@ -2799,7 +2799,7 @@ var TableCommonCell = function (_a) {
                 getStyle = ((_e = column.footer) === null || _e === void 0 ? void 0 : _e.onGetStyle) ? (_f = column.footer) === null || _f === void 0 ? void 0 : _f.onGetStyle() : undefined;
                 break;
         }
-        return __assign$3(__assign$3(__assign$3(__assign$3({}, initStyle), { width: column.width, minWidth: column.minWidth, cursor: type === 'body' && (column.onClick || onClick) ? 'pointer' : undefined }), style), getStyle);
+        return __assign$3(__assign$3(__assign$3(__assign$3({}, initStyle), { width: column.width, minWidth: column.minWidth, cursor: type === 'body' && (column.onClick || onClick) ? 'pointer' : undefined, paddingLeft: column.paddingLeft, paddingRight: column.paddingRight }), style), getStyle);
     }, [column, index, initStyle, item, onClick, type]);
     var sx = useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
