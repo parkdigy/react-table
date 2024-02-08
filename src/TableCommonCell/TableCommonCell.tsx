@@ -173,6 +173,7 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
         !menuOpen &&
         column.type !== 'check' &&
         column.type !== 'button' &&
+        column.type !== 'button-ellipsis' &&
         column.type !== 'buttons' &&
         column.type !== 'img'
       ) {

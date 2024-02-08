@@ -2864,6 +2864,7 @@ var TableCommonCell = function (_a) {
         if (!menuOpen &&
             column.type !== 'check' &&
             column.type !== 'button' &&
+            column.type !== 'button-ellipsis' &&
             column.type !== 'buttons' &&
             column.type !== 'img') {
             e.stopPropagation();
@@ -2964,6 +2965,7 @@ var TableBodyCell = function (_a) {
                         } })));
                 break;
             case 'button':
+            case 'button-ellipsis':
                 data = (React__default.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
             case 'buttons':
