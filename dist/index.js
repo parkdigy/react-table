@@ -3021,6 +3021,16 @@ var TableBodyCell = function (_a) {
                 if (typeof data === 'string' || typeof data === 'number') {
                     data = numberWithThousandSeparator(data);
                 }
+                if (column.numberPrefix) {
+                    data = (React.createElement(React.Fragment, null,
+                        React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, column.numberPrefix),
+                        data));
+                }
+                if (column.numberSuffix) {
+                    data = (React.createElement(React.Fragment, null,
+                        data,
+                        React.createElement("span", { style: { opacity: 0.5, marginLeft: 2 } }, column.numberSuffix)));
+                }
                 break;
             case 'tel':
                 if (typeof data === 'string') {
@@ -3041,8 +3051,6 @@ var TableBodyCell = function (_a) {
             case 'buttons':
                 data = (React.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
-        }
-        switch (column.type) {
             case 'img':
                 {
                     var img = React.createElement("img", { src: data, style: { maxWidth: '100%', verticalAlign: 'middle' }, alt: '' });

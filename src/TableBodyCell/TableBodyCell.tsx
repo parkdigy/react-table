@@ -100,6 +100,22 @@ const TableBodyCell: React.FC<Props> = ({
         if (typeof data === 'string' || typeof data === 'number') {
           data = numberWithThousandSeparator(data);
         }
+        if (column.numberPrefix) {
+          data = (
+            <>
+              <span style={{ opacity: 0.5, marginRight: 2 }}>{column.numberPrefix}</span>
+              {data}
+            </>
+          );
+        }
+        if (column.numberSuffix) {
+          data = (
+            <>
+              {data}
+              <span style={{ opacity: 0.5, marginLeft: 2 }}>{column.numberSuffix}</span>
+            </>
+          );
+        }
         break;
       case 'tel':
         if (typeof data === 'string') {
@@ -139,9 +155,6 @@ const TableBodyCell: React.FC<Props> = ({
           </StyledButtonsBox>
         );
         break;
-    }
-
-    switch (column.type) {
       case 'img':
         {
           const img = <img src={data} style={{ maxWidth: '100%', verticalAlign: 'middle' }} alt='' />;

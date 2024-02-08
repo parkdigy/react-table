@@ -88,6 +88,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
   {
     label: '조회수',
     type: 'number',
+    numberSuffix: '원',
     name: 'view_count',
     width: 100,
     footer: {

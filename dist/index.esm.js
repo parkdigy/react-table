@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useRef,useState,useCallback,useEffect,isValidElement,createRef,cloneElement,PureComponent,createContext,useContext,useMemo,useLayoutEffect,useId}from'react';import {styled,TableRow,lighten,TableCell,Box,Checkbox,Tooltip,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
+import*as React from'react';import React__default,{useRef,useState,useCallback,useEffect,isValidElement,createRef,cloneElement,PureComponent,createContext,useContext,useMemo,useLayoutEffect,useId}from'react';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {findDOMNode}from'react-dom';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -3021,6 +3021,16 @@ var TableBodyCell = function (_a) {
                 if (typeof data === 'string' || typeof data === 'number') {
                     data = numberWithThousandSeparator(data);
                 }
+                if (column.numberPrefix) {
+                    data = (React__default.createElement(React__default.Fragment, null,
+                        React__default.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, column.numberPrefix),
+                        data));
+                }
+                if (column.numberSuffix) {
+                    data = (React__default.createElement(React__default.Fragment, null,
+                        data,
+                        React__default.createElement("span", { style: { opacity: 0.5, marginLeft: 2 } }, column.numberSuffix)));
+                }
                 break;
             case 'tel':
                 if (typeof data === 'string') {
@@ -3041,8 +3051,6 @@ var TableBodyCell = function (_a) {
             case 'buttons':
                 data = (React__default.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
                 break;
-        }
-        switch (column.type) {
             case 'img':
                 {
                     var img = React__default.createElement("img", { src: data, style: { maxWidth: '100%', verticalAlign: 'middle' }, alt: '' });

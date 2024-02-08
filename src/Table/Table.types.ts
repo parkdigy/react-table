@@ -35,6 +35,8 @@ export interface TableColumn<T = TableItem> {
   dateFormat?: string;
   dateTwoLine?: boolean;
   hideAllCheck?: boolean;
+  numberPrefix?: string;
+  numberSuffix?: string;
   tooltipProps?: Omit<TooltipProps, 'children' | 'title'>;
   display?: { xs?: boolean; sm?: boolean; md?: boolean; lg?: boolean; xl?: boolean };
   paddingLeft?: number;
