@@ -101,6 +101,7 @@ export interface TableCommands<T = TableItem> {
     getColumns(): TableProps<T>['columns'];
     setColumns(columns: TableProps<T>['columns']): void;
     getItems(): TableProps<T>['items'];
+    setItems(items: TableProps<T>['items']): void;
     getPaging(): TableProps<T>['paging'];
     setItemsPaging(items: TableProps<T>['items'], paging: TableProps<T>['paging']): void;
     resetSort(): void;

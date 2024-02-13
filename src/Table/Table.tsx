@@ -403,6 +403,10 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
             setColumns(lastColumns);
           },
           getItems: () => lastItems,
+          setItems: (items) => {
+            lastItems = items;
+            setItems(items);
+          },
           getPaging: () => lastPaging,
           setItemsPaging: (items, paging) => {
             lastItems = items;

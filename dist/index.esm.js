@@ -3731,6 +3731,10 @@ var Table = React__default.forwardRef(function (_a, ref) {
                     setColumns(lastColumns_1);
                 },
                 getItems: function () { return lastItems_1; },
+                setItems: function (items) {
+                    lastItems_1 = items;
+                    setItems(items);
+                },
                 getPaging: function () { return lastPaging_1; },
                 setItemsPaging: function (items, paging) {
                     lastItems_1 = items;
