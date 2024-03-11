@@ -5,3 +5,5 @@ export * from './compare';
 export * from './number';
 export * from './table';
 export * from './tel';
+export * from './companyNo';
+export * from './personalNo';

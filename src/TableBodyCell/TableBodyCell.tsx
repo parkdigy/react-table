@@ -1,7 +1,13 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
-import { getTableColumnAlign, getTelAutoDash, numberWithThousandSeparator } from '../@util';
+import {
+  companyNoAutoDash,
+  getTableColumnAlign,
+  getTelAutoDash,
+  numberWithThousandSeparator,
+  personalNoAutoDash,
+} from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
@@ -124,6 +130,16 @@ const TableBodyCell: React.FC<Props> = ({
       case 'tel':
         if (typeof data === 'string') {
           data = getTelAutoDash(data);
+        }
+        break;
+      case 'company_no':
+        if (typeof data === 'string') {
+          data = companyNoAutoDash(data);
+        }
+        break;
+      case 'personal_no':
+        if (typeof data === 'string') {
+          data = personalNoAutoDash(data);
         }
         break;
       case 'check':

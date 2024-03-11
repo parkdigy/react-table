@@ -6,11 +6,29 @@ export interface InfoTableInfo {
   [key: string]: any;
 }
 
+export type InfoTableItemType =
+  | 'text'
+  | 'number'
+  | 'tel'
+  | 'url'
+  | 'email'
+  | 'date'
+  | 'datetime'
+  | 'date-hour'
+  | 'date-minute'
+  | 'company_no'
+  | 'personal_no';
+
 export interface InfoTableItem<T = InfoTableInfo> {
   label: ReactNode;
   name?: keyof T;
+  type?: InfoTableItemType;
   ellipsis?: boolean;
   className?: string;
+  dateFormat?: string;
+  dateTwoLine?: boolean;
+  numberPrefix?: string;
+  numberSuffix?: string;
   style?: CommonSxProps['style'];
   sx?: BoxProps['sx'];
   labelClassName?: string;

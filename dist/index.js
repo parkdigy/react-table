@@ -2787,6 +2787,30 @@ function typographyColorToSxColor(color) {
         }
     }
     return tmp;
+}/********************************************************************************************************************
+ * 사업자등록번호 하이픈 추가
+ * @param companyNo 사업자등록번호
+ * @returns 하이픈이 추가된 사업자등록번호
+ * ******************************************************************************************************************/
+function companyNoAutoDash(companyNo) {
+    var str = companyNo.replace(/[^0-9]/g, '');
+    var values = [str.slice(0, 3)];
+    if (str.length > 3)
+        values.push(str.slice(3, 5));
+    if (str.length > 5)
+        values.push(str.slice(5));
+    return values.join('-');
+}/********************************************************************************************************************
+ * 주민등록번호에 하이픈 추가하는 함수
+ * @param personalNo 주민등록번호
+ * @returns 하이픈 추가된 주민등록번호
+ * ******************************************************************************************************************/
+function personalNoAutoDash(personalNo) {
+    var str = personalNo.replace(/[^0-9]/g, '');
+    var values = [str.slice(0, 6)];
+    if (str.length > 6)
+        values.push(str.slice(6));
+    return values.join('-');
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
@@ -3035,6 +3059,16 @@ var TableBodyCell = function (_a) {
             case 'tel':
                 if (typeof data === 'string') {
                     data = getTelAutoDash(data);
+                }
+                break;
+            case 'company_no':
+                if (typeof data === 'string') {
+                    data = companyNoAutoDash(data);
+                }
+                break;
+            case 'personal_no':
+                if (typeof data === 'string') {
+                    data = personalNoAutoDash(data);
                 }
                 break;
             case 'check':
@@ -4883,9 +4917,101 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
                 finalSizeProps.lg = item.lg;
             if (item.xl)
                 finalSizeProps.xl = item.xl;
-            var data = item.name !== undefined ? info[item.name] : undefined;
-            if (item.onRender)
+            var data = undefined;
+            if (item.name !== undefined) {
+                if (info[item.name] !== undefined) {
+                    if (info[item.name] instanceof Date) {
+                        data = dayjs(info[item.name]).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                    else if (info[item.name] instanceof dayjs) {
+                        data = info[item.name].format('YYYY-MM-DD HH:mm:ss');
+                    }
+                    else {
+                        data = info[item.name];
+                    }
+                }
+            }
+            if (item.onRender) {
                 data = item.onRender(info);
+            }
+            else if (notEmpty(data)) {
+                switch (item.type) {
+                    case 'number':
+                        if (typeof data === 'string' || typeof data === 'number') {
+                            data = numberWithThousandSeparator(data);
+                            if (item.numberPrefix) {
+                                data = (React.createElement(React.Fragment, null,
+                                    React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, item.numberPrefix),
+                                    data));
+                            }
+                            if (item.numberSuffix) {
+                                data = (React.createElement(React.Fragment, null,
+                                    data,
+                                    React.createElement("span", { style: { opacity: 0.5, marginLeft: 2 } }, item.numberSuffix)));
+                            }
+                        }
+                        break;
+                    case 'tel':
+                        if (typeof data === 'string') {
+                            data = getTelAutoDash(data);
+                        }
+                        break;
+                    case 'email':
+                        if (typeof data === 'string') {
+                            data = (React.createElement(React.Fragment, null,
+                                React.createElement("a", { href: "mailto:".concat(data) }, data)));
+                        }
+                        break;
+                    case 'url':
+                        if (typeof data === 'string' && data.toLowerCase().startsWith('http')) {
+                            data = (React.createElement(React.Fragment, null,
+                                React.createElement("a", { href: data, target: '_blank' }, data)));
+                        }
+                        break;
+                    case 'company_no':
+                        if (typeof data === 'string') {
+                            data = companyNoAutoDash(data);
+                        }
+                        break;
+                    case 'personal_no':
+                        if (typeof data === 'string') {
+                            data = personalNoAutoDash(data);
+                        }
+                        break;
+                    case 'date':
+                        if (typeof data === 'string' || typeof data === 'number') {
+                            data = dayjs(data, item.dateFormat).format('YYYY-MM-DD');
+                        }
+                        break;
+                    case 'datetime':
+                        if (typeof data === 'string' || typeof data === 'number') {
+                            var dt = dayjs(data, item.dateFormat);
+                            data = (React.createElement(React.Fragment, null,
+                                React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                                item.dateTwoLine ? React.createElement("br", null) : ' ',
+                                React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH:mm:ss'))));
+                        }
+                        break;
+                    case 'date-hour':
+                        if (typeof data === 'string' || typeof data === 'number') {
+                            var dt = dayjs(data, item.dateFormat);
+                            data = (React.createElement(React.Fragment, null,
+                                React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                                item.dateTwoLine ? React.createElement("br", null) : ' ',
+                                React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시'))));
+                        }
+                        break;
+                    case 'date-minute':
+                        if (typeof data === 'string' || typeof data === 'number') {
+                            var dt = dayjs(data, item.dateFormat);
+                            data = (React.createElement(React.Fragment, null,
+                                React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                                item.dateTwoLine ? React.createElement("br", null) : ' ',
+                                React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시 MM분'))));
+                        }
+                        break;
+                }
+            }
             if (empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React.createElement(React.Fragment, null, "\u00A0");
             var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');

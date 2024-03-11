@@ -1,20 +1,35 @@
 import React from 'react';
 import { InfoTable as _InfoTable } from '../../../../src';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface Info {
   id: number;
   name: string;
   tel: string;
+  email: string;
   address: string;
   url: string;
+  company_no: string;
+  personal_no: string;
+  num_int: number;
+  num_float: number;
+  date: string;
+  datetime: Dayjs;
 }
 
 const info: Info = {
   id: 1,
   name: 'Steve Park',
-  tel: '010-0000-0000',
+  tel: '01000000000',
+  email: 'test@test.com',
   address: '서울시 강남구 대치동 123-123',
   url: 'https://www.google.com',
+  company_no: '1112233333',
+  personal_no: '1234567890123',
+  num_int: 1234567,
+  num_float: 1234567.123,
+  date: '2024-01-01',
+  datetime: dayjs('2024-01-01 12:34:56'),
 };
 
 const InfoTable = () => {
@@ -36,9 +51,18 @@ const InfoTable = () => {
             },
           },
           { label: '이름', name: 'name' },
-          { label: '전화번호', name: 'tel', labelColor: 'secondary' },
+          { label: '전화번호', type: 'tel', name: 'tel', labelColor: 'secondary' },
+          { label: '이메일', type: 'email', name: 'email' },
           { label: '주소', name: 'address', clipboard: true },
-          { label: 'URL', name: 'url', clipboard: true },
+          { label: 'URL', type: 'url', name: 'url', clipboard: true },
+          { label: 'Company No', type: 'company_no', name: 'company_no' },
+          { label: 'Personal No', type: 'personal_no', name: 'personal_no' },
+          { label: 'Number Integer', type: 'number', name: 'num_int', numberPrefix: '$' },
+          { label: 'Number Float', type: 'number', name: 'num_float', numberSuffix: '원' },
+          { label: 'Date', type: 'date', name: 'date' },
+          { label: 'Datetime', type: 'datetime', name: 'datetime' },
+          { label: 'Datetime', type: 'date-hour', name: 'datetime' },
+          { label: 'Datetime', type: 'date-minute', name: 'datetime' },
         ]}
       />
     </div>
