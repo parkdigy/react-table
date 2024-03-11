@@ -85,7 +85,12 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       pagination,
       sortable,
       onClick,
+      onGetBodyRowClassName,
+      onGetBodyRowStyle,
       onGetBodyRowSx,
+      onGetBodyColumnClassName,
+      onGetBodyColumnStyle,
+      onGetBodyColumnSx,
       onPageChange,
       onSortChange,
       onCheckChange,
@@ -681,9 +686,17 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
                   {sortableItems.map((item, idx) => (
                     <TableBodyRow
                       key={item.id}
-                      className={classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color')}
-                      hover
+                      className={classNames(
+                        !!showOddColor && 'odd-color',
+                        !!showEvenColor && 'even-color',
+                        onGetBodyRowClassName ? onGetBodyRowClassName(item, idx) : undefined
+                      )}
+                      style={onGetBodyRowStyle ? onGetBodyRowStyle(item, idx) : undefined}
                       sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
+                      onGetColumnClassName={onGetBodyColumnClassName}
+                      onGetColumnStyle={onGetBodyColumnStyle}
+                      onGetColumnSx={onGetBodyColumnSx}
+                      hover
                       id={item.id}
                       index={idx}
                       defaultAlign={defaultAlign}
@@ -722,6 +735,11 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         handleBodyCheckChange,
         noData,
         onClick,
+        onGetBodyColumnClassName,
+        onGetBodyColumnStyle,
+        onGetBodyColumnSx,
+        onGetBodyRowClassName,
+        onGetBodyRowStyle,
         onGetBodyRowSx,
         showEvenColor,
         showOddColor,

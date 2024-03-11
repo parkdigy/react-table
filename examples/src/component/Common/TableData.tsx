@@ -49,8 +49,9 @@ const columns: TableProps<TTableDataItem>['columns'] = [
       return item.id === 12;
     },
   },
-  { label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
+  { id: 'id', label: 'ID', name: 'id', width: 100, footer: { value: '합계' } },
   {
+    id: 'category',
     label: '카테고리',
     width: 150,
     align: 'left',
@@ -59,6 +60,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     },
   },
   {
+    id: 'img',
     type: 'img',
     name: 'title_img_url',
     width: 80,

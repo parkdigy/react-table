@@ -106,7 +106,12 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
   };
   sortable?: boolean;
   onClick?(item: T, index: number): void;
+  onGetBodyRowClassName?(item: T, index: number): CommonSxProps['className'] | undefined;
+  onGetBodyRowStyle?(item: T, index: number): CommonSxProps['style'] | undefined;
   onGetBodyRowSx?(item: T, index: number): CommonSxProps['sx'] | undefined;
+  onGetBodyColumnClassName?(column: TableColumn<T>, item: T, index: number): CommonSxProps['className'] | undefined;
+  onGetBodyColumnStyle?(column: TableColumn<T>, item: T, index: number): CommonSxProps['style'] | undefined;
+  onGetBodyColumnSx?(column: TableColumn<T>, item: T, index: number): CommonSxProps['sx'] | undefined;
   onPageChange?(page: number): void;
   onSortChange?(items: T[]): void;
   onCheckChange?(columnId: string, items: T[]): void;

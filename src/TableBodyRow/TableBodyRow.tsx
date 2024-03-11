@@ -29,6 +29,9 @@ const TableBodyRow: React.FC<Props> = ({
   item,
   onClick,
   onCheckChange,
+  onGetColumnClassName,
+  onGetColumnStyle,
+  onGetColumnSx,
   // -------------------------------------------------------------------------------------------------------------------
   ...props
 }) => {
@@ -62,6 +65,9 @@ const TableBodyRow: React.FC<Props> = ({
     <StyledBodyRow className={classNames('TableBodyRow', className)} style={finalStyle} {...props} {...sortableProps}>
       {columns.map((column: TableColumn, columnIdx) => (
         <TableBodyCell
+          className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
+          sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
+          style={onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined}
           key={columnIdx}
           index={index}
           item={item}

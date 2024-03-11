@@ -6,6 +6,7 @@ import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
+import classNames from 'classnames';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -14,6 +15,9 @@ const StyledButtonsBox = styled(Box)`
 `;
 
 const TableBodyCell: React.FC<Props> = ({
+  className,
+  style,
+  sx,
   item,
   index,
   column,
@@ -269,7 +273,9 @@ const TableBodyCell: React.FC<Props> = ({
   return (
     <TableCommonCell
       type='body'
-      className='TableBodyCell'
+      className={classNames('TableBodyCell', className)}
+      style={style}
+      sx={sx}
       column={column}
       defaultAlign={defaultAlign}
       defaultEllipsis={defaultEllipsis}
