@@ -17,10 +17,12 @@ export type InfoTableItemType =
   | 'date-hour'
   | 'date-minute'
   | 'company_no'
-  | 'personal_no';
+  | 'personal_no'
+  | 'divider';
 
 export interface InfoTableItem<T = InfoTableInfo> {
-  label: ReactNode;
+  icon?: string;
+  label?: ReactNode;
   name?: keyof T;
   type?: InfoTableItemType;
   ellipsis?: boolean;
@@ -29,6 +31,8 @@ export interface InfoTableItem<T = InfoTableInfo> {
   dateTwoLine?: boolean;
   numberPrefix?: string;
   numberSuffix?: string;
+  dividerColor?: TypographyProps['color'];
+  dividerLine?: boolean;
   style?: CommonSxProps['style'];
   sx?: BoxProps['sx'];
   labelClassName?: string;
@@ -75,6 +79,7 @@ export interface InfoTableProps<T = InfoTableInfo> {
   labelColor?: TypographyProps['color'];
   labelStyle?: CommonSxProps['style'];
   labelSx?: BoxProps['sx'];
+  dividerColor?: TypographyProps['color'];
   valueClassName?: string;
   valueStyle?: CommonSxProps['style'];
   valueSx?: CommonSxProps['sx'];
@@ -85,8 +90,12 @@ export interface InfoTableProps<T = InfoTableInfo> {
   onCopyToClipboard?(item: InfoTableItem<T>, text: string): void;
 }
 
-export const InfoTableDefaultProps: Pick<InfoTableProps, 'spacing' | 'columnSpacing' | 'rowSpacing' | 'labelColor'> = {
+export const InfoTableDefaultProps: Pick<
+  InfoTableProps,
+  'spacing' | 'columnSpacing' | 'rowSpacing' | 'labelColor' | 'dividerColor'
+> = {
   spacing: 2,
   rowSpacing: 3,
   labelColor: 'primary',
+  dividerColor: 'gray',
 };

@@ -30,3 +30,9 @@ export const ClipboardIconButton = styled(IconButton)`
   margin-top: -10px;
   margin-bottom: -10px;
 `;
+
+export const Line = styled('div')`
+  border-top: 1px solid #efefef;
+  height: 1px;
+  flex: 1;
+`;

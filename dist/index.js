@@ -4607,13 +4607,15 @@ TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultP
     spacing: 2,
     rowSpacing: 3,
     labelColor: 'primary',
+    dividerColor: 'gray',
 };var Label = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
 var ValueWrap = material.styled(material.Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"], ["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"])));
 var Value = material.styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex: 1;\n"], ["\n  flex: 1;\n"])));
 var ValueEllipsis = material.styled('div')(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  flex: 1;\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  flex: 1;\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
 var ValueClipboard = material.styled('div')(templateObject_5 || (templateObject_5 = __makeTemplateObject([""], [""])));
 var ClipboardIconButton = material.styled(material.IconButton)(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  margin-top: -10px;\n  margin-bottom: -10px;\n"], ["\n  margin-top: -10px;\n  margin-bottom: -10px;\n"])));
-var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6;var Component = {};var toggleSelection = function () {
+var Line = material.styled('div')(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  border-top: 1px solid #efefef;\n  height: 1px;\n  flex: 1;\n"], ["\n  border-top: 1px solid #efefef;\n  height: 1px;\n  flex: 1;\n"])));
+var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7;var Component = {};var toggleSelection = function () {
   var selection = document.getSelection();
   if (!selection.rangeCount) {
     return function () {};
@@ -4878,7 +4880,7 @@ _defineProperty(CopyToClipboard$1, "defaultProps", {
 
 CopyToClipboard.CopyToClipboard = CopyToClipboard;
 var lib = CopyToClipboard;var InfoTable = function (_a) {
-    var cols = _a.cols, spacing = _a.spacing, columnSpacing = _a.columnSpacing, rowSpacing = _a.rowSpacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
+    var cols = _a.cols, spacing = _a.spacing, columnSpacing = _a.columnSpacing, rowSpacing = _a.rowSpacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, dividerColor = _a.dividerColor, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
     var sizeProps = React.useMemo(function () {
         var value = {};
         if (typeof cols === 'number') {
@@ -4900,7 +4902,7 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
     }, [cols]);
     return (React.createElement(material.Grid, { container: true, spacing: spacing, columnSpacing: columnSpacing, rowSpacing: rowSpacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
         if (item) {
-            var finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
+            var finalLabelColor = typographyColorToSxColor(item.type === 'divider' ? item.dividerColor || dividerColor : item.labelColor || labelColor);
             var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
             var finalValueSx = combineSx(valueSx, item.valueSx);
             var valueUnderlineStyle = valueUnderline
@@ -5015,8 +5017,15 @@ var lib = CopyToClipboard;var InfoTable = function (_a) {
             if (empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React.createElement(React.Fragment, null, "\u00A0");
             var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
-            return (React.createElement(material.Grid, __assign$3({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
-                React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$3(__assign$3({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label),
+            return item.type === 'divider' ? (React.createElement(material.Grid, { key: idx, item: true, xs: 12 },
+                React.createElement(material.Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
+                    item.icon && (React.createElement(reactForm.FormIcon, { sx: { color: item.dividerColor || dividerColor }, fontSize: 'small' }, item.icon)),
+                    item.label && (React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$3(__assign$3({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
+                    item.dividerLine && (React.createElement(React.Fragment, null, item.icon || item.label ? (React.createElement("div", { style: { flex: 1, paddingLeft: 5 } },
+                        React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(material.Grid, __assign$3({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
+                React.createElement(material.Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
+                    item.icon && (React.createElement(reactForm.FormIcon, { sx: { color: finalLabelColor }, fontSize: 'small' }, "CalendarMonth")),
+                    React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign$3(__assign$3({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                 React.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign$3(__assign$3(__assign$3({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React.createElement(ValueEllipsis, null, data) : React.createElement(Value, null, data),
                     item.clipboard && notEmpty(copyToClipboardText_1) && (React.createElement(ValueClipboard, null,

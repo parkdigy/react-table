@@ -44,6 +44,11 @@ const InfoTable = () => {
         valueUnderline
         items={[
           {
+            type: 'divider',
+            icon: 'Article',
+            label: '기본정보',
+          },
+          {
             label: 'ID',
             name: 'id',
             onRender(info) {
@@ -55,11 +60,16 @@ const InfoTable = () => {
           { label: '이메일', type: 'email', name: 'email' },
           { label: '주소', name: 'address', clipboard: true },
           { label: 'URL', type: 'url', name: 'url', clipboard: true },
+          {
+            type: 'divider',
+            icon: 'BlurOn',
+            label: '추가정보',
+          },
           { label: 'Company No', type: 'company_no', name: 'company_no' },
           { label: 'Personal No', type: 'personal_no', name: 'personal_no' },
           { label: 'Number Integer', type: 'number', name: 'num_int', numberPrefix: '$' },
           { label: 'Number Float', type: 'number', name: 'num_float', numberSuffix: '원' },
-          { label: 'Date', type: 'date', name: 'date' },
+          { icon: 'CalendarMonth', label: 'Date', type: 'date', name: 'date' },
           { label: 'Datetime', type: 'datetime', name: 'datetime' },
           { label: 'Datetime', type: 'date-hour', name: 'datetime' },
           { label: 'Datetime', type: 'date-minute', name: 'datetime' },

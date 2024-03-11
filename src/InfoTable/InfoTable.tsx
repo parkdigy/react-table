@@ -1,8 +1,8 @@
 import React, { ReactNode, useMemo } from 'react';
 import classNames from 'classnames';
 import { InfoTableProps as Props, InfoTableDefaultProps, InfoTableInfo } from './InfoTable.types';
-import { ClipboardIconButton, Label, Value, ValueClipboard, ValueEllipsis, ValueWrap } from './InfoTable.style';
-import { Grid } from '@mui/material';
+import { ClipboardIconButton, Label, Line, Value, ValueClipboard, ValueEllipsis, ValueWrap } from './InfoTable.style';
+import { Grid, Stack } from '@mui/material';
 import {
   combineSx,
   companyNoAutoDash,
@@ -16,6 +16,7 @@ import {
 import TableIcon from '../TableIcon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
+import { FormIcon } from '@pdg/react-form';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
   <T = InfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
@@ -33,6 +34,7 @@ const InfoTable: WithType = ({
   labelColor,
   labelStyle,
   labelSx,
+  dividerColor,
   valueClassName,
   valueStyle,
   valueSx,
@@ -68,7 +70,9 @@ const InfoTable: WithType = ({
     >
       {items.map((item, idx) => {
         if (item) {
-          const finalLabelColor = typographyColorToSxColor(item.labelColor || labelColor);
+          const finalLabelColor = typographyColorToSxColor(
+            item.type === 'divider' ? item.dividerColor || dividerColor : item.labelColor || labelColor
+          );
           const finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
           const finalValueSx = combineSx(valueSx, item.valueSx);
           const valueUnderlineStyle = valueUnderline
@@ -204,15 +208,52 @@ const InfoTable: WithType = ({
           const copyToClipboardText =
             item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
 
-          return (
+          return item.type === 'divider' ? (
+            <Grid key={idx} item xs={12}>
+              <Stack direction='row' spacing={0.5} alignItems='center'>
+                {item.icon && (
+                  <FormIcon sx={{ color: item.dividerColor || dividerColor }} fontSize='small'>
+                    {item.icon}
+                  </FormIcon>
+                )}
+                {item.label && (
+                  <Label
+                    className={classNames(labelClassName, item.labelClassName)}
+                    style={{ ...item.labelStyle, ...labelStyle }}
+                    sx={finalLabelSx}
+                  >
+                    {item.label}
+                  </Label>
+                )}
+                {item.dividerLine && (
+                  <>
+                    {item.icon || item.label ? (
+                      <div style={{ flex: 1, paddingLeft: 5 }}>
+                        <Line />
+                      </div>
+                    ) : (
+                      <Line />
+                    )}
+                  </>
+                )}
+              </Stack>
+            </Grid>
+          ) : (
             <Grid key={idx} item {...finalSizeProps} className={item.className} style={item.style} sx={item.sx}>
-              <Label
-                className={classNames(labelClassName, item.labelClassName)}
-                style={{ ...item.labelStyle, ...labelStyle }}
-                sx={finalLabelSx}
-              >
-                {item.label}
-              </Label>
+              <Stack direction='row' spacing={0.5} alignItems='center'>
+                {item.icon && (
+                  <FormIcon sx={{ color: finalLabelColor }} fontSize='small'>
+                    CalendarMonth
+                  </FormIcon>
+                )}
+                <Label
+                  className={classNames(labelClassName, item.labelClassName)}
+                  style={{ ...item.labelStyle, ...labelStyle }}
+                  sx={finalLabelSx}
+                >
+                  {item.label}
+                </Label>
+              </Stack>
               <ValueWrap
                 className={classNames(valueClassName, item.valueClassName)}
                 style={{ ...valueStyle, ...item.valueStyle, ...valueUnderlineStyle }}
