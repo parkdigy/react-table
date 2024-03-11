@@ -2793,7 +2793,7 @@ function typographyColorToSxColor(color) {
  * @returns 하이픈이 추가된 사업자등록번호
  * ******************************************************************************************************************/
 function companyNoAutoDash(companyNo) {
-    var str = companyNo.replace(/[^0-9]/g, '');
+    var str = companyNo.replace(/[^0-9*]/g, '');
     var values = [str.slice(0, 3)];
     if (str.length > 3)
         values.push(str.slice(3, 5));
@@ -2806,7 +2806,7 @@ function companyNoAutoDash(companyNo) {
  * @returns 하이픈 추가된 주민등록번호
  * ******************************************************************************************************************/
 function personalNoAutoDash(personalNo) {
-    var str = personalNo.replace(/[^0-9]/g, '');
+    var str = personalNo.replace(/[^0-9*]/g, '');
     var values = [str.slice(0, 6)];
     if (str.length > 6)
         values.push(str.slice(6));
