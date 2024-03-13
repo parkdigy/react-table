@@ -50,10 +50,12 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
 
   const makeRowCells = useCallback(
     (row: TableTopHeadRowColumnValue[], top?: number) => {
+      let totalColumns = 0;
       const cells = row
-        .map(
-          (info, idx) =>
-            !!info && (
+        .map((info, idx) => {
+          if (info) {
+            totalColumns += info.colSpan || 1;
+            return (
               <TableCell
                 key={idx}
                 colSpan={info.colSpan}
@@ -66,15 +68,17 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
                 {info.label}
                 {info.label != null && <BottomLine style={{ backgroundColor: theme.palette.divider }} />}
               </TableCell>
-            )
-        )
+            );
+          }
+        })
         .filter((cell) => !!cell) as ReactNode[];
 
-      if (cells.length < columns.length) {
+      if (totalColumns < columns.length) {
         cells.push(
           <TableCell key={columns.length} colSpan={columns.length - cells.length} style={{ top, borderBottom: 0 }} />
         );
       }
+
       return cells;
     },
     [columns, theme.palette.divider]

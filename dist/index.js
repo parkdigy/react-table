@@ -3437,17 +3437,21 @@ var TableTopHead = function (_a) {
             React.createElement(material.TableCell, { colSpan: columns.length }, caption)));
     }, [caption, columns]);
     var makeRowCells = React.useCallback(function (row, top) {
+        var totalColumns = 0;
         var cells = row
             .map(function (info, idx) {
-            return !!info && (React.createElement(material.TableCell, { key: idx, colSpan: info.colSpan, align: info.align, style: {
-                    top: top,
-                    borderBottom: 0,
-                } },
-                info.label,
-                info.label != null && React.createElement(BottomLine, { style: { backgroundColor: theme.palette.divider } })));
+            if (info) {
+                totalColumns += info.colSpan || 1;
+                return (React.createElement(material.TableCell, { key: idx, colSpan: info.colSpan, align: info.align, style: {
+                        top: top,
+                        borderBottom: 0,
+                    } },
+                    info.label,
+                    info.label != null && React.createElement(BottomLine, { style: { backgroundColor: theme.palette.divider } })));
+            }
         })
             .filter(function (cell) { return !!cell; });
-        if (cells.length < columns.length) {
+        if (totalColumns < columns.length) {
             cells.push(React.createElement(material.TableCell, { key: columns.length, colSpan: columns.length - cells.length, style: { top: top, borderBottom: 0 } }));
         }
         return cells;
