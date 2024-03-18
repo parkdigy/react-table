@@ -1,18 +1,13 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
-import {
-  companyNoAutoDash,
-  getTableColumnAlign,
-  getTelAutoDash,
-  numberWithThousandSeparator,
-  personalNoAutoDash,
-} from '../@util';
+import { getTableColumnAlign } from '../@util';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
 import classNames from 'classnames';
+import { companyNoAutoDash, numberFormat, personalNoAutoDash, telAutoDash } from '@pdg/util';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -108,7 +103,7 @@ const TableBodyCell: React.FC<Props> = ({
     switch (column.type) {
       case 'number':
         if (typeof data === 'string' || typeof data === 'number') {
-          data = numberWithThousandSeparator(data);
+          data = numberFormat(data);
         }
         if (column.numberPrefix) {
           data = (
@@ -129,7 +124,7 @@ const TableBodyCell: React.FC<Props> = ({
         break;
       case 'tel':
         if (typeof data === 'string') {
-          data = getTelAutoDash(data);
+          data = telAutoDash(data);
         }
         break;
       case 'company_no':

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 
 import classNames from 'classnames';
 import { Button, ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
 import { TableMenuButtonProps as Props, TableMenuButtonDefaultProps } from './TableMenuButton.types';
-import TableIcon from '../TableIcon';
 import useTableState from '../TableContext/useTableState';
+import { PdgIcon } from '@pdg/react-component';
 
 const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
   (
@@ -130,24 +130,24 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           onClick={handleClick}
           startIcon={
             startIcon ? (
-              <TableIcon fontSize='small' sx={{ mr: -0.5 }}>
+              <PdgIcon fontSize='small' sx={{ mr: -0.5 }}>
                 {startIcon}
-              </TableIcon>
+              </PdgIcon>
             ) : undefined
           }
           endIcon={
             endIcon ? (
-              <TableIcon fontSize='small' sx={{ ml: -0.5 }}>
+              <PdgIcon fontSize='small' sx={{ ml: -0.5 }}>
                 {endIcon}
-              </TableIcon>
+              </PdgIcon>
             ) : undefined
           }
           {...props}
         >
           {icon && (
-            <TableIcon fontSize='small' color={color}>
+            <PdgIcon fontSize='small' color={color}>
               {icon}
-            </TableIcon>
+            </PdgIcon>
           )}
           {children}
         </Button>

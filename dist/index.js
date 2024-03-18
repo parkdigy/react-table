@@ -1,4 +1,4 @@
-'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),SimpleBar=require('simplebar-react'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core');require('simplebar-react/dist/simplebar.min.css');var uuid=require('uuid'),reactForm=require('@pdg/react-form'),reactCopyToClipboard=require('react-copy-to-clipboard');/******************************************************************************
+'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),SimpleBar=require('simplebar-react'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),util=require('@pdg/util'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core');require('simplebar-react/dist/simplebar.min.css');var uuid=require('uuid'),reactForm=require('@pdg/react-form'),reactComponent=require('@pdg/react-component'),reactCopyToClipboard=require('react-copy-to-clipboard');/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -111,49 +111,7 @@ var templateObject_1$4;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__
     }
 
   }
-});var empty = function (v) {
-    var result = false;
-    if (v == null) {
-        result = true;
-    }
-    else if (typeof v === 'string') {
-        result = v === '';
-    }
-    else if (typeof v === 'object') {
-        if (Array.isArray(v)) {
-            result = v.length === 0;
-        }
-        else if (!(v instanceof Date)) {
-            result = Object.entries(v).length === 0;
-        }
-    }
-    return result;
-};
-var notEmpty = function (v) {
-    return !empty(v);
-};
-var equal = function (v1, v2) {
-    if (v1 === v2)
-        return true;
-    if (typeof v1 !== typeof v2)
-        return false;
-    if (v1 == null || v2 == null)
-        return false;
-    if (Array.isArray(v1) && Array.isArray(v2)) {
-        if (v1.length !== v2.length)
-            return false;
-        for (var i = 0; i < v1.length; i += 1) {
-            if (v1[i] !== v2[i])
-                return false;
-        }
-    }
-    else {
-        return v1 === v2;
-    }
-    return true;
-};function numberWithThousandSeparator(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}function getTableColumnAlign(column, defaultAlign) {
+});function getTableColumnAlign(column, defaultAlign) {
     switch (column.type) {
         case 'number':
             return column.align ? column.align : 'right';
@@ -187,96 +145,6 @@ function typographyColorToSxColor(color) {
     else {
         return color;
     }
-}function getTelAutoDash(tel) {
-    if (tel == null)
-        return null;
-    var str = tel.replace(/[^0-9*]/g, '');
-    var isLastDash = tel.substr(tel.length - 1, 1) === '-';
-    if (str.substr(0, 1) !== '0' && !['15', '16', '18'].includes(str.substr(0, 2))) {
-        return tel;
-    }
-    var tmp = '';
-    var preLen;
-    switch (str.substr(0, 2)) {
-        case '02':
-            preLen = 2;
-            break;
-        case '15':
-        case '16':
-        case '18':
-            preLen = 4;
-            break;
-        default:
-            preLen = 3;
-    }
-    if (['15', '16', '18'].includes(str.substr(0, 2))) {
-        if (str.length <= preLen) {
-            tmp = str;
-        }
-        else if (str.length <= preLen + 4) {
-            tmp += str.substr(0, preLen);
-            tmp += '-';
-            tmp += str.substr(preLen);
-        }
-        else {
-            tmp = str;
-        }
-    }
-    else if (str.length <= preLen) {
-        tmp = str;
-    }
-    else if (str.length <= preLen + 3) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen);
-    }
-    else if (str.length <= preLen + 7) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen, 3);
-        tmp += '-';
-        tmp += str.substr(preLen + 3);
-    }
-    else if (str.length <= preLen + 8) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen, 4);
-        tmp += '-';
-        tmp += str.substr(preLen + 4);
-    }
-    else {
-        tmp = str;
-    }
-    if (isLastDash) {
-        if (str.length === preLen) {
-            tmp += '-';
-        }
-    }
-    return tmp;
-}/********************************************************************************************************************
- * 사업자등록번호 하이픈 추가
- * @param companyNo 사업자등록번호
- * @returns 하이픈이 추가된 사업자등록번호
- * ******************************************************************************************************************/
-function companyNoAutoDash(companyNo) {
-    var str = companyNo.replace(/[^0-9*]/g, '');
-    var values = [str.slice(0, 3)];
-    if (str.length > 3)
-        values.push(str.slice(3, 5));
-    if (str.length > 5)
-        values.push(str.slice(5));
-    return values.join('-');
-}/********************************************************************************************************************
- * 주민등록번호에 하이픈 추가하는 함수
- * @param personalNo 주민등록번호
- * @returns 하이픈 추가된 주민등록번호
- * ******************************************************************************************************************/
-function personalNoAutoDash(personalNo) {
-    var str = personalNo.replace(/[^0-9*]/g, '');
-    var values = [str.slice(0, 6)];
-    if (str.length > 6)
-        values.push(str.slice(6));
-    return values.join('-');
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
@@ -509,7 +377,7 @@ var TableBodyCell = function (_a) {
         switch (column.type) {
             case 'number':
                 if (typeof data === 'string' || typeof data === 'number') {
-                    data = numberWithThousandSeparator(data);
+                    data = util.numberFormat(data);
                 }
                 if (column.numberPrefix) {
                     data = (React.createElement(React.Fragment, null,
@@ -524,17 +392,17 @@ var TableBodyCell = function (_a) {
                 break;
             case 'tel':
                 if (typeof data === 'string') {
-                    data = getTelAutoDash(data);
+                    data = util.telAutoDash(data);
                 }
                 break;
             case 'company_no':
                 if (typeof data === 'string') {
-                    data = companyNoAutoDash(data);
+                    data = util.companyNoAutoDash(data);
                 }
                 break;
             case 'personal_no':
                 if (typeof data === 'string') {
-                    data = personalNoAutoDash(data);
+                    data = util.personalNoAutoDash(data);
                 }
                 break;
             case 'check':
@@ -1436,7 +1304,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                     if (itemCommands) {
                         switch (itemCommands.getType()) {
                             case 'FormCheckbox':
-                                if (notEmpty(value)) {
+                                if (util.notEmpty(value)) {
                                     var checkCommands = itemCommands;
                                     if (value.toString() === ((_a = itemCommands.getValue()) === null || _a === void 0 ? void 0 : _a.toString())) {
                                         checkCommands.setChecked(true);
@@ -1450,7 +1318,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                             case 'FormDateTimePicker':
                             case 'FormTimePicker':
                                 {
-                                    if (notEmpty(value)) {
+                                    if (util.notEmpty(value)) {
                                         var dateCommands = itemCommands;
                                         var format = dateCommands.getFormValueFormat();
                                         var itemValue = dayjs(value, format);
@@ -1468,7 +1336,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     var toName = dateRangePickerCommands.getFormValueToName();
                                     var format = dateRangePickerCommands.getFormValueFormat();
                                     if (name === fromName) {
-                                        if (notEmpty(value)) {
+                                        if (util.notEmpty(value)) {
                                             var startValue = dayjs(value, format);
                                             dateRangePickerCommands.setFromValue(startValue.isValid() ? startValue : null);
                                         }
@@ -1477,7 +1345,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                         }
                                     }
                                     else if (name === toName) {
-                                        if (notEmpty(value)) {
+                                        if (util.notEmpty(value)) {
                                             var endValue = dayjs(value, format);
                                             dateRangePickerCommands.setToValue(endValue.isValid() ? endValue : null);
                                         }
@@ -1493,10 +1361,10 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     var fromName = dateRangePickerCommands.getFormValueFromName();
                                     var toName = dateRangePickerCommands.getFormValueToName();
                                     if (name === fromName) {
-                                        dateRangePickerCommands.setFromValue(notEmpty(value) ? Number(value) : null);
+                                        dateRangePickerCommands.setFromValue(util.notEmpty(value) ? Number(value) : null);
                                     }
                                     else if (name === toName) {
-                                        dateRangePickerCommands.setToValue(notEmpty(value) ? Number(value) : null);
+                                        dateRangePickerCommands.setToValue(util.notEmpty(value) ? Number(value) : null);
                                     }
                                 }
                                 break;
@@ -1506,10 +1374,10 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     var yearName = monthCommands.getFormValueYearName();
                                     var monthName = monthCommands.getFormValueMonthName();
                                     if (name === yearName) {
-                                        monthCommands.setYear(notEmpty(value) ? Number(value) : null);
+                                        monthCommands.setYear(util.notEmpty(value) ? Number(value) : null);
                                     }
                                     else if (name === monthName) {
-                                        monthCommands.setMonth(notEmpty(value) ? Number(value) : null);
+                                        monthCommands.setMonth(util.notEmpty(value) ? Number(value) : null);
                                     }
                                 }
                                 break;
@@ -1521,16 +1389,16 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     var toYearName = monthRangeCommands.getFormValueToYearName();
                                     var toMonthName = monthRangeCommands.getFormValueToMonthName();
                                     if (name === fromYearName) {
-                                        monthRangeCommands.setFromYear(notEmpty(value) ? Number(value) : null);
+                                        monthRangeCommands.setFromYear(util.notEmpty(value) ? Number(value) : null);
                                     }
                                     else if (name === fromMonthName) {
-                                        monthRangeCommands.setFromMonth(notEmpty(value) ? Number(value) : null);
+                                        monthRangeCommands.setFromMonth(util.notEmpty(value) ? Number(value) : null);
                                     }
                                     else if (name === toYearName) {
-                                        monthRangeCommands.setToYear(notEmpty(value) ? Number(value) : null);
+                                        monthRangeCommands.setToYear(util.notEmpty(value) ? Number(value) : null);
                                     }
                                     else if (name === toMonthName) {
-                                        monthRangeCommands.setToMonth(notEmpty(value) ? Number(value) : null);
+                                        monthRangeCommands.setToMonth(util.notEmpty(value) ? Number(value) : null);
                                     }
                                 }
                                 break;
@@ -1673,7 +1541,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                                     resetValue = searchRef.current.getFormReset(name);
                                     break;
                             }
-                            if (resetValue != null && !equal(resetValue, value) && typeof value !== 'object') {
+                            if (resetValue != null && !util.equal(resetValue, value) && typeof value !== 'object') {
                                 hashes_1.push("".concat(name, "=").concat(encodeURIComponent(value)));
                             }
                         }
@@ -1777,20 +1645,12 @@ SearchTable.displayName = 'SearchTable';
 SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps = {
     variant: 'outlined',
     color: 'primary',
-};var TableIconDefaultProps = {};var TableIcon = React.forwardRef(function (_a, ref) {
-    // Memo --------------------------------------------------------------------------------------------------------------
-    var className = _a.className, initChildren = _a.children, props = __rest(_a, ["className", "children"]);
-    var children = React.useMemo(function () { return initChildren.replace(/[A-Z]/g, function (letter, idx) { return "".concat(idx > 0 ? '_' : '').concat(letter.toLowerCase()); }); }, [initChildren]);
-    // Render ----------------------------------------------------------------------------------------------------------
-    return (React.createElement(material.Icon, __assign({ ref: ref }, props, { className: classNames('TableIcon', className) }), children));
-});
-TableIcon.displayName = 'TableIcon';
-TableIcon.defaultProps = TableIconDefaultProps;var TableButton = React.forwardRef(function (_a, ref) {
+};var TableButton = React.forwardRef(function (_a, ref) {
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
     var sx = React.useMemo(function () { return (__assign({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return (React.createElement(material.Button, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-        icon && (React.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
+    return (React.createElement(material.Button, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
+        icon && (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', color: color }, icon)),
         children));
 });
 TableButton.displayName = 'TableButton';
@@ -1870,8 +1730,8 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
                     }
                 }
                 anchorRef.current = r;
-            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-            icon && (React.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
+            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
+            icon && (React.createElement(reactComponent.PdgIcon, { fontSize: 'small', color: color }, icon)),
             children),
         React.createElement(material.Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
@@ -1997,11 +1857,11 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
             if (item.onRender) {
                 data = item.onRender(info);
             }
-            else if (notEmpty(data)) {
+            else if (util.notEmpty(data)) {
                 switch (item.type) {
                     case 'number':
                         if (typeof data === 'string' || typeof data === 'number') {
-                            data = numberWithThousandSeparator(data);
+                            data = util.numberFormat(data);
                             if (item.numberPrefix) {
                                 data = (React.createElement(React.Fragment, null,
                                     React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, item.numberPrefix),
@@ -2016,7 +1876,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                     case 'tel':
                         if (typeof data === 'string') {
-                            data = getTelAutoDash(data);
+                            data = util.telAutoDash(data);
                         }
                         break;
                     case 'email':
@@ -2033,12 +1893,12 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                     case 'company_no':
                         if (typeof data === 'string') {
-                            data = companyNoAutoDash(data);
+                            data = util.companyNoAutoDash(data);
                         }
                         break;
                     case 'personal_no':
                         if (typeof data === 'string') {
-                            data = personalNoAutoDash(data);
+                            data = util.personalNoAutoDash(data);
                         }
                         break;
                     case 'date':
@@ -2075,7 +1935,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                 }
             }
-            if (empty(data))
+            if (util.empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React.createElement(React.Fragment, null, "\u00A0");
             var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
             return item.type === 'divider' ? (React.createElement(material.Grid, { key: idx, item: true, xs: 12 },
@@ -2089,12 +1949,12 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                     React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                 React.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign(__assign(__assign({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React.createElement(ValueEllipsis, null, data) : React.createElement(Value, null, data),
-                    item.clipboard && notEmpty(copyToClipboardText_1) && (React.createElement(ValueClipboard, null,
+                    item.clipboard && util.notEmpty(copyToClipboardText_1) && (React.createElement(ValueClipboard, null,
                         React.createElement(reactCopyToClipboard.CopyToClipboard, { text: copyToClipboardText_1, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText_1); } : undefined },
                             React.createElement(ClipboardIconButton, __assign({ size: 'small', color: 'primary' }, item.clipboardProps),
-                                React.createElement(TableIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
+                                React.createElement(reactComponent.PdgIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
         }
     })));
 };
 InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;exports.InfoTable=InfoTable;exports.InfoTableDefaultProps=InfoTableDefaultProps;exports.SearchTable=SearchTable;exports.SearchTableDefaultProps=SearchTableDefaultProps;exports.Table=Table;exports.TableButton=TableButton;exports.TableButtonDefaultProps=TableButtonDefaultProps;exports.TableDefaultProps=TableDefaultProps;exports.TableIcon=TableIcon;exports.TableIconDefaultProps=TableIconDefaultProps;exports.TableMenuButton=TableMenuButton;exports.TableMenuButtonDefaultProps=TableMenuButtonDefaultProps;
+InfoTable.defaultProps = InfoTableDefaultProps;exports.InfoTable=InfoTable;exports.InfoTableDefaultProps=InfoTableDefaultProps;exports.SearchTable=SearchTable;exports.SearchTableDefaultProps=SearchTableDefaultProps;exports.Table=Table;exports.TableButton=TableButton;exports.TableButtonDefaultProps=TableButtonDefaultProps;exports.TableDefaultProps=TableDefaultProps;exports.TableMenuButton=TableMenuButton;exports.TableMenuButtonDefaultProps=TableMenuButtonDefaultProps;

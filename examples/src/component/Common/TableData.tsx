@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, MenuItem, MenuList, styled } from '@mui/material';
 import data from './data.json';
 import { TableProps, TableItem, TableButton, TableMenuButton } from '../../../../src';
+import { numberFormat } from '@pdg/util';
 
 const StyledHeaderTag = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -95,7 +96,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     width: 100,
     footer: {
       onRender() {
-        return numberWithThousandSeparator(12123);
+        return numberFormat(12123);
       },
     },
   },

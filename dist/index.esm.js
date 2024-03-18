@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden,FormIcon}from'@pdg/react-form';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden,FormIcon}from'@pdg/react-form';import {PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -111,49 +111,7 @@ var templateObject_1$4;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__
     }
 
   }
-});var empty = function (v) {
-    var result = false;
-    if (v == null) {
-        result = true;
-    }
-    else if (typeof v === 'string') {
-        result = v === '';
-    }
-    else if (typeof v === 'object') {
-        if (Array.isArray(v)) {
-            result = v.length === 0;
-        }
-        else if (!(v instanceof Date)) {
-            result = Object.entries(v).length === 0;
-        }
-    }
-    return result;
-};
-var notEmpty = function (v) {
-    return !empty(v);
-};
-var equal = function (v1, v2) {
-    if (v1 === v2)
-        return true;
-    if (typeof v1 !== typeof v2)
-        return false;
-    if (v1 == null || v2 == null)
-        return false;
-    if (Array.isArray(v1) && Array.isArray(v2)) {
-        if (v1.length !== v2.length)
-            return false;
-        for (var i = 0; i < v1.length; i += 1) {
-            if (v1[i] !== v2[i])
-                return false;
-        }
-    }
-    else {
-        return v1 === v2;
-    }
-    return true;
-};function numberWithThousandSeparator(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}function getTableColumnAlign(column, defaultAlign) {
+});function getTableColumnAlign(column, defaultAlign) {
     switch (column.type) {
         case 'number':
             return column.align ? column.align : 'right';
@@ -187,96 +145,6 @@ function typographyColorToSxColor(color) {
     else {
         return color;
     }
-}function getTelAutoDash(tel) {
-    if (tel == null)
-        return null;
-    var str = tel.replace(/[^0-9*]/g, '');
-    var isLastDash = tel.substr(tel.length - 1, 1) === '-';
-    if (str.substr(0, 1) !== '0' && !['15', '16', '18'].includes(str.substr(0, 2))) {
-        return tel;
-    }
-    var tmp = '';
-    var preLen;
-    switch (str.substr(0, 2)) {
-        case '02':
-            preLen = 2;
-            break;
-        case '15':
-        case '16':
-        case '18':
-            preLen = 4;
-            break;
-        default:
-            preLen = 3;
-    }
-    if (['15', '16', '18'].includes(str.substr(0, 2))) {
-        if (str.length <= preLen) {
-            tmp = str;
-        }
-        else if (str.length <= preLen + 4) {
-            tmp += str.substr(0, preLen);
-            tmp += '-';
-            tmp += str.substr(preLen);
-        }
-        else {
-            tmp = str;
-        }
-    }
-    else if (str.length <= preLen) {
-        tmp = str;
-    }
-    else if (str.length <= preLen + 3) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen);
-    }
-    else if (str.length <= preLen + 7) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen, 3);
-        tmp += '-';
-        tmp += str.substr(preLen + 3);
-    }
-    else if (str.length <= preLen + 8) {
-        tmp += str.substr(0, preLen);
-        tmp += '-';
-        tmp += str.substr(preLen, 4);
-        tmp += '-';
-        tmp += str.substr(preLen + 4);
-    }
-    else {
-        tmp = str;
-    }
-    if (isLastDash) {
-        if (str.length === preLen) {
-            tmp += '-';
-        }
-    }
-    return tmp;
-}/********************************************************************************************************************
- * 사업자등록번호 하이픈 추가
- * @param companyNo 사업자등록번호
- * @returns 하이픈이 추가된 사업자등록번호
- * ******************************************************************************************************************/
-function companyNoAutoDash(companyNo) {
-    var str = companyNo.replace(/[^0-9*]/g, '');
-    var values = [str.slice(0, 3)];
-    if (str.length > 3)
-        values.push(str.slice(3, 5));
-    if (str.length > 5)
-        values.push(str.slice(5));
-    return values.join('-');
-}/********************************************************************************************************************
- * 주민등록번호에 하이픈 추가하는 함수
- * @param personalNo 주민등록번호
- * @returns 하이픈 추가된 주민등록번호
- * ******************************************************************************************************************/
-function personalNoAutoDash(personalNo) {
-    var str = personalNo.replace(/[^0-9*]/g, '');
-    var values = [str.slice(0, 6)];
-    if (str.length > 6)
-        values.push(str.slice(6));
-    return values.join('-');
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
@@ -509,7 +377,7 @@ var TableBodyCell = function (_a) {
         switch (column.type) {
             case 'number':
                 if (typeof data === 'string' || typeof data === 'number') {
-                    data = numberWithThousandSeparator(data);
+                    data = numberFormat(data);
                 }
                 if (column.numberPrefix) {
                     data = (React.createElement(React.Fragment, null,
@@ -524,7 +392,7 @@ var TableBodyCell = function (_a) {
                 break;
             case 'tel':
                 if (typeof data === 'string') {
-                    data = getTelAutoDash(data);
+                    data = telAutoDash(data);
                 }
                 break;
             case 'company_no':
@@ -1777,20 +1645,12 @@ SearchTable.displayName = 'SearchTable';
 SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps = {
     variant: 'outlined',
     color: 'primary',
-};var TableIconDefaultProps = {};var TableIcon = React.forwardRef(function (_a, ref) {
-    // Memo --------------------------------------------------------------------------------------------------------------
-    var className = _a.className, initChildren = _a.children, props = __rest(_a, ["className", "children"]);
-    var children = useMemo(function () { return initChildren.replace(/[A-Z]/g, function (letter, idx) { return "".concat(idx > 0 ? '_' : '').concat(letter.toLowerCase()); }); }, [initChildren]);
-    // Render ----------------------------------------------------------------------------------------------------------
-    return (React.createElement(Icon, __assign({ ref: ref }, props, { className: classNames('TableIcon', className) }), children));
-});
-TableIcon.displayName = 'TableIcon';
-TableIcon.defaultProps = TableIconDefaultProps;var TableButton = React.forwardRef(function (_a, ref) {
+};var TableButton = React.forwardRef(function (_a, ref) {
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
     var sx = useMemo(function () { return (__assign({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return (React.createElement(Button, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-        icon && (React.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
+    return (React.createElement(Button, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
+        icon && (React.createElement(PdgIcon, { fontSize: 'small', color: color }, icon)),
         children));
 });
 TableButton.displayName = 'TableButton';
@@ -1870,8 +1730,8 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
                     }
                 }
                 anchorRef.current = r;
-            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(TableIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-            icon && (React.createElement(TableIcon, { fontSize: 'small', color: color }, icon)),
+            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
+            icon && (React.createElement(PdgIcon, { fontSize: 'small', color: color }, icon)),
             children),
         React.createElement(Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
@@ -2001,7 +1861,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                 switch (item.type) {
                     case 'number':
                         if (typeof data === 'string' || typeof data === 'number') {
-                            data = numberWithThousandSeparator(data);
+                            data = numberFormat(data);
                             if (item.numberPrefix) {
                                 data = (React.createElement(React.Fragment, null,
                                     React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, item.numberPrefix),
@@ -2016,7 +1876,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                     case 'tel':
                         if (typeof data === 'string') {
-                            data = getTelAutoDash(data);
+                            data = telAutoDash(data);
                         }
                         break;
                     case 'email':
@@ -2092,9 +1952,9 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                     item.clipboard && notEmpty(copyToClipboardText_1) && (React.createElement(ValueClipboard, null,
                         React.createElement(CopyToClipboard, { text: copyToClipboardText_1, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText_1); } : undefined },
                             React.createElement(ClipboardIconButton, __assign({ size: 'small', color: 'primary' }, item.clipboardProps),
-                                React.createElement(TableIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
+                                React.createElement(PdgIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
         }
     })));
 };
 InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};
+InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};

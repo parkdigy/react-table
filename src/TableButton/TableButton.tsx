@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Button } from '@mui/material';
 import { TableButtonProps as Props, TableButtonDefaultProps } from './TableButton.types';
-import TableIcon from '../TableIcon';
+import { PdgIcon } from '@pdg/react-component';
 
 const TableButton = React.forwardRef<HTMLButtonElement, Props>(
   ({ children, className, sx: initSx, color, icon, startIcon, endIcon, onClick, ...props }, ref) => {
@@ -24,24 +24,24 @@ const TableButton = React.forwardRef<HTMLButtonElement, Props>(
         onClick={onClick}
         startIcon={
           startIcon ? (
-            <TableIcon fontSize='small' sx={{ mr: -0.5 }}>
+            <PdgIcon fontSize='small' sx={{ mr: -0.5 }}>
               {startIcon}
-            </TableIcon>
+            </PdgIcon>
           ) : undefined
         }
         endIcon={
           endIcon ? (
-            <TableIcon fontSize='small' sx={{ ml: -0.5 }}>
+            <PdgIcon fontSize='small' sx={{ ml: -0.5 }}>
               {endIcon}
-            </TableIcon>
+            </PdgIcon>
           ) : undefined
         }
         {...props}
       >
         {icon && (
-          <TableIcon fontSize='small' color={color}>
+          <PdgIcon fontSize='small' color={color}>
             {icon}
-          </TableIcon>
+          </PdgIcon>
         )}
         {children}
       </Button>

@@ -25,8 +25,8 @@ import {
   SearchGroup,
 } from '@pdg/react-form';
 import { Table, TableCommands, TableItem } from '../Table';
-import { equal, notEmpty } from '../@util';
 import dayjs from 'dayjs';
+import { equal, notEmpty } from '@pdg/util';
 
 interface HashValueMap {
   [key: string]: string;

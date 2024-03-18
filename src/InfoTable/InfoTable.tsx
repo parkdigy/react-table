@@ -3,20 +3,12 @@ import classNames from 'classnames';
 import { InfoTableProps as Props, InfoTableDefaultProps, InfoTableInfo } from './InfoTable.types';
 import { ClipboardIconButton, Label, Line, Value, ValueClipboard, ValueEllipsis, ValueWrap } from './InfoTable.style';
 import { Grid, Stack } from '@mui/material';
-import {
-  combineSx,
-  companyNoAutoDash,
-  empty,
-  getTelAutoDash,
-  notEmpty,
-  numberWithThousandSeparator,
-  personalNoAutoDash,
-  typographyColorToSxColor,
-} from '../@util';
-import TableIcon from '../TableIcon';
+import { combineSx, typographyColorToSxColor } from '../@util';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import { FormIcon } from '@pdg/react-form';
+import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telAutoDash } from '@pdg/util';
+import { PdgIcon } from '@pdg/react-component';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
   <T = InfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
@@ -105,7 +97,7 @@ const InfoTable: WithType = ({
             switch (item.type) {
               case 'number':
                 if (typeof data === 'string' || typeof data === 'number') {
-                  data = numberWithThousandSeparator(data);
+                  data = numberFormat(data);
 
                   if (item.numberPrefix) {
                     data = (
@@ -127,7 +119,7 @@ const InfoTable: WithType = ({
                 break;
               case 'tel':
                 if (typeof data === 'string') {
-                  data = getTelAutoDash(data);
+                  data = telAutoDash(data);
                 }
                 break;
               case 'email':
@@ -267,7 +259,7 @@ const InfoTable: WithType = ({
                       onCopy={onCopyToClipboard ? () => onCopyToClipboard(item, copyToClipboardText) : undefined}
                     >
                       <ClipboardIconButton size='small' color='primary' {...item.clipboardProps}>
-                        <TableIcon>{item.clipboardIcon || 'ContentPaste'}</TableIcon>
+                        <PdgIcon>{item.clipboardIcon || 'ContentPaste'}</PdgIcon>
                       </ClipboardIconButton>
                     </CopyToClipboard>
                   </ValueClipboard>
