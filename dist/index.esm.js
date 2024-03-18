@@ -2097,4 +2097,4 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
     })));
 };
 InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};//# sourceMappingURL=index.esm.js.map
+InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableIcon,TableIconDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};
