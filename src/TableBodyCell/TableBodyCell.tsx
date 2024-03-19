@@ -7,7 +7,7 @@ import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
 import classNames from 'classnames';
-import { companyNoAutoDash, numberFormat, personalNoAutoDash, telAutoDash } from '@pdg/util';
+import { companyNoAutoDash, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -124,7 +124,7 @@ const TableBodyCell: React.FC<Props> = ({
         break;
       case 'tel':
         if (typeof data === 'string') {
-          data = telAutoDash(data);
+          data = telNoAutoDash(data);
         }
         break;
       case 'company_no':

@@ -392,7 +392,7 @@ var TableBodyCell = function (_a) {
                 break;
             case 'tel':
                 if (typeof data === 'string') {
-                    data = util.telAutoDash(data);
+                    data = util.telNoAutoDash(data);
                 }
                 break;
             case 'company_no':
@@ -1876,7 +1876,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                     case 'tel':
                         if (typeof data === 'string') {
-                            data = util.telAutoDash(data);
+                            data = util.telNoAutoDash(data);
                         }
                         break;
                     case 'email':

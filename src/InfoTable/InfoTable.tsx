@@ -7,7 +7,7 @@ import { combineSx, typographyColorToSxColor } from '../@util';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import { FormIcon } from '@pdg/react-form';
-import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telAutoDash } from '@pdg/util';
+import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
 import { PdgIcon } from '@pdg/react-component';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
@@ -119,7 +119,7 @@ const InfoTable: WithType = ({
                 break;
               case 'tel':
                 if (typeof data === 'string') {
-                  data = telAutoDash(data);
+                  data = telNoAutoDash(data);
                 }
                 break;
               case 'email':

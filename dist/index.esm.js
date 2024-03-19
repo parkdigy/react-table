@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden,FormIcon}from'@pdg/react-form';import {PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden,FormIcon}from'@pdg/react-form';import {PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -392,7 +392,7 @@ var TableBodyCell = function (_a) {
                 break;
             case 'tel':
                 if (typeof data === 'string') {
-                    data = telAutoDash(data);
+                    data = telNoAutoDash(data);
                 }
                 break;
             case 'company_no':
@@ -1876,7 +1876,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
                         break;
                     case 'tel':
                         if (typeof data === 'string') {
-                            data = telAutoDash(data);
+                            data = telNoAutoDash(data);
                         }
                         break;
                     case 'email':
