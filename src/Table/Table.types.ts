@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { TableCellProps, TooltipProps } from '@mui/material';
 import { TablePaginationProps } from '../TablePagination/TablePagination.types';
 import { CommonSxProps } from '../@types';
@@ -46,6 +46,7 @@ export interface TableColumn<T = TableItem> {
   head?: {
     className?: CommonSxProps['className'];
     style?: CommonSxProps['style'];
+    backgroundColor?: CSSProperties['backgroundColor'];
     sx?: CommonSxProps['sx'];
     onGetClassName?(): CommonSxProps['className'];
     onGetStyle?(): CommonSxProps['style'];
@@ -56,6 +57,7 @@ export interface TableColumn<T = TableItem> {
     value?: ReactNode;
     className?: CommonSxProps['className'];
     style?: CommonSxProps['style'];
+    backgroundColor?: CSSProperties['backgroundColor'];
     sx?: CommonSxProps['sx'];
     onGetClassName?(): CommonSxProps['className'];
     onGetStyle?(): CommonSxProps['style'];
@@ -64,6 +66,7 @@ export interface TableColumn<T = TableItem> {
   };
   className?: CommonSxProps['className'];
   style?: CommonSxProps['style'];
+  backgroundColor?: CSSProperties['backgroundColor'];
   sx?: CommonSxProps['sx'];
   onGetClassName?(item: T, index: number): CommonSxProps['className'];
   onGetStyle?(item: T, index: number): CommonSxProps['style'];

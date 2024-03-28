@@ -82,17 +82,21 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
 
     switch (type) {
       case 'head':
-        style = column.head?.style;
+        style = column.head?.backgroundColor
+          ? { ...column.head?.style, backgroundColor: column.head.backgroundColor }
+          : column.head?.style;
         getStyle = column.head?.onGetStyle ? column.head?.onGetStyle() : undefined;
         break;
       case 'body':
-        style = column.style;
+        style = column.backgroundColor ? { ...column.style, backgroundColor: column.backgroundColor } : column.style;
         if (item != null && index != null) {
           getStyle = column.onGetStyle ? column.onGetStyle(item, index) : undefined;
         }
         break;
       case 'footer':
-        style = column.footer?.style;
+        style = column.footer?.backgroundColor
+          ? { ...column.footer?.style, backgroundColor: column.footer.backgroundColor }
+          : column.footer?.style;
         getStyle = column.footer?.onGetStyle ? column.footer?.onGetStyle() : undefined;
         break;
     }

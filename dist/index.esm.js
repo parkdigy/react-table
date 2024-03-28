@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Button,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden,FormIcon}from'@pdg/react-form';import {PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -205,23 +205,25 @@ var TableCommonCell = function (_a) {
         }
     }, [column, index, initClassName, item, type]);
     var style = useMemo(function () {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         var style;
         var getStyle;
         switch (type) {
             case 'head':
-                style = (_a = column.head) === null || _a === void 0 ? void 0 : _a.style;
-                getStyle = ((_b = column.head) === null || _b === void 0 ? void 0 : _b.onGetStyle) ? (_c = column.head) === null || _c === void 0 ? void 0 : _c.onGetStyle() : undefined;
+                style = ((_a = column.head) === null || _a === void 0 ? void 0 : _a.backgroundColor)
+                    ? __assign(__assign({}, (_b = column.head) === null || _b === void 0 ? void 0 : _b.style), { backgroundColor: column.head.backgroundColor }) : (_c = column.head) === null || _c === void 0 ? void 0 : _c.style;
+                getStyle = ((_d = column.head) === null || _d === void 0 ? void 0 : _d.onGetStyle) ? (_e = column.head) === null || _e === void 0 ? void 0 : _e.onGetStyle() : undefined;
                 break;
             case 'body':
-                style = column.style;
+                style = column.backgroundColor ? __assign(__assign({}, column.style), { backgroundColor: column.backgroundColor }) : column.style;
                 if (item != null && index != null) {
                     getStyle = column.onGetStyle ? column.onGetStyle(item, index) : undefined;
                 }
                 break;
             case 'footer':
-                style = (_d = column.footer) === null || _d === void 0 ? void 0 : _d.style;
-                getStyle = ((_e = column.footer) === null || _e === void 0 ? void 0 : _e.onGetStyle) ? (_f = column.footer) === null || _f === void 0 ? void 0 : _f.onGetStyle() : undefined;
+                style = ((_f = column.footer) === null || _f === void 0 ? void 0 : _f.backgroundColor)
+                    ? __assign(__assign({}, (_g = column.footer) === null || _g === void 0 ? void 0 : _g.style), { backgroundColor: column.footer.backgroundColor }) : (_h = column.footer) === null || _h === void 0 ? void 0 : _h.style;
+                getStyle = ((_j = column.footer) === null || _j === void 0 ? void 0 : _j.onGetStyle) ? (_k = column.footer) === null || _k === void 0 ? void 0 : _k.onGetStyle() : undefined;
                 break;
         }
         return __assign(__assign(__assign(__assign({}, initStyle), { width: column.width, minWidth: column.minWidth, cursor: type === 'body' && (column.onClick || onClick) ? 'pointer' : undefined, paddingLeft: column.paddingLeft, paddingRight: column.paddingRight }), style), getStyle);
@@ -1647,37 +1649,50 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
     color: 'primary',
 };var TableButton = React.forwardRef(function (_a, ref) {
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
-    var sx = useMemo(function () { return (__assign({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
+    var sx = useMemo(function () { return (__assign({ minWidth: 0, px: 0.7 }, initSx)); }, [initSx]);
     // Render ----------------------------------------------------------------------------------------------------------
-    return (React.createElement(Button, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick, startIcon: startIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-        icon && (React.createElement(PdgIcon, { fontSize: 'small', color: color }, icon)),
-        children));
+    return (React.createElement(PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, icon: icon, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
 });
 TableButton.displayName = 'TableButton';
 TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultProps = {
-    variant: 'outlined',
+    variant: 'text',
     color: 'primary',
     placement: 'bottom',
 };var TableMenuButton = React.forwardRef(function (_a, ref) {
-    // ID ----------------------------------------------------------------------------------------------------------------
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "placement", "inModal", "zIndex", "menuList"]);
+    /********************************************************************************************************************
+     * ID
+     * ******************************************************************************************************************/
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, variant = _a.variant, initIcon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "variant", "icon", "startIcon", "endIcon", "placement", "inModal", "zIndex", "menuList"]);
     var buttonId = useId();
     var menuId = useId();
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
     var _b = useTableState(), menuOpen = _b.menuOpen, openMenuId = _b.openMenuId, setMenuOpen = _b.setMenuOpen;
-    // Ref ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
     var anchorRef = useRef();
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
     var _c = useState(false), open = _c[0], setOpen = _c[1];
-    // Effect ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+    var icon = useMemo(function () { return (!initIcon && !startIcon && !endIcon && !children ? 'MoreVert' : initIcon); }, [initIcon, startIcon, endIcon, children]);
+    var sx = useMemo(function () { return (__assign({ minWidth: 0, pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7, pr: !children ? 0.7 : endIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7 }, initSx)); }, [children, endIcon, icon, initSx, startIcon, variant]);
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
     useEffect(function () {
         if (open && menuOpen && openMenuId !== menuId) {
             setOpen(false);
         }
     }, [menuId, menuOpen, open, openMenuId]);
-    // Memo --------------------------------------------------------------------------------------------------------------
-    var sx = useMemo(function () { return (__assign({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7 }, initSx)); }, [endIcon, initSx, startIcon]);
-    // Event Handler -----------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
     var handleClick = useCallback(function () {
         setOpen(function (old) { return !old; });
         if (!open) {
@@ -1708,7 +1723,9 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             }
         }
     }, [menuId, open, setMenuOpen]);
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var finalMenuList = useMemo(function () {
         return React.cloneElement(menuList, {
             autoFocusItem: open,
@@ -1718,9 +1735,11 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
             onClick: handleClose,
         });
     }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement("span", null,
-        React.createElement(Button, __assign({ ref: function (r) {
+        React.createElement(PdgButton, __assign({ ref: function (r) {
                 if (ref) {
                     if (typeof ref === 'function') {
                         ref(r);
@@ -1730,9 +1749,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
                     }
                 }
                 anchorRef.current = r;
-            }, id: buttonId, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: handleClick, startIcon: startIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { mr: -0.5 } }, startIcon)) : undefined, endIcon: endIcon ? (React.createElement(PdgIcon, { fontSize: 'small', sx: { ml: -0.5 } }, endIcon)) : undefined }, props),
-            icon && (React.createElement(PdgIcon, { fontSize: 'small', color: color }, icon)),
-            children),
+            }, id: buttonId, variant: variant, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, icon: icon, startIcon: startIcon, endIcon: endIcon, onClick: handleClick }, props), children),
         React.createElement(Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
             var placements = placement.split('-');
@@ -1940,12 +1957,12 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
             var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
             return item.type === 'divider' ? (React.createElement(Grid, { key: idx, item: true, xs: 12 },
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
-                    item.icon && (React.createElement(FormIcon, { sx: { color: item.dividerColor || dividerColor }, fontSize: 'small' }, item.icon)),
+                    item.icon && (React.createElement(PdgIcon, { sx: { color: item.dividerColor || dividerColor }, fontSize: 'small' }, item.icon)),
                     item.label && (React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                     item.dividerLine && (React.createElement(React.Fragment, null, item.icon || item.label ? (React.createElement("div", { style: { flex: 1, paddingLeft: 5 } },
                         React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(Grid, __assign({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
-                    item.icon && (React.createElement(FormIcon, { sx: { color: finalLabelColor }, fontSize: 'small' }, "CalendarMonth")),
+                    item.icon && (React.createElement(PdgIcon, { sx: { color: finalLabelColor }, fontSize: 'small' }, "CalendarMonth")),
                     React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                 React.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign(__assign(__assign({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React.createElement(ValueEllipsis, null, data) : React.createElement(Value, null, data),

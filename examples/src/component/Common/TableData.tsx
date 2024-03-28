@@ -153,8 +153,6 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     onRender() {
       return (
         <TableMenuButton
-          icon='MoreVert'
-          variant='text'
           placement='left'
           menuList={
             <MenuList>

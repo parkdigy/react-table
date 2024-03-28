@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { BoxProps, GridProps, IconButtonProps, TypographyProps } from '@mui/material';
 import { CommonSxProps } from '../@types';
+import { PdgIconProps } from '@pdg/react-component';
 
 export interface InfoTableInfo {
   [key: string]: any;
@@ -21,7 +22,7 @@ export type InfoTableItemType =
   | 'divider';
 
 export interface InfoTableItem<T = InfoTableInfo> {
-  icon?: string;
+  icon?: PdgIconProps['children'];
   label?: ReactNode;
   name?: keyof T;
   type?: InfoTableItemType;

@@ -6,7 +6,6 @@ import { Grid, Stack } from '@mui/material';
 import { combineSx, typographyColorToSxColor } from '../@util';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
-import { FormIcon } from '@pdg/react-form';
 import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
 import { PdgIcon } from '@pdg/react-component';
 
@@ -204,9 +203,9 @@ const InfoTable: WithType = ({
             <Grid key={idx} item xs={12}>
               <Stack direction='row' spacing={0.5} alignItems='center'>
                 {item.icon && (
-                  <FormIcon sx={{ color: item.dividerColor || dividerColor }} fontSize='small'>
+                  <PdgIcon sx={{ color: item.dividerColor || dividerColor }} fontSize='small'>
                     {item.icon}
-                  </FormIcon>
+                  </PdgIcon>
                 )}
                 {item.label && (
                   <Label
@@ -234,9 +233,9 @@ const InfoTable: WithType = ({
             <Grid key={idx} item {...finalSizeProps} className={item.className} style={item.style} sx={item.sx}>
               <Stack direction='row' spacing={0.5} alignItems='center'>
                 {item.icon && (
-                  <FormIcon sx={{ color: finalLabelColor }} fontSize='small'>
+                  <PdgIcon sx={{ color: finalLabelColor }} fontSize='small'>
                     CalendarMonth
-                  </FormIcon>
+                  </PdgIcon>
                 )}
                 <Label
                   className={classNames(labelClassName, item.labelClassName)}

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { Button, ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
+import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
 import { TableMenuButtonProps as Props, TableMenuButtonDefaultProps } from './TableMenuButton.types';
 import useTableState from '../TableContext/useTableState';
-import { PdgIcon } from '@pdg/react-component';
+import { PdgButton } from '@pdg/react-component';
 
 const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
   (
@@ -12,7 +12,8 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
       className,
       sx: initSx,
       color,
-      icon,
+      variant,
+      icon: initIcon,
       startIcon,
       endIcon,
       placement,
@@ -23,24 +24,53 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
     },
     ref
   ) => {
-    // ID ----------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * ID
+     * ******************************************************************************************************************/
 
     const buttonId = useId();
     const menuId = useId();
 
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
 
     const { menuOpen, openMenuId, setMenuOpen } = useTableState();
 
-    // Ref ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
 
     const anchorRef = useRef<HTMLButtonElement | null>();
 
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
 
     const [open, setOpen] = useState(false);
 
-    // Effect ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+
+    const icon = useMemo(
+      () => (!initIcon && !startIcon && !endIcon && !children ? 'MoreVert' : initIcon),
+      [initIcon, startIcon, endIcon, children]
+    );
+
+    const sx = useMemo(
+      () => ({
+        minWidth: 0,
+        pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
+        pr: !children ? 0.7 : endIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
+        ...initSx,
+      }),
+      [children, endIcon, icon, initSx, startIcon, variant]
+    );
+
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
 
     useEffect(() => {
       if (open && menuOpen && openMenuId !== menuId) {
@@ -48,14 +78,9 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
       }
     }, [menuId, menuOpen, open, openMenuId]);
 
-    // Memo --------------------------------------------------------------------------------------------------------------
-
-    const sx = useMemo(
-      () => ({ minWidth: 0, px: !startIcon && !endIcon ? 0.7 : 1.7, ...initSx }),
-      [endIcon, initSx, startIcon]
-    );
-
-    // Event Handler -----------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
 
     const handleClick = useCallback(() => {
       setOpen((old) => !old);
@@ -91,7 +116,9 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
       [menuId, open, setMenuOpen]
     );
 
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
 
     const finalMenuList = useMemo(() => {
       return React.cloneElement(menuList, {
@@ -103,11 +130,13 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
       });
     }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
 
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
 
     return (
       <span>
-        <Button
+        <PdgButton
           ref={(r) => {
             if (ref) {
               if (typeof ref === 'function') {
@@ -119,6 +148,7 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
             anchorRef.current = r;
           }}
           id={buttonId}
+          variant={variant}
           aria-controls={open ? menuId : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup='true'
@@ -127,30 +157,14 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           size='small'
           sx={sx}
           color={color}
+          icon={icon}
+          startIcon={startIcon}
+          endIcon={endIcon}
           onClick={handleClick}
-          startIcon={
-            startIcon ? (
-              <PdgIcon fontSize='small' sx={{ mr: -0.5 }}>
-                {startIcon}
-              </PdgIcon>
-            ) : undefined
-          }
-          endIcon={
-            endIcon ? (
-              <PdgIcon fontSize='small' sx={{ ml: -0.5 }}>
-                {endIcon}
-              </PdgIcon>
-            ) : undefined
-          }
           {...props}
         >
-          {icon && (
-            <PdgIcon fontSize='small' color={color}>
-              {icon}
-            </PdgIcon>
-          )}
           {children}
-        </Button>
+        </PdgButton>
         <Popper
           className='TableMenuButton-Popper'
           open={open}
