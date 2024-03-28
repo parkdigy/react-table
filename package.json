@@ -1,7 +1,7 @@
 {
   "name": "@pdg/react-table",
   "title": "React Table",
-  "version": "1.0.82",
+  "version": "1.0.83",
   "description": "React Table",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -47,7 +47,7 @@
     "@mui/material": "^5.15.13",
     "@mui/x-date-pickers": "^6.19.7",
     "@pdg/react-component": "^1.0.9",
-    "@pdg/react-form": "^1.0.93",
+    "@pdg/react-form": "^1.0.94",
     "@pdg/react-hook": "^1.0.8",
     "@pdg/util": "^1.0.19",
     "@tinymce/tinymce-react": "^4.3.2",
