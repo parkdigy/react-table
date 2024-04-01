@@ -52,6 +52,9 @@ interface WithForwardRefType<T = TableItem> extends React.FC<SearchTableProps<T>
 const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, SearchTableProps>(
   (
     {
+      className,
+      style: initStyle,
+      sx,
       color,
       hash,
       stickyHeader,
@@ -61,17 +64,20 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       betweenSearchTableComponent,
       onGetData,
       onRequestHashChange,
-      // ---------------------------------------------------------------------------------------------------------------
-      className,
-      style: initStyle,
-      sx,
     },
     ref
   ) => {
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
+
     const searchRef = useRef<SearchCommands>();
     const tableRef = useRef<TableCommands>();
+    const lastGetDataDataRef = useRef<FormValueMap>({});
 
-    //------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
 
     const getSearchInfo = useCallback((search: SearchTableProps['search']) => {
       const searchInfo: SearchInfo = {};
@@ -94,17 +100,17 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       return tableInfo;
     }, []);
 
-    // Ref -------------------------------------------------------------------------------------------------------------
-
-    const lastGetDataDataRef = useRef<FormValueMap>({});
-
-    // State -----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
 
     const [isFirstSearchSubmit, setIsFirstSearchSubmit] = useState(true);
 
     const [tableData, setTableData] = useState<SearchTableData>();
 
-    // searchInfo ------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * searchInfo
+     * ******************************************************************************************************************/
 
     const searchInfoFirstUseEffect = useRef(true);
     const [searchInfo, setSearchInfo] = useState<SearchInfo>(() => getSearchInfo(search));
@@ -117,7 +123,9 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    // tableInfo -------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * tableInfo
+     * ******************************************************************************************************************/
 
     const tableInfoFirstUseEffect = useRef(true);
     const [tableInfo, setTableInfo] = useState<TableInfo>(() => getTableInfo(table));
@@ -130,7 +138,9 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
 
-    // Function - getData ----------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
 
     const getData = useCallback(
       (data: FormValueMap) => {
@@ -142,8 +152,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       },
       [onGetData]
     );
-
-    // Function ----------------------------------------------------------------------------------------------------------
 
     const deHash = useCallback((): HashValueMap => {
       const values: HashValueMap = {};
@@ -273,7 +281,9 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       }
     }, [searchRef, deHash]);
 
-    // Commands --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Commands
+     * ******************************************************************************************************************/
 
     useLayoutEffect(() => {
       if (ref) {
@@ -318,7 +328,9 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       }
     }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
 
-    //--------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * hash
+     * ******************************************************************************************************************/
 
     useEffect(() => {
       if (hash) {
@@ -327,8 +339,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.location.hash]);
-
-    //--------------------------------------------------------------------------------------------------------------------
 
     const hashChange = useCallback(
       (params: FormValueMap) => {
@@ -428,7 +438,9 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       [onRequestHashChange, getData]
     );
 
-    //------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
 
     const handlePageChange = useCallback(
       (page: number) => {
@@ -473,23 +485,24 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       [searchRef, hash, hashChange, getData, isFirstSearchSubmit]
     );
 
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
 
-    const style = useMemo((): CSSProperties | undefined => {
-      if (fullHeight) {
-        return { ...initStyle, flex: 1, display: 'flex' };
-      } else {
-        return initStyle;
-      }
-    }, [initStyle, fullHeight]);
+    const styles: { containerStyle: CSSProperties | undefined; tableContainerStyle?: CSSProperties } = useMemo(
+      () =>
+        fullHeight
+          ? {
+              containerStyle: { ...initStyle, flex: 1, display: 'flex' },
+              tableContainerStyle: { flex: 1, display: 'flex', flexDirection: 'column' },
+            }
+          : { containerStyle: initStyle },
+      [initStyle, fullHeight]
+    );
 
-    const tableContainerStyle = useMemo((): CSSProperties | undefined => {
-      if (fullHeight) {
-        return { flex: 1, display: 'flex', flexDirection: 'column' };
-      }
-    }, [fullHeight]);
-
-    //------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
 
     return (
       <Grid
@@ -497,7 +510,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
         direction='column'
         spacing={1}
         className={classNames('SearchTable', className)}
-        style={style}
+        style={styles.containerStyle}
         sx={sx}
       >
         <Grid item sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
@@ -524,7 +537,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
           </Search>
         </Grid>
         {betweenSearchTableComponent && <Grid item>{betweenSearchTableComponent}</Grid>}
-        <Grid item style={tableContainerStyle}>
+        <Grid item style={styles.tableContainerStyle}>
           <Table
             {...tableInfo.props}
             stickyHeader={stickyHeader || tableInfo.props?.stickyHeader}

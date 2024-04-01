@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   FormToggleButtonGroup,
   FormText,
@@ -26,13 +26,27 @@ import { TTableDataItem } from '../Common/TableData';
 import { lv } from '@pdg/util';
 
 const SearchTable = () => {
+  /********************************************************************************************************************
+   * Use
+   * ******************************************************************************************************************/
+
   const navigate = useNavigate();
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /********************************************************************************************************************
+   * Ref
+   * ******************************************************************************************************************/
 
   const searchTableRef = useRef<SearchTableCommands<TTableDataItem>>(null);
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /********************************************************************************************************************
+   * State
+   * ******************************************************************************************************************/
+
+  const [hash, setHash] = useState(true);
+
+  /********************************************************************************************************************
+   * Event Handler
+   * ******************************************************************************************************************/
 
   const handleSelectLoadItems = useCallback(() => {
     return new Promise<FormSelectItems<'' | number>>((resolve) => {
@@ -50,58 +64,67 @@ const SearchTable = () => {
     });
   }, []);
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /********************************************************************************************************************
+   * Memo
+   * ******************************************************************************************************************/
 
-  const [hash, setHash] = useState(true);
-  const [search] = useState<SearchTableProps['search']>({
-    searchGroups: (
-      <>
-        <SearchGroup max>
-          <FormText name='keyword' label='검색어' />
-          <FormSelect name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
-          <FormToggleButtonGroup
-            name='FormToggleButtonGroup'
-            value=''
-            notAllowEmptyValue
-            onLoadItems={handleToggleButtonGroupLoadItems}
-          />
-          <FormYearPicker name='FormYearPicker' label='조회년도' />
-          <FormMonthPicker name='FormMonthPicker' label='조회월' />
-          <FormDatePicker name='FormDatePicker' label='조회일자' width={120} />
-          <FormTimePicker name='FormTimePicker' label='조회시간' time='minute' width={80} />
-          <FormDateTimePicker name='FormDateTimePicker' label='조회일시' time='minute' />
-          <FormYearRangePicker name='FormYearRangePicker' fromLabel='조회기간(년)' toLabel='조회기간(년)' />
-          <FormMonthRangePicker name='FormMonthRangePicker' fromLabel='조회기간(월)' toLabel='조회기간(월)' />
-          <FormDateRangePicker
-            name='FormDateRangePicker'
-            fromLabel='조회기간(일)'
-            toLabel='조회기간(일)'
-            inputWidth={120}
-          />
-        </SearchGroup>
-        <SearchGroup align='right'>
-          <SearchButton
-            icon='download'
-            onClick={() => {
-              searchTableRef.current?.reload(1);
-            }}
-          />
-          <SearchButton startIcon='add' variant='contained'>
-            새 항목
-          </SearchButton>
-        </SearchGroup>
-      </>
-    ),
-  });
-  const [table] = useState<SearchTableProps<TTableDataItem>['table']>({
-    columns: TableData.columns,
-    stickyHeader: true,
-    onClick: (item: any) => {
-      ll(item);
-    },
-  });
+  const search: SearchTableProps['search'] = useMemo(
+    () => ({
+      searchGroups: (
+        <>
+          <SearchGroup max>
+            <FormText name='keyword' label='검색어' />
+            <FormSelect name='customer' label='거래처' formValueSort onLoadItems={handleSelectLoadItems} />
+            <FormToggleButtonGroup
+              name='FormToggleButtonGroup'
+              value=''
+              notAllowEmptyValue
+              onLoadItems={handleToggleButtonGroupLoadItems}
+            />
+            <FormYearPicker name='FormYearPicker' label='조회년도' />
+            <FormMonthPicker name='FormMonthPicker' label='조회월' />
+            <FormDatePicker name='FormDatePicker' label='조회일자' width={120} />
+            <FormTimePicker name='FormTimePicker' label='조회시간' time='minute' width={80} />
+            <FormDateTimePicker name='FormDateTimePicker' label='조회일시' time='minute' />
+            <FormYearRangePicker name='FormYearRangePicker' fromLabel='조회기간(년)' toLabel='조회기간(년)' />
+            <FormMonthRangePicker name='FormMonthRangePicker' fromLabel='조회기간(월)' toLabel='조회기간(월)' />
+            <FormDateRangePicker
+              name='FormDateRangePicker'
+              fromLabel='조회기간(일)'
+              toLabel='조회기간(일)'
+              inputWidth={120}
+            />
+          </SearchGroup>
+          <SearchGroup align='right'>
+            <SearchButton
+              icon='download'
+              onClick={() => {
+                searchTableRef.current?.reload(1);
+              }}
+            />
+            <SearchButton startIcon='add' variant='contained'>
+              새 항목
+            </SearchButton>
+          </SearchGroup>
+        </>
+      ),
+    }),
+    [handleSelectLoadItems, handleToggleButtonGroupLoadItems]
+  );
 
-  //--------------------------------------------------------------------------------------------------------------------
+  const table: SearchTableProps<TTableDataItem>['table'] = useMemo(() => {
+    return {
+      columns: TableData.columns,
+      stickyHeader: true,
+      onClick: (item: any) => {
+        ll(item);
+      },
+    };
+  }, []);
+
+  /********************************************************************************************************************
+   * Event Handler
+   * ******************************************************************************************************************/
 
   const handleGetData = useCallback((params: FormValueMap) => {
     return new Promise<SearchTableData<TTableDataItem>>((resolve) => {
@@ -136,7 +159,9 @@ const SearchTable = () => {
     [navigate]
   );
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /********************************************************************************************************************
+   * Render
+   * ******************************************************************************************************************/
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

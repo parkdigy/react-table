@@ -54,6 +54,12 @@ export interface InfoTableItem<T = InfoTableInfo> {
   clipboardProps?: Omit<IconButtonProps, 'children'>;
   onRender?(info: T): ReactNode;
   onRenderEmpty?(info: T): ReactNode;
+  onHide?(info: T): boolean;
+  onXs?(info: T): number;
+  onSm?(info: T): number;
+  onMd?(info: T): number;
+  onLg?(info: T): number;
+  onXl?(info: T): number;
 }
 
 export type InfoTableItems<T = InfoTableInfo> = (InfoTableItem<T> | false | undefined | null)[];

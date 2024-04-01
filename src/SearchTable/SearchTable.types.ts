@@ -33,8 +33,6 @@ export interface SearchTableProps<T = TableItem> extends CommonSxProps {
 
 export const SearchTableDefaultProps = {};
 
-//--------------------------------------------------------------------------------------------------------------------
-
 export interface SearchTableCommands<T = TableItem> {
   reload(page?: number): void;
   getLastLoadData(): FormValueMap;

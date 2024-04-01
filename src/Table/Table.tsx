@@ -1,7 +1,6 @@
 import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon } from '@mui/material';
-import SimpleBar from 'simplebar-react';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
@@ -27,11 +26,12 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import 'simplebar-react/dist/simplebar.min.css';
 import TableContextProvider from '../TableContextProvider';
 import { v4 as uuid } from 'uuid';
 import { TableBodyCellCommands } from '../TableBodyCell';
 import TableTopHead from '../TableTopHead';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
@@ -64,6 +64,9 @@ let _columnId = 0;
 const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
   (
     {
+      className,
+      style: initStyle,
+      sx,
       caption,
       topHeadRows,
       columns: initColumns,
@@ -94,14 +97,12 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       onPageChange,
       onSortChange,
       onCheckChange,
-      // ---------------------------------------------------------------------------------------------------------------
-      className,
-      style: initStyle,
-      sx,
     },
     ref
   ) => {
-    // Ref ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
 
     const localHeaderDataRef = useRef<TLocalHeaderData>({});
     const localBodyDataRef = useRef<TLocalBodyData>({});
@@ -110,7 +111,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     const simpleBarRef = useRef<SimpleBarCore>(null);
     const finalColumnsIdRef = useRef<string[] | undefined>([]);
 
-    // sortable --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * sortable
+     * ******************************************************************************************************************/
 
     const sensors = useSensors(
       useSensor(MouseSensor, {
@@ -131,12 +134,21 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       })
     );
 
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
+    const [columns, setColumns] = useAutoUpdateLayoutState<TableProps['columns']>(initColumns);
+    const [finalColumns, setFinalColumns] = useState<TableColumn[]>();
+    const [items, setItems] = useAutoUpdateLayoutState<TableProps['items']>(initItems);
+    const [sortableItems, setSortableItems] = useState<(TableItem & { id: number | string })[]>();
+    const [paging, setPaging] = useAutoUpdateLayoutState<TableProps['paging']>(initPaging);
 
-    // State - containerHeight -------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * containerHeight
+     * ******************************************************************************************************************/
 
     const [containerHeight, setContainerHeight] = useState<number | undefined>();
 
@@ -152,7 +164,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       },
     });
 
-    // State - footerHeight --------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * footerHeight
+     * ******************************************************************************************************************/
 
     const [pagingHeight, setPagingHeight] = useState<number | undefined>();
 
@@ -168,15 +182,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       },
     });
 
-    // State -----------------------------------------------------------------------------------------------------------
-
-    const [columns, setColumns] = useAutoUpdateLayoutState<TableProps['columns']>(initColumns);
-    const [finalColumns, setFinalColumns] = useState<TableColumn<TableItem>[]>();
-    const [items, setItems] = useAutoUpdateLayoutState<TableProps['items']>(initItems);
-    const [sortableItems, setSortableItems] = useState<(TableItem & { id: number | string })[]>();
-    const [paging, setPaging] = useAutoUpdateLayoutState<TableProps['paging']>(initPaging);
-
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
 
     const tableSx = useMemo(() => {
       const sx = {
@@ -190,7 +198,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       };
     }, [cellPadding]);
 
-    // Function --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
 
     const makeSortableItems = useCallback((items?: TableProps['items']) => {
       return items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
@@ -303,7 +313,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       simpleBarRef.current?.getScrollElement()?.scrollTo({ top: 0 });
     }, []);
 
-    // Effect ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
 
     useEffect(() => {
       return () => {
@@ -393,7 +405,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       }
     }, [finalColumns, getFinalColumnId]);
 
-    // Commands --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Commands
+     * ******************************************************************************************************************/
 
     useLayoutEffect(() => {
       if (ref) {
@@ -445,7 +459,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       simpleBarScrollToTop,
     ]);
 
-    // Event Handler ---------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
 
     const handleDragEnd = useCallback(
       (event: DragEndEvent) => {
@@ -511,7 +527,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [onPageChange, simpleBarScrollToTop]
     );
 
-    // TableContext Function ---------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * TableContext Function
+     * ******************************************************************************************************************/
 
     const TableContextSetMenuOpen = useCallback(
       (newMenuOpen: boolean, newOpenMenuId: string | undefined) => {
@@ -581,7 +599,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [getFinalColumnId]
     );
 
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
 
     const tableContextValue = useMemo(
       () => ({
@@ -605,8 +625,6 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         openMenuId,
       ]
     );
-
-    // Memo --------------------------------------------------------------------------------------------------------------
 
     const isNoData = useMemo(() => !!sortableItems && sortableItems.length <= 0, [sortableItems]);
     const finalPagingHeight = useMemo(
@@ -794,7 +812,9 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       ]
     );
 
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
 
     return finalColumns ? (
       <TableContextProvider value={tableContextValue}>

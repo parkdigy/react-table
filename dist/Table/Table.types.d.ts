@@ -3,9 +3,15 @@ import { TableCellProps, TooltipProps } from '@mui/material';
 import { TablePaginationProps } from '../TablePagination/TablePagination.types';
 import { CommonSxProps } from '../@types';
 import { TableTopHeadProps } from '../TableTopHead';
+/********************************************************************************************************************
+ * TableItem
+ * ******************************************************************************************************************/
 export interface TableItem {
     [key: string]: any;
 }
+/********************************************************************************************************************
+ * TableColumn
+ * ******************************************************************************************************************/
 export interface TableColumn<T = TableItem> {
     id?: string;
     type?: 'text' | 'number' | 'tel' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'company_no' | 'personal_no' | 'img' | 'button' | 'buttons' | 'check';
@@ -68,6 +74,9 @@ export interface TableColumn<T = TableItem> {
     onCheckDisabledChange?(item: T, checkDisabled: boolean): void;
 }
 export type TableColumns<T = TableItem> = (TableColumn<T> | false | undefined | null)[];
+/********************************************************************************************************************
+ * TableProps
+ * ******************************************************************************************************************/
 export interface TableProps<T = TableItem> extends CommonSxProps {
     caption?: ReactNode;
     topHeadRows?: TableTopHeadProps['rows'];
@@ -105,6 +114,9 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
     onCheckChange?(columnId: string, items: T[]): void;
 }
 export declare const TableDefaultProps: Pick<TableProps, 'defaultAlign' | 'pagingAlign' | 'cellPadding'>;
+/********************************************************************************************************************
+ * TableCommands
+ * ******************************************************************************************************************/
 export interface TableCommands<T = TableItem> {
     getColumns(): TableProps<T>['columns'];
     setColumns(columns: TableProps<T>['columns']): void;

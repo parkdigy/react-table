@@ -36,7 +36,7 @@ const InfoTable = () => {
   return (
     <div>
       <_InfoTable<Info>
-        cols={{ xs: 2, sm: 2, md: 3 }}
+        cols={3}
         labelColor='primary'
         info={info}
         rowSpacing={3}
@@ -51,9 +51,6 @@ const InfoTable = () => {
           {
             label: 'ID',
             name: 'id',
-            onRender(info) {
-              return info.id;
-            },
           },
           { label: '이름', name: 'name' },
           { label: '전화번호', type: 'tel', name: 'tel', labelColor: 'secondary' },

@@ -16,12 +16,10 @@ export interface TableContextValue {
 export const TableContextDefaultValue: TableContextValue = {
   menuOpen: false,
   openMenuId: undefined,
-  /* eslint-disable */
   setMenuOpen() {},
   setItemColumnChecked() {},
   setItemColumnCheckDisabled() {},
   setItemColumnCommands() {},
   setHeadColumnChecked() {},
   setHeadColumnCommands() {},
-  /* eslint-enable */
 };

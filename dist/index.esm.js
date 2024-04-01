@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import SimpleBar from'simplebar-react';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {v4}from'uuid';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -148,14 +148,12 @@ function typographyColorToSxColor(color) {
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
-    /* eslint-disable */
     setMenuOpen: function () { },
     setItemColumnChecked: function () { },
     setItemColumnCheckDisabled: function () { },
     setItemColumnCommands: function () { },
     setHeadColumnChecked: function () { },
     setHeadColumnCommands: function () { },
-    /* eslint-enable */
 };var TableContext = createContext(TableContextDefaultValue);function useTableState() {
     var value = useContext(TableContext);
     if (value === undefined) {
@@ -164,10 +162,14 @@ function typographyColorToSxColor(color) {
     return value;
 }var StyledTableCell = styled(TableCell)(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"], ["\n  &.ellipsis {\n    position: relative;\n    max-width: 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n"])));
 var TableCommonCell = function (_a) {
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
     var children = _a.children, initClassName = _a.className, initStyle = _a.style, initSx = _a.sx, type = _a.type, column = _a.column, defaultAlign = _a.defaultAlign, initDefaultEllipsis = _a.defaultEllipsis, index = _a.index, item = _a.item, onClick = _a.onClick;
     var menuOpen = useTableState().menuOpen;
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var align = useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
     var ellipsis = useMemo(function () {
         return type !== 'head' &&
@@ -286,7 +288,9 @@ var TableCommonCell = function (_a) {
             }
         }
     }, [column, index, initSx, item, type]);
-    // Event Handler ---------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
     var handleClick = useCallback(function (e) {
         if (!menuOpen &&
             column.type !== 'check' &&
@@ -307,18 +311,26 @@ var TableCommonCell = function (_a) {
             }
         }
     }, [menuOpen, type, item, index, column, onClick]);
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(StyledTableCell, { align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 };
 var templateObject_1$3;var StyledButtonsBox = styled(Box)(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 var TableBodyCell = function (_a) {
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
     var className = _a.className, style = _a.style, sx = _a.sx, item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
     var _b = useTableState(), menuOpen = _b.menuOpen, setItemColumnChecked = _b.setItemColumnChecked, setItemColumnCheckDisabled = _b.setItemColumnCheckDisabled, setItemColumnCommands = _b.setItemColumnCommands;
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
     var _c = useState(false), checked = _c[0], setChecked = _c[1];
     var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
-    // Effect ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
     useEffect(function () {
         if (column.type === 'check') {
             setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
@@ -350,7 +362,9 @@ var TableBodyCell = function (_a) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checkDisabled]);
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var isHidden = useMemo(function () { return (column.onHide ? column.onHide(item, index) : false); }, [column, index, item]);
     var buttonsBoxJustifyContent = useMemo(function () {
         switch (getTableColumnAlign(column, defaultAlign)) {
@@ -477,7 +491,9 @@ var TableBodyCell = function (_a) {
         }
         return data;
     }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
-    // Event Handler ---------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
     var handleClick = useCallback(function (item, index) {
         if (column.onClick) {
             column.onClick(item, index);
@@ -487,7 +503,9 @@ var TableBodyCell = function (_a) {
                 onClick(item, index);
         }
     }, [column, onClick]);
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(TableCommonCell, { type: 'body', className: classNames('TableBodyCell', className), style: style, sx: sx, column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, !isHidden && data));
 };
 var templateObject_1$2;var StyledBodyRow = styled(TableRow)(function (_a) {
@@ -502,12 +520,14 @@ var templateObject_1$2;var StyledBodyRow = styled(TableRow)(function (_a) {
     });
 });
 var TableBodyRow = function (_a) {
-    var className = _a.className, style = _a.style, 
-    //--------------------------------------------------------------------------------------------------------------------
-    id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, onGetColumnClassName = _a.onGetColumnClassName, onGetColumnStyle = _a.onGetColumnStyle, onGetColumnSx = _a.onGetColumnSx, 
-    // -------------------------------------------------------------------------------------------------------------------
-    props = __rest(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange", "onGetColumnClassName", "onGetColumnStyle", "onGetColumnSx"]);
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
+    var className = _a.className, style = _a.style, id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, onGetColumnClassName = _a.onGetColumnClassName, onGetColumnStyle = _a.onGetColumnStyle, onGetColumnSx = _a.onGetColumnSx, props = __rest(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange", "onGetColumnClassName", "onGetColumnStyle", "onGetColumnSx"]);
     var _b = useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var finalStyle = useMemo(function () {
         return sortable
             ? __assign(__assign({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style;
@@ -516,10 +536,16 @@ var TableBodyRow = function (_a) {
         return sortable
             ? __assign(__assign({ ref: setNodeRef }, attributes), listeners) : {};
     }, [attributes, listeners, setNodeRef, sortable]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
 };
 TableBodyRow.displayName = 'TableBodyRow';
 TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = function (_a) {
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var column = _a.column, defaultAlign = _a.defaultAlign;
     var data = useMemo(function () {
         var _a, _b, _c;
@@ -530,6 +556,9 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = funct
             return (_c = column.footer) === null || _c === void 0 ? void 0 : _c.value;
         }
     }, [column]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(TableCommonCell, { type: 'head', className: 'TableFooterCell', column: column, defaultAlign: defaultAlign }, data));
 };var TablePagination = function (_a) {
     var className = _a.className, style = _a.style, sx = _a.sx, paging = _a.paging, align = _a.align, onChange = _a.onChange;
@@ -551,13 +580,19 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = funct
         },
     });
 });var TableHeadCell = function (_a) {
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
     var column = _a.column, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
     var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
     var _c = useState(false), checked = _c[0], setChecked = _c[1];
     var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
-    // Effect ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
     useEffect(function () {
         if (column.type === 'check') {
             setHeadColumnChecked(column, checked);
@@ -577,7 +612,9 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = funct
             },
         });
     }, [setHeadColumnCommands, column]);
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var style = useMemo(function () { return (top !== undefined ? { top: top } : undefined); }, [top]);
     var data = useMemo(function () {
         var _a, _b;
@@ -601,19 +638,27 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = funct
             }
         }
     }, [checkDisabled, checked, column, onCheckChange]);
-    // Render ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: style, column: column, defaultAlign: defaultAlign }, data));
 };var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 var TableTopHead = function (_a) {
-    // Use ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
     var columns = _a.columns, rows = _a.rows, caption = _a.caption, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
     var theme = useTheme();
-    // Ref ---------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
     var captionRef = useRef(null);
     var row1Ref = useRef(null);
     var row2Ref = useRef(null);
     var row3Ref = useRef(null);
-    // ResizeDetector ----------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * ResizeDetector
+     * ******************************************************************************************************************/
     var captionHeight = useResizeDetector({
         targetRef: captionRef,
         handleWidth: false,
@@ -622,7 +667,9 @@ var TableTopHead = function (_a) {
     var row1Height = useResizeDetector({ targetRef: row1Ref, handleWidth: false, handleHeight: true }).height;
     var row2Height = useResizeDetector({ targetRef: row2Ref, handleWidth: false, handleHeight: true }).height;
     var row3Height = useResizeDetector({ targetRef: row3Ref, handleWidth: false, handleHeight: true }).height;
-    // Function ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
     var captionRow = useMemo(function () {
         return !!caption && (React.createElement(TableTopHeadCaptionRow, { ref: captionRef, className: 'TableTopHeadCaptionRow' },
             React.createElement(TableCell, { colSpan: columns.length }, caption)));
@@ -651,7 +698,9 @@ var TableTopHead = function (_a) {
         var top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
         return (React.createElement(TableRow, null, columns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
     }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
-    // Render ------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     if (rows) {
         if (Array.isArray(rows[0])) {
             return (React.createElement(TableHead, { className: 'TableHead' },
@@ -698,17 +747,19 @@ var templateObject_1$1;function columnFilter(v) {
 }
 var _columnId = 0;
 var Table = React.forwardRef(function (_a, ref) {
-    // Ref ---------------------------------------------------------------------------------------------------------------
-    var caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange, 
-    // ---------------------------------------------------------------------------------------------------------------
-    className = _a.className, initStyle = _a.style, sx = _a.sx;
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
+    var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
     var localHeaderDataRef = useRef({});
     var localBodyDataRef = useRef({});
     var updateHeadCheckTimer = useRef();
     var fireOnCheckChangeTimer = useRef({});
     var simpleBarRef = useRef(null);
     var finalColumnsIdRef = useRef([]);
-    // sortable --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * sortable
+     * ******************************************************************************************************************/
     var sensors = useSensors(useSensor(MouseSensor, {
         // Require the mouse to move by 10 pixels before activating
         activationConstraint: {
@@ -723,11 +774,20 @@ var Table = React.forwardRef(function (_a, ref) {
     }), useSensor(KeyboardSensor, {
         coordinateGetter: sortableKeyboardCoordinates,
     }));
-    // State -------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
     var _b = useState(false), menuOpen = _b[0], setMenuOpen = _b[1];
     var _c = useState(undefined), openMenuId = _c[0], setOpenMenuId = _c[1];
-    // State - containerHeight -------------------------------------------------------------------------------------------
-    var _d = useState(), containerHeight = _d[0], setContainerHeight = _d[1];
+    var _d = useAutoUpdateLayoutState(initColumns), columns = _d[0], setColumns = _d[1];
+    var _e = useState(), finalColumns = _e[0], setFinalColumns = _e[1];
+    var _f = useAutoUpdateLayoutState(initItems), items = _f[0], setItems = _f[1];
+    var _g = useState(), sortableItems = _g[0], setSortableItems = _g[1];
+    var _h = useAutoUpdateLayoutState(initPaging), paging = _h[0], setPaging = _h[1];
+    /********************************************************************************************************************
+     * containerHeight
+     * ******************************************************************************************************************/
+    var _j = useState(), containerHeight = _j[0], setContainerHeight = _j[1];
     var containerHeightDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -740,8 +800,10 @@ var Table = React.forwardRef(function (_a, ref) {
             }
         },
     }).ref;
-    // State - footerHeight --------------------------------------------------------------------------------------------
-    var _e = useState(), pagingHeight = _e[0], setPagingHeight = _e[1];
+    /********************************************************************************************************************
+     * footerHeight
+     * ******************************************************************************************************************/
+    var _k = useState(), pagingHeight = _k[0], setPagingHeight = _k[1];
     var pagingHeightResizeDetector = useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -754,13 +816,9 @@ var Table = React.forwardRef(function (_a, ref) {
             }
         },
     }).ref;
-    // State -----------------------------------------------------------------------------------------------------------
-    var _f = useAutoUpdateLayoutState(initColumns), columns = _f[0], setColumns = _f[1];
-    var _g = useState(), finalColumns = _g[0], setFinalColumns = _g[1];
-    var _h = useAutoUpdateLayoutState(initItems), items = _h[0], setItems = _h[1];
-    var _j = useState(), sortableItems = _j[0], setSortableItems = _j[1];
-    var _k = useAutoUpdateLayoutState(initPaging), paging = _k[0], setPaging = _k[1];
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var tableSx = useMemo(function () {
         var sx = {
             padding: typeof cellPadding === 'number' ? "".concat(cellPadding, "px") : cellPadding,
@@ -771,7 +829,9 @@ var Table = React.forwardRef(function (_a, ref) {
             '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
         };
     }, [cellPadding]);
-    // Function --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
     var makeSortableItems = useCallback(function (items) {
         return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
             var id = _a.id, item = __rest(_a, ["id"]);
@@ -863,7 +923,9 @@ var Table = React.forwardRef(function (_a, ref) {
         var _a, _b;
         (_b = (_a = simpleBarRef.current) === null || _a === void 0 ? void 0 : _a.getScrollElement()) === null || _b === void 0 ? void 0 : _b.scrollTo({ top: 0 });
     }, []);
-    // Effect ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
     useEffect(function () {
         return function () {
             stopHeadCheckTimer();
@@ -947,7 +1009,9 @@ var Table = React.forwardRef(function (_a, ref) {
             localHeaderDataRef.current = {};
         }
     }, [finalColumns, getFinalColumnId]);
-    // Commands --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Commands
+     * ******************************************************************************************************************/
     useLayoutEffect(function () {
         if (ref) {
             var lastColumns_1 = columns;
@@ -996,7 +1060,9 @@ var Table = React.forwardRef(function (_a, ref) {
         getCheckedItems,
         simpleBarScrollToTop,
     ]);
-    // Event Handler ---------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
     var handleDragEnd = useCallback(function (event) {
         var active = event.active, over = event.over;
         if (active && over) {
@@ -1046,7 +1112,9 @@ var Table = React.forwardRef(function (_a, ref) {
         simpleBarScrollToTop();
         onPageChange && onPageChange(page);
     }, [onPageChange, simpleBarScrollToTop]);
-    // TableContext Function ---------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * TableContext Function
+     * ******************************************************************************************************************/
     var TableContextSetMenuOpen = useCallback(function (newMenuOpen, newOpenMenuId) {
         if (newMenuOpen) {
             setMenuOpen(newMenuOpen);
@@ -1095,7 +1163,9 @@ var Table = React.forwardRef(function (_a, ref) {
             data.commands = commands;
         }
     }, [getFinalColumnId]);
-    // Memo --------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var tableContextValue = useMemo(function () { return ({
         menuOpen: menuOpen,
         openMenuId: openMenuId,
@@ -1115,7 +1185,6 @@ var Table = React.forwardRef(function (_a, ref) {
         menuOpen,
         openMenuId,
     ]);
-    // Memo --------------------------------------------------------------------------------------------------------------
     var isNoData = useMemo(function () { return !!sortableItems && sortableItems.length <= 0; }, [sortableItems]);
     var finalPagingHeight = useMemo(function () { return (paging && paging.total > 0 ? pagingHeight || 0 : 0); }, [paging, pagingHeight]);
     var stickyHeader = useMemo(function () { return !isNoData && initStickyHeader; }, [initStickyHeader, isNoData]);
@@ -1205,7 +1274,9 @@ var Table = React.forwardRef(function (_a, ref) {
         pagingHeightResizeDetector,
         pagingStyle,
     ]);
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return finalColumns ? (React.createElement(TableContextProvider, { value: tableContextValue },
         React.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className, !!stickyHeader && 'sticky-header', !!fullHeight && 'full-height', !!showOddColor && 'odd-color', !!showEvenColor && 'even-color', !!sortable && 'sortable'), variant: 'outlined', style: style, sx: sx },
             React.createElement(SimpleBar, { ref: simpleBarRef, style: simpleBarStyle },
@@ -1218,13 +1289,17 @@ var Table = React.forwardRef(function (_a, ref) {
 });
 Table.displayName = 'Table';
 Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React.forwardRef(function (_a, ref) {
+    /********************************************************************************************************************
+     * Ref
+     * ******************************************************************************************************************/
     var _b, _c;
-    var color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange, 
-    // ---------------------------------------------------------------------------------------------------------------
-    className = _a.className, initStyle = _a.style, sx = _a.sx;
+    var className = _a.className, initStyle = _a.style, sx = _a.sx, color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
     var searchRef = useRef();
     var tableRef = useRef();
-    //------------------------------------------------------------------------------------------------------------------
+    var lastGetDataDataRef = useRef({});
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
     var getSearchInfo = useCallback(function (search) {
         var searchInfo = {};
         if (search) {
@@ -1244,12 +1319,14 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
         return tableInfo;
     }, []);
-    // Ref -------------------------------------------------------------------------------------------------------------
-    var lastGetDataDataRef = useRef({});
-    // State -----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
     var _d = useState(true), isFirstSearchSubmit = _d[0], setIsFirstSearchSubmit = _d[1];
     var _e = useState(), tableData = _e[0], setTableData = _e[1];
-    // searchInfo ------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * searchInfo
+     * ******************************************************************************************************************/
     var searchInfoFirstUseEffect = useRef(true);
     var _f = useState(function () { return getSearchInfo(search); }), searchInfo = _f[0], setSearchInfo = _f[1];
     useEffect(function () {
@@ -1261,7 +1338,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
-    // tableInfo -------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * tableInfo
+     * ******************************************************************************************************************/
     var tableInfoFirstUseEffect = useRef(true);
     var _g = useState(function () { return getTableInfo(table); }), tableInfo = _g[0], setTableInfo = _g[1];
     useEffect(function () {
@@ -1273,14 +1352,15 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
-    // Function - getData ----------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Function
+     * ******************************************************************************************************************/
     var getData = useCallback(function (data) {
         lastGetDataDataRef.current = data;
         if (onGetData) {
             onGetData(data).then(setTableData);
         }
     }, [onGetData]);
-    // Function ----------------------------------------------------------------------------------------------------------
     var deHash = useCallback(function () {
         var values = {};
         var hash = window.location.hash.substring(1);
@@ -1414,7 +1494,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             return commands.getAllFormValue();
         }
     }, [searchRef, deHash]);
-    // Commands --------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Commands
+     * ******************************************************************************************************************/
     useLayoutEffect(function () {
         if (ref) {
             var commands = {
@@ -1454,7 +1536,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             }
         }
     }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
-    //--------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * hash
+     * ******************************************************************************************************************/
     useEffect(function () {
         if (hash) {
             var data = hashToSearchValue();
@@ -1463,7 +1547,6 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.location.hash]);
-    //--------------------------------------------------------------------------------------------------------------------
     var hashChange = useCallback(function (params) {
         if (onRequestHashChange) {
             var hashes_1 = [];
@@ -1559,7 +1642,9 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             }
         }
     }, [onRequestHashChange, getData]);
-    //------------------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
     var handlePageChange = useCallback(function (page) {
         var _a, _b;
         (_a = searchRef.current) === null || _a === void 0 ? void 0 : _a.setValue('page', page);
@@ -1598,22 +1683,21 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
             }
         }
     }, [searchRef, hash, hashChange, getData, isFirstSearchSubmit]);
-    // Memo --------------------------------------------------------------------------------------------------------------
-    var style = useMemo(function () {
-        if (fullHeight) {
-            return __assign(__assign({}, initStyle), { flex: 1, display: 'flex' });
-        }
-        else {
-            return initStyle;
-        }
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+    var styles = useMemo(function () {
+        return fullHeight
+            ? {
+                containerStyle: __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }),
+                tableContainerStyle: { flex: 1, display: 'flex', flexDirection: 'column' },
+            }
+            : { containerStyle: initStyle };
     }, [initStyle, fullHeight]);
-    var tableContainerStyle = useMemo(function () {
-        if (fullHeight) {
-            return { flex: 1, display: 'flex', flexDirection: 'column' };
-        }
-    }, [fullHeight]);
-    //------------------------------------------------------------------------------------------------------------------
-    return (React.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: style, sx: sx },
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return (React.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: styles.containerStyle, sx: sx },
         React.createElement(Grid, { item: true, sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
             React.createElement(Search, __assign({ color: color }, searchInfo.props, { ref: function (commands) {
                     if (searchInfo.ref) {
@@ -1630,7 +1714,7 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                     React.createElement(FormHidden, { name: 'page', value: 1 })),
                 searchInfo.searchGroups)),
         betweenSearchTableComponent && React.createElement(Grid, { item: true }, betweenSearchTableComponent),
-        React.createElement(Grid, { item: true, style: tableContainerStyle },
+        React.createElement(Grid, { item: true, style: styles.tableContainerStyle },
             React.createElement(Table, __assign({}, tableInfo.props, { stickyHeader: stickyHeader || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.stickyHeader), fullHeight: fullHeight || ((_c = tableInfo.props) === null || _c === void 0 ? void 0 : _c.fullHeight), ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
@@ -1648,9 +1732,14 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
     variant: 'outlined',
     color: 'primary',
 };var TableButton = React.forwardRef(function (_a, ref) {
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
     var sx = useMemo(function () { return (__assign({ minWidth: 0, px: 0.7 }, initSx)); }, [initSx]);
-    // Render ----------------------------------------------------------------------------------------------------------
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
     return (React.createElement(PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, icon: icon, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
 });
 TableButton.displayName = 'TableButton';
@@ -1818,45 +1907,13 @@ var ValueClipboard = styled('div')(templateObject_5 || (templateObject_5 = __mak
 var ClipboardIconButton = styled(IconButton)(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  margin-top: -10px;\n  margin-bottom: -10px;\n"], ["\n  margin-top: -10px;\n  margin-bottom: -10px;\n"])));
 var Line = styled('div')(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  border-top: 1px solid #efefef;\n  height: 1px;\n  flex: 1;\n"], ["\n  border-top: 1px solid #efefef;\n  height: 1px;\n  flex: 1;\n"])));
 var templateObject_1, templateObject_2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7;var InfoTable = function (_a) {
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
     var cols = _a.cols, spacing = _a.spacing, columnSpacing = _a.columnSpacing, rowSpacing = _a.rowSpacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, dividerColor = _a.dividerColor, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
-    var sizeProps = useMemo(function () {
-        var value = {};
-        if (typeof cols === 'number') {
-            value.xs = 12 / cols;
-        }
-        else {
-            if (cols.xs)
-                value.xs = 12 / cols.xs;
-            if (cols.sm)
-                value.sm = 12 / cols.sm;
-            if (cols.md)
-                value.md = 12 / cols.md;
-            if (cols.lg)
-                value.lg = 12 / cols.lg;
-            if (cols.xl)
-                value.xl = 12 / cols.xl;
-        }
-        return value;
-    }, [cols]);
-    return (React.createElement(Grid, { container: true, spacing: spacing, columnSpacing: columnSpacing, rowSpacing: rowSpacing, className: classNames('InfoTable', className), style: style, sx: sx }, items.map(function (item, idx) {
-        if (item) {
-            var finalLabelColor = typographyColorToSxColor(item.type === 'divider' ? item.dividerColor || dividerColor : item.labelColor || labelColor);
-            var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
-            var finalValueSx = combineSx(valueSx, item.valueSx);
-            var valueUnderlineStyle = valueUnderline
-                ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
-                : undefined;
-            var finalSizeProps = __assign({}, sizeProps);
-            if (item.xs)
-                finalSizeProps.xs = item.xs;
-            if (item.sm)
-                finalSizeProps.sm = item.sm;
-            if (item.md)
-                finalSizeProps.md = item.md;
-            if (item.lg)
-                finalSizeProps.lg = item.lg;
-            if (item.xl)
-                finalSizeProps.xl = item.xl;
+    var renderItems = useMemo(function () {
+        return items.filter(function (item) { return !!item && (!item.onHide || !item.onHide(info)); }).map(function (item) {
+            /** data */
             var data = undefined;
             if (item.name !== undefined) {
                 if (info[item.name] !== undefined) {
@@ -1954,24 +2011,91 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
             }
             if (empty(data))
                 data = item.onRenderEmpty ? item.onRenderEmpty(info) : React.createElement(React.Fragment, null, "\u00A0");
-            var copyToClipboardText_1 = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
+            /** copyToClipboardText */
+            var copyToClipboardText = item.clipboardText || (typeof data === 'string' ? data : typeof data === 'number' ? data.toString() : '');
+            /** sizeProps */
+            var sizeProps = {};
+            if (typeof cols === 'number') {
+                sizeProps.xs = 12 / cols;
+            }
+            else {
+                if (cols.xs)
+                    sizeProps.xs = 12 / cols.xs;
+                if (cols.sm)
+                    sizeProps.sm = 12 / cols.sm;
+                if (cols.md)
+                    sizeProps.md = 12 / cols.md;
+                if (cols.lg)
+                    sizeProps.lg = 12 / cols.lg;
+                if (cols.xl)
+                    sizeProps.xl = 12 / cols.xl;
+            }
+            if (item.xs)
+                sizeProps.xs = item.xs;
+            if (item.sm)
+                sizeProps.sm = item.sm;
+            if (item.md)
+                sizeProps.md = item.md;
+            if (item.lg)
+                sizeProps.lg = item.lg;
+            if (item.xl)
+                sizeProps.xl = item.xl;
+            if (item.onXs)
+                sizeProps.xs = item.onXs(info);
+            if (item.onSm)
+                sizeProps.sm = item.onSm(info);
+            if (item.onMd)
+                sizeProps.md = item.onMd(info);
+            if (item.onLg)
+                sizeProps.lg = item.onLg(info);
+            if (item.onXl)
+                sizeProps.xl = item.onXl(info);
+            return { item: item, data: data, copyToClipboardText: copyToClipboardText, sizeProps: sizeProps };
+        });
+    }, [info, items, cols]);
+    var content = useMemo(function () {
+        return renderItems.map(function (_a, idx) {
+            var item = _a.item, data = _a.data, copyToClipboardText = _a.copyToClipboardText, sizeProps = _a.sizeProps;
+            var finalLabelColor = typographyColorToSxColor(item.type === 'divider' ? item.dividerColor || dividerColor : item.labelColor || labelColor);
+            var finalLabelSx = combineSx(labelSx, item.labelSx, !!finalLabelColor && { color: finalLabelColor });
+            var finalValueSx = combineSx(valueSx, item.valueSx);
+            var valueUnderlineStyle = valueUnderline
+                ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
+                : undefined;
             return item.type === 'divider' ? (React.createElement(Grid, { key: idx, item: true, xs: 12 },
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
                     item.icon && (React.createElement(PdgIcon, { sx: { color: item.dividerColor || dividerColor }, fontSize: 'small' }, item.icon)),
                     item.label && (React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                     item.dividerLine && (React.createElement(React.Fragment, null, item.icon || item.label ? (React.createElement("div", { style: { flex: 1, paddingLeft: 5 } },
-                        React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(Grid, __assign({ key: idx, item: true }, finalSizeProps, { className: item.className, style: item.style, sx: item.sx }),
+                        React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(Grid, __assign({ key: idx, item: true }, sizeProps, { className: item.className, style: item.style, sx: item.sx }),
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
                     item.icon && (React.createElement(PdgIcon, { sx: { color: finalLabelColor }, fontSize: 'small' }, "CalendarMonth")),
                     React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                 React.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign(__assign(__assign({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React.createElement(ValueEllipsis, null, data) : React.createElement(Value, null, data),
-                    item.clipboard && notEmpty(copyToClipboardText_1) && (React.createElement(ValueClipboard, null,
-                        React.createElement(CopyToClipboard, { text: copyToClipboardText_1, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText_1); } : undefined },
+                    item.clipboard && notEmpty(copyToClipboardText) && (React.createElement(ValueClipboard, null,
+                        React.createElement(CopyToClipboard, { text: copyToClipboardText, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText); } : undefined },
                             React.createElement(ClipboardIconButton, __assign({ size: 'small', color: 'primary' }, item.clipboardProps),
                                 React.createElement(PdgIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
-        }
-    })));
+        });
+    }, [
+        dividerColor,
+        ellipsis,
+        labelClassName,
+        labelColor,
+        labelStyle,
+        labelSx,
+        onCopyToClipboard,
+        renderItems,
+        valueClassName,
+        valueStyle,
+        valueSx,
+        valueUnderline,
+    ]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return (React.createElement(Grid, { container: true, spacing: spacing, columnSpacing: columnSpacing, rowSpacing: rowSpacing, className: classNames('InfoTable', className), style: style, sx: sx }, content));
 };
 InfoTable.displayName = 'InfoTable';
 InfoTable.defaultProps = InfoTableDefaultProps;export{InfoTable,InfoTableDefaultProps,SearchTable,SearchTableDefaultProps,Table,TableButton,TableButtonDefaultProps,TableDefaultProps,TableMenuButton,TableMenuButtonDefaultProps};
