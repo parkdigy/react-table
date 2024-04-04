@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Table as _Table, TableCommands, TableProps } from '../../../../src';
 import { TableData } from '@ccomp';
-import { Button, Grid, Stack } from '@mui/material';
+import { Alert, Button, Grid, Stack } from '@mui/material';
 import { TTableDataItem } from '../Common/TableData';
+import { FormCheckbox, Search, SearchGroup } from '@pdg/react-form';
 
 const Table: React.FC = () => {
   /********************************************************************************************************************
@@ -14,6 +15,9 @@ const Table: React.FC = () => {
   /********************************************************************************************************************
    * State
    * ******************************************************************************************************************/
+
+  const [fullHeight, setFullHeight] = useState(true);
+  const [stickyHeader, setStickyHeader] = useState(false);
 
   const [sorting, setSorting] = useState(false);
   const [page, setPage] = useState(1);
@@ -79,24 +83,54 @@ const Table: React.FC = () => {
       <div>
         <Button onClick={handleGetCheckedItems}>체크된 아이템 가져오기</Button>
       </div>
-      {sorting && (
-        <Grid container spacing={1}>
-          <Grid item>
-            <Button>변경된 순서 저장</Button>
+      <Search>
+        <SearchGroup>
+          <FormCheckbox
+            name='fullHeight'
+            text='fullHeight (전체 높이)'
+            checked={fullHeight}
+            onChange={(checked) => {
+              setFullHeight(checked);
+            }}
+          />
+          <FormCheckbox
+            name='stickyHeader'
+            text='stickyHeader (타이틀 고정)'
+            checked={stickyHeader}
+            onChange={(checked) => {
+              setStickyHeader(checked);
+            }}
+          />
+        </SearchGroup>
+      </Search>
+      {sorting ? (
+        <div style={{ border: '1px solid #efefef', padding: 10 }}>
+          <Grid container spacing={1}>
+            <Grid item>
+              <Button variant='contained'>변경된 순서 저장</Button>
+            </Grid>
+            <Grid item>
+              <Button
+                color='secondary'
+                onClick={() => {
+                  tableRef.current?.resetSort();
+                  setSorting(false);
+                }}
+              >
+                순서 초기화
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button color='secondary' onClick={() => tableRef.current?.resetSort()}>
-              순서 초기화
-            </Button>
-          </Grid>
-        </Grid>
+        </div>
+      ) : (
+        <Alert severity='info'>드래그하여 순서를 변경할 수 있습니다.</Alert>
       )}
       {items && paging && (
         <_Table<TTableDataItem>
           ref={tableRef}
           defaultAlign='center'
-          stickyHeader
-          fullHeight
+          stickyHeader={stickyHeader}
+          fullHeight={fullHeight}
           caption='게시판 목록'
           topHeadRows={[
             { colSpan: 2 },

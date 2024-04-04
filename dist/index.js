@@ -1,4 +1,30 @@
-'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),util=require('@pdg/util'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core'),uuid=require('uuid'),SimpleBar=require('simplebar-react');require('simplebar-react/dist/simplebar.min.css');var reactForm=require('@pdg/react-form'),reactComponent=require('@pdg/react-component'),reactCopyToClipboard=require('react-copy-to-clipboard');/******************************************************************************
+'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),util=require('@pdg/util'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core'),uuid=require('uuid'),SimpleBar=require('simplebar-react');require('simplebar-react/dist/simplebar.min.css');var reactForm=require('@pdg/react-form'),reactComponent=require('@pdg/react-component'),reactCopyToClipboard=require('react-copy-to-clipboard');function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}var css_248z = ".simplebar-track.simplebar-vertical {\n  width: 8px !important;\n}\n.simplebar-track.simplebar-vertical .simplebar-scrollbar.simplebar-visible:before {\n  opacity: 0.3 !important;\n}\n\n.Table .TableHead .TableHeadRow th {\n  position: relative;\n  transform: translateY(-100%);\n}\n.Table.sticky-header .TableHead .TableHeadRow th {\n  position: sticky;\n  transform: none;\n}";
+styleInject(css_248z);/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
