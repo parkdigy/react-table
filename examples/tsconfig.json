@@ -12,10 +12,10 @@
     "preserveSymlinks": true,
     "baseUrl": "./",
     "paths": {
-      "#comp": ["src/component"],
-      "#ccomp": ["src/component/Common"]
+      "@comp": ["src/component"],
+      "@ccomp": ["src/component/Common"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../src/**/*"],
   "exclude": ["node_modules", "dist", "src/**/*.test.tsx"]
 }

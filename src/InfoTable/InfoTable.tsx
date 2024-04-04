@@ -216,7 +216,7 @@ const InfoTable: WithType = ({
           <Grid key={idx} item xs={12}>
             <Stack direction='row' spacing={0.5} alignItems='center'>
               {item.icon && (
-                <PdgIcon sx={{ color: item.dividerColor || dividerColor }} fontSize='small'>
+                <PdgIcon sx={{ color: item.dividerColor || dividerColor }} size='small'>
                   {item.icon}
                 </PdgIcon>
               )}
@@ -246,7 +246,7 @@ const InfoTable: WithType = ({
           <Grid key={idx} item {...sizeProps} className={item.className} style={item.style} sx={item.sx}>
             <Stack direction='row' spacing={0.5} alignItems='center'>
               {item.icon && (
-                <PdgIcon sx={{ color: finalLabelColor }} fontSize='small'>
+                <PdgIcon sx={{ color: finalLabelColor }} size='small'>
                   CalendarMonth
                 </PdgIcon>
               )}

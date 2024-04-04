@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Table as _Table, TableCommands, TableProps } from '../../../../src';
-import { TableData } from '#ccomp';
+import { TableData } from '@ccomp';
 import { Button, Grid, Stack } from '@mui/material';
 import { TTableDataItem } from '../Common/TableData';
 

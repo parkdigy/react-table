@@ -3,6 +3,12 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development LIB_ENV=development webpack serve --config=webpack.config.js",
     "dev-prd-lib": "cross-env NODE_ENV=development LIB_ENV=production webpack serve --config=webpack.config.js",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "clean:prod": "rm -rf build && rm -rf dist && mkdir dist",
+    "clean:prod:win": "rmdir /s /q build && rmdir /s /q dist && mkdir dist",
+    "copy:index": "cp ./dist/index.html ../index.html && cp ./dist/index.html ../404.html",
+    "build:webpack": "cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
+    "build": "npm run clean:prod && npm run lint && npm run build:webpack && npm run copy:index",
     "reinstall-module": "rm -rf node_modules && rm -f package-lock.json && npm i"
   },
   "devDependencies": {
@@ -13,11 +19,11 @@
     "@mui/icons-material": "^5.15.13",
     "@mui/material": "^5.15.13",
     "@mui/x-date-pickers": "^6.19.7",
-    "@pdg/react-admin-layout": "^1.0.20",
-    "@pdg/react-component": "^1.0.11",
-    "@pdg/react-form": "^1.0.104",
-    "@pdg/react-hook": "^1.0.15",
-    "@pdg/util": "^1.0.19",
+    "@pdg/react-admin-layout": "^1.0.21",
+    "@pdg/react-component": "^1.0.12",
+    "@pdg/react-form": "^1.0.105",
+    "@pdg/react-hook": "^1.0.16",
+    "@pdg/util": "^1.0.20",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
     "@tinymce/tinymce-react": "^4.3.2",
@@ -51,6 +57,7 @@
     "url-loader": "^4.1.1",
     "uuid": "^9.0.1",
     "webpack": "^5.90.3",
+    "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-shell-plugin-next": "^2.3.1"
