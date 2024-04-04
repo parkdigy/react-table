@@ -24,7 +24,7 @@ const DefaultLayout = () => {
         uri: !info.uri ? info.uri : isEnvProduction ? `/react-table${info.uri}` : info.uri,
         // items: info.items?.map((subInfo) => ({
         //   ...subInfo,
-        //   uri: !subInfo.uri ? subInfo.uri : isEnvProduction ? `/react-component${subInfo.uri}` : subInfo.uri,
+        //   uri: !subInfo.uri ? subInfo.uri : isEnvProduction ? `/react-table{subInfo.uri}` : subInfo.uri,
         // })),
       })),
     []
@@ -48,7 +48,7 @@ const DefaultLayout = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <AdminLayout.DefaultLayout logo='@pdg/react-form' menu={finalMenu} onMenuClick={handleMenuClick}>
+      <AdminLayout.DefaultLayout logo='@pdg/react-table' menu={finalMenu} onMenuClick={handleMenuClick}>
         <MainRouter />
       </AdminLayout.DefaultLayout>
     </ThemeProvider>
