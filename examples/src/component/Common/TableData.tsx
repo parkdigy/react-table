@@ -130,7 +130,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     align: 'center',
     width: 80,
     onRender() {
-      return <TableButton icon='Edit' />;
+      return <TableButton>수정</TableButton>;
     },
   },
   {
