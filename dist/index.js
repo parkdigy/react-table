@@ -1762,7 +1762,7 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
      * Memo
      * ******************************************************************************************************************/
     var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
-    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, px: 0.7 }, initSx)); }, [initSx]);
+    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, px: '5px !important' }, initSx)); }, [initSx]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/

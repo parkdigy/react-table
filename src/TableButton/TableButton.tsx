@@ -12,7 +12,7 @@ const TableButton = React.forwardRef<HTMLButtonElement, Props>(
     const sx = useMemo(
       () => ({
         minWidth: 0,
-        px: 0.7,
+        px: '5px !important',
         ...initSx,
       }),
       [initSx]

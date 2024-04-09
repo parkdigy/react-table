@@ -102,7 +102,7 @@ const SearchTable = () => {
                 searchTableRef.current?.reload(1);
               }}
             />
-            <SearchButton startIcon='add' variant='contained'>
+            <SearchButton icon='add' iconProps={{ style: { marginLeft: -5 } }} variant='contained'>
               새 항목
             </SearchButton>
           </SearchGroup>

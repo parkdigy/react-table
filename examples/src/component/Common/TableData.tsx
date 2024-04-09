@@ -54,7 +54,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
   {
     id: 'category',
     label: '카테고리',
-    width: 150,
+    width: 100,
     align: 'left',
     onRender({ category_name, category_color }) {
       return <span style={{ color: category_color }}>{category_name}</span>;
