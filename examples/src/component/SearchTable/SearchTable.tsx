@@ -97,12 +97,12 @@ const SearchTable = () => {
           </SearchGroup>
           <SearchGroup align='right'>
             <SearchButton
-              icon='download'
+              startIcon='download'
               onClick={() => {
                 searchTableRef.current?.reload(1);
               }}
             />
-            <SearchButton icon='add' iconProps={{ style: { marginLeft: -5 } }} variant='contained'>
+            <SearchButton startIcon='add' startIconMarginLeft={-5} variant='contained'>
               새 항목
             </SearchButton>
           </SearchGroup>

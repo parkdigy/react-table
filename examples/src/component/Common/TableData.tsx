@@ -140,8 +140,8 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     onRender() {
       return (
         <>
-          <TableButton icon='Link' />
-          <TableButton icon='Delete' color='error' />
+          <TableButton startIcon='Link' />
+          <TableButton startIcon='Delete' color='error' />
         </>
       );
     },

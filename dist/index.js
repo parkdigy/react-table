@@ -1761,12 +1761,12 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, icon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "icon", "startIcon", "endIcon", "onClick"]);
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "onClick"]);
     var sx = React.useMemo(function () { return (__assign({ minWidth: 0, px: '5px !important' }, initSx)); }, [initSx]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(reactComponent.PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, icon: icon, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
+    return (React.createElement(reactComponent.PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick }, props), children));
 });
 TableButton.displayName = 'TableButton';
 TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultProps = {
@@ -1777,7 +1777,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
     /********************************************************************************************************************
      * ID
      * ******************************************************************************************************************/
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, variant = _a.variant, initIcon = _a.icon, startIcon = _a.startIcon, endIcon = _a.endIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "variant", "icon", "startIcon", "endIcon", "placement", "inModal", "zIndex", "menuList"]);
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, variant = _a.variant, startIcon = _a.startIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"]);
     var buttonId = React.useId();
     var menuId = React.useId();
     /********************************************************************************************************************
@@ -1795,8 +1795,8 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var icon = React.useMemo(function () { return (!initIcon && !startIcon && !endIcon && !children ? 'MoreVert' : initIcon); }, [initIcon, startIcon, endIcon, children]);
-    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7, pr: !children ? 0.7 : endIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7 }, initSx)); }, [children, endIcon, icon, initSx, startIcon, variant]);
+    var icon = React.useMemo(function () { return (!startIcon && !children ? 'MoreVert' : undefined); }, [startIcon, children]);
+    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7 }, initSx)); }, [children, icon, initSx, startIcon, variant]);
     /********************************************************************************************************************
      * Effect
      * ******************************************************************************************************************/
@@ -1864,7 +1864,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
                     }
                 }
                 anchorRef.current = r;
-            }, id: buttonId, variant: variant, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, icon: icon, startIcon: startIcon, endIcon: endIcon, onClick: handleClick }, props), children),
+            }, id: buttonId, variant: variant, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, startIcon: icon, onClick: handleClick }, props), children),
         React.createElement(material.Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
             var placements = placement.split('-');

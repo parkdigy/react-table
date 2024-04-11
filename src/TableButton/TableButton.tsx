@@ -4,7 +4,7 @@ import { TableButtonProps as Props, TableButtonDefaultProps } from './TableButto
 import { PdgButton } from '@pdg/react-component';
 
 const TableButton = React.forwardRef<HTMLButtonElement, Props>(
-  ({ children, className, sx: initSx, color, icon, startIcon, endIcon, onClick, ...props }, ref) => {
+  ({ children, className, sx: initSx, color, onClick, ...props }, ref) => {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
@@ -30,9 +30,6 @@ const TableButton = React.forwardRef<HTMLButtonElement, Props>(
         size='small'
         sx={sx}
         color={color}
-        icon={icon}
-        startIcon={startIcon}
-        endIcon={endIcon}
         onClick={onClick}
         {...props}
       >

@@ -7,21 +7,7 @@ import { PdgButton } from '@pdg/react-component';
 
 const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
   (
-    {
-      children,
-      className,
-      sx: initSx,
-      color,
-      variant,
-      icon: initIcon,
-      startIcon,
-      endIcon,
-      placement,
-      inModal,
-      zIndex,
-      menuList,
-      ...props
-    },
+    { children, className, sx: initSx, color, variant, startIcon, placement, inModal, zIndex, menuList, ...props },
     ref
   ) => {
     /********************************************************************************************************************
@@ -53,19 +39,15 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
      * Memo
      * ******************************************************************************************************************/
 
-    const icon = useMemo(
-      () => (!initIcon && !startIcon && !endIcon && !children ? 'MoreVert' : initIcon),
-      [initIcon, startIcon, endIcon, children]
-    );
+    const icon = useMemo(() => (!startIcon && !children ? 'MoreVert' : undefined), [startIcon, children]);
 
     const sx = useMemo(
       () => ({
         minWidth: 0,
         pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
-        pr: !children ? 0.7 : endIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
         ...initSx,
       }),
-      [children, endIcon, icon, initSx, startIcon, variant]
+      [children, icon, initSx, startIcon, variant]
     );
 
     /********************************************************************************************************************
@@ -157,9 +139,7 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           size='small'
           sx={sx}
           color={color}
-          icon={icon}
-          startIcon={startIcon}
-          endIcon={endIcon}
+          startIcon={icon}
           onClick={handleClick}
           {...props}
         >
