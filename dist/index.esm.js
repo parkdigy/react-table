@@ -1761,12 +1761,12 @@ SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps =
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "onClick"]);
-    var sx = useMemo(function () { return (__assign({ minWidth: 0, px: '5px !important' }, initSx)); }, [initSx]);
+    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "startIcon", "endIcon", "onClick"]);
+    var sx = useMemo(function () { return (__assign({ minWidth: 0, px: empty(startIcon) && empty(endIcon) ? '7px !important' : empty(children) ? '5px !important' : '7px !important' }, initSx)); }, [children, endIcon, initSx, startIcon]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, onClick: onClick }, props), children));
+    return (React.createElement(PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
 });
 TableButton.displayName = 'TableButton';
 TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultProps = {
