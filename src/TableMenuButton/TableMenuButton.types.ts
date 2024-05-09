@@ -8,9 +8,3 @@ export interface TableMenuButtonProps extends Omit<PdgButtonProps, 'size' | 'onC
   zIndex?: number;
   menuList: ReactElement;
 }
-
-export const TableMenuButtonDefaultProps: Pick<TableMenuButtonProps, 'variant' | 'color' | 'placement'> = {
-  variant: 'text',
-  color: 'primary',
-  placement: 'bottom',
-};

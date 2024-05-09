@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { TableBodyCellProps as Props } from './TableBodyCell.types';
-import { getTableColumnAlign } from '../@util';
+import { getTableColumnAlign } from '../@util.private';
 import TableCommonCell from '../TableCommonCell';
 import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';

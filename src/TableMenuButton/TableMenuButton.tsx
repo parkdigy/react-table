@@ -1,13 +1,25 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
-import { TableMenuButtonProps as Props, TableMenuButtonDefaultProps } from './TableMenuButton.types';
+import { TableMenuButtonProps as Props } from './TableMenuButton.types';
 import useTableState from '../TableContext/useTableState';
 import { PdgButton } from '@pdg/react-component';
 
 const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
   (
-    { children, className, sx: initSx, color, variant, startIcon, placement, inModal, zIndex, menuList, ...props },
+    {
+      children,
+      className,
+      sx: initSx,
+      color = 'primary',
+      variant = 'text',
+      startIcon,
+      placement = 'bottom',
+      inModal,
+      zIndex,
+      menuList,
+      ...props
+    },
     ref
   ) => {
     /********************************************************************************************************************
@@ -215,8 +227,5 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
-
-TableMenuButton.displayName = 'TableMenuButton';
-TableMenuButton.defaultProps = TableMenuButtonDefaultProps;
 
 export default TableMenuButton;

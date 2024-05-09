@@ -18,5 +18,3 @@ export interface TableTopHeadProps {
   defaultAlign: TableProps['defaultAlign'];
   onCheckChange(column: TableColumn, checked: boolean): void;
 }
-
-export const TableTopHeadDefaultProps = {};

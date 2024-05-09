@@ -2,7 +2,7 @@
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
 
-  if (!css || typeof document === 'undefined') { return; }
+  if (typeof document === 'undefined') { return; }
 
   var head = document.head || document.getElementsByTagName('head')[0];
   var style = document.createElement('style');
@@ -71,10 +71,6 @@ function __makeTemplateObject(cooked, raw) {
 typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
     var e = new Error(message);
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};var TableDefaultProps = {
-    defaultAlign: 'left',
-    pagingAlign: 'center',
-    cellPadding: 13,
 };var StyledBodyRow$1 = material.styled(material.TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
@@ -87,7 +83,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     });
 });
 var StyledNoDataDiv = material.styled('div')(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
-var templateObject_1$4;var TableBodyRowDefaultProps = {};const CSS = /*#__PURE__*/Object.freeze({
+var templateObject_1$4;const CSS = /*#__PURE__*/Object.freeze({
   Translate: {
     toString(transform) {
       if (!transform) {
@@ -566,9 +562,7 @@ var TableBodyRow = function (_a) {
      * Render
      * ******************************************************************************************************************/
     return (React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
-};
-TableBodyRow.displayName = 'TableBodyRow';
-TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = function (_a) {
+};var TableFooterCell = function (_a) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
@@ -596,7 +590,7 @@ TableBodyRow.defaultProps = TableBodyRowDefaultProps;var TableFooterCell = funct
 };var TableContextProvider = function (_a) {
     var children = _a.children, value = _a.value;
     return React.createElement(TableContext.Provider, { value: value }, children);
-};var TableTopHeadDefaultProps = {};var TableTopHeadCaptionRow = material.styled(material.TableRow)(function (_a) {
+};var TableTopHeadCaptionRow = material.styled(material.TableRow)(function (_a) {
     var theme = _a.theme;
     return ({
         '> th': {
@@ -766,8 +760,6 @@ var TableTopHead = function (_a) {
             columnRow));
     }
 };
-TableTopHead.displayName = 'TableTopHead';
-TableTopHead.defaultProps = TableTopHeadDefaultProps;
 var templateObject_1$1;function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
@@ -776,7 +768,7 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
-    var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, pagingAlign = _a.pagingAlign, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, cellPadding = _a.cellPadding, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
+    var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, _b = _a.pagingAlign, pagingAlign = _b === void 0 ? 'center' : _b, _c = _a.defaultAlign, defaultAlign = _c === void 0 ? 'left' : _c, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, _d = _a.cellPadding, cellPadding = _d === void 0 ? 13 : _d, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable$1 = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
     var localHeaderDataRef = React.useRef({});
     var localBodyDataRef = React.useRef({});
     var updateHeadCheckTimer = React.useRef();
@@ -803,17 +795,17 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
-    var _b = React.useState(false), menuOpen = _b[0], setMenuOpen = _b[1];
-    var _c = React.useState(undefined), openMenuId = _c[0], setOpenMenuId = _c[1];
-    var _d = reactHook.useAutoUpdateLayoutState(initColumns), columns = _d[0], setColumns = _d[1];
-    var _e = React.useState(), finalColumns = _e[0], setFinalColumns = _e[1];
-    var _f = reactHook.useAutoUpdateLayoutState(initItems), items = _f[0], setItems = _f[1];
-    var _g = React.useState(), sortableItems = _g[0], setSortableItems = _g[1];
-    var _h = reactHook.useAutoUpdateLayoutState(initPaging), paging = _h[0], setPaging = _h[1];
+    var _e = React.useState(false), menuOpen = _e[0], setMenuOpen = _e[1];
+    var _f = React.useState(undefined), openMenuId = _f[0], setOpenMenuId = _f[1];
+    var _g = reactHook.useAutoUpdateLayoutState(initColumns), columns = _g[0], setColumns = _g[1];
+    var _h = React.useState(), finalColumns = _h[0], setFinalColumns = _h[1];
+    var _j = reactHook.useAutoUpdateLayoutState(initItems), items = _j[0], setItems = _j[1];
+    var _k = React.useState(), sortableItems = _k[0], setSortableItems = _k[1];
+    var _l = reactHook.useAutoUpdateLayoutState(initPaging), paging = _l[0], setPaging = _l[1];
     /********************************************************************************************************************
      * containerHeight
      * ******************************************************************************************************************/
-    var _j = React.useState(), containerHeight = _j[0], setContainerHeight = _j[1];
+    var _m = React.useState(), containerHeight = _m[0], setContainerHeight = _m[1];
     var containerHeightDetector = reactResizeDetector.useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -829,7 +821,7 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * footerHeight
      * ******************************************************************************************************************/
-    var _k = React.useState(), pagingHeight = _k[0], setPagingHeight = _k[1];
+    var _o = React.useState(), pagingHeight = _o[0], setPagingHeight = _o[1];
     var pagingHeightResizeDetector = reactResizeDetector.useResizeDetector({
         handleHeight: true,
         handleWidth: false,
@@ -1312,9 +1304,7 @@ var Table = React.forwardRef(function (_a, ref) {
                         tableBody,
                         tableFooter))),
             tablePaging))) : null;
-});
-Table.displayName = 'Table';
-Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var SearchTable = React.forwardRef(function (_a, ref) {
+});var SearchTable = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
@@ -1752,38 +1742,25 @@ Table.defaultProps = TableDefaultProps;var SearchTableDefaultProps = {};var Sear
                     }
                     tableRef.current = commands || undefined;
                 }, items: tableData === null || tableData === void 0 ? void 0 : tableData.items, paging: tableData === null || tableData === void 0 ? void 0 : tableData.paging, onPageChange: handlePageChange })))));
+});var TableButton = React.forwardRef(function (_a, ref) {
+    var children = _a.children, className = _a.className, initSx = _a.sx, _b = _a.variant, variant = _b === void 0 ? 'outlined' : _b, _c = _a.color, color = _c === void 0 ? 'primary' : _c, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "variant", "color", "startIcon", "endIcon", "onClick"]);
+    return (React.createElement(reactComponent.PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), variant: variant, type: 'button', size: 'small', sx: __assign({ minWidth: 0, px: util.empty(startIcon) && util.empty(endIcon)
+                ? '7px !important'
+                : util.empty(children)
+                    ? '5px !important'
+                    : '7px !important' }, initSx), color: color, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
 });
-SearchTable.displayName = 'SearchTable';
-SearchTable.defaultProps = SearchTableDefaultProps;var TableButtonDefaultProps = {
-    variant: 'outlined',
-    color: 'primary',
-};var TableButton = React.forwardRef(function (_a, ref) {
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "color", "startIcon", "endIcon", "onClick"]);
-    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, px: util.empty(startIcon) && util.empty(endIcon) ? '7px !important' : util.empty(children) ? '5px !important' : '7px !important' }, initSx)); }, [children, endIcon, initSx, startIcon]);
-    /********************************************************************************************************************
-     * Render
-     * ******************************************************************************************************************/
-    return (React.createElement(reactComponent.PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), type: 'button', size: 'small', sx: sx, color: color, startIcon: startIcon, endIcon: endIcon, onClick: onClick }, props), children));
-});
-TableButton.displayName = 'TableButton';
-TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultProps = {
-    variant: 'text',
-    color: 'primary',
-    placement: 'bottom',
-};var TableMenuButton = React.forwardRef(function (_a, ref) {
+var TableButton$1 = React.memo(TableButton);var TableMenuButton = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * ID
      * ******************************************************************************************************************/
-    var children = _a.children, className = _a.className, initSx = _a.sx, color = _a.color, variant = _a.variant, startIcon = _a.startIcon, placement = _a.placement, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"]);
+    var children = _a.children, className = _a.className, initSx = _a.sx, _b = _a.color, color = _b === void 0 ? 'primary' : _b, _c = _a.variant, variant = _c === void 0 ? 'text' : _c, startIcon = _a.startIcon, _d = _a.placement, placement = _d === void 0 ? 'bottom' : _d, inModal = _a.inModal, zIndex = _a.zIndex, menuList = _a.menuList, props = __rest(_a, ["children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"]);
     var buttonId = React.useId();
     var menuId = React.useId();
     /********************************************************************************************************************
      * Use
      * ******************************************************************************************************************/
-    var _b = useTableState(), menuOpen = _b.menuOpen, openMenuId = _b.openMenuId, setMenuOpen = _b.setMenuOpen;
+    var _e = useTableState(), menuOpen = _e.menuOpen, openMenuId = _e.openMenuId, setMenuOpen = _e.setMenuOpen;
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
@@ -1791,7 +1768,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
     /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
-    var _c = React.useState(false), open = _c[0], setOpen = _c[1];
+    var _f = React.useState(false), open = _f[0], setOpen = _f[1];
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
@@ -1918,14 +1895,7 @@ TableButton.defaultProps = TableButtonDefaultProps;var TableMenuButtonDefaultPro
                 React.createElement(material.Paper, null,
                     React.createElement(material.ClickAwayListener, { onClickAway: handleClose }, finalMenuList))));
         })));
-});
-TableMenuButton.displayName = 'TableMenuButton';
-TableMenuButton.defaultProps = TableMenuButtonDefaultProps;var InfoTableDefaultProps = {
-    spacing: 2,
-    rowSpacing: 3,
-    labelColor: 'primary',
-    dividerColor: 'gray',
-};var Label = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
+});var Label = material.styled(material.Box)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  font-size: 12px;\n  font-weight: bold;\n"], ["\n  font-size: 12px;\n  font-weight: bold;\n"])));
 var ValueWrap = material.styled(material.Box)(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"], ["\n  margin-top: 3px;\n  position: relative;\n  display: flex;\n  flex-direction: row;\n"])));
 var Value = material.styled('div')(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex: 1;\n"], ["\n  flex: 1;\n"])));
 var ValueEllipsis = material.styled('div')(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  flex: 1;\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"], ["\n  flex: 1;\n  position: relative;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n"])));
@@ -1936,7 +1906,7 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var cols = _a.cols, spacing = _a.spacing, columnSpacing = _a.columnSpacing, rowSpacing = _a.rowSpacing, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, labelColor = _a.labelColor, labelStyle = _a.labelStyle, labelSx = _a.labelSx, dividerColor = _a.dividerColor, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
+    var cols = _a.cols, _b = _a.spacing, spacing = _b === void 0 ? 2 : _b, columnSpacing = _a.columnSpacing, _c = _a.rowSpacing, rowSpacing = _c === void 0 ? 3 : _c, className = _a.className, style = _a.style, sx = _a.sx, labelClassName = _a.labelClassName, _d = _a.labelColor, labelColor = _d === void 0 ? 'primary' : _d, labelStyle = _a.labelStyle, labelSx = _a.labelSx, _e = _a.dividerColor, dividerColor = _e === void 0 ? 'gray' : _e, valueClassName = _a.valueClassName, valueStyle = _a.valueStyle, valueSx = _a.valueSx, ellipsis = _a.ellipsis, valueUnderline = _a.valueUnderline, info = _a.info, items = _a.items, onCopyToClipboard = _a.onCopyToClipboard;
     var renderItems = React.useMemo(function () {
         return items.filter(function (item) { return !!item && (!item.onHide || !item.onHide(info)); }).map(function (item) {
             /** data */
@@ -2122,6 +2092,4 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
      * Render
      * ******************************************************************************************************************/
     return (React.createElement(material.Grid, { container: true, spacing: spacing, columnSpacing: columnSpacing, rowSpacing: rowSpacing, className: classNames('InfoTable', className), style: style, sx: sx }, content));
-};
-InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;exports.InfoTable=InfoTable;exports.InfoTableDefaultProps=InfoTableDefaultProps;exports.SearchTable=SearchTable;exports.SearchTableDefaultProps=SearchTableDefaultProps;exports.Table=Table;exports.TableButton=TableButton;exports.TableButtonDefaultProps=TableButtonDefaultProps;exports.TableDefaultProps=TableDefaultProps;exports.TableMenuButton=TableMenuButton;exports.TableMenuButtonDefaultProps=TableMenuButtonDefaultProps;
+};exports.InfoTable=InfoTable;exports.SearchTable=SearchTable;exports.Table=Table;exports.TableButton=TableButton$1;exports.TableMenuButton=TableMenuButton;

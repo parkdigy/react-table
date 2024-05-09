@@ -76,4 +76,3 @@ export interface InfoTableProps<T = InfoTableInfo> {
     items: InfoTableItems<T>;
     onCopyToClipboard?(item: InfoTableItem<T>, text: string): void;
 }
-export declare const InfoTableDefaultProps: Pick<InfoTableProps, 'spacing' | 'columnSpacing' | 'rowSpacing' | 'labelColor' | 'dividerColor'>;

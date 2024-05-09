@@ -1,9 +1,17 @@
 import React, { ReactNode, useMemo } from 'react';
 import classNames from 'classnames';
-import { InfoTableProps as Props, InfoTableDefaultProps, InfoTableInfo, InfoTableItem } from './InfoTable.types';
-import { ClipboardIconButton, Label, Line, Value, ValueClipboard, ValueEllipsis, ValueWrap } from './InfoTable.style';
+import { InfoTableProps as Props, InfoTableInfo, InfoTableItem } from './InfoTable.types';
+import {
+  ClipboardIconButton,
+  Label,
+  Line,
+  Value,
+  ValueClipboard,
+  ValueEllipsis,
+  ValueWrap,
+} from './InfoTable.style.private';
 import { Grid, Stack } from '@mui/material';
-import { combineSx, typographyColorToSxColor } from '../@util';
+import { combineSx, typographyColorToSxColor } from '../@util.private';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
@@ -15,17 +23,17 @@ interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
 
 const InfoTable: WithType = ({
   cols,
-  spacing,
+  spacing = 2,
   columnSpacing,
-  rowSpacing,
+  rowSpacing = 3,
   className,
   style,
   sx,
   labelClassName,
-  labelColor,
+  labelColor = 'primary',
   labelStyle,
   labelSx,
-  dividerColor,
+  dividerColor = 'gray',
   valueClassName,
   valueStyle,
   valueSx,
@@ -314,8 +322,5 @@ const InfoTable: WithType = ({
     </Grid>
   );
 };
-
-InfoTable.displayName = 'InfoTable';
-InfoTable.defaultProps = InfoTableDefaultProps;
 
 export default InfoTable;

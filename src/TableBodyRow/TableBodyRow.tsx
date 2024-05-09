@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { TableBodyRowProps as Props, TableBodyRowDefaultProps } from './TableBodyRow.types';
+import { TableBodyRowProps as Props } from './TableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -91,8 +91,5 @@ const TableBodyRow: React.FC<Props> = ({
     </StyledBodyRow>
   );
 };
-
-TableBodyRow.displayName = 'TableBodyRow';
-TableBodyRow.defaultProps = TableBodyRowDefaultProps;
 
 export default TableBodyRow;

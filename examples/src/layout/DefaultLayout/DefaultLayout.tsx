@@ -1,54 +1,25 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import * as AdminLayout from '@pdg/react-admin-layout';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import menu from './menu.json';
 import { theme } from './DefaultLayout.types';
 import MainRouter from '../../router';
 
+const FINAL_MENU = menu.map((info) => ({
+  ...info,
+  uri: !info.uri ? info.uri : isEnvProduction ? `/react-table${info.uri}` : info.uri,
+  // items: info.items?.map((subInfo) => ({
+  //   ...subInfo,
+  //   uri: !subInfo.uri ? subInfo.uri : isEnvProduction ? `/react-table{subInfo.uri}` : subInfo.uri,
+  // })),
+}));
+
 const DefaultLayout = () => {
-  /********************************************************************************************************************
-   * Use
-   * ******************************************************************************************************************/
-
-  const navigate = useNavigate();
-
-  /********************************************************************************************************************
-   * Memo
-   * ******************************************************************************************************************/
-
-  const finalMenu = useMemo(
-    () =>
-      menu.map((info) => ({
-        ...info,
-        uri: !info.uri ? info.uri : isEnvProduction ? `/react-table${info.uri}` : info.uri,
-        // items: info.items?.map((subInfo) => ({
-        //   ...subInfo,
-        //   uri: !subInfo.uri ? subInfo.uri : isEnvProduction ? `/react-table{subInfo.uri}` : subInfo.uri,
-        // })),
-      })),
-    []
-  );
-
-  /********************************************************************************************************************
-   * Event Handler
-   * ******************************************************************************************************************/
-
-  const handleMenuClick = (menuItem: AdminLayout.MenuItem) => {
-    if (menuItem.uri) {
-      navigate(menuItem.uri);
-    }
-  };
-
-  /********************************************************************************************************************
-   * Render
-   * ******************************************************************************************************************/
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <AdminLayout.DefaultLayout logo='@pdg/react-table' menu={finalMenu} onMenuClick={handleMenuClick}>
+      <AdminLayout.DefaultLayout logo='@pdg/react-table' menu={FINAL_MENU}>
         <MainRouter />
       </AdminLayout.DefaultLayout>
     </ThemeProvider>

@@ -17,5 +17,3 @@ export interface TableBodyRowProps extends Omit<TableRowProps, 'id' | 'onClick'>
   onGetColumnStyle?(column: TableColumn, item: TableItem, index: number): CommonSxProps['style'] | undefined;
   onGetColumnSx?(column: TableColumn, item: TableItem, index: number): CommonSxProps['sx'] | undefined;
 }
-
-export const TableBodyRowDefaultProps = {};

@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
   SearchTableProps,
-  SearchTableDefaultProps,
   SearchTableSearchProps,
   SearchTableCommands,
   SearchTableData,
@@ -561,8 +560,5 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
     );
   }
 );
-
-SearchTable.displayName = 'SearchTable';
-SearchTable.defaultProps = SearchTableDefaultProps;
 
 export default SearchTable;

@@ -128,12 +128,6 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
   onCheckChange?(columnId: string, items: T[]): void;
 }
 
-export const TableDefaultProps: Pick<TableProps, 'defaultAlign' | 'pagingAlign' | 'cellPadding'> = {
-  defaultAlign: 'left',
-  pagingAlign: 'center',
-  cellPadding: 13,
-};
-
 /********************************************************************************************************************
  * TableCommands
  * ******************************************************************************************************************/

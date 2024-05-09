@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { TableCell, styled } from '@mui/material';
 import { TableCommonCellProps } from './TableCommonCell.types';
-import { getTableColumnAlign } from '../@util';
+import { getTableColumnAlign } from '../@util.private';
 import { CommonSxProps } from '../@types';
 import useTableState from '../TableContext/useTableState';
 

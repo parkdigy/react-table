@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
-import { TableProps, TableDefaultProps, TableCommands, TableColumn, TableItem } from './Table.types';
-import { StyledBodyRow, StyledNoDataDiv } from './Table.styles';
+import { TableProps, TableCommands, TableColumn, TableItem } from './Table.types';
+import { StyledBodyRow, StyledNoDataDiv } from './Table.styles.private';
 import TableBodyRow from '../TableBodyRow';
 import { TableHeadCellCommands } from '../TableHeadCell';
 import TableFooterCell from '../TableFooterCell';
@@ -72,8 +72,8 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       columns: initColumns,
       items: initItems,
       paging: initPaging,
-      pagingAlign,
-      defaultAlign,
+      pagingAlign = 'center',
+      defaultAlign = 'left',
       defaultEllipsis,
       stickyHeader: initStickyHeader,
       height,
@@ -82,7 +82,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       fullHeight,
       showOddColor,
       showEvenColor,
-      cellPadding,
+      cellPadding = 13,
       footer,
       noData,
       pagination,
@@ -848,8 +848,5 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     ) : null;
   }
 );
-
-Table.displayName = 'Table';
-Table.defaultProps = TableDefaultProps;
 
 export default Table;

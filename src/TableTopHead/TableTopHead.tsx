@@ -1,8 +1,8 @@
 import React, { ReactNode, useCallback, useMemo, useRef } from 'react';
-import { TableTopHeadProps as Props, TableTopHeadDefaultProps, TableTopHeadRowColumnValue } from './TableTopHead.types';
+import { TableTopHeadProps as Props, TableTopHeadRowColumnValue } from './TableTopHead.types';
 import { styled, TableCell, TableHead, TableRow, useTheme } from '@mui/material';
 import { useResizeDetector } from 'react-resize-detector';
-import { TableTopHeadCaptionRow } from './TableTopHead.style';
+import { TableTopHeadCaptionRow } from './TableTopHead.style.private';
 import TableHeadCell from '../TableHeadCell';
 
 const BottomLine = styled('div')`
@@ -167,8 +167,5 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
     );
   }
 };
-
-TableTopHead.displayName = 'TableTopHead';
-TableTopHead.defaultProps = TableTopHeadDefaultProps;
 
 export default TableTopHead;
