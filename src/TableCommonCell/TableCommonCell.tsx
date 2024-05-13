@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { TableCell, styled } from '@mui/material';
 import { TableCommonCellProps } from './TableCommonCell.types';
 import { getTableColumnAlign } from '../@util.private';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 import useTableState from '../TableContext/useTableState';
 
 const StyledTableCell = styled(TableCell)`
@@ -39,22 +39,23 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
    * Memo
    * ******************************************************************************************************************/
 
-  const align = useMemo(() => getTableColumnAlign(column, defaultAlign), [column, defaultAlign]);
+  const { align, ellipsis } = useMemo(() => {
+    const align = getTableColumnAlign(column, defaultAlign);
 
-  const ellipsis = useMemo(
-    () =>
+    const ellipsis =
       type !== 'head' &&
       (column.ellipsis ||
         (column.type !== 'img' &&
           column.type !== 'button' &&
           column.type !== 'buttons' &&
-          (column.ellipsis == null ? !!initDefaultEllipsis : false))),
-    [type, column, initDefaultEllipsis]
-  );
+          (column.ellipsis == null ? !!initDefaultEllipsis : false)));
+
+    return { align, ellipsis };
+  }, [column, defaultAlign, initDefaultEllipsis, type]);
 
   const className = useMemo(() => {
-    let className: CommonSxProps['className'];
-    let getClassName: CommonSxProps['className'];
+    let className: TableCommonSxProps['className'];
+    let getClassName: TableCommonSxProps['className'];
 
     switch (type) {
       case 'head':
@@ -81,8 +82,8 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   }, [column, index, initClassName, item, type]);
 
   const style = useMemo(() => {
-    let style: CommonSxProps['style'];
-    let getStyle: CommonSxProps['style'];
+    let style: TableCommonSxProps['style'];
+    let getStyle: TableCommonSxProps['style'];
 
     switch (type) {
       case 'head':
@@ -118,9 +119,9 @@ const TableCommonCell: React.FC<TableCommonCellProps> = ({
   }, [column, index, initStyle, item, onClick, type]);
 
   const sx = useMemo(() => {
-    let sx: CommonSxProps['sx'];
-    let getSx: CommonSxProps['sx'];
-    let displaySx: CommonSxProps['sx'];
+    let sx: TableCommonSxProps['sx'];
+    let getSx: TableCommonSxProps['sx'];
+    let displaySx: TableCommonSxProps['sx'];
 
     switch (type) {
       case 'head':

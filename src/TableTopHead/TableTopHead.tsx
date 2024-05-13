@@ -46,16 +46,6 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
    * Function
    * ******************************************************************************************************************/
 
-  const captionRow = useMemo(
-    () =>
-      !!caption && (
-        <TableTopHeadCaptionRow ref={captionRef} className='TableTopHeadCaptionRow'>
-          <TableCell colSpan={columns.length}>{caption}</TableCell>
-        </TableTopHeadCaptionRow>
-      ),
-    [caption, columns]
-  );
-
   const makeRowCells = useCallback(
     (row: TableTopHeadRowColumnValue[], top?: number) => {
       let totalColumns = 0;
@@ -109,6 +99,16 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
       </TableRow>
     );
   }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
+
+  /********************************************************************************************************************
+   * Variable
+   * ******************************************************************************************************************/
+
+  const captionRow = !!caption && (
+    <TableTopHeadCaptionRow ref={captionRef} className='TableTopHeadCaptionRow'>
+      <TableCell colSpan={columns.length}>{caption}</TableCell>
+    </TableTopHeadCaptionRow>
+  );
 
   /********************************************************************************************************************
    * Render

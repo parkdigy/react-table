@@ -1,6 +1,6 @@
 import { TableColumn, TableItem, TableProps } from '../Table/Table.types';
-import { CommonSxProps } from '../@types';
-export interface TableCommonCellProps extends CommonSxProps {
+import { TableCommonSxProps } from '../@types';
+export interface TableCommonCellProps extends TableCommonSxProps {
     type: 'head' | 'body' | 'footer';
     column: TableColumn;
     defaultAlign?: TableProps['defaultAlign'];

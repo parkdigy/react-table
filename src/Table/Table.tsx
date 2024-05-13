@@ -27,11 +27,11 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import TableContextProvider from '../TableContextProvider';
-import { v4 as uuid } from 'uuid';
 import { TableBodyCellCommands } from '../TableBodyCell';
 import TableTopHead from '../TableTopHead';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
+import { makeSortableItems } from './Table.function.private';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
@@ -201,12 +201,6 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
     /********************************************************************************************************************
      * Function
      * ******************************************************************************************************************/
-
-    const makeSortableItems = useCallback((items?: TableProps['items']) => {
-      return items?.map<TableItem & { id: number | string }>(({ id, ...item }, index) => {
-        return { id: id == null ? `${uuid()}_${index}` : id, ...item };
-      });
-    }, []);
 
     const getFinalColumnId = useCallback(
       (column: TableColumn) => {
@@ -446,18 +440,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [
-      ref,
-      columns,
-      items,
-      paging,
-      makeSortableItems,
-      setColumns,
-      setItems,
-      setPaging,
-      getCheckedItems,
-      simpleBarScrollToTop,
-    ]);
+    }, [ref, columns, items, paging, setColumns, setItems, setPaging, getCheckedItems, simpleBarScrollToTop]);
 
     /********************************************************************************************************************
      * Event Handler
@@ -603,39 +586,14 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
      * Memo
      * ******************************************************************************************************************/
 
-    const tableContextValue = useMemo(
-      () => ({
-        menuOpen,
-        openMenuId,
-        setMenuOpen: TableContextSetMenuOpen,
-        setItemColumnChecked: TableContextSetItemColumnChecked,
-        setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
-        setItemColumnCommands: TableContextSetItemColumnCommands,
-        setHeadColumnChecked: TableContextSetHeadColumnChecked,
-        setHeadColumnCommands: TableContextSetHeadColumnCommands,
-      }),
-      [
-        TableContextSetHeadColumnChecked,
-        TableContextSetHeadColumnCommands,
-        TableContextSetItemColumnCheckDisabled,
-        TableContextSetItemColumnChecked,
-        TableContextSetItemColumnCommands,
-        TableContextSetMenuOpen,
-        menuOpen,
-        openMenuId,
-      ]
-    );
+    const isNoData = !!sortableItems && sortableItems.length <= 0;
 
-    const isNoData = useMemo(() => !!sortableItems && sortableItems.length <= 0, [sortableItems]);
-    const finalPagingHeight = useMemo(
-      () => (paging && paging.total > 0 ? pagingHeight || 0 : 0),
-      [paging, pagingHeight]
-    );
-    const stickyHeader = useMemo(() => !isNoData && initStickyHeader, [initStickyHeader, isNoData]);
+    const finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
 
-    const style = useMemo((): CSSProperties => {
-      if (fullHeight) {
-        return {
+    const stickyHeader = !isNoData && initStickyHeader;
+
+    const style: CSSProperties = fullHeight
+      ? {
           width: '100%',
           ...initStyle,
           flex: 1,
@@ -644,15 +602,11 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
-        };
-      } else {
-        return { width: '100%', ...initStyle };
-      }
-    }, [initStyle, fullHeight]);
+        }
+      : { width: '100%', ...initStyle };
 
-    const simpleBarStyle = useMemo((): CSSProperties => {
-      if (fullHeight) {
-        return {
+    const simpleBarStyle: CSSProperties = fullHeight
+      ? {
           height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
           flex: 1,
           position: 'absolute',
@@ -660,38 +614,26 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           left: 0,
           right: 0,
           marginBottom: finalPagingHeight || 0,
-        };
-      } else {
-        return { height, minHeight, maxHeight, marginBottom: -1 };
-      }
-    }, [fullHeight, containerHeight, finalPagingHeight, height, minHeight, maxHeight]);
+        }
+      : { height, minHeight, maxHeight, marginBottom: -1 };
 
-    const tableStyle = useMemo((): CSSProperties | undefined => {
-      if (fullHeight && isNoData) {
-        return { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 };
-      }
-    }, [fullHeight, isNoData, containerHeight, finalPagingHeight]);
+    const tableStyle =
+      fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
 
-    const pagingStyle = useMemo((): CSSProperties => {
-      const style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
-      if (fullHeight) {
-        return { position: 'sticky', ...style };
-      }
-      return style;
-    }, [fullHeight]);
+    // pageStyle
+    const pagingStyle: CSSProperties = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+    if (fullHeight) {
+      pagingStyle.position = 'sticky';
+    }
 
-    const tableTopHead = useMemo(
-      () =>
-        finalColumns && (
-          <TableTopHead
-            caption={caption}
-            rows={topHeadRows}
-            columns={finalColumns}
-            defaultAlign={defaultAlign}
-            onCheckChange={handleHeadCheckChange}
-          />
-        ),
-      [caption, defaultAlign, finalColumns, handleHeadCheckChange, topHeadRows]
+    const tableTopHead = finalColumns && (
+      <TableTopHead
+        caption={caption}
+        rows={topHeadRows}
+        columns={finalColumns}
+        defaultAlign={defaultAlign}
+        onCheckChange={handleHeadCheckChange}
+      />
     );
 
     const tableBody = useMemo(
@@ -782,42 +724,23 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [defaultAlign, finalColumns, footer, isNoData]
     );
 
-    const tablePaging = useMemo(
-      () =>
-        finalColumns &&
-        paging &&
-        paging.total > 0 && (
-          <Stack ref={fullHeight ? pagingHeightResizeDetector : undefined} alignItems={pagingAlign} style={pagingStyle}>
-            <TablePagination
-              className={pagination?.className}
-              style={pagination?.style}
-              sx={pagination?.sx}
-              paging={paging}
-              align={pagingAlign}
-              onChange={handlePageChange}
-            />
-          </Stack>
-        ),
-      [
-        finalColumns,
-        fullHeight,
-        handlePageChange,
-        pagination?.className,
-        pagination?.style,
-        pagination?.sx,
-        paging,
-        pagingAlign,
-        pagingHeightResizeDetector,
-        pagingStyle,
-      ]
-    );
-
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
 
     return finalColumns ? (
-      <TableContextProvider value={tableContextValue}>
+      <TableContextProvider
+        value={{
+          menuOpen,
+          openMenuId,
+          setMenuOpen: TableContextSetMenuOpen,
+          setItemColumnChecked: TableContextSetItemColumnChecked,
+          setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
+          setItemColumnCommands: TableContextSetItemColumnCommands,
+          setHeadColumnChecked: TableContextSetHeadColumnChecked,
+          setHeadColumnCommands: TableContextSetHeadColumnCommands,
+        }}
+      >
         <Paper
           ref={fullHeight ? containerHeightDetector : undefined}
           className={classNames(
@@ -842,7 +765,22 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
               </MuiTable>
             </DndContext>
           </SimpleBar>
-          {tablePaging}
+          {finalColumns && paging && paging.total > 0 && (
+            <Stack
+              ref={fullHeight ? pagingHeightResizeDetector : undefined}
+              alignItems={pagingAlign}
+              style={pagingStyle}
+            >
+              <TablePagination
+                className={pagination?.className}
+                style={pagination?.style}
+                sx={pagination?.sx}
+                paging={paging}
+                align={pagingAlign}
+                onChange={handlePageChange}
+              />
+            </Stack>
+          )}
         </Paper>
       </TableContextProvider>
     ) : null;

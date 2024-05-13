@@ -1,11 +1,11 @@
 import { CSSProperties, ReactNode } from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-export interface CommonProps {
+export interface TableCommonProps {
     children?: ReactNode;
     className?: string;
     style?: CSSProperties;
 }
-export interface CommonSxProps extends CommonProps {
+export interface TableCommonSxProps extends TableCommonProps {
     sx?: SxProps<Theme>;
 }

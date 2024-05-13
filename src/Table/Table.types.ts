@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode } from 'react';
 import { TableCellProps, TooltipProps } from '@mui/material';
 import { TablePaginationProps } from '../TablePagination/TablePagination.types';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 import { TableTopHeadProps } from '../TableTopHead';
 
 /********************************************************************************************************************
@@ -48,33 +48,33 @@ export interface TableColumn<T = TableItem> {
   paddingLeft?: number;
   paddingRight?: number;
   head?: {
-    className?: CommonSxProps['className'];
-    style?: CommonSxProps['style'];
+    className?: TableCommonSxProps['className'];
+    style?: TableCommonSxProps['style'];
     backgroundColor?: CSSProperties['backgroundColor'];
-    sx?: CommonSxProps['sx'];
-    onGetClassName?(): CommonSxProps['className'];
-    onGetStyle?(): CommonSxProps['style'];
-    onGetSx?(): CommonSxProps['sx'];
+    sx?: TableCommonSxProps['sx'];
+    onGetClassName?(): TableCommonSxProps['className'];
+    onGetStyle?(): TableCommonSxProps['style'];
+    onGetSx?(): TableCommonSxProps['sx'];
     onRender?(): ReactNode;
   };
   footer?: {
     value?: ReactNode;
-    className?: CommonSxProps['className'];
-    style?: CommonSxProps['style'];
+    className?: TableCommonSxProps['className'];
+    style?: TableCommonSxProps['style'];
     backgroundColor?: CSSProperties['backgroundColor'];
-    sx?: CommonSxProps['sx'];
-    onGetClassName?(): CommonSxProps['className'];
-    onGetStyle?(): CommonSxProps['style'];
-    onGetSx?(): CommonSxProps['sx'];
+    sx?: TableCommonSxProps['sx'];
+    onGetClassName?(): TableCommonSxProps['className'];
+    onGetStyle?(): TableCommonSxProps['style'];
+    onGetSx?(): TableCommonSxProps['sx'];
     onRender?(): ReactNode;
   };
-  className?: CommonSxProps['className'];
-  style?: CommonSxProps['style'];
+  className?: TableCommonSxProps['className'];
+  style?: TableCommonSxProps['style'];
   backgroundColor?: CSSProperties['backgroundColor'];
-  sx?: CommonSxProps['sx'];
-  onGetClassName?(item: T, index: number): CommonSxProps['className'];
-  onGetStyle?(item: T, index: number): CommonSxProps['style'];
-  onGetSx?(item: T, index: number): CommonSxProps['sx'];
+  sx?: TableCommonSxProps['sx'];
+  onGetClassName?(item: T, index: number): TableCommonSxProps['className'];
+  onGetStyle?(item: T, index: number): TableCommonSxProps['style'];
+  onGetSx?(item: T, index: number): TableCommonSxProps['sx'];
   onHide?(item: T, index: number): boolean;
   onGetTooltip?(item: T, index: number): ReactNode;
   onRender?(item: T, index: number): ReactNode;
@@ -91,7 +91,7 @@ export type TableColumns<T = TableItem> = (TableColumn<T> | false | undefined | 
  * TableProps
  * ******************************************************************************************************************/
 
-export interface TableProps<T = TableItem> extends CommonSxProps {
+export interface TableProps<T = TableItem> extends TableCommonSxProps {
   caption?: ReactNode;
   topHeadRows?: TableTopHeadProps['rows'];
   columns?: TableColumns<T>;
@@ -111,18 +111,22 @@ export interface TableProps<T = TableItem> extends CommonSxProps {
   footer?: boolean;
   noData?: ReactNode;
   pagination?: {
-    className?: CommonSxProps['className'];
-    style?: CommonSxProps['style'];
-    sx?: CommonSxProps['sx'];
+    className?: TableCommonSxProps['className'];
+    style?: TableCommonSxProps['style'];
+    sx?: TableCommonSxProps['sx'];
   };
   sortable?: boolean;
   onClick?(item: T, index: number): void;
-  onGetBodyRowClassName?(item: T, index: number): CommonSxProps['className'] | undefined;
-  onGetBodyRowStyle?(item: T, index: number): CommonSxProps['style'] | undefined;
-  onGetBodyRowSx?(item: T, index: number): CommonSxProps['sx'] | undefined;
-  onGetBodyColumnClassName?(column: TableColumn<T>, item: T, index: number): CommonSxProps['className'] | undefined;
-  onGetBodyColumnStyle?(column: TableColumn<T>, item: T, index: number): CommonSxProps['style'] | undefined;
-  onGetBodyColumnSx?(column: TableColumn<T>, item: T, index: number): CommonSxProps['sx'] | undefined;
+  onGetBodyRowClassName?(item: T, index: number): TableCommonSxProps['className'] | undefined;
+  onGetBodyRowStyle?(item: T, index: number): TableCommonSxProps['style'] | undefined;
+  onGetBodyRowSx?(item: T, index: number): TableCommonSxProps['sx'] | undefined;
+  onGetBodyColumnClassName?(
+    column: TableColumn<T>,
+    item: T,
+    index: number
+  ): TableCommonSxProps['className'] | undefined;
+  onGetBodyColumnStyle?(column: TableColumn<T>, item: T, index: number): TableCommonSxProps['style'] | undefined;
+  onGetBodyColumnSx?(column: TableColumn<T>, item: T, index: number): TableCommonSxProps['sx'] | undefined;
   onPageChange?(page: number): void;
   onSortChange?(items: T[]): void;
   onCheckChange?(columnId: string, items: T[]): void;

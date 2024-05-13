@@ -1,5 +1,5 @@
 import { TableColumn } from '../Table/Table.types';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 import { TypographyProps } from '@mui/material';
 
 export function getTableColumnAlign(column: TableColumn, defaultAlign: TableColumn['align']): TableColumn['align'] {
@@ -11,8 +11,8 @@ export function getTableColumnAlign(column: TableColumn, defaultAlign: TableColu
   }
 }
 
-export function combineSx(...sx: (boolean | CommonSxProps['sx'])[]): CommonSxProps['sx'] {
-  const finalSx: CommonSxProps['sx'] = [];
+export function combineSx(...sx: (boolean | TableCommonSxProps['sx'])[]): TableCommonSxProps['sx'] {
+  const finalSx: TableCommonSxProps['sx'] = [];
   if (Array.isArray(finalSx)) {
     sx.forEach((v) => v && finalSx.push(...(Array.isArray(v) ? v : [v])));
   }

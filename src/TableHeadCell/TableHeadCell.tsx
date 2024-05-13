@@ -47,8 +47,6 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
    * Memo
    * ******************************************************************************************************************/
 
-  const style = useMemo(() => (top !== undefined ? { top } : undefined), [top]);
-
   const data = useMemo(() => {
     if (column.type === 'check') {
       return column.hideAllCheck ? null : (
@@ -79,7 +77,13 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
    * ******************************************************************************************************************/
 
   return (
-    <TableCommonCell type='head' className='TableHeadCell' style={style} column={column} defaultAlign={defaultAlign}>
+    <TableCommonCell
+      type='head'
+      className='TableHeadCell'
+      style={top !== undefined ? { top } : undefined}
+      column={column}
+      defaultAlign={defaultAlign}
+    >
       {data}
     </TableCommonCell>
   );

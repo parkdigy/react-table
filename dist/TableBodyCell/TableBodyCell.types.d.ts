@@ -1,13 +1,13 @@
 import { TableColumn, TableItem, TableProps } from '../Table/Table.types';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 export interface TableBodyCellCommands {
     setChecked(checked: boolean): void;
     setCheckDisabled(disabled: boolean): void;
 }
 export interface TableBodyCellProps {
-    className?: CommonSxProps['className'];
-    style?: CommonSxProps['style'];
-    sx?: CommonSxProps['sx'];
+    className?: TableCommonSxProps['className'];
+    style?: TableCommonSxProps['style'];
+    sx?: TableCommonSxProps['sx'];
     index: number;
     item: TableItem;
     column: TableColumn;

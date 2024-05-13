@@ -2,7 +2,16 @@ import React from 'react';
 import { TableProps, TableCommands, TableItem } from '../Table';
 import { FormValueMap, SearchCommands, SearchProps } from '@pdg/react-form';
 import { ReactNode } from 'react';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
+export interface SearchInfo {
+    ref?: SearchTableSearchProps['ref'];
+    searchGroups?: SearchTableSearchProps['searchGroups'];
+    props?: Omit<SearchTableSearchProps, 'ref' | 'searchGroups'>;
+}
+export interface TableInfo {
+    ref?: SearchTableTableProps['ref'];
+    props?: Omit<SearchTableTableProps, 'ref'>;
+}
 export interface SearchTableData<T = TableItem> {
     items: TableProps<T>['items'];
     paging?: TableProps<T>['paging'];
@@ -14,7 +23,7 @@ export interface SearchTableSearchProps extends Omit<SearchProps, 'ref' | 'color
 export interface SearchTableTableProps<T = TableItem> extends Omit<TableProps<T>, 'ref' | 'items' | 'paging' | 'onPageChange'> {
     ref?: React.ForwardedRef<TableCommands<T>>;
 }
-export interface SearchTableProps<T = TableItem> extends CommonSxProps {
+export interface SearchTableProps<T = TableItem> extends TableCommonSxProps {
     color?: SearchProps['color'];
     hash?: boolean;
     stickyHeader?: boolean;

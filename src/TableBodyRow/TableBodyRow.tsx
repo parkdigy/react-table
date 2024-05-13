@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { TableBodyRowProps as Props } from './TableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
@@ -40,39 +40,36 @@ const TableBodyRow: React.FC<Props> = ({
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   /********************************************************************************************************************
-   * Memo
+   * Variable
    * ******************************************************************************************************************/
 
-  const finalStyle = useMemo(
-    () =>
-      sortable
-        ? {
-            ...style,
-            transform: CSS.Transform.toString(transform),
-            transition,
-          }
-        : style,
-    [sortable, style, transform, transition]
-  );
-
-  const sortableProps = useMemo(
-    () =>
-      sortable
-        ? {
-            ref: setNodeRef,
-            ...attributes,
-            ...listeners,
-          }
-        : {},
-    [attributes, listeners, setNodeRef, sortable]
-  );
+  const sortableProps = sortable
+    ? {
+        ref: setNodeRef,
+        ...attributes,
+        ...listeners,
+      }
+    : {};
 
   /********************************************************************************************************************
    * Render
    * ******************************************************************************************************************/
 
   return (
-    <StyledBodyRow className={classNames('TableBodyRow', className)} style={finalStyle} {...props} {...sortableProps}>
+    <StyledBodyRow
+      className={classNames('TableBodyRow', className)}
+      style={
+        sortable
+          ? {
+              ...style,
+              transform: CSS.Transform.toString(transform),
+              transition,
+            }
+          : style
+      }
+      {...props}
+      {...sortableProps}
+    >
       {columns.map((column: TableColumn, columnIdx) => (
         <TableBodyCell
           className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}

@@ -1,13 +1,7 @@
-import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
-import {
-  SearchTableProps,
-  SearchTableSearchProps,
-  SearchTableCommands,
-  SearchTableData,
-  SearchTableTableProps,
-} from './SearchTable.types';
+import { SearchTableProps, SearchTableCommands, SearchTableData, SearchInfo, TableInfo } from './SearchTable.types';
 import {
   FormCheckValueItemCommands,
   FormDateRangePickerCommands,
@@ -26,21 +20,7 @@ import {
 import { Table, TableCommands, TableItem } from '../Table';
 import dayjs from 'dayjs';
 import { equal, notEmpty } from '@pdg/util';
-
-interface HashValueMap {
-  [key: string]: string;
-}
-
-interface SearchInfo {
-  ref?: SearchTableSearchProps['ref'];
-  searchGroups?: SearchTableSearchProps['searchGroups'];
-  props?: Omit<SearchTableSearchProps, 'ref' | 'searchGroups'>;
-}
-
-interface TableInfo {
-  ref?: SearchTableTableProps['ref'];
-  props?: Omit<SearchTableTableProps, 'ref'>;
-}
+import { deHash, getSearchInfo, getTableInfo } from './SearchTable.function.private';
 
 interface WithForwardRefType<T = TableItem> extends React.FC<SearchTableProps<T>> {
   <T = TableItem>(
@@ -75,36 +55,10 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
     const lastGetDataDataRef = useRef<FormValueMap>({});
 
     /********************************************************************************************************************
-     * Function
-     * ******************************************************************************************************************/
-
-    const getSearchInfo = useCallback((search: SearchTableProps['search']) => {
-      const searchInfo: SearchInfo = {};
-      if (search) {
-        const { ref, searchGroups, ...props } = search;
-        searchInfo.ref = ref;
-        searchInfo.searchGroups = searchGroups;
-        searchInfo.props = props;
-      }
-      return searchInfo;
-    }, []);
-
-    const getTableInfo = useCallback((table: SearchTableProps['table']) => {
-      const tableInfo: TableInfo = {};
-      if (table) {
-        const { ref, ...props } = table;
-        tableInfo.ref = ref;
-        tableInfo.props = props;
-      }
-      return tableInfo;
-    }, []);
-
-    /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
 
     const [isFirstSearchSubmit, setIsFirstSearchSubmit] = useState(true);
-
     const [tableData, setTableData] = useState<SearchTableData>();
 
     /********************************************************************************************************************
@@ -119,7 +73,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       } else {
         setSearchInfo(getSearchInfo(search));
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     /********************************************************************************************************************
@@ -134,7 +87,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       } else {
         setTableInfo(getTableInfo(table));
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
 
     /********************************************************************************************************************
@@ -151,16 +103,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
       },
       [onGetData]
     );
-
-    const deHash = useCallback((): HashValueMap => {
-      const values: HashValueMap = {};
-      const hash = window.location.hash.substring(1);
-      hash.replace(/([^=&]+)=([^&]*)/g, (substring, key, value) => {
-        values[decodeURIComponent(key)] = decodeURIComponent(value);
-        return substring;
-      });
-      return values;
-    }, []);
 
     const hashToSearchValue = useCallback((): FormValueMap | undefined => {
       const commands = searchRef.current;
@@ -278,7 +220,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
         });
         return commands.getAllFormValue();
       }
-    }, [searchRef, deHash]);
+    }, [searchRef]);
 
     /********************************************************************************************************************
      * Commands
@@ -485,21 +427,6 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
     );
 
     /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-
-    const styles: { containerStyle: CSSProperties | undefined; tableContainerStyle?: CSSProperties } = useMemo(
-      () =>
-        fullHeight
-          ? {
-              containerStyle: { ...initStyle, flex: 1, display: 'flex' },
-              tableContainerStyle: { flex: 1, display: 'flex', flexDirection: 'column' },
-            }
-          : { containerStyle: initStyle },
-      [initStyle, fullHeight]
-    );
-
-    /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
 
@@ -509,7 +436,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
         direction='column'
         spacing={1}
         className={classNames('SearchTable', className)}
-        style={styles.containerStyle}
+        style={fullHeight ? { ...initStyle, flex: 1, display: 'flex' } : initStyle}
         sx={sx}
       >
         <Grid item sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
@@ -536,7 +463,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
           </Search>
         </Grid>
         {betweenSearchTableComponent && <Grid item>{betweenSearchTableComponent}</Grid>}
-        <Grid item style={styles.tableContainerStyle}>
+        <Grid item style={fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
           <Table
             {...tableInfo.props}
             stickyHeader={stickyHeader || tableInfo.props?.stickyHeader}

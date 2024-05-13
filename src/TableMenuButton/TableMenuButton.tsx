@@ -48,21 +48,6 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
     const [open, setOpen] = useState(false);
 
     /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-
-    const icon = useMemo(() => (!startIcon && !children ? 'MoreVert' : undefined), [startIcon, children]);
-
-    const sx = useMemo(
-      () => ({
-        minWidth: 0,
-        pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
-        ...initSx,
-      }),
-      [children, icon, initSx, startIcon, variant]
-    );
-
-    /********************************************************************************************************************
      * Effect
      * ******************************************************************************************************************/
 
@@ -125,6 +110,12 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
     }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
 
     /********************************************************************************************************************
+     * Variable
+     * ******************************************************************************************************************/
+
+    const icon = !startIcon && !children ? 'MoreVert' : undefined;
+
+    /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
 
@@ -149,7 +140,11 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
           className={classNames(className, 'TableMenuButton')}
           type='button'
           size='small'
-          sx={sx}
+          sx={{
+            minWidth: 0,
+            pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7,
+            ...initSx,
+          }}
           color={color}
           startIcon={icon}
           onClick={handleClick}
@@ -168,7 +163,7 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
         >
           {({ TransitionProps, placement }) => {
             const placements = placement.split('-');
-            let transformOrigin = '';
+            let transformOrigin;
             if (placements[0] === 'left') {
               transformOrigin = 'right';
               // if (placements.length > 1) {

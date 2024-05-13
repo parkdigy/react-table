@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { BoxProps, GridProps, IconButtonProps, TypographyProps } from '@mui/material';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 import { PdgIconProps } from '@pdg/react-component';
 
 export interface InfoTableInfo {
@@ -34,15 +34,15 @@ export interface InfoTableItem<T = InfoTableInfo> {
   numberSuffix?: string;
   dividerColor?: TypographyProps['color'];
   dividerLine?: boolean;
-  style?: CommonSxProps['style'];
+  style?: TableCommonSxProps['style'];
   sx?: BoxProps['sx'];
   labelClassName?: string;
   labelColor?: TypographyProps['color'];
-  labelStyle?: CommonSxProps['style'];
+  labelStyle?: TableCommonSxProps['style'];
   labelSx?: BoxProps['sx'];
   valueClassName?: string;
-  valueStyle?: CommonSxProps['style'];
-  valueSx?: CommonSxProps['sx'];
+  valueStyle?: TableCommonSxProps['style'];
+  valueSx?: TableCommonSxProps['sx'];
   xs?: number;
   sm?: number;
   md?: number;
@@ -80,16 +80,16 @@ export interface InfoTableProps<T = InfoTableInfo> {
   columnSpacing?: GridProps['spacing'];
   rowSpacing?: GridProps['spacing'];
   className?: string;
-  style?: CommonSxProps['style'];
-  sx?: CommonSxProps['sx'];
+  style?: TableCommonSxProps['style'];
+  sx?: TableCommonSxProps['sx'];
   labelClassName?: string;
   labelColor?: TypographyProps['color'];
-  labelStyle?: CommonSxProps['style'];
+  labelStyle?: TableCommonSxProps['style'];
   labelSx?: BoxProps['sx'];
   dividerColor?: TypographyProps['color'];
   valueClassName?: string;
-  valueStyle?: CommonSxProps['style'];
-  valueSx?: CommonSxProps['sx'];
+  valueStyle?: TableCommonSxProps['style'];
+  valueSx?: TableCommonSxProps['sx'];
   ellipsis?: boolean;
   valueUnderline?: boolean;
   info: T;

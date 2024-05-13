@@ -1,4 +1,4 @@
-'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),util=require('@pdg/util'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core'),uuid=require('uuid'),SimpleBar=require('simplebar-react');require('simplebar-react/dist/simplebar.min.css');var reactForm=require('@pdg/react-form'),reactComponent=require('@pdg/react-component'),reactCopyToClipboard=require('react-copy-to-clipboard');function styleInject(css, ref) {
+'use strict';var React=require('react'),classNames=require('classnames'),material=require('@mui/material'),reactResizeDetector=require('react-resize-detector'),sortable=require('@dnd-kit/sortable'),dayjs=require('dayjs'),util=require('@pdg/util'),reactHook=require('@pdg/react-hook'),core=require('@dnd-kit/core'),SimpleBar=require('simplebar-react');require('simplebar-react/dist/simplebar.min.css');var uuid=require('uuid'),reactForm=require('@pdg/react-form'),reactComponent=require('@pdg/react-component'),reactCopyToClipboard=require('react-copy-to-clipboard');function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
 
@@ -192,15 +192,16 @@ var TableCommonCell = function (_a) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var align = React.useMemo(function () { return getTableColumnAlign(column, defaultAlign); }, [column, defaultAlign]);
-    var ellipsis = React.useMemo(function () {
-        return type !== 'head' &&
+    var _b = React.useMemo(function () {
+        var align = getTableColumnAlign(column, defaultAlign);
+        var ellipsis = type !== 'head' &&
             (column.ellipsis ||
                 (column.type !== 'img' &&
                     column.type !== 'button' &&
                     column.type !== 'buttons' &&
                     (column.ellipsis == null ? !!initDefaultEllipsis : false)));
-    }, [type, column, initDefaultEllipsis]);
+        return { align: align, ellipsis: ellipsis };
+    }, [column, defaultAlign, initDefaultEllipsis, type]), align = _b.align, ellipsis = _b.ellipsis;
     var className = React.useMemo(function () {
         var _a, _b, _c, _d, _e, _f;
         var className;
@@ -548,20 +549,15 @@ var TableBodyRow = function (_a) {
     var className = _a.className, style = _a.style, id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable$1 = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, onGetColumnClassName = _a.onGetColumnClassName, onGetColumnStyle = _a.onGetColumnStyle, onGetColumnSx = _a.onGetColumnSx, props = __rest(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange", "onGetColumnClassName", "onGetColumnStyle", "onGetColumnSx"]);
     var _b = sortable.useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
     /********************************************************************************************************************
-     * Memo
+     * Variable
      * ******************************************************************************************************************/
-    var finalStyle = React.useMemo(function () {
-        return sortable$1
-            ? __assign(__assign({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style;
-    }, [sortable$1, style, transform, transition]);
-    var sortableProps = React.useMemo(function () {
-        return sortable$1
-            ? __assign(__assign({ ref: setNodeRef }, attributes), listeners) : {};
-    }, [attributes, listeners, setNodeRef, sortable$1]);
+    var sortableProps = sortable$1
+        ? __assign(__assign({ ref: setNodeRef }, attributes), listeners) : {};
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: finalStyle }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
+    return (React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: sortable$1
+            ? __assign(__assign({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); })));
 };var TableFooterCell = function (_a) {
     /********************************************************************************************************************
      * Memo
@@ -635,7 +631,6 @@ var TableBodyRow = function (_a) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var style = React.useMemo(function () { return (top !== undefined ? { top: top } : undefined); }, [top]);
     var data = React.useMemo(function () {
         var _a, _b;
         if (column.type === 'check') {
@@ -661,7 +656,7 @@ var TableBodyRow = function (_a) {
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: style, column: column, defaultAlign: defaultAlign }, data));
+    return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: top !== undefined ? { top: top } : undefined, column: column, defaultAlign: defaultAlign }, data));
 };var BottomLine = material.styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 var TableTopHead = function (_a) {
     /********************************************************************************************************************
@@ -690,10 +685,6 @@ var TableTopHead = function (_a) {
     /********************************************************************************************************************
      * Function
      * ******************************************************************************************************************/
-    var captionRow = React.useMemo(function () {
-        return !!caption && (React.createElement(TableTopHeadCaptionRow, { ref: captionRef, className: 'TableTopHeadCaptionRow' },
-            React.createElement(material.TableCell, { colSpan: columns.length }, caption)));
-    }, [caption, columns]);
     var makeRowCells = React.useCallback(function (row, top) {
         var totalColumns = 0;
         var cells = row
@@ -718,6 +709,11 @@ var TableTopHead = function (_a) {
         var top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
         return (React.createElement(material.TableRow, null, columns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
     }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
+    /********************************************************************************************************************
+     * Variable
+     * ******************************************************************************************************************/
+    var captionRow = !!caption && (React.createElement(TableTopHeadCaptionRow, { ref: captionRef, className: 'TableTopHeadCaptionRow' },
+        React.createElement(material.TableCell, { colSpan: columns.length }, caption)));
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
@@ -760,7 +756,12 @@ var TableTopHead = function (_a) {
             columnRow));
     }
 };
-var templateObject_1$1;function columnFilter(v) {
+var templateObject_1$1;var makeSortableItems = function (items) {
+    return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
+        var id = _a.id, item = __rest(_a, ["id"]);
+        return __assign({ id: id == null ? "".concat(uuid.v4(), "_").concat(index) : id }, item);
+    });
+};function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
 var _columnId = 0;
@@ -850,12 +851,6 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Function
      * ******************************************************************************************************************/
-    var makeSortableItems = React.useCallback(function (items) {
-        return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
-            var id = _a.id, item = __rest(_a, ["id"]);
-            return __assign({ id: id == null ? "".concat(uuid.v4(), "_").concat(index) : id }, item);
-        });
-    }, []);
     var getFinalColumnId = React.useCallback(function (column) {
         if (finalColumns && finalColumnsIdRef.current) {
             var idx = finalColumns.indexOf(column);
@@ -1066,18 +1061,7 @@ var Table = React.forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [
-        ref,
-        columns,
-        items,
-        paging,
-        makeSortableItems,
-        setColumns,
-        setItems,
-        setPaging,
-        getCheckedItems,
-        simpleBarScrollToTop,
-    ]);
+    }, [ref, columns, items, paging, setColumns, setItems, setPaging, getCheckedItems, simpleBarScrollToTop]);
     /********************************************************************************************************************
      * Event Handler
      * ******************************************************************************************************************/
@@ -1184,67 +1168,29 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var tableContextValue = React.useMemo(function () { return ({
-        menuOpen: menuOpen,
-        openMenuId: openMenuId,
-        setMenuOpen: TableContextSetMenuOpen,
-        setItemColumnChecked: TableContextSetItemColumnChecked,
-        setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
-        setItemColumnCommands: TableContextSetItemColumnCommands,
-        setHeadColumnChecked: TableContextSetHeadColumnChecked,
-        setHeadColumnCommands: TableContextSetHeadColumnCommands,
-    }); }, [
-        TableContextSetHeadColumnChecked,
-        TableContextSetHeadColumnCommands,
-        TableContextSetItemColumnCheckDisabled,
-        TableContextSetItemColumnChecked,
-        TableContextSetItemColumnCommands,
-        TableContextSetMenuOpen,
-        menuOpen,
-        openMenuId,
-    ]);
-    var isNoData = React.useMemo(function () { return !!sortableItems && sortableItems.length <= 0; }, [sortableItems]);
-    var finalPagingHeight = React.useMemo(function () { return (paging && paging.total > 0 ? pagingHeight || 0 : 0); }, [paging, pagingHeight]);
-    var stickyHeader = React.useMemo(function () { return !isNoData && initStickyHeader; }, [initStickyHeader, isNoData]);
-    var style = React.useMemo(function () {
-        if (fullHeight) {
-            return __assign(__assign({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' });
+    var isNoData = !!sortableItems && sortableItems.length <= 0;
+    var finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
+    var stickyHeader = !isNoData && initStickyHeader;
+    var style = fullHeight
+        ? __assign(__assign({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }) : __assign({ width: '100%' }, initStyle);
+    var simpleBarStyle = fullHeight
+        ? {
+            height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
+            flex: 1,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            marginBottom: finalPagingHeight || 0,
         }
-        else {
-            return __assign({ width: '100%' }, initStyle);
-        }
-    }, [initStyle, fullHeight]);
-    var simpleBarStyle = React.useMemo(function () {
-        if (fullHeight) {
-            return {
-                height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
-                flex: 1,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                marginBottom: finalPagingHeight || 0,
-            };
-        }
-        else {
-            return { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
-        }
-    }, [fullHeight, containerHeight, finalPagingHeight, height, minHeight, maxHeight]);
-    var tableStyle = React.useMemo(function () {
-        if (fullHeight && isNoData) {
-            return { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 };
-        }
-    }, [fullHeight, isNoData, containerHeight, finalPagingHeight]);
-    var pagingStyle = React.useMemo(function () {
-        var style = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
-        if (fullHeight) {
-            return __assign({ position: 'sticky' }, style);
-        }
-        return style;
-    }, [fullHeight]);
-    var tableTopHead = React.useMemo(function () {
-        return finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
-    }, [caption, defaultAlign, finalColumns, handleHeadCheckChange, topHeadRows]);
+        : { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
+    var tableStyle = fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+    // pageStyle
+    var pagingStyle = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+    if (fullHeight) {
+        pagingStyle.position = 'sticky';
+    }
+    var tableTopHead = finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
     var tableBody = React.useMemo(function () {
         return finalColumns && (React.createElement(material.TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(sortable.SortableContext, { items: sortableItems, strategy: sortable.verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color', onGetBodyRowClassName ? onGetBodyRowClassName(item, idx) : undefined), style: onGetBodyRowStyle ? onGetBodyRowStyle(item, idx) : undefined, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, onGetColumnClassName: onGetBodyColumnClassName, onGetColumnStyle: onGetBodyColumnStyle, onGetColumnSx: onGetBodyColumnSx, hover: true, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable$1, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React.createElement(StyledBodyRow$1, null,
             React.createElement(material.TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React.createElement(StyledNoDataDiv, null,
@@ -1275,27 +1221,19 @@ var Table = React.forwardRef(function (_a, ref) {
             footer && (React.createElement(material.TableFooter, null,
             React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))));
     }, [defaultAlign, finalColumns, footer, isNoData]);
-    var tablePaging = React.useMemo(function () {
-        return finalColumns &&
-            paging &&
-            paging.total > 0 && (React.createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
-            React.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })));
-    }, [
-        finalColumns,
-        fullHeight,
-        handlePageChange,
-        pagination === null || pagination === void 0 ? void 0 : pagination.className,
-        pagination === null || pagination === void 0 ? void 0 : pagination.style,
-        pagination === null || pagination === void 0 ? void 0 : pagination.sx,
-        paging,
-        pagingAlign,
-        pagingHeightResizeDetector,
-        pagingStyle,
-    ]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return finalColumns ? (React.createElement(TableContextProvider, { value: tableContextValue },
+    return finalColumns ? (React.createElement(TableContextProvider, { value: {
+            menuOpen: menuOpen,
+            openMenuId: openMenuId,
+            setMenuOpen: TableContextSetMenuOpen,
+            setItemColumnChecked: TableContextSetItemColumnChecked,
+            setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
+            setItemColumnCommands: TableContextSetItemColumnCommands,
+            setHeadColumnChecked: TableContextSetHeadColumnChecked,
+            setHeadColumnCommands: TableContextSetHeadColumnCommands,
+        } },
         React.createElement(material.Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className, !!stickyHeader && 'sticky-header', !!fullHeight && 'full-height', !!showOddColor && 'odd-color', !!showEvenColor && 'even-color', !!sortable$1 && 'sortable'), variant: 'outlined', style: style, sx: sx },
             React.createElement(SimpleBar, { ref: simpleBarRef, style: simpleBarStyle },
                 React.createElement(core.DndContext, { sensors: sensors, collisionDetection: core.closestCenter, onDragEnd: handleDragEnd },
@@ -1303,8 +1241,36 @@ var Table = React.forwardRef(function (_a, ref) {
                         tableTopHead,
                         tableBody,
                         tableFooter))),
-            tablePaging))) : null;
-});var SearchTable = React.forwardRef(function (_a, ref) {
+            finalColumns && paging && paging.total > 0 && (React.createElement(material.Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
+                React.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })))))) : null;
+});var getSearchInfo = function (search) {
+    var searchInfo = {};
+    if (search) {
+        var ref = search.ref, searchGroups = search.searchGroups, props = __rest(search, ["ref", "searchGroups"]);
+        searchInfo.ref = ref;
+        searchInfo.searchGroups = searchGroups;
+        searchInfo.props = props;
+    }
+    return searchInfo;
+};
+var getTableInfo = function (table) {
+    var tableInfo = {};
+    if (table) {
+        var ref = table.ref, props = __rest(table, ["ref"]);
+        tableInfo.ref = ref;
+        tableInfo.props = props;
+    }
+    return tableInfo;
+};
+var deHash = function () {
+    var values = {};
+    var hash = window.location.hash.substring(1);
+    hash.replace(/([^=&]+)=([^&]*)/g, function (substring, key, value) {
+        values[decodeURIComponent(key)] = decodeURIComponent(value);
+        return substring;
+    });
+    return values;
+};var SearchTable = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
@@ -1313,28 +1279,6 @@ var Table = React.forwardRef(function (_a, ref) {
     var searchRef = React.useRef();
     var tableRef = React.useRef();
     var lastGetDataDataRef = React.useRef({});
-    /********************************************************************************************************************
-     * Function
-     * ******************************************************************************************************************/
-    var getSearchInfo = React.useCallback(function (search) {
-        var searchInfo = {};
-        if (search) {
-            var ref_1 = search.ref, searchGroups = search.searchGroups, props = __rest(search, ["ref", "searchGroups"]);
-            searchInfo.ref = ref_1;
-            searchInfo.searchGroups = searchGroups;
-            searchInfo.props = props;
-        }
-        return searchInfo;
-    }, []);
-    var getTableInfo = React.useCallback(function (table) {
-        var tableInfo = {};
-        if (table) {
-            var ref_2 = table.ref, props = __rest(table, ["ref"]);
-            tableInfo.ref = ref_2;
-            tableInfo.props = props;
-        }
-        return tableInfo;
-    }, []);
     /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
@@ -1352,7 +1296,6 @@ var Table = React.forwardRef(function (_a, ref) {
         else {
             setSearchInfo(getSearchInfo(search));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
     /********************************************************************************************************************
      * tableInfo
@@ -1366,7 +1309,6 @@ var Table = React.forwardRef(function (_a, ref) {
         else {
             setTableInfo(getTableInfo(table));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table]);
     /********************************************************************************************************************
      * Function
@@ -1377,15 +1319,6 @@ var Table = React.forwardRef(function (_a, ref) {
             onGetData(data).then(setTableData);
         }
     }, [onGetData]);
-    var deHash = React.useCallback(function () {
-        var values = {};
-        var hash = window.location.hash.substring(1);
-        hash.replace(/([^=&]+)=([^&]*)/g, function (substring, key, value) {
-            values[decodeURIComponent(key)] = decodeURIComponent(value);
-            return substring;
-        });
-        return values;
-    }, []);
     var hashToSearchValue = React.useCallback(function () {
         var commands = searchRef.current;
         if (commands) {
@@ -1509,7 +1442,7 @@ var Table = React.forwardRef(function (_a, ref) {
             });
             return commands.getAllFormValue();
         }
-    }, [searchRef, deHash]);
+    }, [searchRef]);
     /********************************************************************************************************************
      * Commands
      * ******************************************************************************************************************/
@@ -1700,20 +1633,9 @@ var Table = React.forwardRef(function (_a, ref) {
         }
     }, [searchRef, hash, hashChange, getData, isFirstSearchSubmit]);
     /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-    var styles = React.useMemo(function () {
-        return fullHeight
-            ? {
-                containerStyle: __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }),
-                tableContainerStyle: { flex: 1, display: 'flex', flexDirection: 'column' },
-            }
-            : { containerStyle: initStyle };
-    }, [initStyle, fullHeight]);
-    /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(material.Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: styles.containerStyle, sx: sx },
+    return (React.createElement(material.Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: fullHeight ? __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }) : initStyle, sx: sx },
         React.createElement(material.Grid, { item: true, sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
             React.createElement(reactForm.Search, __assign({ color: color }, searchInfo.props, { ref: function (commands) {
                     if (searchInfo.ref) {
@@ -1730,7 +1652,7 @@ var Table = React.forwardRef(function (_a, ref) {
                     React.createElement(reactForm.FormHidden, { name: 'page', value: 1 })),
                 searchInfo.searchGroups)),
         betweenSearchTableComponent && React.createElement(material.Grid, { item: true }, betweenSearchTableComponent),
-        React.createElement(material.Grid, { item: true, style: styles.tableContainerStyle },
+        React.createElement(material.Grid, { item: true, style: fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined },
             React.createElement(Table, __assign({}, tableInfo.props, { stickyHeader: stickyHeader || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.stickyHeader), fullHeight: fullHeight || ((_c = tableInfo.props) === null || _c === void 0 ? void 0 : _c.fullHeight), ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
@@ -1769,11 +1691,6 @@ var TableButton$1 = React.memo(TableButton);var TableMenuButton = React.forwardR
      * State
      * ******************************************************************************************************************/
     var _f = React.useState(false), open = _f[0], setOpen = _f[1];
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-    var icon = React.useMemo(function () { return (!startIcon && !children ? 'MoreVert' : undefined); }, [startIcon, children]);
-    var sx = React.useMemo(function () { return (__assign({ minWidth: 0, pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7 }, initSx)); }, [children, icon, initSx, startIcon, variant]);
     /********************************************************************************************************************
      * Effect
      * ******************************************************************************************************************/
@@ -1828,6 +1745,10 @@ var TableButton$1 = React.memo(TableButton);var TableMenuButton = React.forwardR
         });
     }, [buttonId, handleClose, handleListKeyDown, menuId, menuList, open]);
     /********************************************************************************************************************
+     * Variable
+     * ******************************************************************************************************************/
+    var icon = !startIcon && !children ? 'MoreVert' : undefined;
+    /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
     return (React.createElement("span", null,
@@ -1841,11 +1762,11 @@ var TableButton$1 = React.memo(TableButton);var TableMenuButton = React.forwardR
                     }
                 }
                 anchorRef.current = r;
-            }, id: buttonId, variant: variant, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: sx, color: color, startIcon: icon, onClick: handleClick }, props), children),
+            }, id: buttonId, variant: variant, "aria-controls": open ? menuId : undefined, "aria-expanded": open ? 'true' : undefined, "aria-haspopup": 'true', className: classNames(className, 'TableMenuButton'), type: 'button', size: 'small', sx: __assign({ minWidth: 0, pl: !children ? 0.7 : icon || startIcon ? 0.7 : variant === 'text' ? 1.2 : 0.7 }, initSx), color: color, startIcon: icon, onClick: handleClick }, props), children),
         React.createElement(material.Popper, { className: 'TableMenuButton-Popper', open: open, anchorEl: anchorRef.current, role: undefined, placement: placement, transition: true, style: { zIndex: inModal ? (zIndex === undefined ? 1301 : zIndex) : zIndex } }, function (_a) {
             var TransitionProps = _a.TransitionProps, placement = _a.placement;
             var placements = placement.split('-');
-            var transformOrigin = '';
+            var transformOrigin;
             if (placements[0] === 'left') {
                 transformOrigin = 'right';
                 // if (placements.length > 1) {

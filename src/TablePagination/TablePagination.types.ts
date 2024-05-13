@@ -1,5 +1,5 @@
 import { StackProps } from '@mui/material';
-import { CommonSxProps } from '../@types';
+import { TableCommonSxProps } from '../@types';
 
 export interface TablePaging {
   current_page: number;
@@ -8,7 +8,7 @@ export interface TablePaging {
   total: number;
 }
 
-export interface TablePaginationProps extends Pick<CommonSxProps, 'className' | 'style' | 'sx'> {
+export interface TablePaginationProps extends Pick<TableCommonSxProps, 'className' | 'style' | 'sx'> {
   paging: TablePaging;
   align?: StackProps['alignItems'];
   onChange?(page: number): void;
