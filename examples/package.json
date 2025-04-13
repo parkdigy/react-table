@@ -21,7 +21,7 @@
     "@mui/x-date-pickers": "^7.28.3",
     "@pdg/react-admin-layout": "^1.0.38",
     "@pdg/react-component": "^1.0.31",
-    "@pdg/react-form": "^1.0.133",
+    "@pdg/react-form": "^1.0.134",
     "@pdg/react-hook": "^1.0.26",
     "@pdg/util": "^1.0.23",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.16",
