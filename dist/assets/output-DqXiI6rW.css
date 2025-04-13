@@ -1,0 +1,15 @@
+.simplebar-track.simplebar-vertical {
+  width: 8px !important;
+}
+.simplebar-track.simplebar-vertical .simplebar-scrollbar.simplebar-visible:before {
+  opacity: 0.3 !important;
+}
+
+.Table .TableHead .TableHeadRow th {
+  position: relative;
+  transform: translateY(-100%);
+}
+.Table.sticky-header .TableHead .TableHeadRow th {
+  position: sticky;
+  transform: none;
+}

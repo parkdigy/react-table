@@ -106,10 +106,10 @@ const Table: React.FC = () => {
       {sorting ? (
         <div style={{ border: '1px solid #efefef', padding: 10 }}>
           <Grid container spacing={1}>
-            <Grid item>
+            <Grid>
               <Button variant='contained'>변경된 순서 저장</Button>
             </Grid>
-            <Grid item>
+            <Grid>
               <Button
                 color='secondary'
                 onClick={() => {

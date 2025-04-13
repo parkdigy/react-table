@@ -12,10 +12,9 @@ import {
 } from './InfoTable.style.private';
 import { Grid, Stack } from '@mui/material';
 import { combineSx, typographyColorToSxColor } from '../@util.private';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from 'dayjs';
 import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
-import { PdgIcon } from '@pdg/react-component';
+import { PdgCopyToClipboard, PdgIcon } from '@pdg/react-component';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
   <T = InfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
@@ -221,7 +220,7 @@ const InfoTable: WithType = ({
           : undefined;
 
         return item.type === 'divider' ? (
-          <Grid key={idx} item xs={12}>
+          <Grid key={idx} size={{ xs: 12 }}>
             <Stack direction='row' spacing={0.5} alignItems='center'>
               {item.icon && (
                 <PdgIcon sx={{ color: item.dividerColor || dividerColor }} size='small'>
@@ -251,7 +250,7 @@ const InfoTable: WithType = ({
             </Stack>
           </Grid>
         ) : (
-          <Grid key={idx} item {...sizeProps} className={item.className} style={item.style} sx={item.sx}>
+          <Grid key={idx} size={sizeProps} className={item.className} style={item.style} sx={item.sx}>
             <Stack direction='row' spacing={0.5} alignItems='center'>
               {item.icon && (
                 <PdgIcon sx={{ color: finalLabelColor }} size='small'>
@@ -274,14 +273,14 @@ const InfoTable: WithType = ({
               {item.ellipsis || ellipsis ? <ValueEllipsis>{data}</ValueEllipsis> : <Value>{data}</Value>}
               {item.clipboard && notEmpty(copyToClipboardText) && (
                 <ValueClipboard>
-                  <CopyToClipboard
+                  <PdgCopyToClipboard
                     text={copyToClipboardText}
                     onCopy={onCopyToClipboard ? () => onCopyToClipboard(item, copyToClipboardText) : undefined}
                   >
                     <ClipboardIconButton size='small' color='primary' {...item.clipboardProps}>
                       <PdgIcon>{item.clipboardIcon || 'ContentPaste'}</PdgIcon>
                     </ClipboardIconButton>
-                  </CopyToClipboard>
+                  </PdgCopyToClipboard>
                 </ValueClipboard>
               )}
             </ValueWrap>

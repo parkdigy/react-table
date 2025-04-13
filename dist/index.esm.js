@@ -1,30 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon}from'@pdg/react-component';import {CopyToClipboard}from'react-copy-to-clipboard';function styleInject(css, ref) {
-  if ( ref === void 0 ) ref = {};
-  var insertAt = ref.insertAt;
-
-  if (typeof document === 'undefined') { return; }
-
-  var head = document.head || document.getElementsByTagName('head')[0];
-  var style = document.createElement('style');
-  style.type = 'text/css';
-
-  if (insertAt === 'top') {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}var css_248z = ".simplebar-track.simplebar-vertical {\n  width: 8px !important;\n}\n.simplebar-track.simplebar-vertical .simplebar-scrollbar.simplebar-visible:before {\n  opacity: 0.3 !important;\n}\n\n.Table .TableHead .TableHeadRow th {\n  position: relative;\n  transform: translateY(-100%);\n}\n.Table.sticky-header .TableHead .TableHeadRow th {\n  position: sticky;\n  transform: none;\n}";
-styleInject(css_248z);/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon,PdgCopyToClipboard}from'@pdg/react-component';/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -38,7 +12,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 
 var __assign = function() {
@@ -772,7 +746,7 @@ var Table = React.forwardRef(function (_a, ref) {
     var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, _b = _a.pagingAlign, pagingAlign = _b === void 0 ? 'center' : _b, _c = _a.defaultAlign, defaultAlign = _c === void 0 ? 'left' : _c, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, _d = _a.cellPadding, cellPadding = _d === void 0 ? 13 : _d, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
     var localHeaderDataRef = useRef({});
     var localBodyDataRef = useRef({});
-    var updateHeadCheckTimer = useRef();
+    var updateHeadCheckTimer = useRef(undefined);
     var fireOnCheckChangeTimer = useRef({});
     var simpleBarRef = useRef(null);
     var finalColumnsIdRef = useRef([]);
@@ -1276,8 +1250,8 @@ var deHash = function () {
      * ******************************************************************************************************************/
     var _b, _c;
     var className = _a.className, initStyle = _a.style, sx = _a.sx, color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
-    var searchRef = useRef();
-    var tableRef = useRef();
+    var searchRef = useRef(undefined);
+    var tableRef = useRef(undefined);
     var lastGetDataDataRef = useRef({});
     /********************************************************************************************************************
      * State
@@ -1636,7 +1610,7 @@ var deHash = function () {
      * Render
      * ******************************************************************************************************************/
     return (React.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: fullHeight ? __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }) : initStyle, sx: sx },
-        React.createElement(Grid, { item: true, sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
+        React.createElement(Grid, { sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
             React.createElement(Search, __assign({ color: color }, searchInfo.props, { ref: function (commands) {
                     if (searchInfo.ref) {
                         if (typeof searchInfo.ref === 'function') {
@@ -1651,8 +1625,8 @@ var deHash = function () {
                 React.createElement(SearchGroup, { hidden: true },
                     React.createElement(FormHidden, { name: 'page', value: 1 })),
                 searchInfo.searchGroups)),
-        betweenSearchTableComponent && React.createElement(Grid, { item: true }, betweenSearchTableComponent),
-        React.createElement(Grid, { item: true, style: fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined },
+        betweenSearchTableComponent && React.createElement(Grid, null, betweenSearchTableComponent),
+        React.createElement(Grid, { style: fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined },
             React.createElement(Table, __assign({}, tableInfo.props, { stickyHeader: stickyHeader || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.stickyHeader), fullHeight: fullHeight || ((_c = tableInfo.props) === null || _c === void 0 ? void 0 : _c.fullHeight), ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
@@ -1686,7 +1660,7 @@ var TableButton$1 = React.memo(TableButton);var TableMenuButton = React.forwardR
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
-    var anchorRef = useRef();
+    var anchorRef = useRef(null);
     /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
@@ -1979,19 +1953,19 @@ var templateObject_1, templateObject_2, templateObject_3, templateObject_4, temp
             var valueUnderlineStyle = valueUnderline
                 ? { borderBottom: '1px solid #efefef', paddingBottom: 5 }
                 : undefined;
-            return item.type === 'divider' ? (React.createElement(Grid, { key: idx, item: true, xs: 12 },
+            return item.type === 'divider' ? (React.createElement(Grid, { key: idx, size: { xs: 12 } },
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
                     item.icon && (React.createElement(PdgIcon, { sx: { color: item.dividerColor || dividerColor }, size: 'small' }, item.icon)),
                     item.label && (React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                     item.dividerLine && (React.createElement(React.Fragment, null, item.icon || item.label ? (React.createElement("div", { style: { flex: 1, paddingLeft: 5 } },
-                        React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(Grid, __assign({ key: idx, item: true }, sizeProps, { className: item.className, style: item.style, sx: item.sx }),
+                        React.createElement(Line, null))) : (React.createElement(Line, null))))))) : (React.createElement(Grid, { key: idx, size: sizeProps, className: item.className, style: item.style, sx: item.sx },
                 React.createElement(Stack, { direction: 'row', spacing: 0.5, alignItems: 'center' },
                     item.icon && (React.createElement(PdgIcon, { sx: { color: finalLabelColor }, size: 'small' }, "CalendarMonth")),
                     React.createElement(Label, { className: classNames(labelClassName, item.labelClassName), style: __assign(__assign({}, item.labelStyle), labelStyle), sx: finalLabelSx }, item.label)),
                 React.createElement(ValueWrap, { className: classNames(valueClassName, item.valueClassName), style: __assign(__assign(__assign({}, valueStyle), item.valueStyle), valueUnderlineStyle), sx: finalValueSx },
                     item.ellipsis || ellipsis ? React.createElement(ValueEllipsis, null, data) : React.createElement(Value, null, data),
                     item.clipboard && notEmpty(copyToClipboardText) && (React.createElement(ValueClipboard, null,
-                        React.createElement(CopyToClipboard, { text: copyToClipboardText, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText); } : undefined },
+                        React.createElement(PdgCopyToClipboard, { text: copyToClipboardText, onCopy: onCopyToClipboard ? function () { return onCopyToClipboard(item, copyToClipboardText); } : undefined },
                             React.createElement(ClipboardIconButton, __assign({ size: 'small', color: 'primary' }, item.clipboardProps),
                                 React.createElement(PdgIcon, null, item.clipboardIcon || 'ContentPaste'))))))));
         });

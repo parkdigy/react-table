@@ -50,8 +50,8 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
      * Ref
      * ******************************************************************************************************************/
 
-    const searchRef = useRef<SearchCommands>();
-    const tableRef = useRef<TableCommands>();
+    const searchRef = useRef<SearchCommands>(undefined);
+    const tableRef = useRef<TableCommands>(undefined);
     const lastGetDataDataRef = useRef<FormValueMap>({});
 
     /********************************************************************************************************************
@@ -439,7 +439,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
         style={fullHeight ? { ...initStyle, flex: 1, display: 'flex' } : initStyle}
         sx={sx}
       >
-        <Grid item sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
+        <Grid sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
           <Search
             color={color}
             {...searchInfo.props}
@@ -462,8 +462,8 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
             {searchInfo.searchGroups}
           </Search>
         </Grid>
-        {betweenSearchTableComponent && <Grid item>{betweenSearchTableComponent}</Grid>}
-        <Grid item style={fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
+        {betweenSearchTableComponent && <Grid>{betweenSearchTableComponent}</Grid>}
+        <Grid style={fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
           <Table
             {...tableInfo.props}
             stickyHeader={stickyHeader || tableInfo.props?.stickyHeader}

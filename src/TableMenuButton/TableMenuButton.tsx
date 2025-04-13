@@ -39,7 +39,7 @@ const TableMenuButton = React.forwardRef<HTMLButtonElement, Props>(
      * Ref
      * ******************************************************************************************************************/
 
-    const anchorRef = useRef<HTMLButtonElement | null>();
+    const anchorRef = useRef<HTMLButtonElement>(null);
 
     /********************************************************************************************************************
      * State

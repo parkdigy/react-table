@@ -106,7 +106,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const localHeaderDataRef = useRef<TLocalHeaderData>({});
     const localBodyDataRef = useRef<TLocalBodyData>({});
-    const updateHeadCheckTimer = useRef<NodeJS.Timeout>();
+    const updateHeadCheckTimer = useRef<NodeJS.Timeout>(undefined);
     const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
     const simpleBarRef = useRef<SimpleBarCore>(null);
     const finalColumnsIdRef = useRef<string[] | undefined>([]);
