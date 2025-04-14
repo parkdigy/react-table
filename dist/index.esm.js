@@ -1,4 +1,30 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon,PdgCopyToClipboard}from'@pdg/react-component';/******************************************************************************
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon,PdgCopyToClipboard}from'@pdg/react-component';function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}var css_248z = ".simplebar-track.simplebar-vertical {\n  width: 8px !important;\n}\n.simplebar-track.simplebar-vertical .simplebar-scrollbar.simplebar-visible:before {\n  opacity: 0.3 !important;\n}\n\n.Table .TableHead .TableHeadRow th {\n  position: relative;\n  transform: translateY(-100%);\n}\n.Table.sticky-header .TableHead .TableHeadRow th {\n  position: sticky;\n  transform: none;\n}";
+styleInject(css_248z);/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
