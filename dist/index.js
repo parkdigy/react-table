@@ -632,16 +632,31 @@ var TableBodyRow = function (_a) {
      * Memo
      * ******************************************************************************************************************/
     var data = React.useMemo(function () {
-        var _a, _b;
+        var _a, _b, _c, _d;
         if (column.type === 'check') {
-            return column.hideAllCheck ? null : (React.createElement(material.Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
-                    setChecked(newChecked);
-                    onCheckChange && onCheckChange(column, newChecked);
-                } }));
+            if (column.hideAllCheck) {
+                if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
+                    return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+                }
+                else {
+                    if (typeof column.label === 'string') {
+                        return React.createElement("div", { dangerouslySetInnerHTML: { __html: column.label } });
+                    }
+                    else {
+                        return column.label;
+                    }
+                }
+            }
+            else {
+                return (React.createElement(material.Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
+                        setChecked(newChecked);
+                        onCheckChange && onCheckChange(column, newChecked);
+                    } }));
+            }
         }
         else {
-            if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
-                return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+            if ((_c = column.head) === null || _c === void 0 ? void 0 : _c.onRender) {
+                return (_d = column.head) === null || _d === void 0 ? void 0 : _d.onRender();
             }
             else {
                 if (typeof column.label === 'string') {

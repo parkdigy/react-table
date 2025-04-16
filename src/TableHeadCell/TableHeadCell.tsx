@@ -49,16 +49,28 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
 
   const data = useMemo(() => {
     if (column.type === 'check') {
-      return column.hideAllCheck ? null : (
-        <Checkbox
-          checked={checked}
-          disabled={checkDisabled}
-          onChange={(e, newChecked) => {
-            setChecked(newChecked);
-            onCheckChange && onCheckChange(column, newChecked);
-          }}
-        />
-      );
+      if (column.hideAllCheck) {
+        if (column.head?.onRender) {
+          return column.head?.onRender();
+        } else {
+          if (typeof column.label === 'string') {
+            return <div dangerouslySetInnerHTML={{ __html: column.label }} />;
+          } else {
+            return column.label;
+          }
+        }
+      } else {
+        return (
+          <Checkbox
+            checked={checked}
+            disabled={checkDisabled}
+            onChange={(e, newChecked) => {
+              setChecked(newChecked);
+              onCheckChange && onCheckChange(column, newChecked);
+            }}
+          />
+        );
+      }
     } else {
       if (column.head?.onRender) {
         return column.head?.onRender();
