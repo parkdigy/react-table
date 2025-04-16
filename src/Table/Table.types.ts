@@ -145,5 +145,9 @@ export interface TableCommands<T = TableItem> {
   setItemsPaging(items: TableProps<T>['items'], paging: TableProps<T>['paging']): void;
   resetSort(): void;
   getCheckedItems(columnId: string): T[];
+  getChecked(itemKey: string, itemValue: any, columnId: string): boolean;
+  setChecked(itemKey: string, itemValue: any, columnId: string, checked: boolean): void;
+  toggleChecked(itemKey: string, itemValue: any, columnId: string): void;
+  setCheckedAll(columnId: string, checked: boolean): void;
   scrollToTop(): void;
 }

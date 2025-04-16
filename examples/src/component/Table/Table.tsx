@@ -81,7 +81,9 @@ const Table: React.FC = () => {
   return (
     <Stack style={{ height: '100%' }} spacing={1}>
       <div>
-        <Button onClick={handleGetCheckedItems}>체크된 아이템 가져오기</Button>
+        <Button type='button' onClick={handleGetCheckedItems}>
+          체크된 아이템 가져오기
+        </Button>
       </div>
       <Search>
         <SearchGroup>

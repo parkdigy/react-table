@@ -256,6 +256,64 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       [getFinalColumnId]
     );
 
+    const getChecked = useCallback((itemKey: string, itemValue: any, columnId: string): boolean => {
+      let checked = false;
+      Object.keys(localBodyDataRef.current).find((key) => {
+        const itemData = localBodyDataRef.current[key];
+        if (itemData.item[itemKey] === itemValue) {
+          const columnData = itemData.columns[columnId];
+          checked = !!columnData?.checked;
+          return true;
+        }
+      });
+      return checked;
+    }, []);
+
+    const setChecked = useCallback(
+      (itemKey: string, itemValue: any, columnId: string, checked: boolean) => {
+        Object.keys(localBodyDataRef.current).find((key) => {
+          const itemData = localBodyDataRef.current[key];
+          if (itemData.item[itemKey] === itemValue) {
+            const columnData = itemData.columns[columnId];
+            if (columnData) {
+              columnData.commands?.setChecked(checked);
+              updateHeadCheck(columnData.column);
+            }
+            return true;
+          }
+        });
+      },
+      [updateHeadCheck]
+    );
+
+    const toggleChecked = useCallback(
+      (itemKey: string, itemValue: any, columnId: string) => {
+        Object.keys(localBodyDataRef.current).forEach((key) => {
+          const itemData = localBodyDataRef.current[key];
+          if (itemData.item[itemKey] === itemValue) {
+            const columnData = itemData.columns[columnId];
+            if (columnData) {
+              columnData.commands?.setChecked(!columnData.checked);
+              updateHeadCheck(columnData.column);
+            }
+            return true;
+          }
+        });
+      },
+      [updateHeadCheck]
+    );
+
+    const setCheckedAll = useCallback((columnId: string, checked: boolean) => {
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        const itemData = localBodyDataRef.current[key];
+        const columnData = itemData.columns[columnId];
+        if (columnData) {
+          columnData.commands?.setChecked(checked);
+        }
+      });
+      localHeaderDataRef.current[columnId]?.commands?.setChecked(checked);
+    }, []);
+
     const getCheckedItems = useCallback((columnId: string): TableItem[] => {
       const checkedItems: TableItem[] = [];
       Object.keys(localBodyDataRef.current).forEach((key) => {
@@ -431,6 +489,10 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
             setSortableItems(makeSortableItems(lastItems));
           },
           getCheckedItems,
+          getChecked,
+          setChecked,
+          toggleChecked,
+          setCheckedAll,
           scrollToTop: simpleBarScrollToTop,
         };
 
@@ -440,7 +502,21 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           ref.current = commands;
         }
       }
-    }, [ref, columns, items, paging, setColumns, setItems, setPaging, getCheckedItems, simpleBarScrollToTop]);
+    }, [
+      ref,
+      columns,
+      items,
+      paging,
+      setColumns,
+      setItems,
+      setPaging,
+      getCheckedItems,
+      simpleBarScrollToTop,
+      setChecked,
+      toggleChecked,
+      getChecked,
+      setCheckedAll,
+    ]);
 
     /********************************************************************************************************************
      * Event Handler

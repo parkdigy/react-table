@@ -893,6 +893,58 @@ var Table = React.forwardRef(function (_a, ref) {
             }, 100);
         }
     }, [getFinalColumnId]);
+    var getChecked = React.useCallback(function (itemKey, itemValue, columnId) {
+        var checked = false;
+        Object.keys(localBodyDataRef.current).find(function (key) {
+            var itemData = localBodyDataRef.current[key];
+            if (itemData.item[itemKey] === itemValue) {
+                var columnData = itemData.columns[columnId];
+                checked = !!(columnData === null || columnData === void 0 ? void 0 : columnData.checked);
+                return true;
+            }
+        });
+        return checked;
+    }, []);
+    var setChecked = React.useCallback(function (itemKey, itemValue, columnId, checked) {
+        Object.keys(localBodyDataRef.current).find(function (key) {
+            var _a;
+            var itemData = localBodyDataRef.current[key];
+            if (itemData.item[itemKey] === itemValue) {
+                var columnData = itemData.columns[columnId];
+                if (columnData) {
+                    (_a = columnData.commands) === null || _a === void 0 ? void 0 : _a.setChecked(checked);
+                    updateHeadCheck(columnData.column);
+                }
+                return true;
+            }
+        });
+    }, [updateHeadCheck]);
+    var toggleChecked = React.useCallback(function (itemKey, itemValue, columnId) {
+        Object.keys(localBodyDataRef.current).forEach(function (key) {
+            var _a;
+            var itemData = localBodyDataRef.current[key];
+            if (itemData.item[itemKey] === itemValue) {
+                var columnData = itemData.columns[columnId];
+                if (columnData) {
+                    (_a = columnData.commands) === null || _a === void 0 ? void 0 : _a.setChecked(!columnData.checked);
+                    updateHeadCheck(columnData.column);
+                }
+                return true;
+            }
+        });
+    }, [updateHeadCheck]);
+    var setCheckedAll = React.useCallback(function (columnId, checked) {
+        var _a, _b;
+        Object.keys(localBodyDataRef.current).forEach(function (key) {
+            var _a;
+            var itemData = localBodyDataRef.current[key];
+            var columnData = itemData.columns[columnId];
+            if (columnData) {
+                (_a = columnData.commands) === null || _a === void 0 ? void 0 : _a.setChecked(checked);
+            }
+        });
+        (_b = (_a = localHeaderDataRef.current[columnId]) === null || _a === void 0 ? void 0 : _a.commands) === null || _b === void 0 ? void 0 : _b.setChecked(checked);
+    }, []);
     var getCheckedItems = React.useCallback(function (columnId) {
         var checkedItems = [];
         Object.keys(localBodyDataRef.current).forEach(function (key) {
@@ -1052,6 +1104,10 @@ var Table = React.forwardRef(function (_a, ref) {
                     setSortableItems(makeSortableItems(lastItems_1));
                 },
                 getCheckedItems: getCheckedItems,
+                getChecked: getChecked,
+                setChecked: setChecked,
+                toggleChecked: toggleChecked,
+                setCheckedAll: setCheckedAll,
                 scrollToTop: simpleBarScrollToTop,
             };
             if (typeof ref === 'function') {
@@ -1061,7 +1117,21 @@ var Table = React.forwardRef(function (_a, ref) {
                 ref.current = commands;
             }
         }
-    }, [ref, columns, items, paging, setColumns, setItems, setPaging, getCheckedItems, simpleBarScrollToTop]);
+    }, [
+        ref,
+        columns,
+        items,
+        paging,
+        setColumns,
+        setItems,
+        setPaging,
+        getCheckedItems,
+        simpleBarScrollToTop,
+        setChecked,
+        toggleChecked,
+        getChecked,
+        setCheckedAll,
+    ]);
     /********************************************************************************************************************
      * Event Handler
      * ******************************************************************************************************************/
