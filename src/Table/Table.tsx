@@ -707,6 +707,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         caption={caption}
         rows={topHeadRows}
         columns={finalColumns}
+        items={items}
         defaultAlign={defaultAlign}
         onCheckChange={handleHeadCheckChange}
       />
@@ -792,12 +793,12 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           <TableFooter>
             <TableRow>
               {finalColumns.map((column, idx) => (
-                <TableFooterCell key={idx} column={column} defaultAlign={defaultAlign} />
+                <TableFooterCell key={idx} column={column} items={items} defaultAlign={defaultAlign} />
               ))}
             </TableRow>
           </TableFooter>
         ),
-      [defaultAlign, finalColumns, footer, isNoData]
+      [defaultAlign, finalColumns, footer, isNoData, items]
     );
 
     /********************************************************************************************************************

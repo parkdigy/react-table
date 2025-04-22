@@ -13,7 +13,7 @@ const BottomLine = styled('div')`
   bottom: 0;
 `;
 
-const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, onCheckChange }) => {
+const TableTopHead: React.FC<Props> = ({ columns, items, rows, caption, defaultAlign, onCheckChange }) => {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
@@ -91,6 +91,7 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
           <TableHeadCell
             key={idx}
             column={column}
+            items={items}
             defaultAlign={defaultAlign}
             top={top}
             onCheckChange={onCheckChange}
@@ -98,7 +99,7 @@ const TableTopHead: React.FC<Props> = ({ columns, rows, caption, defaultAlign, o
         ))}
       </TableRow>
     );
-  }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
+  }, [captionHeight, columns, defaultAlign, items, onCheckChange, row1Height, row2Height, row3Height]);
 
   /********************************************************************************************************************
    * Variable

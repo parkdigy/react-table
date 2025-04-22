@@ -4,7 +4,7 @@ import TableCommonCell from '../TableCommonCell';
 import { Checkbox } from '@mui/material';
 import useTableState from '../TableContext/useTableState';
 
-const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top, onCheckChange }) => {
+const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, items, defaultAlign, top, onCheckChange }) => {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
@@ -51,7 +51,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
     if (column.type === 'check') {
       if (column.hideAllCheck) {
         if (column.head?.onRender) {
-          return column.head?.onRender();
+          return column.head?.onRender(items);
         } else {
           if (typeof column.label === 'string') {
             return <div dangerouslySetInnerHTML={{ __html: column.label }} />;
@@ -73,7 +73,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
       }
     } else {
       if (column.head?.onRender) {
-        return column.head?.onRender();
+        return column.head?.onRender(items);
       } else {
         if (typeof column.label === 'string') {
           return <div dangerouslySetInnerHTML={{ __html: column.label }} />;
@@ -82,7 +82,7 @@ const TableHeadCell: React.FC<TableHeadCellProps> = ({ column, defaultAlign, top
         }
       }
     }
-  }, [checkDisabled, checked, column, onCheckChange]);
+  }, [checkDisabled, checked, column, items, onCheckChange]);
 
   /********************************************************************************************************************
    * Render

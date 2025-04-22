@@ -52,10 +52,10 @@ export interface TableColumn<T = TableItem> {
     style?: TableCommonSxProps['style'];
     backgroundColor?: CSSProperties['backgroundColor'];
     sx?: TableCommonSxProps['sx'];
-    onGetClassName?(): TableCommonSxProps['className'];
-    onGetStyle?(): TableCommonSxProps['style'];
-    onGetSx?(): TableCommonSxProps['sx'];
-    onRender?(): ReactNode;
+    onGetClassName?(items?: T[]): TableCommonSxProps['className'];
+    onGetStyle?(items?: T[]): TableCommonSxProps['style'];
+    onGetSx?(items?: T[]): TableCommonSxProps['sx'];
+    onRender?(items?: T[]): ReactNode;
   };
   footer?: {
     value?: ReactNode;
@@ -63,10 +63,10 @@ export interface TableColumn<T = TableItem> {
     style?: TableCommonSxProps['style'];
     backgroundColor?: CSSProperties['backgroundColor'];
     sx?: TableCommonSxProps['sx'];
-    onGetClassName?(): TableCommonSxProps['className'];
-    onGetStyle?(): TableCommonSxProps['style'];
-    onGetSx?(): TableCommonSxProps['sx'];
-    onRender?(): ReactNode;
+    onGetClassName?(items?: T[]): TableCommonSxProps['className'];
+    onGetStyle?(items?: T[]): TableCommonSxProps['style'];
+    onGetSx?(items?: T[]): TableCommonSxProps['sx'];
+    onRender?(items?: T[]): ReactNode;
   };
   className?: TableCommonSxProps['className'];
   style?: TableCommonSxProps['style'];

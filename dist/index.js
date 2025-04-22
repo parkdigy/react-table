@@ -562,16 +562,16 @@ var TableBodyRow = function (_a) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
-    var column = _a.column, defaultAlign = _a.defaultAlign;
+    var column = _a.column, items = _a.items, defaultAlign = _a.defaultAlign;
     var data = React.useMemo(function () {
         var _a, _b, _c;
         if ((_a = column.footer) === null || _a === void 0 ? void 0 : _a.onRender) {
-            return (_b = column.footer) === null || _b === void 0 ? void 0 : _b.onRender();
+            return (_b = column.footer) === null || _b === void 0 ? void 0 : _b.onRender(items);
         }
         else {
             return (_c = column.footer) === null || _c === void 0 ? void 0 : _c.value;
         }
-    }, [column]);
+    }, [column.footer, items]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
@@ -599,7 +599,7 @@ var TableBodyRow = function (_a) {
     /********************************************************************************************************************
      * Use
      * ******************************************************************************************************************/
-    var column = _a.column, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
+    var column = _a.column, items = _a.items, defaultAlign = _a.defaultAlign, top = _a.top, onCheckChange = _a.onCheckChange;
     var _b = useTableState(), setHeadColumnChecked = _b.setHeadColumnChecked, setHeadColumnCommands = _b.setHeadColumnCommands;
     /********************************************************************************************************************
      * State
@@ -636,7 +636,7 @@ var TableBodyRow = function (_a) {
         if (column.type === 'check') {
             if (column.hideAllCheck) {
                 if ((_a = column.head) === null || _a === void 0 ? void 0 : _a.onRender) {
-                    return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender();
+                    return (_b = column.head) === null || _b === void 0 ? void 0 : _b.onRender(items);
                 }
                 else {
                     if (typeof column.label === 'string') {
@@ -656,7 +656,7 @@ var TableBodyRow = function (_a) {
         }
         else {
             if ((_c = column.head) === null || _c === void 0 ? void 0 : _c.onRender) {
-                return (_d = column.head) === null || _d === void 0 ? void 0 : _d.onRender();
+                return (_d = column.head) === null || _d === void 0 ? void 0 : _d.onRender(items);
             }
             else {
                 if (typeof column.label === 'string') {
@@ -667,7 +667,7 @@ var TableBodyRow = function (_a) {
                 }
             }
         }
-    }, [checkDisabled, checked, column, onCheckChange]);
+    }, [checkDisabled, checked, column, items, onCheckChange]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
@@ -677,7 +677,7 @@ var TableTopHead = function (_a) {
     /********************************************************************************************************************
      * Use
      * ******************************************************************************************************************/
-    var columns = _a.columns, rows = _a.rows, caption = _a.caption, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
+    var columns = _a.columns, items = _a.items, rows = _a.rows, caption = _a.caption, defaultAlign = _a.defaultAlign, onCheckChange = _a.onCheckChange;
     var theme = material.useTheme();
     /********************************************************************************************************************
      * Ref
@@ -722,8 +722,8 @@ var TableTopHead = function (_a) {
     }, [columns, theme.palette.divider]);
     var columnRow = React.useMemo(function () {
         var top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
-        return (React.createElement(material.TableRow, null, columns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
-    }, [captionHeight, columns, defaultAlign, onCheckChange, row1Height, row2Height, row3Height]);
+        return (React.createElement(material.TableRow, null, columns.map(function (column, idx) { return (React.createElement(TableHeadCell, { key: idx, column: column, items: items, defaultAlign: defaultAlign, top: top, onCheckChange: onCheckChange })); })));
+    }, [captionHeight, columns, defaultAlign, items, onCheckChange, row1Height, row2Height, row3Height]);
     /********************************************************************************************************************
      * Variable
      * ******************************************************************************************************************/
@@ -1275,7 +1275,7 @@ var Table = React.forwardRef(function (_a, ref) {
     if (fullHeight) {
         pagingStyle.position = 'sticky';
     }
-    var tableTopHead = finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
+    var tableTopHead = finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, items: items, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
     var tableBody = React.useMemo(function () {
         return finalColumns && (React.createElement(material.TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(sortable.SortableContext, { items: sortableItems, strategy: sortable.verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color', onGetBodyRowClassName ? onGetBodyRowClassName(item, idx) : undefined), style: onGetBodyRowStyle ? onGetBodyRowStyle(item, idx) : undefined, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, onGetColumnClassName: onGetBodyColumnClassName, onGetColumnStyle: onGetBodyColumnStyle, onGetColumnSx: onGetBodyColumnSx, hover: true, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable$1, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React.createElement(StyledBodyRow$1, null,
             React.createElement(material.TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React.createElement(StyledNoDataDiv, null,
@@ -1304,8 +1304,8 @@ var Table = React.forwardRef(function (_a, ref) {
         return finalColumns &&
             !isNoData &&
             footer && (React.createElement(material.TableFooter, null,
-            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableFooterCell, { key: idx, column: column, defaultAlign: defaultAlign })); }))));
-    }, [defaultAlign, finalColumns, footer, isNoData]);
+            React.createElement(material.TableRow, null, finalColumns.map(function (column, idx) { return (React.createElement(TableFooterCell, { key: idx, column: column, items: items, defaultAlign: defaultAlign })); }))));
+    }, [defaultAlign, finalColumns, footer, isNoData, items]);
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/

@@ -95,8 +95,10 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     name: 'view_count',
     width: 100,
     footer: {
-      onRender() {
-        return numberFormat(12123);
+      onRender(items) {
+        if (items) {
+          return numberFormat(items.reduce((acc, item) => acc + item.view_count, 0));
+        }
       },
     },
   },
