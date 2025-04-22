@@ -50,6 +50,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
      * Ref
      * ******************************************************************************************************************/
 
+    const initPathRef = useRef(window.location.pathname);
     const searchRef = useRef<SearchCommands>(undefined);
     const tableRef = useRef<TableCommands>(undefined);
     const lastGetDataDataRef = useRef<FormValueMap>({});
@@ -274,7 +275,7 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
      * ******************************************************************************************************************/
 
     useEffect(() => {
-      if (hash) {
+      if (hash && window.location.pathname === initPathRef.current) {
         const data = hashToSearchValue();
         if (data) getData(data);
       }

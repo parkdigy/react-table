@@ -1361,6 +1361,7 @@ var deHash = function () {
      * ******************************************************************************************************************/
     var _b, _c;
     var className = _a.className, initStyle = _a.style, sx = _a.sx, color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
+    var initPathRef = useRef(window.location.pathname);
     var searchRef = useRef(undefined);
     var tableRef = useRef(undefined);
     var lastGetDataDataRef = useRef({});
@@ -1574,7 +1575,7 @@ var deHash = function () {
      * hash
      * ******************************************************************************************************************/
     useEffect(function () {
-        if (hash) {
+        if (hash && window.location.pathname === initPathRef.current) {
             var data = hashToSearchValue();
             if (data)
                 getData(data);
