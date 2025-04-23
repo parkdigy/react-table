@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import { SearchTableProps, SearchTableCommands, SearchTableData, SearchInfo, TableInfo } from './SearchTable.types';
@@ -431,15 +431,8 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
      * Render
      * ******************************************************************************************************************/
 
-    return (
-      <Grid
-        container
-        direction='column'
-        spacing={1}
-        className={classNames('SearchTable', className)}
-        style={fullHeight ? { ...initStyle, flex: 1, display: 'flex' } : initStyle}
-        sx={sx}
-      >
+    const searchView = useMemo(
+      () => (
         <Grid sx={{ display: searchInfo.searchGroups ? undefined : 'none' }}>
           <Search
             color={color}
@@ -463,7 +456,12 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
             {searchInfo.searchGroups}
           </Search>
         </Grid>
-        {betweenSearchTableComponent && <Grid>{betweenSearchTableComponent}</Grid>}
+      ),
+      [color, handleSearchSubmit, searchInfo]
+    );
+
+    const tableView = useMemo(
+      () => (
         <Grid style={fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
           <Table
             {...tableInfo.props}
@@ -484,6 +482,22 @@ const SearchTable: WithForwardRefType = React.forwardRef<SearchTableCommands, Se
             onPageChange={handlePageChange}
           />
         </Grid>
+      ),
+      [fullHeight, handlePageChange, stickyHeader, tableData?.items, tableData?.paging, tableInfo]
+    );
+
+    return (
+      <Grid
+        container
+        direction='column'
+        spacing={1}
+        className={classNames('SearchTable', className)}
+        style={fullHeight ? { ...initStyle, flex: 1, display: 'flex' } : initStyle}
+        sx={sx}
+      >
+        {searchView}
+        {betweenSearchTableComponent && <Grid>{betweenSearchTableComponent}</Grid>}
+        {tableView}
       </Grid>
     );
   }

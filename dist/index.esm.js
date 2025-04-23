@@ -1359,7 +1359,6 @@ var deHash = function () {
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
-    var _b, _c;
     var className = _a.className, initStyle = _a.style, sx = _a.sx, color = _a.color, hash = _a.hash, stickyHeader = _a.stickyHeader, fullHeight = _a.fullHeight, search = _a.search, table = _a.table, betweenSearchTableComponent = _a.betweenSearchTableComponent, onGetData = _a.onGetData, onRequestHashChange = _a.onRequestHashChange;
     var initPathRef = useRef(window.location.pathname);
     var searchRef = useRef(undefined);
@@ -1368,13 +1367,13 @@ var deHash = function () {
     /********************************************************************************************************************
      * State
      * ******************************************************************************************************************/
-    var _d = useState(true), isFirstSearchSubmit = _d[0], setIsFirstSearchSubmit = _d[1];
-    var _e = useState(), tableData = _e[0], setTableData = _e[1];
+    var _b = useState(true), isFirstSearchSubmit = _b[0], setIsFirstSearchSubmit = _b[1];
+    var _c = useState(), tableData = _c[0], setTableData = _c[1];
     /********************************************************************************************************************
      * searchInfo
      * ******************************************************************************************************************/
     var searchInfoFirstUseEffect = useRef(true);
-    var _f = useState(function () { return getSearchInfo(search); }), searchInfo = _f[0], setSearchInfo = _f[1];
+    var _d = useState(function () { return getSearchInfo(search); }), searchInfo = _d[0], setSearchInfo = _d[1];
     useEffect(function () {
         if (searchInfoFirstUseEffect.current) {
             searchInfoFirstUseEffect.current = false;
@@ -1387,7 +1386,7 @@ var deHash = function () {
      * tableInfo
      * ******************************************************************************************************************/
     var tableInfoFirstUseEffect = useRef(true);
-    var _g = useState(function () { return getTableInfo(table); }), tableInfo = _g[0], setTableInfo = _g[1];
+    var _e = useState(function () { return getTableInfo(table); }), tableInfo = _e[0], setTableInfo = _e[1];
     useEffect(function () {
         if (tableInfoFirstUseEffect.current) {
             tableInfoFirstUseEffect.current = false;
@@ -1721,25 +1720,25 @@ var deHash = function () {
     /********************************************************************************************************************
      * Render
      * ******************************************************************************************************************/
-    return (React.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: fullHeight ? __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }) : initStyle, sx: sx },
-        React.createElement(Grid, { sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
-            React.createElement(Search, __assign({ color: color }, searchInfo.props, { ref: function (commands) {
-                    if (searchInfo.ref) {
-                        if (typeof searchInfo.ref === 'function') {
-                            searchInfo.ref(commands);
-                        }
-                        else {
-                            searchInfo.ref.current = commands;
-                        }
+    var searchView = useMemo(function () { return (React.createElement(Grid, { sx: { display: searchInfo.searchGroups ? undefined : 'none' } },
+        React.createElement(Search, __assign({ color: color }, searchInfo.props, { ref: function (commands) {
+                if (searchInfo.ref) {
+                    if (typeof searchInfo.ref === 'function') {
+                        searchInfo.ref(commands);
                     }
-                    searchRef.current = commands || undefined;
-                }, autoSubmit: true, onSubmit: handleSearchSubmit }),
-                React.createElement(SearchGroup, { hidden: true },
-                    React.createElement(FormHidden, { name: 'page', value: 1 })),
-                searchInfo.searchGroups)),
-        betweenSearchTableComponent && React.createElement(Grid, null, betweenSearchTableComponent),
-        React.createElement(Grid, { style: fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined },
-            React.createElement(Table, __assign({}, tableInfo.props, { stickyHeader: stickyHeader || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.stickyHeader), fullHeight: fullHeight || ((_c = tableInfo.props) === null || _c === void 0 ? void 0 : _c.fullHeight), ref: function (commands) {
+                    else {
+                        searchInfo.ref.current = commands;
+                    }
+                }
+                searchRef.current = commands || undefined;
+            }, autoSubmit: true, onSubmit: handleSearchSubmit }),
+            React.createElement(SearchGroup, { hidden: true },
+                React.createElement(FormHidden, { name: 'page', value: 1 })),
+            searchInfo.searchGroups))); }, [color, handleSearchSubmit, searchInfo]);
+    var tableView = useMemo(function () {
+        var _a, _b;
+        return (React.createElement(Grid, { style: fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined },
+            React.createElement(Table, __assign({}, tableInfo.props, { stickyHeader: stickyHeader || ((_a = tableInfo.props) === null || _a === void 0 ? void 0 : _a.stickyHeader), fullHeight: fullHeight || ((_b = tableInfo.props) === null || _b === void 0 ? void 0 : _b.fullHeight), ref: function (commands) {
                     if (tableInfo.ref) {
                         if (typeof tableInfo.ref === 'function') {
                             tableInfo.ref(commands);
@@ -1749,7 +1748,12 @@ var deHash = function () {
                         }
                     }
                     tableRef.current = commands || undefined;
-                }, items: tableData === null || tableData === void 0 ? void 0 : tableData.items, paging: tableData === null || tableData === void 0 ? void 0 : tableData.paging, onPageChange: handlePageChange })))));
+                }, items: tableData === null || tableData === void 0 ? void 0 : tableData.items, paging: tableData === null || tableData === void 0 ? void 0 : tableData.paging, onPageChange: handlePageChange }))));
+    }, [fullHeight, handlePageChange, stickyHeader, tableData === null || tableData === void 0 ? void 0 : tableData.items, tableData === null || tableData === void 0 ? void 0 : tableData.paging, tableInfo]);
+    return (React.createElement(Grid, { container: true, direction: 'column', spacing: 1, className: classNames('SearchTable', className), style: fullHeight ? __assign(__assign({}, initStyle), { flex: 1, display: 'flex' }) : initStyle, sx: sx },
+        searchView,
+        betweenSearchTableComponent && React.createElement(Grid, null, betweenSearchTableComponent),
+        tableView));
 });var TableButton = React.forwardRef(function (_a, ref) {
     var children = _a.children, className = _a.className, initSx = _a.sx, _b = _a.variant, variant = _b === void 0 ? 'outlined' : _b, _c = _a.color, color = _c === void 0 ? 'primary' : _c, startIcon = _a.startIcon, endIcon = _a.endIcon, onClick = _a.onClick, props = __rest(_a, ["children", "className", "sx", "variant", "color", "startIcon", "endIcon", "onClick"]);
     return (React.createElement(PdgButton, __assign({ ref: ref, className: classNames(className, 'TableButton'), variant: variant, type: 'button', size: 'small', sx: __assign({ minWidth: 0, px: empty(startIcon) && empty(endIcon)
