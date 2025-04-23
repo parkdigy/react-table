@@ -66,7 +66,7 @@ export interface TableColumn<T = TableItem> {
     onGetSx?(item: T, index: number): TableCommonSxProps['sx'];
     onHide?(item: T, index: number): boolean;
     onGetTooltip?(item: T, index: number): ReactNode;
-    onRender?(item: T, index: number): ReactNode;
+    onRender?(item: T, index: number, inView: boolean): ReactNode;
     onClick?(item: T, index: number): void;
     onInitChecked?(item: T): boolean;
     onCheckDisabled?(item: T): boolean;
@@ -94,6 +94,7 @@ export interface TableProps<T = TableItem> extends TableCommonSxProps {
     showOddColor?: boolean;
     showEvenColor?: boolean;
     cellPadding?: string | number;
+    inViewRender?: boolean;
     footer?: boolean;
     noData?: ReactNode;
     pagination?: {

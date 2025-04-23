@@ -4,6 +4,7 @@ import { TableHeadCellCommands } from '../TableHeadCell';
 export interface TableContextValue {
     menuOpen: boolean;
     openMenuId?: string;
+    inViewRender?: boolean;
     setMenuOpen(menuOpen: boolean, openMenuId?: string): void;
     setItemColumnChecked(item: TableItem, column: TableColumn, checked: boolean): void;
     setItemColumnCheckDisabled(item: TableItem, column: TableColumn, checkDisabled: boolean): void;

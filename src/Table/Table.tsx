@@ -83,6 +83,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       showOddColor,
       showEvenColor,
       cellPadding = 13,
+      inViewRender,
       footer,
       noData,
       pagination,
@@ -810,6 +811,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         value={{
           menuOpen,
           openMenuId,
+          inViewRender,
           setMenuOpen: TableContextSetMenuOpen,
           setItemColumnChecked: TableContextSetItemColumnChecked,
           setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,

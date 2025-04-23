@@ -56,36 +56,38 @@ const TableBodyRow: React.FC<Props> = ({
    * ******************************************************************************************************************/
 
   return (
-    <StyledBodyRow
-      className={classNames('TableBodyRow', className)}
-      style={
-        sortable
-          ? {
-              ...style,
-              transform: CSS.Transform.toString(transform),
-              transition,
-            }
-          : style
-      }
-      {...props}
-      {...sortableProps}
-    >
-      {columns.map((column: TableColumn, columnIdx) => (
-        <TableBodyCell
-          className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
-          sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
-          style={onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined}
-          key={columnIdx}
-          index={index}
-          item={item}
-          defaultAlign={defaultAlign}
-          defaultEllipsis={defaultEllipsis}
-          column={column}
-          onClick={onClick}
-          onCheckChange={onCheckChange}
-        />
-      ))}
-    </StyledBodyRow>
+    <>
+      <StyledBodyRow
+        className={classNames('TableBodyRow', className)}
+        style={
+          sortable
+            ? {
+                ...style,
+                transform: CSS.Transform.toString(transform),
+                transition,
+              }
+            : style
+        }
+        {...props}
+        {...sortableProps}
+      >
+        {columns.map((column: TableColumn, columnIdx) => (
+          <TableBodyCell
+            className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
+            sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
+            style={onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined}
+            key={columnIdx}
+            index={index}
+            item={item}
+            defaultAlign={defaultAlign}
+            defaultEllipsis={defaultEllipsis}
+            column={column}
+            onClick={onClick}
+            onCheckChange={onCheckChange}
+          />
+        ))}
+      </StyledBodyRow>
+    </>
   );
 };
 
