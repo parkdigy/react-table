@@ -4,6 +4,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { TableSortableBodyBlock } from '../TableSortableBodyBlock';
 import { chunkArray } from '../@util.private/chunkArray';
 import useTableState from '../TableContext/useTableState';
+import { ifUndefined } from '@pdg/util';
 
 export const TableSortableBody = ({
   items,
@@ -36,7 +37,7 @@ export const TableSortableBody = ({
     if (progressiveVisible) {
       return (
         <>
-          {chunkArray(items, 5).map((bItems, index) => (
+          {chunkArray(items, ifUndefined(progressiveVisible.blockSize, 20)).map((bItems, index) => (
             <TableSortableBodyBlock
               key={index}
               items={bItems}

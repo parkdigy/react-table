@@ -13,8 +13,8 @@ export interface TableItem {
  * TableProgressiveVisibleInfo
  * ******************************************************************************************************************/
 export interface TableProgressiveVisibleInfo {
-    blockSize: number;
     rowHeight: number;
+    blockSize?: number;
     delay?: number;
 }
 /********************************************************************************************************************

@@ -91,10 +91,8 @@ export const TableSortableBodyBlock = ({
         <TableRow ref={canInView ? ref : undefined}>
           <TableCell
             colSpan={columns.length}
-            style={{ height: 50 * items.length, border: 'none', textAlign: 'center' }}
-          >
-            {canInView && '...'}
-          </TableCell>
+            style={{ height: progressiveVisible.rowHeight * items.length, border: 'none' }}
+          />
         </TableRow>
       ),
     [

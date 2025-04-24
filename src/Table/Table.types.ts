@@ -17,8 +17,8 @@ export interface TableItem {
  * ******************************************************************************************************************/
 
 export interface TableProgressiveVisibleInfo {
-  blockSize: number;
   rowHeight: number;
+  blockSize?: number; // default=20
   delay?: number; // default=300
 }
 
