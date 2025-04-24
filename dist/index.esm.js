@@ -1,4 +1,4 @@
-import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Box,Tooltip,Checkbox,Stack,Pagination,useTheme,TableHead,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useSortable,sortableKeyboardCoordinates,arrayMove,SortableContext,verticalListSortingStrategy}from'@dnd-kit/sortable';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,notEmpty,equal,empty}from'@pdg/util';import {useInView}from'react-intersection-observer';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon,PdgCopyToClipboard}from'@pdg/react-component';function styleInject(css, ref) {
+import React,{createContext,useContext,useMemo,useCallback,useState,useEffect,useRef,useLayoutEffect,useId}from'react';import classNames from'classnames';import {styled,TableRow,lighten,TableCell,Stack,Pagination,Checkbox,useTheme,TableHead,Box,Tooltip,TableBody,Icon,TableFooter,Paper,Table as Table$1,Grid,Popper,Grow,ClickAwayListener,IconButton}from'@mui/material';import {useResizeDetector}from'react-resize-detector';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import SimpleBar from'simplebar-react';import'simplebar-react/dist/simplebar.min.css';import {v4}from'uuid';import dayjs from'dayjs';import {personalNoAutoDash,companyNoAutoDash,telNoAutoDash,numberFormat,ifUndefined,notEmpty,equal,empty}from'@pdg/util';import {useInView}from'react-intersection-observer';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';import {PdgButton,PdgIcon,PdgCopyToClipboard}from'@pdg/react-component';function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
 
@@ -83,57 +83,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     });
 });
 var StyledNoDataDiv = styled('div')(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
-var templateObject_1$4;const CSS = /*#__PURE__*/Object.freeze({
-  Translate: {
-    toString(transform) {
-      if (!transform) {
-        return;
-      }
-
-      const {
-        x,
-        y
-      } = transform;
-      return "translate3d(" + (x ? Math.round(x) : 0) + "px, " + (y ? Math.round(y) : 0) + "px, 0)";
-    }
-
-  },
-  Scale: {
-    toString(transform) {
-      if (!transform) {
-        return;
-      }
-
-      const {
-        scaleX,
-        scaleY
-      } = transform;
-      return "scaleX(" + scaleX + ") scaleY(" + scaleY + ")";
-    }
-
-  },
-  Transform: {
-    toString(transform) {
-      if (!transform) {
-        return;
-      }
-
-      return [CSS.Translate.toString(transform), CSS.Scale.toString(transform)].join(' ');
-    }
-
-  },
-  Transition: {
-    toString(_ref) {
-      let {
-        property,
-        duration,
-        easing
-      } = _ref;
-      return property + " " + duration + "ms " + easing;
-    }
-
-  }
-});function getTableColumnAlign(column, defaultAlign) {
+var templateObject_1$4;function getTableColumnAlign(column, defaultAlign) {
     switch (column.type) {
         case 'number':
             return column.align ? column.align : 'right';
@@ -170,7 +120,6 @@ function typographyColorToSxColor(color) {
 }var TableContextDefaultValue = {
     menuOpen: false,
     openMenuId: undefined,
-    inViewRender: false,
     setMenuOpen: function () { },
     setItemColumnChecked: function () { },
     setItemColumnCheckDisabled: function () { },
@@ -340,240 +289,7 @@ var TableCommonCell = React.forwardRef(function (_a, ref) {
      * ******************************************************************************************************************/
     return (React.createElement(StyledTableCell, { ref: ref, align: align, className: classNames(className, 'TableCommonCell', ellipsis && 'ellipsis', column.type ? "column-type-".concat(column.type) : false), style: style, sx: sx, onClick: type === 'body' ? handleClick : undefined }, children));
 });
-var templateObject_1$3;var StyledButtonsBox = styled(Box)(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
-var TableBodyCell = React.forwardRef(function (_a, ref) {
-    /********************************************************************************************************************
-     * Use
-     * ******************************************************************************************************************/
-    var className = _a.className, style = _a.style, sx = _a.sx, item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
-    var _b = useTableState(), menuOpen = _b.menuOpen, inViewRender = _b.inViewRender, setItemColumnChecked = _b.setItemColumnChecked, setItemColumnCheckDisabled = _b.setItemColumnCheckDisabled, setItemColumnCommands = _b.setItemColumnCommands;
-    var _c = useInView({ threshold: 0 }), inViewRef = _c.ref, inView = _c.inView;
-    /********************************************************************************************************************
-     * State
-     * ******************************************************************************************************************/
-    var _d = useState(false), checked = _d[0], setChecked = _d[1];
-    var _e = useState(false), checkDisabled = _e[0], setCheckDisabled = _e[1];
-    /********************************************************************************************************************
-     * Effect
-     * ******************************************************************************************************************/
-    useEffect(function () {
-        if (column.type === 'check') {
-            setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
-            setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
-        }
-        setItemColumnCommands(item, column, {
-            setChecked: function (checked) {
-                if (column.type === 'check') {
-                    setChecked(checked);
-                }
-            },
-            setCheckDisabled: function (disabled) {
-                if (column.type === 'check') {
-                    setCheckDisabled(disabled);
-                }
-            },
-        });
-    }, [column, item, setItemColumnCommands]);
-    useEffect(function () {
-        if (column.type === 'check') {
-            setItemColumnChecked(item, column, checked);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checked]);
-    useEffect(function () {
-        if (column.type === 'check') {
-            setItemColumnCheckDisabled(item, column, checkDisabled);
-            column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checkDisabled]);
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-    var isHidden = useMemo(function () { return (column.onHide ? column.onHide(item, index) : false); }, [column, index, item]);
-    var buttonsBoxJustifyContent = useMemo(function () {
-        switch (getTableColumnAlign(column, defaultAlign)) {
-            case 'center':
-                return 'center';
-            case 'right':
-                return 'end';
-            default:
-                return 'start';
-        }
-    }, [column, defaultAlign]);
-    var data = useMemo(function () {
-        var _a, _b;
-        var data;
-        if (column.type !== 'check') {
-            if (column.onRender) {
-                data = column.onRender(item, index, inView);
-            }
-            else if (column.name) {
-                data = item[column.name];
-            }
-            else {
-                data = undefined;
-            }
-        }
-        switch (column.type) {
-            case 'number':
-                if (typeof data === 'string' || typeof data === 'number') {
-                    data = numberFormat(data);
-                }
-                if (column.numberPrefix) {
-                    data = (React.createElement(React.Fragment, null,
-                        React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, column.numberPrefix),
-                        data));
-                }
-                if (column.numberSuffix) {
-                    data = (React.createElement(React.Fragment, null,
-                        data,
-                        React.createElement("span", { style: { opacity: 0.5, marginLeft: 2 } }, column.numberSuffix)));
-                }
-                break;
-            case 'tel':
-                if (typeof data === 'string') {
-                    data = telNoAutoDash(data);
-                }
-                break;
-            case 'company_no':
-                if (typeof data === 'string') {
-                    data = companyNoAutoDash(data);
-                }
-                break;
-            case 'personal_no':
-                if (typeof data === 'string') {
-                    data = personalNoAutoDash(data);
-                }
-                break;
-            case 'check':
-                data = (React.createElement(Box, { className: 'TableBoxyCell-check-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } },
-                    React.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
-                            setChecked(newChecked);
-                            column.onCheckChange && column.onCheckChange(item, newChecked);
-                            onCheckChange && onCheckChange(item, column, newChecked);
-                        } })));
-                break;
-            case 'button':
-                data = (React.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
-                break;
-            case 'buttons':
-                data = (React.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
-                break;
-            case 'img':
-                {
-                    var img = React.createElement("img", { src: data, style: { maxWidth: '100%', verticalAlign: 'middle' }, alt: '' });
-                    var placement = ((_a = column.tooltipProps) === null || _a === void 0 ? void 0 : _a.placement) ? (_b = column.tooltipProps) === null || _b === void 0 ? void 0 : _b.placement : 'left';
-                    data = (React.createElement("a", { href: data, target: '_blank', onClick: menuOpen
-                            ? undefined
-                            : function (e) {
-                                e.stopPropagation();
-                            } },
-                        React.createElement(Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: React.createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
-                }
-                break;
-            case 'date':
-                if (data) {
-                    data = dayjs(data, column.dateFormat).format('YYYY-MM-DD');
-                }
-                break;
-            case 'datetime':
-                if (data) {
-                    var dt = dayjs(data, column.dateFormat);
-                    data = (React.createElement(React.Fragment, null,
-                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
-                        column.dateTwoLine ? React.createElement("br", null) : ' ',
-                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH:mm:ss'))));
-                }
-                break;
-            case 'date-hour':
-                if (data) {
-                    var dt = dayjs(data, column.dateFormat);
-                    data = (React.createElement(React.Fragment, null,
-                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
-                        column.dateTwoLine ? React.createElement("br", null) : ' ',
-                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시'))));
-                }
-                break;
-            case 'date-minute':
-                if (data) {
-                    var dt = dayjs(data, column.dateFormat);
-                    data = (React.createElement(React.Fragment, null,
-                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
-                        column.dateTwoLine ? React.createElement("br", null) : ' ',
-                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시 MM분'))));
-                }
-                break;
-        }
-        if (column.type !== 'img') {
-            var tooltip = void 0;
-            if (column.onGetTooltip) {
-                tooltip = column.onGetTooltip(item, index);
-            }
-            if (tooltip) {
-                data = (React.createElement(Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: tooltip }, column.tooltipProps), React.isValidElement(data) ? (data.type === React.Fragment ? (React.createElement("span", null, data)) : (data)) : (React.createElement("span", null, data))));
-            }
-        }
-        return data;
-    }, [column, item, index, inView, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
-    /********************************************************************************************************************
-     * Event Handler
-     * ******************************************************************************************************************/
-    var handleClick = useCallback(function (item, index) {
-        if (column.onClick) {
-            column.onClick(item, index);
-        }
-        else {
-            if (onClick)
-                onClick(item, index);
-        }
-    }, [column, onClick]);
-    /********************************************************************************************************************
-     * Render
-     * ******************************************************************************************************************/
-    return (React.createElement(TableCommonCell, { ref: function (cellRef) {
-            if (inViewRender) {
-                inViewRef(cellRef);
-            }
-            if (ref) {
-                if (typeof ref === 'function') {
-                    ref(cellRef);
-                }
-                else {
-                    ref.current = cellRef;
-                }
-            }
-        }, type: 'body', className: classNames('TableBodyCell', className), style: style, sx: sx, column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, !isHidden && data));
-});
-var templateObject_1$2;var StyledBodyRow = styled(TableRow)(function (_a) {
-    var theme = _a.theme;
-    return ({
-        '&.odd-color:nth-of-type(odd):not(:hover)': {
-            backgroundColor: lighten(theme.palette.action.hover, 0.4),
-        },
-        '&.even-color:nth-of-type(even):not(:hover)': {
-            backgroundColor: lighten(theme.palette.action.hover, 0.4),
-        },
-    });
-});
-var TableBodyRow = function (_a) {
-    /********************************************************************************************************************
-     * Use
-     * ******************************************************************************************************************/
-    var className = _a.className, style = _a.style, id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, onGetColumnClassName = _a.onGetColumnClassName, onGetColumnStyle = _a.onGetColumnStyle, onGetColumnSx = _a.onGetColumnSx, props = __rest(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange", "onGetColumnClassName", "onGetColumnStyle", "onGetColumnSx"]);
-    var _b = useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
-    /********************************************************************************************************************
-     * Variable
-     * ******************************************************************************************************************/
-    var sortableProps = sortable
-        ? __assign(__assign({ ref: setNodeRef }, attributes), listeners) : {};
-    /********************************************************************************************************************
-     * Render
-     * ******************************************************************************************************************/
-    return (React.createElement(React.Fragment, null,
-        React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: sortable
-                ? __assign(__assign({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); }))));
-};var TableFooterCell = function (_a) {
+var templateObject_1$3;var TableFooterCell = function (_a) {
     /********************************************************************************************************************
      * Memo
      * ******************************************************************************************************************/
@@ -687,7 +403,7 @@ var TableBodyRow = function (_a) {
      * Render
      * ******************************************************************************************************************/
     return (React.createElement(TableCommonCell, { type: 'head', className: 'TableHeadCell', style: top !== undefined ? { top: top } : undefined, column: column, defaultAlign: defaultAlign }, data));
-};var BottomLine = styled('div')(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
+};var BottomLine = styled('div')(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"], ["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 var TableTopHead = function (_a) {
     /********************************************************************************************************************
      * Use
@@ -786,11 +502,379 @@ var TableTopHead = function (_a) {
             columnRow));
     }
 };
-var templateObject_1$1;var makeSortableItems = function (items) {
+var templateObject_1$2;var makeSortableItems = function (items) {
     return items === null || items === void 0 ? void 0 : items.map(function (_a, index) {
         var id = _a.id, item = __rest(_a, ["id"]);
         return __assign({ id: id == null ? "".concat(v4(), "_").concat(index) : id }, item);
     });
+};const CSS = /*#__PURE__*/Object.freeze({
+  Translate: {
+    toString(transform) {
+      if (!transform) {
+        return;
+      }
+
+      const {
+        x,
+        y
+      } = transform;
+      return "translate3d(" + (x ? Math.round(x) : 0) + "px, " + (y ? Math.round(y) : 0) + "px, 0)";
+    }
+
+  },
+  Scale: {
+    toString(transform) {
+      if (!transform) {
+        return;
+      }
+
+      const {
+        scaleX,
+        scaleY
+      } = transform;
+      return "scaleX(" + scaleX + ") scaleY(" + scaleY + ")";
+    }
+
+  },
+  Transform: {
+    toString(transform) {
+      if (!transform) {
+        return;
+      }
+
+      return [CSS.Translate.toString(transform), CSS.Scale.toString(transform)].join(' ');
+    }
+
+  },
+  Transition: {
+    toString(_ref) {
+      let {
+        property,
+        duration,
+        easing
+      } = _ref;
+      return property + " " + duration + "ms " + easing;
+    }
+
+  }
+});var StyledButtonsBox = styled(Box)(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
+var TableBodyCell = React.forwardRef(function (_a, ref) {
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
+    var className = _a.className, style = _a.style, sx = _a.sx, item = _a.item, index = _a.index, column = _a.column, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
+    var _b = useTableState(), menuOpen = _b.menuOpen, setItemColumnChecked = _b.setItemColumnChecked, setItemColumnCheckDisabled = _b.setItemColumnCheckDisabled, setItemColumnCommands = _b.setItemColumnCommands;
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
+    var _c = useState(false), checked = _c[0], setChecked = _c[1];
+    var _d = useState(false), checkDisabled = _d[0], setCheckDisabled = _d[1];
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
+    useEffect(function () {
+        if (column.type === 'check') {
+            setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
+            setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
+        }
+        setItemColumnCommands(item, column, {
+            setChecked: function (checked) {
+                if (column.type === 'check') {
+                    setChecked(checked);
+                }
+            },
+            setCheckDisabled: function (disabled) {
+                if (column.type === 'check') {
+                    setCheckDisabled(disabled);
+                }
+            },
+        });
+    }, [column, item, setItemColumnCommands]);
+    useEffect(function () {
+        if (column.type === 'check') {
+            setItemColumnChecked(item, column, checked);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checked]);
+    useEffect(function () {
+        if (column.type === 'check') {
+            setItemColumnCheckDisabled(item, column, checkDisabled);
+            column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checkDisabled]);
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+    var isHidden = useMemo(function () { return (column.onHide ? column.onHide(item, index) : false); }, [column, index, item]);
+    var buttonsBoxJustifyContent = useMemo(function () {
+        switch (getTableColumnAlign(column, defaultAlign)) {
+            case 'center':
+                return 'center';
+            case 'right':
+                return 'end';
+            default:
+                return 'start';
+        }
+    }, [column, defaultAlign]);
+    var data = useMemo(function () {
+        var _a, _b;
+        var data;
+        if (column.type !== 'check') {
+            if (column.onRender) {
+                data = column.onRender(item, index);
+            }
+            else if (column.name) {
+                data = item[column.name];
+            }
+            else {
+                data = undefined;
+            }
+        }
+        switch (column.type) {
+            case 'number':
+                if (typeof data === 'string' || typeof data === 'number') {
+                    data = numberFormat(data);
+                }
+                if (column.numberPrefix) {
+                    data = (React.createElement(React.Fragment, null,
+                        React.createElement("span", { style: { opacity: 0.5, marginRight: 2 } }, column.numberPrefix),
+                        data));
+                }
+                if (column.numberSuffix) {
+                    data = (React.createElement(React.Fragment, null,
+                        data,
+                        React.createElement("span", { style: { opacity: 0.5, marginLeft: 2 } }, column.numberSuffix)));
+                }
+                break;
+            case 'tel':
+                if (typeof data === 'string') {
+                    data = telNoAutoDash(data);
+                }
+                break;
+            case 'company_no':
+                if (typeof data === 'string') {
+                    data = companyNoAutoDash(data);
+                }
+                break;
+            case 'personal_no':
+                if (typeof data === 'string') {
+                    data = personalNoAutoDash(data);
+                }
+                break;
+            case 'check':
+                data = (React.createElement(Box, { className: 'TableBoxyCell-check-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } },
+                    React.createElement(Checkbox, { checked: checked, disabled: checkDisabled, onChange: function (e, newChecked) {
+                            setChecked(newChecked);
+                            column.onCheckChange && column.onCheckChange(item, newChecked);
+                            onCheckChange && onCheckChange(item, column, newChecked);
+                        } })));
+                break;
+            case 'button':
+                data = (React.createElement(Box, { className: 'TableBoxyCell-button-box', onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
+                break;
+            case 'buttons':
+                data = (React.createElement(StyledButtonsBox, { className: 'TableBodyCell-buttons-box', justifyContent: buttonsBoxJustifyContent, onClick: menuOpen ? undefined : function (e) { return e.stopPropagation(); } }, data));
+                break;
+            case 'img':
+                {
+                    var img = React.createElement("img", { src: data, style: { maxWidth: '100%', verticalAlign: 'middle' }, alt: '' });
+                    var placement = ((_a = column.tooltipProps) === null || _a === void 0 ? void 0 : _a.placement) ? (_b = column.tooltipProps) === null || _b === void 0 ? void 0 : _b.placement : 'left';
+                    data = (React.createElement("a", { href: data, target: '_blank', onClick: menuOpen
+                            ? undefined
+                            : function (e) {
+                                e.stopPropagation();
+                            } },
+                        React.createElement(Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: React.createElement("div", { style: { paddingTop: 3, paddingBottom: 3 } }, img) }, column.tooltipProps, { placement: placement }), img)));
+                }
+                break;
+            case 'date':
+                if (data) {
+                    data = dayjs(data, column.dateFormat).format('YYYY-MM-DD');
+                }
+                break;
+            case 'datetime':
+                if (data) {
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React.createElement(React.Fragment, null,
+                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React.createElement("br", null) : ' ',
+                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH:mm:ss'))));
+                }
+                break;
+            case 'date-hour':
+                if (data) {
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React.createElement(React.Fragment, null,
+                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React.createElement("br", null) : ' ',
+                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시'))));
+                }
+                break;
+            case 'date-minute':
+                if (data) {
+                    var dt = dayjs(data, column.dateFormat);
+                    data = (React.createElement(React.Fragment, null,
+                        React.createElement("span", null, dt.format('YYYY-MM-DD')),
+                        column.dateTwoLine ? React.createElement("br", null) : ' ',
+                        React.createElement("span", { style: { opacity: 0.5 } }, dt.format('HH시 MM분'))));
+                }
+                break;
+        }
+        if (column.type !== 'img') {
+            var tooltip = void 0;
+            if (column.onGetTooltip) {
+                tooltip = column.onGetTooltip(item, index);
+            }
+            if (tooltip) {
+                data = (React.createElement(Tooltip, __assign({ className: 'TableBodyCell-tooltip', title: tooltip }, column.tooltipProps), React.isValidElement(data) ? (data.type === React.Fragment ? (React.createElement("span", null, data)) : (data)) : (React.createElement("span", null, data))));
+            }
+        }
+        return data;
+    }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
+    /********************************************************************************************************************
+     * Event Handler
+     * ******************************************************************************************************************/
+    var handleClick = useCallback(function (item, index) {
+        if (column.onClick) {
+            column.onClick(item, index);
+        }
+        else {
+            if (onClick)
+                onClick(item, index);
+        }
+    }, [column, onClick]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return (React.createElement(TableCommonCell, { ref: ref, type: 'body', className: classNames('TableBodyCell', className), style: style, sx: sx, column: column, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, item: item, index: index, onClick: column.onClick || onClick ? handleClick : undefined }, !isHidden && data));
+});
+var templateObject_1$1;var StyledBodyRow = styled(TableRow)(function (_a) {
+    var theme = _a.theme;
+    return ({
+        '&.odd-color:nth-of-type(odd):not(:hover)': {
+            backgroundColor: lighten(theme.palette.action.hover, 0.4),
+        },
+        '&.even-color:nth-of-type(even):not(:hover)': {
+            backgroundColor: lighten(theme.palette.action.hover, 0.4),
+        },
+    });
+});
+var TableBodyRow = function (_a) {
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
+    var className = _a.className, style = _a.style, id = _a.id, index = _a.index, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, columns = _a.columns, item = _a.item, onClick = _a.onClick, onCheckChange = _a.onCheckChange, onGetColumnClassName = _a.onGetColumnClassName, onGetColumnStyle = _a.onGetColumnStyle, onGetColumnSx = _a.onGetColumnSx, props = __rest(_a, ["className", "style", "id", "index", "defaultAlign", "defaultEllipsis", "sortable", "columns", "item", "onClick", "onCheckChange", "onGetColumnClassName", "onGetColumnStyle", "onGetColumnSx"]);
+    var _b = useSortable({ id: id }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform, transition = _b.transition;
+    /********************************************************************************************************************
+     * Variable
+     * ******************************************************************************************************************/
+    var sortableProps = sortable
+        ? __assign(__assign({ ref: setNodeRef }, attributes), listeners) : {};
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return (React.createElement(React.Fragment, null,
+        React.createElement(StyledBodyRow, __assign({ className: classNames('TableBodyRow', className), style: sortable
+                ? __assign(__assign({}, style), { transform: CSS.Transform.toString(transform), transition: transition }) : style }, props, sortableProps), columns.map(function (column, columnIdx) { return (React.createElement(TableBodyCell, { className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined, sx: onGetColumnSx ? onGetColumnSx(column, item, index) : undefined, style: onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined, key: columnIdx, index: index, item: item, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, column: column, onClick: onClick, onCheckChange: onCheckChange })); }))));
+};var TableSortableBodyBlock = function (_a) {
+    var items = _a.items, baseIndex = _a.baseIndex, columns = _a.columns, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
+    var progressiveVisible = useTableState().progressiveVisible;
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
+    var _b = useInView({ threshold: 0, triggerOnce: true }), ref = _b.ref, inView = _b.inView;
+    /********************************************************************************************************************
+     * State
+     * ******************************************************************************************************************/
+    var _c = useState(baseIndex === 0), canInView = _c[0], setCanInView = _c[1];
+    /********************************************************************************************************************
+     * Effect
+     * ******************************************************************************************************************/
+    useEffect(function () {
+        if (progressiveVisible && baseIndex > 0) {
+            setTimeout(function () {
+                setCanInView(true);
+            }, baseIndex * ifUndefined(progressiveVisible.delay, 300));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [progressiveVisible]);
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+    var renderItems = useMemo(function () {
+        return !progressiveVisible || inView ? (items.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, id: item.id, index: baseIndex + idx, className: classNames(showOddColor && 'odd-color', showEvenColor && 'even-color', onGetBodyRowClassName ? onGetBodyRowClassName(item, baseIndex + idx) : undefined), style: onGetBodyRowStyle ? onGetBodyRowStyle(item, baseIndex + idx) : undefined, sx: onGetBodyRowSx ? onGetBodyRowSx(item, baseIndex + idx) : undefined, hover: true, onGetColumnClassName: onGetBodyColumnClassName, onGetColumnStyle: onGetBodyColumnStyle, onGetColumnSx: onGetBodyColumnSx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: columns, item: item, onClick: onClick, onCheckChange: onCheckChange })); })) : (React.createElement(TableRow, { ref: canInView ? ref : undefined },
+            React.createElement(TableCell, { colSpan: columns.length, style: { height: 50 * items.length, border: 'none', textAlign: 'center' } }, canInView && '...')));
+    }, [
+        baseIndex,
+        canInView,
+        columns,
+        defaultAlign,
+        defaultEllipsis,
+        inView,
+        items,
+        onCheckChange,
+        onClick,
+        onGetBodyColumnClassName,
+        onGetBodyColumnStyle,
+        onGetBodyColumnSx,
+        onGetBodyRowClassName,
+        onGetBodyRowStyle,
+        onGetBodyRowSx,
+        progressiveVisible,
+        ref,
+        showEvenColor,
+        showOddColor,
+        sortable,
+    ]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return React.createElement(React.Fragment, null, renderItems);
+};var chunkArray = function (array, size) {
+    var result = [];
+    for (var i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+};var TableSortableBody = function (_a) {
+    /********************************************************************************************************************
+     * Use
+     * ******************************************************************************************************************/
+    var items = _a.items, columns = _a.columns, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, defaultAlign = _a.defaultAlign, defaultEllipsis = _a.defaultEllipsis, sortable = _a.sortable, onClick = _a.onClick, onCheckChange = _a.onCheckChange;
+    var progressiveVisible = useTableState().progressiveVisible;
+    /********************************************************************************************************************
+     * Memo
+     * ******************************************************************************************************************/
+    var renderBlock = useMemo(function () {
+        if (progressiveVisible) {
+            return (React.createElement(React.Fragment, null, chunkArray(items, 5).map(function (bItems, index) { return (React.createElement(TableSortableBodyBlock, { key: index, items: bItems, baseIndex: index, columns: columns, showOddColor: showOddColor, showEvenColor: showEvenColor, onGetBodyRowStyle: onGetBodyRowStyle, onGetBodyRowSx: onGetBodyRowSx, onGetBodyRowClassName: onGetBodyRowClassName, onGetBodyColumnClassName: onGetBodyColumnClassName, onGetBodyColumnStyle: onGetBodyColumnStyle, onGetBodyColumnSx: onGetBodyColumnSx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, onClick: onClick, onCheckChange: onCheckChange })); })));
+        }
+        else {
+            return (React.createElement(TableSortableBodyBlock, { items: items, baseIndex: 0, columns: columns, showOddColor: showOddColor, showEvenColor: showEvenColor, onGetBodyRowStyle: onGetBodyRowStyle, onGetBodyRowSx: onGetBodyRowSx, onGetBodyRowClassName: onGetBodyRowClassName, onGetBodyColumnClassName: onGetBodyColumnClassName, onGetBodyColumnStyle: onGetBodyColumnStyle, onGetBodyColumnSx: onGetBodyColumnSx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, onClick: onClick, onCheckChange: onCheckChange }));
+        }
+    }, [
+        columns,
+        defaultAlign,
+        defaultEllipsis,
+        items,
+        onCheckChange,
+        onClick,
+        onGetBodyColumnClassName,
+        onGetBodyColumnStyle,
+        onGetBodyColumnSx,
+        onGetBodyRowClassName,
+        onGetBodyRowStyle,
+        onGetBodyRowSx,
+        progressiveVisible,
+        showEvenColor,
+        showOddColor,
+        sortable,
+    ]);
+    /********************************************************************************************************************
+     * Render
+     * ******************************************************************************************************************/
+    return sortable ? (React.createElement(SortableContext, { items: items, strategy: verticalListSortingStrategy }, renderBlock)) : (renderBlock);
 };function columnFilter(v) {
     return v !== undefined && v !== null && v !== false;
 }
@@ -799,7 +883,7 @@ var Table = React.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Ref
      * ******************************************************************************************************************/
-    var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, _b = _a.pagingAlign, pagingAlign = _b === void 0 ? 'center' : _b, _c = _a.defaultAlign, defaultAlign = _c === void 0 ? 'left' : _c, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, _d = _a.cellPadding, cellPadding = _d === void 0 ? 13 : _d, inViewRender = _a.inViewRender, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
+    var className = _a.className, initStyle = _a.style, sx = _a.sx, caption = _a.caption, topHeadRows = _a.topHeadRows, initColumns = _a.columns, initItems = _a.items, initPaging = _a.paging, _b = _a.pagingAlign, pagingAlign = _b === void 0 ? 'center' : _b, _c = _a.defaultAlign, defaultAlign = _c === void 0 ? 'left' : _c, defaultEllipsis = _a.defaultEllipsis, initStickyHeader = _a.stickyHeader, height = _a.height, minHeight = _a.minHeight, maxHeight = _a.maxHeight, fullHeight = _a.fullHeight, showOddColor = _a.showOddColor, showEvenColor = _a.showEvenColor, _d = _a.cellPadding, cellPadding = _d === void 0 ? 13 : _d, footer = _a.footer, noData = _a.noData, pagination = _a.pagination, sortable = _a.sortable, progressiveVisible = _a.progressiveVisible, onClick = _a.onClick, onGetBodyRowClassName = _a.onGetBodyRowClassName, onGetBodyRowStyle = _a.onGetBodyRowStyle, onGetBodyRowSx = _a.onGetBodyRowSx, onGetBodyColumnClassName = _a.onGetBodyColumnClassName, onGetBodyColumnStyle = _a.onGetBodyColumnStyle, onGetBodyColumnSx = _a.onGetBodyColumnSx, onPageChange = _a.onPageChange, onSortChange = _a.onSortChange, onCheckChange = _a.onCheckChange;
     var localHeaderDataRef = useRef({});
     var localBodyDataRef = useRef({});
     var updateHeadCheckTimer = useRef(undefined);
@@ -865,19 +949,6 @@ var Table = React.forwardRef(function (_a, ref) {
             }
         },
     }).ref;
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-    var tableSx = useMemo(function () {
-        var sx = {
-            padding: typeof cellPadding === 'number' ? "".concat(cellPadding, "px") : cellPadding,
-        };
-        return {
-            '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-            '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-            '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        };
-    }, [cellPadding]);
     /********************************************************************************************************************
      * Function
      * ******************************************************************************************************************/
@@ -1271,28 +1342,42 @@ var Table = React.forwardRef(function (_a, ref) {
     var isNoData = !!sortableItems && sortableItems.length <= 0;
     var finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
     var stickyHeader = !isNoData && initStickyHeader;
-    var style = fullHeight
-        ? __assign(__assign({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }) : __assign({ width: '100%' }, initStyle);
-    var simpleBarStyle = fullHeight
-        ? {
-            height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
-            flex: 1,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            marginBottom: finalPagingHeight || 0,
+    var _p = useMemo(function () {
+        var style = fullHeight
+            ? __assign(__assign({ width: '100%' }, initStyle), { flex: 1, justifyContent: 'flex-end', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }) : __assign({ width: '100%' }, initStyle);
+        var sx = { padding: typeof cellPadding === 'number' ? "".concat(cellPadding, "px") : cellPadding };
+        var tableSx = {
+            '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+            '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+            '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+        };
+        // pageStyle
+        var pagingStyle = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+        if (fullHeight) {
+            pagingStyle.position = 'sticky';
         }
-        : { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
-    var tableStyle = fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
-    // pageStyle
-    var pagingStyle = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
-    if (fullHeight) {
-        pagingStyle.position = 'sticky';
-    }
-    var tableTopHead = finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, items: items, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
+        return { style: style, tableSx: tableSx, pagingStyle: pagingStyle };
+    }, [cellPadding, fullHeight, initStyle]), style = _p.style, tableSx = _p.tableSx, pagingStyle = _p.pagingStyle;
+    var _q = useMemo(function () {
+        var simpleBarStyle = fullHeight
+            ? {
+                height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
+                flex: 1,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                marginBottom: finalPagingHeight || 0,
+            }
+            : { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
+        var tableStyle = fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+        return { simpleBarStyle: simpleBarStyle, tableStyle: tableStyle };
+    }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]), simpleBarStyle = _q.simpleBarStyle, tableStyle = _q.tableStyle;
+    var tableTopHead = useMemo(function () {
+        return finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, items: items, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
+    }, [caption, defaultAlign, finalColumns, handleHeadCheckChange, items, topHeadRows]);
     var tableBody = useMemo(function () {
-        return finalColumns && (React.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(SortableContext, { items: sortableItems, strategy: verticalListSortingStrategy }, sortableItems.map(function (item, idx) { return (React.createElement(TableBodyRow, { key: item.id, className: classNames(!!showOddColor && 'odd-color', !!showEvenColor && 'even-color', onGetBodyRowClassName ? onGetBodyRowClassName(item, idx) : undefined), style: onGetBodyRowStyle ? onGetBodyRowStyle(item, idx) : undefined, sx: onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined, onGetColumnClassName: onGetBodyColumnClassName, onGetColumnStyle: onGetBodyColumnStyle, onGetColumnSx: onGetBodyColumnSx, hover: true, id: item.id, index: idx, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, columns: finalColumns, item: item, onClick: onClick, onCheckChange: handleBodyCheckChange })); }))) : (React.createElement(StyledBodyRow$1, null,
+        return finalColumns && (React.createElement(TableBody, null, sortableItems ? (sortableItems.length > 0 ? (React.createElement(TableSortableBody, { items: sortableItems, columns: finalColumns, showOddColor: showOddColor, showEvenColor: showEvenColor, defaultAlign: defaultAlign, defaultEllipsis: defaultEllipsis, sortable: sortable, onClick: onClick, onCheckChange: handleBodyCheckChange, onGetBodyRowClassName: onGetBodyRowClassName, onGetBodyRowStyle: onGetBodyRowStyle, onGetBodyRowSx: onGetBodyRowSx, onGetBodyColumnClassName: onGetBodyColumnClassName, onGetBodyColumnSx: onGetBodyColumnSx, onGetBodyColumnStyle: onGetBodyColumnStyle })) : (React.createElement(StyledBodyRow$1, null,
             React.createElement(TableCell, { colSpan: finalColumns.length, style: { flex: 1 } }, noData ? (noData) : (React.createElement(StyledNoDataDiv, null,
                 React.createElement("div", null,
                     React.createElement(Icon, null, "error")),
@@ -1327,7 +1412,7 @@ var Table = React.forwardRef(function (_a, ref) {
     return finalColumns ? (React.createElement(TableContextProvider, { value: {
             menuOpen: menuOpen,
             openMenuId: openMenuId,
-            inViewRender: inViewRender,
+            progressiveVisible: progressiveVisible,
             setMenuOpen: TableContextSetMenuOpen,
             setItemColumnChecked: TableContextSetItemColumnChecked,
             setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,

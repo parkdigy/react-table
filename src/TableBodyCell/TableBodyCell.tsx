@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
 import classNames from 'classnames';
 import { companyNoAutoDash, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
-import { useInView } from 'react-intersection-observer';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -22,9 +21,7 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
      * Use
      * ******************************************************************************************************************/
 
-    const { menuOpen, inViewRender, setItemColumnChecked, setItemColumnCheckDisabled, setItemColumnCommands } =
-      useTableState();
-    const { ref: inViewRef, inView } = useInView({ threshold: 0 });
+    const { menuOpen, setItemColumnChecked, setItemColumnCheckDisabled, setItemColumnCommands } = useTableState();
 
     /********************************************************************************************************************
      * State
@@ -93,7 +90,7 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
       let data;
       if (column.type !== 'check') {
         if (column.onRender) {
-          data = column.onRender(item, index, inView);
+          data = column.onRender(item, index);
         } else if (column.name) {
           data = item[column.name];
         } else {
@@ -265,7 +262,7 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
         }
       }
       return data;
-    }, [column, item, index, inView, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
+    }, [column, item, index, menuOpen, checked, checkDisabled, buttonsBoxJustifyContent, onCheckChange]);
 
     /********************************************************************************************************************
      * Event Handler
@@ -288,18 +285,7 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
 
     return (
       <TableCommonCell
-        ref={(cellRef) => {
-          if (inViewRender) {
-            inViewRef(cellRef);
-          }
-          if (ref) {
-            if (typeof ref === 'function') {
-              ref(cellRef);
-            } else {
-              ref.current = cellRef;
-            }
-          }
-        }}
+        ref={ref}
         type='body'
         className={classNames('TableBodyCell', className)}
         style={style}

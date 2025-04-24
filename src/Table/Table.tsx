@@ -5,7 +5,6 @@ import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableCommands, TableColumn, TableItem } from './Table.types';
 import { StyledBodyRow, StyledNoDataDiv } from './Table.styles.private';
-import TableBodyRow from '../TableBodyRow';
 import { TableHeadCellCommands } from '../TableHeadCell';
 import TableFooterCell from '../TableFooterCell';
 import TablePagination from '../TablePagination';
@@ -20,18 +19,14 @@ import {
   useSensors,
   DragEndEvent,
 } from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import TableContextProvider from '../TableContextProvider';
 import { TableBodyCellCommands } from '../TableBodyCell';
 import TableTopHead from '../TableTopHead';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { makeSortableItems } from './Table.function.private';
+import { TableSortableBody } from '../TableSortableBody';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
@@ -83,11 +78,11 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       showOddColor,
       showEvenColor,
       cellPadding = 13,
-      inViewRender,
       footer,
       noData,
       pagination,
       sortable,
+      progressiveVisible,
       onClick,
       onGetBodyRowClassName,
       onGetBodyRowStyle,
@@ -182,22 +177,6 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         }
       },
     });
-
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-
-    const tableSx = useMemo(() => {
-      const sx = {
-        padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding,
-      };
-
-      return {
-        '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-      };
-    }, [cellPadding]);
 
     /********************************************************************************************************************
      * Function
@@ -669,49 +648,68 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
 
     const stickyHeader = !isNoData && initStickyHeader;
 
-    const style: CSSProperties = fullHeight
-      ? {
-          width: '100%',
-          ...initStyle,
-          flex: 1,
-          justifyContent: 'flex-end',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }
-      : { width: '100%', ...initStyle };
+    const { style, tableSx, pagingStyle } = useMemo(() => {
+      const style: CSSProperties = fullHeight
+        ? {
+            width: '100%',
+            ...initStyle,
+            flex: 1,
+            justifyContent: 'flex-end',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+          }
+        : { width: '100%', ...initStyle };
 
-    const simpleBarStyle: CSSProperties = fullHeight
-      ? {
-          height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
-          flex: 1,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          marginBottom: finalPagingHeight || 0,
-        }
-      : { height, minHeight, maxHeight, marginBottom: -1 };
+      const sx = { padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding };
+      const tableSx = {
+        '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+        '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+        '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+      };
 
-    const tableStyle =
-      fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+      // pageStyle
+      const pagingStyle: CSSProperties = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+      if (fullHeight) {
+        pagingStyle.position = 'sticky';
+      }
 
-    // pageStyle
-    const pagingStyle: CSSProperties = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
-    if (fullHeight) {
-      pagingStyle.position = 'sticky';
-    }
+      return { style, tableSx, pagingStyle };
+    }, [cellPadding, fullHeight, initStyle]);
 
-    const tableTopHead = finalColumns && (
-      <TableTopHead
-        caption={caption}
-        rows={topHeadRows}
-        columns={finalColumns}
-        items={items}
-        defaultAlign={defaultAlign}
-        onCheckChange={handleHeadCheckChange}
-      />
+    const { simpleBarStyle, tableStyle } = useMemo(() => {
+      const simpleBarStyle: CSSProperties = fullHeight
+        ? {
+            height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
+            flex: 1,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            marginBottom: finalPagingHeight || 0,
+          }
+        : { height, minHeight, maxHeight, marginBottom: -1 };
+
+      const tableStyle =
+        fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+
+      return { simpleBarStyle, tableStyle };
+    }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]);
+
+    const tableTopHead = useMemo(
+      () =>
+        finalColumns && (
+          <TableTopHead
+            caption={caption}
+            rows={topHeadRows}
+            columns={finalColumns}
+            items={items}
+            defaultAlign={defaultAlign}
+            onCheckChange={handleHeadCheckChange}
+          />
+        ),
+      [caption, defaultAlign, finalColumns, handleHeadCheckChange, items, topHeadRows]
     );
 
     const tableBody = useMemo(
@@ -720,33 +718,23 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           <TableBody>
             {sortableItems ? (
               sortableItems.length > 0 ? (
-                <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
-                  {sortableItems.map((item, idx) => (
-                    <TableBodyRow
-                      key={item.id}
-                      className={classNames(
-                        !!showOddColor && 'odd-color',
-                        !!showEvenColor && 'even-color',
-                        onGetBodyRowClassName ? onGetBodyRowClassName(item, idx) : undefined
-                      )}
-                      style={onGetBodyRowStyle ? onGetBodyRowStyle(item, idx) : undefined}
-                      sx={onGetBodyRowSx ? onGetBodyRowSx(item, idx) : undefined}
-                      onGetColumnClassName={onGetBodyColumnClassName}
-                      onGetColumnStyle={onGetBodyColumnStyle}
-                      onGetColumnSx={onGetBodyColumnSx}
-                      hover
-                      id={item.id}
-                      index={idx}
-                      defaultAlign={defaultAlign}
-                      defaultEllipsis={defaultEllipsis}
-                      sortable={sortable}
-                      columns={finalColumns}
-                      item={item}
-                      onClick={onClick}
-                      onCheckChange={handleBodyCheckChange}
-                    />
-                  ))}
-                </SortableContext>
+                <TableSortableBody
+                  items={sortableItems}
+                  columns={finalColumns}
+                  showOddColor={showOddColor}
+                  showEvenColor={showEvenColor}
+                  defaultAlign={defaultAlign}
+                  defaultEllipsis={defaultEllipsis}
+                  sortable={sortable}
+                  onClick={onClick}
+                  onCheckChange={handleBodyCheckChange}
+                  onGetBodyRowClassName={onGetBodyRowClassName}
+                  onGetBodyRowStyle={onGetBodyRowStyle}
+                  onGetBodyRowSx={onGetBodyRowSx}
+                  onGetBodyColumnClassName={onGetBodyColumnClassName}
+                  onGetBodyColumnSx={onGetBodyColumnSx}
+                  onGetBodyColumnStyle={onGetBodyColumnStyle}
+                />
               ) : (
                 <StyledBodyRow>
                   <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
@@ -811,7 +799,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
         value={{
           menuOpen,
           openMenuId,
-          inViewRender,
+          progressiveVisible,
           setMenuOpen: TableContextSetMenuOpen,
           setItemColumnChecked: TableContextSetItemColumnChecked,
           setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,

@@ -13,6 +13,16 @@ export interface TableItem {
 }
 
 /********************************************************************************************************************
+ * TableProgressiveVisibleInfo
+ * ******************************************************************************************************************/
+
+export interface TableProgressiveVisibleInfo {
+  blockSize: number;
+  rowHeight: number;
+  delay?: number; // default=300
+}
+
+/********************************************************************************************************************
  * TableColumn
  * ******************************************************************************************************************/
 
@@ -77,7 +87,7 @@ export interface TableColumn<T = TableItem> {
   onGetSx?(item: T, index: number): TableCommonSxProps['sx'];
   onHide?(item: T, index: number): boolean;
   onGetTooltip?(item: T, index: number): ReactNode;
-  onRender?(item: T, index: number, inView: boolean): ReactNode;
+  onRender?(item: T, index: number): ReactNode;
   onClick?(item: T, index: number): void;
   onInitChecked?(item: T): boolean;
   onCheckDisabled?(item: T): boolean;
@@ -108,7 +118,6 @@ export interface TableProps<T = TableItem> extends TableCommonSxProps {
   showOddColor?: boolean;
   showEvenColor?: boolean;
   cellPadding?: string | number;
-  inViewRender?: boolean;
   footer?: boolean;
   noData?: ReactNode;
   pagination?: {
@@ -116,6 +125,7 @@ export interface TableProps<T = TableItem> extends TableCommonSxProps {
     style?: TableCommonSxProps['style'];
     sx?: TableCommonSxProps['sx'];
   };
+  progressiveVisible?: TableProgressiveVisibleInfo;
   sortable?: boolean;
   onClick?(item: T, index: number): void;
   onGetBodyRowClassName?(item: T, index: number): TableCommonSxProps['className'] | undefined;

@@ -1,10 +1,10 @@
-import { TableColumn, TableItem } from '../Table';
+import { TableColumn, TableItem, TableProgressiveVisibleInfo } from '../Table';
 import { TableBodyCellCommands } from '../TableBodyCell';
 import { TableHeadCellCommands } from '../TableHeadCell';
 export interface TableContextValue {
     menuOpen: boolean;
     openMenuId?: string;
-    inViewRender?: boolean;
+    progressiveVisible?: TableProgressiveVisibleInfo;
     setMenuOpen(menuOpen: boolean, openMenuId?: string): void;
     setItemColumnChecked(item: TableItem, column: TableColumn, checked: boolean): void;
     setItemColumnCheckDisabled(item: TableItem, column: TableColumn, checkDisabled: boolean): void;
