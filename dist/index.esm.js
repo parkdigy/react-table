@@ -1359,7 +1359,7 @@ var Table = React.forwardRef(function (_a, ref) {
         return { style: style, tableSx: tableSx, pagingStyle: pagingStyle };
     }, [cellPadding, fullHeight, initStyle]), style = _p.style, tableSx = _p.tableSx, pagingStyle = _p.pagingStyle;
     var _q = useMemo(function () {
-        var simpleBarStyle = fullHeight
+        var contentContainerStyle = fullHeight
             ? {
                 height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
                 flex: 1,
@@ -1371,8 +1371,8 @@ var Table = React.forwardRef(function (_a, ref) {
             }
             : { height: height, minHeight: minHeight, maxHeight: maxHeight, marginBottom: -1 };
         var tableStyle = fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
-        return { simpleBarStyle: simpleBarStyle, tableStyle: tableStyle };
-    }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]), simpleBarStyle = _q.simpleBarStyle, tableStyle = _q.tableStyle;
+        return { contentContainerStyle: contentContainerStyle, tableStyle: tableStyle };
+    }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]), contentContainerStyle = _q.contentContainerStyle, tableStyle = _q.tableStyle;
     var tableTopHead = useMemo(function () {
         return finalColumns && (React.createElement(TableTopHead, { caption: caption, rows: topHeadRows, columns: finalColumns, items: items, defaultAlign: defaultAlign, onCheckChange: handleHeadCheckChange }));
     }, [caption, defaultAlign, finalColumns, handleHeadCheckChange, items, topHeadRows]);
@@ -1421,12 +1421,17 @@ var Table = React.forwardRef(function (_a, ref) {
             setHeadColumnCommands: TableContextSetHeadColumnCommands,
         } },
         React.createElement(Paper, { ref: fullHeight ? containerHeightDetector : undefined, className: classNames('Table', className, !!stickyHeader && 'sticky-header', !!fullHeight && 'full-height', !!showOddColor && 'odd-color', !!showEvenColor && 'even-color', !!sortable && 'sortable'), variant: 'outlined', style: style, sx: sx },
-            React.createElement(SimpleBar, { ref: simpleBarRef, style: simpleBarStyle },
+            fullHeight ? (React.createElement(SimpleBar, { ref: simpleBarRef, style: contentContainerStyle },
                 React.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
                     React.createElement(Table$1, { stickyHeader: stickyHeader, sx: tableSx, style: tableStyle },
                         tableTopHead,
                         tableBody,
-                        tableFooter))),
+                        tableFooter)))) : (React.createElement(Box, { style: contentContainerStyle },
+                React.createElement(DndContext, { sensors: sensors, collisionDetection: closestCenter, onDragEnd: handleDragEnd },
+                    React.createElement(Table$1, { stickyHeader: stickyHeader, sx: tableSx, style: tableStyle },
+                        tableTopHead,
+                        tableBody,
+                        tableFooter)))),
             finalColumns && paging && paging.total > 0 && (React.createElement(Stack, { ref: fullHeight ? pagingHeightResizeDetector : undefined, alignItems: pagingAlign, style: pagingStyle },
                 React.createElement(TablePagination, { className: pagination === null || pagination === void 0 ? void 0 : pagination.className, style: pagination === null || pagination === void 0 ? void 0 : pagination.style, sx: pagination === null || pagination === void 0 ? void 0 : pagination.sx, paging: paging, align: pagingAlign, onChange: handlePageChange })))))) : null;
 });var getSearchInfo = function (search) {

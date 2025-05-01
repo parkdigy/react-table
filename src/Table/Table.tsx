@@ -1,6 +1,6 @@
 import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon } from '@mui/material';
+import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon, Box } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
 import { TableProps, TableCommands, TableColumn, TableItem } from './Table.types';
@@ -678,8 +678,8 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       return { style, tableSx, pagingStyle };
     }, [cellPadding, fullHeight, initStyle]);
 
-    const { simpleBarStyle, tableStyle } = useMemo(() => {
-      const simpleBarStyle: CSSProperties = fullHeight
+    const { contentContainerStyle, tableStyle } = useMemo(() => {
+      const contentContainerStyle: CSSProperties = fullHeight
         ? {
             height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
             flex: 1,
@@ -694,7 +694,7 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
       const tableStyle =
         fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
 
-      return { simpleBarStyle, tableStyle };
+      return { contentContainerStyle, tableStyle };
     }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]);
 
     const tableTopHead = useMemo(
@@ -823,15 +823,27 @@ const Table: WithForwardRefType = React.forwardRef<TableCommands, TableProps>(
           style={style}
           sx={sx}
         >
-          <SimpleBar ref={simpleBarRef} style={simpleBarStyle}>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
-                {tableTopHead}
-                {tableBody}
-                {tableFooter}
-              </MuiTable>
-            </DndContext>
-          </SimpleBar>
+          {fullHeight ? (
+            <SimpleBar ref={simpleBarRef} style={contentContainerStyle}>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
+                  {tableTopHead}
+                  {tableBody}
+                  {tableFooter}
+                </MuiTable>
+              </DndContext>
+            </SimpleBar>
+          ) : (
+            <Box style={contentContainerStyle}>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
+                  {tableTopHead}
+                  {tableBody}
+                  {tableFooter}
+                </MuiTable>
+              </DndContext>
+            </Box>
+          )}
           {finalColumns && paging && paging.total > 0 && (
             <Stack
               ref={fullHeight ? pagingHeightResizeDetector : undefined}
