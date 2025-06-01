@@ -17,7 +17,7 @@ export type InfoTableItemType =
   | 'datetime'
   | 'date-hour'
   | 'date-minute'
-  | 'company_no'
+  | 'business_no'
   | 'personal_no'
   | 'divider';
 

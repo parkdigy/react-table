@@ -7,7 +7,7 @@ import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
 import classNames from 'classnames';
-import { companyNoAutoDash, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
+import { businessNoAutoDash, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -125,9 +125,9 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
             data = telNoAutoDash(data);
           }
           break;
-        case 'company_no':
+        case 'business_no':
           if (typeof data === 'string') {
-            data = companyNoAutoDash(data);
+            data = businessNoAutoDash(data);
           }
           break;
         case 'personal_no':

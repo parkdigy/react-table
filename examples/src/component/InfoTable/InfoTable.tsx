@@ -9,7 +9,7 @@ interface Info {
   email: string;
   address: string;
   url: string;
-  company_no: string;
+  business_no: string;
   personal_no: string;
   num_int: number;
   num_float: number;
@@ -24,7 +24,7 @@ const info: Info = {
   email: 'test@test.com',
   address: '서울시 강남구 대치동 123-123',
   url: 'https://www.google.com',
-  company_no: '1112233333',
+  business_no: '1112233333',
   personal_no: '1234567890123',
   num_int: 1234567,
   num_float: 1234567.123,
@@ -62,7 +62,7 @@ const InfoTable = () => {
             icon: 'BlurOn',
             label: '추가정보',
           },
-          { label: 'Company No', type: 'company_no', name: 'company_no' },
+          { label: 'Business No', type: 'business_no', name: 'business_no' },
           { label: 'Personal No', type: 'personal_no', name: 'personal_no' },
           { label: 'Number Integer', type: 'number', name: 'num_int', numberPrefix: '$' },
           { label: 'Number Float', type: 'number', name: 'num_float', numberSuffix: '원' },

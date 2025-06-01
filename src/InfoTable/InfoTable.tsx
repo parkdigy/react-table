@@ -13,7 +13,7 @@ import {
 import { Grid, Stack } from '@mui/material';
 import { combineSx, typographyColorToSxColor } from '../@util.private';
 import dayjs from 'dayjs';
-import { companyNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
+import { businessNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
 import { PdgCopyToClipboard, PdgIcon } from '@pdg/react-component';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
@@ -119,9 +119,9 @@ const InfoTable: WithType = ({
                 );
               }
               break;
-            case 'company_no':
+            case 'business_no':
               if (typeof data === 'string') {
-                data = companyNoAutoDash(data);
+                data = businessNoAutoDash(data);
               }
               break;
             case 'personal_no':

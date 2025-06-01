@@ -22,7 +22,7 @@ export interface TableProgressiveVisibleInfo {
  * ******************************************************************************************************************/
 export interface TableColumn<T = TableItem> {
     id?: string;
-    type?: 'text' | 'number' | 'tel' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'company_no' | 'personal_no' | 'img' | 'button' | 'buttons' | 'check';
+    type?: 'text' | 'number' | 'tel' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'business_no' | 'personal_no' | 'img' | 'button' | 'buttons' | 'check';
     label?: ReactNode;
     name?: keyof T;
     align?: TableCellProps['align'];

@@ -3,10 +3,11 @@ import resolve from '@rollup/plugin-node-resolve';
 import eslint from '@rollup/plugin-eslint';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
-import postcss from 'rollup-plugin-postcss';
+import sass from 'rollup-plugin-sass';
 import del from 'rollup-plugin-delete';
 import fs from 'fs';
 import path from 'path';
+import stripUseClient from './stripUseClient.js';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const packageJson = require('./package.json');
@@ -35,7 +36,7 @@ const getConfig = () => ({
     }),
     del({ targets: 'dist/*' }),
     peerDepsExternal(),
-    postcss(),
+    sass({ api: 'modern' }),
     resolve(),
     commonjs({
       include: /node_modules/,
@@ -63,6 +64,7 @@ const getConfig = () => ({
         removeFromDir('./dist');
       },
     },
+    stripUseClient(),
   ],
 });
 

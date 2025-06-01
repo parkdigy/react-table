@@ -24,7 +24,6 @@ import TableContextProvider from '../TableContextProvider';
 import { TableBodyCellCommands } from '../TableBodyCell';
 import TableTopHead from '../TableTopHead';
 import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
 import { makeSortableItems } from './Table.function.private';
 import { TableSortableBody } from '../TableSortableBody';
 

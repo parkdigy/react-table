@@ -5,7 +5,7 @@ import { PdgIconProps } from '@pdg/react-component';
 export interface InfoTableInfo {
     [key: string]: any;
 }
-export type InfoTableItemType = 'text' | 'number' | 'tel' | 'url' | 'email' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'company_no' | 'personal_no' | 'divider';
+export type InfoTableItemType = 'text' | 'number' | 'tel' | 'url' | 'email' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'business_no' | 'personal_no' | 'divider';
 export interface InfoTableItem<T = InfoTableInfo> {
     icon?: PdgIconProps['children'];
     label?: ReactNode;
