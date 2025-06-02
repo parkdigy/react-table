@@ -3678,7 +3678,7 @@ function requirePropTypes () {
 	return propTypes.exports;
 }var propTypesExports = /*@__PURE__*/ requirePropTypes();
 var PropTypes = /*@__PURE__*/getDefaultExportFromCjs(propTypesExports);/**
- * @mui/styled-engine v7.1.0
+ * @mui/styled-engine v7.1.1
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
@@ -5676,10 +5676,15 @@ function createStyled(input = {}) {
       ...options
     });
     const transformStyle = style => {
-      // On the server Emotion doesn't use React.forwardRef for creating components, so the created
-      // component stays as a function. This condition makes sure that we do not interpolate functions
-      // which are basically components used as a selectors.
-      if (typeof style === 'function' && style.__emotion_real !== style) {
+      // - On the server Emotion doesn't use React.forwardRef for creating components, so the created
+      //   component stays as a function. This condition makes sure that we do not interpolate functions
+      //   which are basically components used as a selectors.
+      // - `style` could be a styled component from a babel plugin for component selectors, This condition
+      //   makes sure that we do not interpolate them.
+      if (style.__emotion_real === style) {
+        return style;
+      }
+      if (typeof style === 'function') {
         return function styleFunctionProcessor(props) {
           return processStyle(props, style);
         };
