@@ -1,6 +1,5 @@
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
-import eslint from '@rollup/plugin-eslint';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import sass from 'rollup-plugin-sass';
@@ -8,9 +7,7 @@ import del from 'rollup-plugin-delete';
 import fs from 'fs';
 import path from 'path';
 import stripUseClient from './stripUseClient.js';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const packageJson = require('./package.json');
+import packageJson from './package.json';
 
 const externalDeps = Object.keys(packageJson.dependencies || {}).concat(
   Object.keys(packageJson.peerDependencies || {})
@@ -29,14 +26,15 @@ const getConfig = () => ({
   output: [getOutput(packageJson.main, 'cjs'), getOutput(packageJson.module, 'esm')],
   external: externalDeps,
   plugins: [
-    eslint({
-      throwOnError: true,
-      throwOnWarning: true,
-      include: ['./src/**/*.{ts,tsx}'],
-    }),
     del({ targets: 'dist/*' }),
     peerDepsExternal(),
-    sass({ api: 'modern' }),
+    sass({
+      insert: true,
+      api: 'modern',
+      options: {
+        style: 'compressed',
+      },
+    }),
     resolve(),
     commonjs({
       include: /node_modules/,

@@ -1,4 +1,12 @@
-import*as React from'react';import React__default,{forwardRef,useContext,isValidElement,cloneElement,Children,useRef,useState,useCallback,useEffect,createContext,useMemo,useLayoutEffect,useId as useId$1}from'react';import {jsx as jsx$1,jsxs}from'react/jsx-runtime';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import*as ReactDOM from'react-dom';import ReactDOM__default from'react-dom';import {useInView}from'react-intersection-observer';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';/******************************************************************************
+import*as React from'react';import React__default,{forwardRef,useContext,isValidElement,cloneElement,Children,useRef,useState,useCallback,useEffect,createContext,useMemo,useLayoutEffect,useId as useId$1}from'react';import {jsx as jsx$1,jsxs}from'react/jsx-runtime';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import*as ReactDOM from'react-dom';import ReactDOM__default from'react-dom';import {useInView}from'react-intersection-observer';import {Search,SearchGroup,FormHidden}from'@pdg/react-form';function insertStyle(css) {
+    if (typeof window === 'undefined')
+        return;
+    const style = document.createElement('style');
+    style.setAttribute('type', 'text/css');
+    style.innerHTML = css;
+    document.head.appendChild(style);
+    return css;
+}insertStyle(".simplebar-track.simplebar-vertical{width:8px !important}.simplebar-track.simplebar-vertical .simplebar-scrollbar.simplebar-visible:before{opacity:.3 !important}.Table .TableHead .TableHeadRow th{position:relative;transform:translateY(-100%)}.Table.sticky-header .TableHead .TableHeadRow th{position:sticky;transform:none}");/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
