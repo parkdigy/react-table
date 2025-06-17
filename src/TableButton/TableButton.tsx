@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { TableButtonProps as Props } from './TableButton.types';
 import { PdgButton } from '@pdg/react-component';
-import { empty } from '@pdg/util';
+import { empty } from '@pdg/compare';
 
 const TableButton = React.forwardRef<HTMLButtonElement, Props>(
   (

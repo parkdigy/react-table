@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, MenuItem, MenuList, styled } from '@mui/material';
 import data from './data.json';
 import { TableProps, TableItem, TableButton, TableMenuButton } from '../../../../src';
-import { numberFormat } from '@pdg/util';
+import { formatNumber } from '@pdg/formatting';
 
 const StyledHeaderTag = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -97,7 +97,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     footer: {
       onRender(items) {
         if (items) {
-          return numberFormat(items.reduce((acc, item) => acc + item.view_count, 0));
+          return formatNumber(items.reduce((acc, item) => acc + item.view_count, 0));
         }
       },
     },

@@ -13,7 +13,8 @@ import {
 import { Grid, Stack } from '@mui/material';
 import { combineSx, typographyColorToSxColor } from '../@util.private';
 import dayjs from 'dayjs';
-import { businessNoAutoDash, empty, notEmpty, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
+import { empty, notEmpty } from '@pdg/compare';
+import { formatBusinessNo, formatNumber, formatPersonalNo, formatTelNo } from '@pdg/formatting';
 import { PdgCopyToClipboard, PdgIcon } from '@pdg/react-component';
 
 interface WithType<T = InfoTableInfo> extends React.FC<Props<T>> {
@@ -74,7 +75,7 @@ const InfoTable: WithType = ({
           switch (item.type) {
             case 'number':
               if (typeof data === 'string' || typeof data === 'number') {
-                data = numberFormat(data);
+                data = formatNumber(data);
 
                 if (item.numberPrefix) {
                   data = (
@@ -96,7 +97,7 @@ const InfoTable: WithType = ({
               break;
             case 'tel':
               if (typeof data === 'string') {
-                data = telNoAutoDash(data);
+                data = formatTelNo(data);
               }
               break;
             case 'email':
@@ -121,12 +122,12 @@ const InfoTable: WithType = ({
               break;
             case 'business_no':
               if (typeof data === 'string') {
-                data = businessNoAutoDash(data);
+                data = formatBusinessNo(data);
               }
               break;
             case 'personal_no':
               if (typeof data === 'string') {
-                data = personalNoAutoDash(data);
+                data = formatPersonalNo(data);
               }
               break;
             case 'date':

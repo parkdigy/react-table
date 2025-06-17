@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useInView } from 'react-intersection-observer';
 import { TableCell, TableRow } from '@mui/material';
 import useTableState from '../TableContext/useTableState';
-import { ifUndefined } from '@pdg/util';
+import { ifUndefined } from '@pdg/compare';
 
 export const TableSortableBodyBlock = ({
   items,

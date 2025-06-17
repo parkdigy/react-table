@@ -4,7 +4,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { TableSortableBodyBlock } from '../TableSortableBodyBlock';
 import { chunkArray } from '../@util.private/chunkArray';
 import useTableState from '../TableContext/useTableState';
-import { ifUndefined } from '@pdg/util';
+import { ifUndefined } from '@pdg/compare';
 
 export const TableSortableBody = ({
   items,

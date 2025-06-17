@@ -1,5 +1,5 @@
 import { SearchInfo, SearchTableProps, TableInfo } from './SearchTable.types';
-import { Dict } from '@pdg/util';
+import { Dict } from '@pdg/types';
 
 export const getSearchInfo = (search: SearchTableProps['search']) => {
   const searchInfo: SearchInfo = {};

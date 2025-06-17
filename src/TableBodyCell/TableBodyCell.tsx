@@ -7,7 +7,7 @@ import { TableItem } from '../Table/Table.types';
 import dayjs from 'dayjs';
 import useTableState from '../TableContext/useTableState';
 import classNames from 'classnames';
-import { businessNoAutoDash, numberFormat, personalNoAutoDash, telNoAutoDash } from '@pdg/util';
+import { formatBusinessNo, formatNumber, formatPersonalNo, formatTelNo } from '@pdg/formatting';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -101,7 +101,7 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
       switch (column.type) {
         case 'number':
           if (typeof data === 'string' || typeof data === 'number') {
-            data = numberFormat(data);
+            data = formatNumber(data);
           }
           if (column.numberPrefix) {
             data = (
@@ -122,17 +122,17 @@ const TableBodyCell = React.forwardRef<HTMLTableCellElement, Props>(
           break;
         case 'tel':
           if (typeof data === 'string') {
-            data = telNoAutoDash(data);
+            data = formatTelNo(data);
           }
           break;
         case 'business_no':
           if (typeof data === 'string') {
-            data = businessNoAutoDash(data);
+            data = formatBusinessNo(data);
           }
           break;
         case 'personal_no':
           if (typeof data === 'string') {
-            data = personalNoAutoDash(data);
+            data = formatPersonalNo(data);
           }
           break;
         case 'check':

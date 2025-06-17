@@ -19,7 +19,7 @@ import {
 } from '@pdg/react-form';
 import { Table, TableCommands, TableItem } from '../Table';
 import dayjs from 'dayjs';
-import { equal, notEmpty } from '@pdg/util';
+import { equal, notEmpty } from '@pdg/compare';
 import { deHash, getSearchInfo, getTableInfo } from './SearchTable.function.private';
 
 interface WithForwardRefType<T = TableItem> extends React.FC<SearchTableProps<T>> {

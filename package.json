@@ -1,7 +1,7 @@
 {
   "name": "@pdg/react-table",
   "title": "React Table",
-  "version": "1.0.138",
+  "version": "1.0.139",
   "description": "React Table",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -51,10 +51,15 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@mui/x-date-pickers": "^7.29.4",
-    "@pdg/react-component": "^1.0.38",
-    "@pdg/react-form": "^1.0.160",
+    "@pdg/compare": "^1.0.4",
+    "@pdg/formatting": "^1.0.3",
+    "@pdg/react-component": "^1.0.39",
+    "@pdg/react-form": "^1.0.165",
     "@pdg/react-hook": "^1.0.30",
-    "react-intersection-observer": "^9.16.0"
+    "@pdg/types": "^1.0.1",
+    "@types/uuid": "^10.0.0",
+    "react-intersection-observer": "^9.16.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",

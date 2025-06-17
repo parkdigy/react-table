@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router';
 import { SearchTable as _SearchTable, SearchTableData, SearchTableCommands, SearchTableProps } from '../../../../src';
 import { TableData } from '@ccomp';
 import { TTableDataItem } from '../Common/TableData';
-import { lv } from '@pdg/util';
+import { lv } from '@pdg/data';
 
 const SearchTable = () => {
   /********************************************************************************************************************
