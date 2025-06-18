@@ -68,7 +68,7 @@ module.exports = {
   },
   output: {
     path: outputPath,
-    publicPath: isProduction ? '/react-admin-layout/examples/dist/' : '/',
+    publicPath: isProduction ? '/react-table/examples/dist/' : '/',
     filename: '[name].[chunkhash].js',
     chunkFilename: 'chunks/[name].[chunkhash].js',
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { InfoTable as _InfoTable } from '../../../../src';
+import { PInfoTable as _InfoTable } from '../../../../src';
 import dayjs, { Dayjs } from 'dayjs';
 
 interface Info {

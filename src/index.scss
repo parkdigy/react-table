@@ -5,13 +5,13 @@
   }
 }
 
-.Table {
-  .TableHead .TableHeadRow th {
+.PTable {
+  .PTableHead .PTableHeadRow th {
       position: relative;
       transform: translateY(-100%);
   }
   &.sticky-header {
-    .TableHead .TableHeadRow th {
+    .PTableHead .PTableHeadRow th {
       position: sticky;
       transform: none;
     }

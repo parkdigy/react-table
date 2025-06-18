@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, MenuItem, MenuList, styled } from '@mui/material';
 import data from './data.json';
-import { TableProps, TableItem, TableButton, TableMenuButton } from '../../../../src';
+import { PTableProps, PTableItem, PTableButton, PTableMenuButton } from '../../../../src';
 import { formatNumber } from '@pdg/formatting';
 
 const StyledHeaderTag = styled(Box)(({ theme }) => ({
@@ -32,7 +32,7 @@ export interface TTableDataItem {
   status_name: string;
 }
 
-const columns: TableProps<TTableDataItem>['columns'] = [
+const columns: PTableProps<TTableDataItem>['columns'] = [
   {
     id: 'check',
     type: 'check',
@@ -76,7 +76,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     align: 'left',
     ellipsis: true,
     minWidth: 200,
-    onRender(item: TableItem) {
+    onRender(item: PTableItem) {
       return (
         <>
           <StyledTitle>{item.title}</StyledTitle>
@@ -132,7 +132,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     align: 'center',
     width: 80,
     onRender() {
-      return <TableButton>수정</TableButton>;
+      return <PTableButton>수정</PTableButton>;
     },
   },
   {
@@ -142,8 +142,8 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     onRender() {
       return (
         <>
-          <TableButton startIcon='Link' />
-          <TableButton startIcon='Delete' color='error' />
+          <PTableButton startIcon='Link' />
+          <PTableButton startIcon='Delete' color='error' />
         </>
       );
     },
@@ -154,7 +154,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
     width: 50,
     onRender() {
       return (
-        <TableMenuButton
+        <PTableMenuButton
           placement='left'
           menuList={
             <MenuList>
@@ -168,7 +168,7 @@ const columns: TableProps<TTableDataItem>['columns'] = [
   },
 ];
 
-const TableData: Required<Pick<TableProps<TTableDataItem>, 'columns' | 'items' | 'paging'>> = {
+const TableData: Required<Pick<PTableProps<TTableDataItem>, 'columns' | 'items' | 'paging'>> = {
   columns,
   items: data.items,
   paging: data.paging,

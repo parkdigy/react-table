@@ -1,8 +1,8 @@
-import { TableColumn } from '../Table/Table.types';
-import { TableCommonSxProps } from '../@types';
+import { PTableColumn } from '../PTable/PTable.types';
+import { PTableCommonSxProps } from '../@types';
 import { TypographyProps } from '@mui/material';
 
-export function getTableColumnAlign(column: TableColumn, defaultAlign: TableColumn['align']): TableColumn['align'] {
+export function getTableColumnAlign(column: PTableColumn, defaultAlign: PTableColumn['align']): PTableColumn['align'] {
   switch (column.type) {
     case 'number':
       return column.align ? column.align : 'right';
@@ -11,8 +11,8 @@ export function getTableColumnAlign(column: TableColumn, defaultAlign: TableColu
   }
 }
 
-export function combineSx(...sx: (boolean | TableCommonSxProps['sx'])[]): TableCommonSxProps['sx'] {
-  const finalSx: TableCommonSxProps['sx'] = [];
+export function combineSx(...sx: (boolean | PTableCommonSxProps['sx'])[]): PTableCommonSxProps['sx'] {
+  const finalSx: PTableCommonSxProps['sx'] = [];
   if (Array.isArray(finalSx)) {
     sx.forEach((v) => v && finalSx.push(...(Array.isArray(v) ? v : [v])));
   }

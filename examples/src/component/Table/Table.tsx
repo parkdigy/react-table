@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Table as _Table, TableCommands, TableProps } from '../../../../src';
+import { PTable as _Table, PTableCommands, PTableProps } from '../../../../src';
 import { TableData } from '@ccomp';
 import { Alert, Button, Grid, Stack } from '@mui/material';
 import { TTableDataItem } from '../Common/TableData';
-import { FormCheckbox, Search, SearchGroup } from '@pdg/react-form';
+import { PFormCheckbox, PSearch, PSearchGroup } from '@pdg/react-form';
 
 const Table: React.FC = () => {
   /********************************************************************************************************************
    * Ref
    * ******************************************************************************************************************/
 
-  const tableRef = useRef<TableCommands<TTableDataItem>>(null);
+  const tableRef = useRef<PTableCommands<TTableDataItem>>(null);
 
   /********************************************************************************************************************
    * State
@@ -22,7 +22,7 @@ const Table: React.FC = () => {
   const [sorting, setSorting] = useState(false);
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<TTableDataItem[]>();
-  const [paging, setPaging] = useState<TableProps['paging']>();
+  const [paging, setPaging] = useState<PTableProps['paging']>();
 
   /********************************************************************************************************************
    * Effect
@@ -85,9 +85,9 @@ const Table: React.FC = () => {
           체크된 아이템 가져오기
         </Button>
       </div>
-      <Search>
-        <SearchGroup>
-          <FormCheckbox
+      <PSearch>
+        <PSearchGroup>
+          <PFormCheckbox
             name='fullHeight'
             text='fullHeight (전체 높이)'
             checked={fullHeight}
@@ -95,7 +95,7 @@ const Table: React.FC = () => {
               setFullHeight(checked);
             }}
           />
-          <FormCheckbox
+          <PFormCheckbox
             name='stickyHeader'
             text='stickyHeader (타이틀 고정)'
             checked={stickyHeader}
@@ -103,8 +103,8 @@ const Table: React.FC = () => {
               setStickyHeader(checked);
             }}
           />
-        </SearchGroup>
-      </Search>
+        </PSearchGroup>
+      </PSearch>
       {sorting ? (
         <div style={{ border: '1px solid #efefef', padding: 10 }}>
           <Grid container spacing={1}>

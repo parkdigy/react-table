@@ -1,4 +1,4 @@
-import TableBodyCell from './TableBodyCell';
-export default TableBodyCell;
-export { TableBodyCell };
-export * from './TableBodyCell.types';
+import PTableBodyCell from './PTableBodyCell';
+export default PTableBodyCell;
+export { PTableBodyCell };
+export * from './PTableBodyCell.types';
