@@ -5,7 +5,7 @@ import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { PTableColumn } from '../PTable';
-import PTableBodyCell from '../TableBodyCell';
+import PTableBodyCell from '../PTableBodyCell';
 
 export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
   '&.odd-color:nth-of-type(odd):not(:hover)': {

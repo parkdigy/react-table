@@ -1,5 +1,5 @@
 import { PTableColumn, PTableItem, PTableProgressiveVisibleInfo } from '../PTable';
-import { PTableBodyCellCommands } from '../TableBodyCell';
+import { PTableBodyCellCommands } from '../PTableBodyCell';
 import { PTableHeadCellCommands } from '../PTableHeadCell';
 
 export interface PTableContextValue {

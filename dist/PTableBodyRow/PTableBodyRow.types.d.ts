@@ -1,6 +1,6 @@
 import { TableCellProps, TableRowProps } from '@mui/material';
 import { PTableColumn, PTableItem, PTableProps } from '../PTable';
-import { PTableBodyCellProps } from '../TableBodyCell';
+import { PTableBodyCellProps } from '../PTableBodyCell';
 import { PTableCommonSxProps } from '../@types';
 export interface PTableBodyRowProps extends Omit<TableRowProps, 'id' | 'onClick'> {
     id: string | number;

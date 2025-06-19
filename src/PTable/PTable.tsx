@@ -21,7 +21,7 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import PTableContextProvider from '../PTableContextProvider';
-import { PTableBodyCellCommands } from '../TableBodyCell';
+import { PTableBodyCellCommands } from '../PTableBodyCell';
 import PTableTopHead from '../PTableTopHead';
 import SimpleBar from 'simplebar-react';
 import { makeSortableItems } from './PTable.function.private';
