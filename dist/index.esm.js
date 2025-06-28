@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useMemo,useRef,useState,useCallback,useEffect,createContext,useContext,useLayoutEffect,useId}from'react';import {styled,Box,IconButton,Grid,Stack,TableRow,lighten,TableCell,Pagination,Checkbox,useTheme,TableHead,Tooltip,TableBody,Icon,TableFooter,Paper,Table,Popper,Grow,ClickAwayListener}from'@mui/material';import {notEmpty,empty,ifUndefined,equal}from'@pdg/compare';import {formatPersonalNo,formatBusinessNo,formatTelNo,formatNumber}from'@pdg/formatting';import {PIcon,PCopyToClipboard,PButton}from'@pdg/react-component';import {PSearch,PSearchGroup,PFormHidden}from'@pdg/react-form';import {useAutoUpdateLayoutState}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import {v4}from'uuid';import {useInView}from'react-intersection-observer';function insertStyle(css) {
+import*as React from'react';import React__default,{useMemo,useRef,useState,useCallback,useEffect,createContext,useContext,useLayoutEffect,useId}from'react';import {styled,Box,IconButton,Grid,Stack,TableRow,lighten,TableCell,Pagination,Checkbox,useTheme,TableHead,Tooltip,TableBody,Icon,TableFooter,Paper,Table,Popper,Grow,ClickAwayListener}from'@mui/material';import {notEmpty,empty,ifUndefined,equal}from'@pdg/compare';import {formatPersonalNo,formatBusinessNo,formatTelNo,formatNumber}from'@pdg/formatting';import {PIcon,PCopyToClipboard,PButton}from'@pdg/react-component';import {PSearch,PSearchGroup,PFormHidden}from'@pdg/react-form';import {useAutoUpdateLayoutState,useForwardLayoutRef}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import {v4}from'uuid';import {useInView}from'react-intersection-observer';function insertStyle(css) {
     if (typeof window === 'undefined')
         return;
     const style = document.createElement('style');
@@ -3876,61 +3876,52 @@ var PTable = React__default.forwardRef(function (_a, ref) {
     /********************************************************************************************************************
      * Commands
      * ******************************************************************************************************************/
-    useLayoutEffect(function () {
-        if (ref) {
-            var lastColumns_1 = columns;
-            var lastItems_1 = items;
-            var lastPaging_1 = paging;
-            var commands = {
-                getColumns: function () { return lastColumns_1; },
-                setColumns: function (columns) {
-                    lastColumns_1 = columns;
-                    setColumns(lastColumns_1);
-                },
-                getItems: function () { return lastItems_1; },
-                setItems: function (items) {
-                    lastItems_1 = items;
-                    setItems(items);
-                },
-                getPaging: function () { return lastPaging_1; },
-                setItemsPaging: function (items, paging) {
-                    lastItems_1 = items;
-                    lastPaging_1 = paging;
-                    setItems(lastItems_1);
-                    setPaging(lastPaging_1);
-                },
-                resetSort: function () {
-                    setSortableItems(makeSortableItems(lastItems_1));
-                },
-                getCheckedItems: getCheckedItems,
-                getChecked: getChecked,
-                setChecked: setChecked,
-                toggleChecked: toggleChecked,
-                setCheckedAll: setCheckedAll,
-                scrollToTop: simpleBarScrollToTop,
-            };
-            if (typeof ref === 'function') {
-                ref(commands);
-            }
-            else {
-                ref.current = commands;
-            }
-        }
+    useForwardLayoutRef(ref, useMemo(function () {
+        var lastColumns = columns;
+        var lastItems = items;
+        var lastPaging = paging;
+        return {
+            getColumns: function () { return lastColumns; },
+            setColumns: function (columns) {
+                lastColumns = columns;
+                setColumns(lastColumns);
+            },
+            getItems: function () { return lastItems; },
+            setItems: function (items) {
+                lastItems = items;
+                setItems(items);
+            },
+            getPaging: function () { return lastPaging; },
+            setItemsPaging: function (items, paging) {
+                lastItems = items;
+                lastPaging = paging;
+                setItems(lastItems);
+                setPaging(lastPaging);
+            },
+            resetSort: function () {
+                setSortableItems(makeSortableItems(lastItems));
+            },
+            getCheckedItems: getCheckedItems,
+            getChecked: getChecked,
+            setChecked: setChecked,
+            toggleChecked: toggleChecked,
+            setCheckedAll: setCheckedAll,
+            scrollToTop: simpleBarScrollToTop,
+        };
     }, [
-        ref,
         columns,
+        getChecked,
+        getCheckedItems,
         items,
         paging,
+        setChecked,
+        setCheckedAll,
         setColumns,
         setItems,
         setPaging,
-        getCheckedItems,
         simpleBarScrollToTop,
-        setChecked,
         toggleChecked,
-        getChecked,
-        setCheckedAll,
-    ]);
+    ]));
     /********************************************************************************************************************
      * Event Handler
      * ******************************************************************************************************************/
@@ -4335,45 +4326,35 @@ var deHash = function () {
     /********************************************************************************************************************
      * Commands
      * ******************************************************************************************************************/
-    useLayoutEffect(function () {
-        if (ref) {
-            var commands = {
-                reload: function (page) {
-                    var _a, _b, _c, _d;
-                    if (page != null) {
-                        (_a = tableRef.current) === null || _a === void 0 ? void 0 : _a.scrollToTop();
-                    }
-                    var finalData;
-                    if (lastGetDataDataRef.current) {
-                        finalData = __assign$2({}, lastGetDataDataRef.current);
-                        if (page != null) {
-                            (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
-                            finalData.page = page;
-                        }
-                    }
-                    else {
-                        if (hash) {
-                            hashToSearchValue();
-                        }
-                        if (page != null) {
-                            (_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.setValue('page', page);
-                        }
-                        finalData = ((_d = searchRef.current) === null || _d === void 0 ? void 0 : _d.getAllFormValue()) || {};
-                    }
-                    getData(finalData);
-                },
-                getLastLoadData: function () { return lastGetDataDataRef.current || {}; },
-                getSearch: function () { return searchRef.current; },
-                getTable: function () { return tableRef.current; },
-            };
-            if (typeof ref === 'function') {
-                ref(commands);
+    useForwardLayoutRef(ref, useMemo(function () { return ({
+        reload: function (page) {
+            var _a, _b, _c, _d;
+            if (page != null) {
+                (_a = tableRef.current) === null || _a === void 0 ? void 0 : _a.scrollToTop();
+            }
+            var finalData;
+            if (lastGetDataDataRef.current) {
+                finalData = __assign$2({}, lastGetDataDataRef.current);
+                if (page != null) {
+                    (_b = searchRef.current) === null || _b === void 0 ? void 0 : _b.setValue('page', page);
+                    finalData.page = page;
+                }
             }
             else {
-                ref.current = commands;
+                if (hash) {
+                    hashToSearchValue();
+                }
+                if (page != null) {
+                    (_c = searchRef.current) === null || _c === void 0 ? void 0 : _c.setValue('page', page);
+                }
+                finalData = ((_d = searchRef.current) === null || _d === void 0 ? void 0 : _d.getAllFormValue()) || {};
             }
-        }
-    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
+            getData(finalData);
+        },
+        getLastLoadData: function () { return lastGetDataDataRef.current || {}; },
+        getSearch: function () { return searchRef.current; },
+        getTable: function () { return tableRef.current; },
+    }); }, [getData, hash, hashToSearchValue]));
     /********************************************************************************************************************
      * hash
      * ******************************************************************************************************************/

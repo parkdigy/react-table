@@ -8,7 +8,7 @@ import { StyledBodyRow, StyledNoDataDiv } from './PTable.styles.private';
 import { PTableHeadCellCommands } from '../PTableHeadCell';
 import PTableFooterCell from '../PTableFooterCell';
 import PTablePagination from '../PTablePagination';
-import { useAutoUpdateLayoutState } from '@pdg/react-hook';
+import { useAutoUpdateLayoutState, useForwardLayoutRef } from '@pdg/react-hook';
 import {
   DndContext,
   closestCenter,
@@ -442,13 +442,14 @@ const PTable: WithForwardRefType = React.forwardRef<PTableCommands, PTableProps>
      * Commands
      * ******************************************************************************************************************/
 
-    useLayoutEffect(() => {
-      if (ref) {
+    useForwardLayoutRef(
+      ref,
+      useMemo<PTableCommands>(() => {
         let lastColumns = columns;
         let lastItems = items;
         let lastPaging = paging;
 
-        const commands: PTableCommands = {
+        return {
           getColumns: () => lastColumns,
           setColumns: (columns) => {
             lastColumns = columns;
@@ -476,28 +477,21 @@ const PTable: WithForwardRefType = React.forwardRef<PTableCommands, PTableProps>
           setCheckedAll,
           scrollToTop: simpleBarScrollToTop,
         };
-
-        if (typeof ref === 'function') {
-          ref(commands);
-        } else {
-          ref.current = commands;
-        }
-      }
-    }, [
-      ref,
-      columns,
-      items,
-      paging,
-      setColumns,
-      setItems,
-      setPaging,
-      getCheckedItems,
-      simpleBarScrollToTop,
-      setChecked,
-      toggleChecked,
-      getChecked,
-      setCheckedAll,
-    ]);
+      }, [
+        columns,
+        getChecked,
+        getCheckedItems,
+        items,
+        paging,
+        setChecked,
+        setCheckedAll,
+        setColumns,
+        setItems,
+        setPaging,
+        simpleBarScrollToTop,
+        toggleChecked,
+      ])
+    );
 
     /********************************************************************************************************************
      * Event Handler

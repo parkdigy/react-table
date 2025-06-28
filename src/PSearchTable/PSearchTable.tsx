@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
@@ -27,6 +27,7 @@ import { PTable, PTableCommands, PTableItem } from '../PTable';
 import dayjs from 'dayjs';
 import { equal, notEmpty } from '@pdg/compare';
 import { deHash, getSearchInfo, getTableInfo } from './PSearchTable.function.private';
+import { useForwardLayoutRef } from '@pdg/react-hook';
 
 interface WithForwardRefType<T = PTableItem> extends React.FC<PSearchTableProps<T>> {
   <T = PTableItem>(
@@ -233,9 +234,10 @@ const PSearchTable: WithForwardRefType = React.forwardRef<PSearchTableCommands, 
      * Commands
      * ******************************************************************************************************************/
 
-    useLayoutEffect(() => {
-      if (ref) {
-        const commands: PSearchTableCommands = {
+    useForwardLayoutRef(
+      ref,
+      useMemo<PSearchTableCommands>(
+        () => ({
           reload: (page?: number) => {
             if (page != null) {
               tableRef.current?.scrollToTop();
@@ -266,15 +268,10 @@ const PSearchTable: WithForwardRefType = React.forwardRef<PSearchTableCommands, 
           getLastLoadData: () => lastGetDataDataRef.current || {},
           getSearch: () => searchRef.current,
           getTable: () => tableRef.current,
-        };
-
-        if (typeof ref === 'function') {
-          ref(commands);
-        } else {
-          ref.current = commands;
-        }
-      }
-    }, [ref, hash, lastGetDataDataRef, searchRef, tableRef, getData, hashToSearchValue]);
+        }),
+        [getData, hash, hashToSearchValue]
+      )
+    );
 
     /********************************************************************************************************************
      * hash
