@@ -8,7 +8,7 @@ import { StyledBodyRow, StyledNoDataDiv } from './PTable.styles.private';
 import { PTableHeadCellCommands } from '../PTableHeadCell';
 import PTableFooterCell from '../PTableFooterCell';
 import PTablePagination from '../PTablePagination';
-import { useAutoUpdateLayoutState, useForwardLayoutRef } from '@pdg/react-hook';
+import { useAutoUpdateState, useForwardLayoutRef } from '@pdg/react-hook';
 import {
   DndContext,
   closestCenter,
@@ -137,11 +137,11 @@ const PTable: WithForwardRefType = React.forwardRef<PTableCommands, PTableProps>
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
-    const [columns, setColumns] = useAutoUpdateLayoutState<PTableProps['columns']>(initColumns);
+    const [columns, setColumns] = useAutoUpdateState<PTableProps['columns']>(initColumns);
     const [finalColumns, setFinalColumns] = useState<PTableColumn[]>();
-    const [items, setItems] = useAutoUpdateLayoutState<PTableProps['items']>(initItems);
+    const [items, setItems] = useAutoUpdateState<PTableProps['items']>(initItems);
     const [sortableItems, setSortableItems] = useState<(PTableItem & { id: number | string })[]>();
-    const [paging, setPaging] = useAutoUpdateLayoutState<PTableProps['paging']>(initPaging);
+    const [paging, setPaging] = useAutoUpdateState<PTableProps['paging']>(initPaging);
 
     /********************************************************************************************************************
      * containerHeight

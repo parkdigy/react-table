@@ -3610,11 +3610,11 @@ var PTable = React.forwardRef(function (_a, ref) {
      * ******************************************************************************************************************/
     var _e = React.useState(false), menuOpen = _e[0], setMenuOpen = _e[1];
     var _f = React.useState(undefined), openMenuId = _f[0], setOpenMenuId = _f[1];
-    var _g = reactHook.useAutoUpdateLayoutState(initColumns), columns = _g[0], setColumns = _g[1];
+    var _g = reactHook.useAutoUpdateState(initColumns), columns = _g[0], setColumns = _g[1];
     var _h = React.useState(), finalColumns = _h[0], setFinalColumns = _h[1];
-    var _j = reactHook.useAutoUpdateLayoutState(initItems), items = _j[0], setItems = _j[1];
+    var _j = reactHook.useAutoUpdateState(initItems), items = _j[0], setItems = _j[1];
     var _k = React.useState(), sortableItems = _k[0], setSortableItems = _k[1];
-    var _l = reactHook.useAutoUpdateLayoutState(initPaging), paging = _l[0], setPaging = _l[1];
+    var _l = reactHook.useAutoUpdateState(initPaging), paging = _l[0], setPaging = _l[1];
     /********************************************************************************************************************
      * containerHeight
      * ******************************************************************************************************************/

@@ -1,4 +1,4 @@
-import*as React from'react';import React__default,{useMemo,useRef,useState,useCallback,useEffect,createContext,useContext,useLayoutEffect,useId}from'react';import {styled,Box,IconButton,Grid,Stack,TableRow,lighten,TableCell,Pagination,Checkbox,useTheme,TableHead,Tooltip,TableBody,Icon,TableFooter,Paper,Table,Popper,Grow,ClickAwayListener}from'@mui/material';import {notEmpty,empty,ifUndefined,equal}from'@pdg/compare';import {formatPersonalNo,formatBusinessNo,formatTelNo,formatNumber}from'@pdg/formatting';import {PIcon,PCopyToClipboard,PButton}from'@pdg/react-component';import {PSearch,PSearchGroup,PFormHidden}from'@pdg/react-form';import {useAutoUpdateLayoutState,useForwardLayoutRef}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import {v4}from'uuid';import {useInView}from'react-intersection-observer';function insertStyle(css) {
+import*as React from'react';import React__default,{useMemo,useRef,useState,useCallback,useEffect,createContext,useContext,useLayoutEffect,useId}from'react';import {styled,Box,IconButton,Grid,Stack,TableRow,lighten,TableCell,Pagination,Checkbox,useTheme,TableHead,Tooltip,TableBody,Icon,TableFooter,Paper,Table,Popper,Grow,ClickAwayListener}from'@mui/material';import {notEmpty,empty,ifUndefined,equal}from'@pdg/compare';import {formatPersonalNo,formatBusinessNo,formatTelNo,formatNumber}from'@pdg/formatting';import {PIcon,PCopyToClipboard,PButton}from'@pdg/react-component';import {PSearch,PSearchGroup,PFormHidden}from'@pdg/react-form';import {useAutoUpdateState,useForwardLayoutRef}from'@pdg/react-hook';import {useSensors,useSensor,MouseSensor,TouchSensor,KeyboardSensor,DndContext,closestCenter}from'@dnd-kit/core';import {useSortable,SortableContext,verticalListSortingStrategy,sortableKeyboardCoordinates,arrayMove}from'@dnd-kit/sortable';import {v4}from'uuid';import {useInView}from'react-intersection-observer';function insertStyle(css) {
     if (typeof window === 'undefined')
         return;
     const style = document.createElement('style');
@@ -3610,11 +3610,11 @@ var PTable = React__default.forwardRef(function (_a, ref) {
      * ******************************************************************************************************************/
     var _e = useState(false), menuOpen = _e[0], setMenuOpen = _e[1];
     var _f = useState(undefined), openMenuId = _f[0], setOpenMenuId = _f[1];
-    var _g = useAutoUpdateLayoutState(initColumns), columns = _g[0], setColumns = _g[1];
+    var _g = useAutoUpdateState(initColumns), columns = _g[0], setColumns = _g[1];
     var _h = useState(), finalColumns = _h[0], setFinalColumns = _h[1];
-    var _j = useAutoUpdateLayoutState(initItems), items = _j[0], setItems = _j[1];
+    var _j = useAutoUpdateState(initItems), items = _j[0], setItems = _j[1];
     var _k = useState(), sortableItems = _k[0], setSortableItems = _k[1];
-    var _l = useAutoUpdateLayoutState(initPaging), paging = _l[0], setPaging = _l[1];
+    var _l = useAutoUpdateState(initPaging), paging = _l[0], setPaging = _l[1];
     /********************************************************************************************************************
      * containerHeight
      * ******************************************************************************************************************/
