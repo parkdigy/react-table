@@ -5,8 +5,8 @@ import {
   PSearchTableProps,
   PSearchTableCommands,
   PSearchTableData,
-  PSearchInfo,
-  PTableInfo,
+  PSearchTableSearchInfo,
+  PSearchTableTableInfo,
 } from './PSearchTable.types';
 import {
   PFormCheckValueItemCommands,
@@ -74,7 +74,7 @@ const PSearchTable: WithForwardRefType = React.forwardRef<PSearchTableCommands, 
      * ******************************************************************************************************************/
 
     const searchInfoFirstUseEffect = useRef(true);
-    const [searchInfo, setSearchInfo] = useState<PSearchInfo>(() => getSearchInfo(search));
+    const [searchInfo, setSearchInfo] = useState<PSearchTableSearchInfo>(() => getSearchInfo(search));
     useEffect(() => {
       if (searchInfoFirstUseEffect.current) {
         searchInfoFirstUseEffect.current = false;
@@ -88,7 +88,7 @@ const PSearchTable: WithForwardRefType = React.forwardRef<PSearchTableCommands, 
      * ******************************************************************************************************************/
 
     const tableInfoFirstUseEffect = useRef(true);
-    const [tableInfo, setTableInfo] = useState<PTableInfo>(() => getTableInfo(table));
+    const [tableInfo, setTableInfo] = useState<PSearchTableTableInfo>(() => getTableInfo(table));
     useEffect(() => {
       if (tableInfoFirstUseEffect.current) {
         tableInfoFirstUseEffect.current = false;

@@ -4,13 +4,13 @@ import { PFormValueMap, PSearchCommands, PSearchProps } from '@pdg/react-form';
 import { ReactNode } from 'react';
 import { PTableCommonSxProps } from '../@types';
 
-export interface PSearchInfo {
+export interface PSearchTableSearchInfo {
   ref?: PSearchTableSearchProps['ref'];
   searchGroups?: PSearchTableSearchProps['searchGroups'];
   props?: Omit<PSearchTableSearchProps, 'ref' | 'searchGroups'>;
 }
 
-export interface PTableInfo {
+export interface PSearchTableTableInfo {
   ref?: PSearchTableTableProps['ref'];
   props?: Omit<PSearchTableTableProps, 'ref'>;
 }

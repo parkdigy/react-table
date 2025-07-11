@@ -1,8 +1,8 @@
-import { PSearchInfo, PSearchTableProps, PTableInfo } from './PSearchTable.types';
+import { PSearchTableSearchInfo, PSearchTableProps, PSearchTableTableInfo } from './PSearchTable.types';
 import { Dict } from '@pdg/types';
 
 export const getSearchInfo = (search: PSearchTableProps['search']) => {
-  const searchInfo: PSearchInfo = {};
+  const searchInfo: PSearchTableSearchInfo = {};
   if (search) {
     const { ref, searchGroups, ...props } = search;
     searchInfo.ref = ref;
@@ -13,7 +13,7 @@ export const getSearchInfo = (search: PSearchTableProps['search']) => {
 };
 
 export const getTableInfo = (table: PSearchTableProps['table']) => {
-  const tableInfo: PTableInfo = {};
+  const tableInfo: PSearchTableTableInfo = {};
   if (table) {
     const { ref, ...props } = table;
     tableInfo.ref = ref;
