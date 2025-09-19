@@ -9,5 +9,5 @@ export interface PTablePaging {
 export interface PTablePaginationProps extends Pick<PTableCommonSxProps, 'className' | 'style' | 'sx'> {
     paging: PTablePaging;
     align?: StackProps['alignItems'];
-    onChange?(page: number): void;
+    onChange?: (page: number) => void;
 }

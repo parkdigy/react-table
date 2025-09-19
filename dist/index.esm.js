@@ -1263,18 +1263,9 @@ function useResizeDetector({ skipOnMount = false, refreshMode, refreshRate = 100
     });
 });
 var StyledNoDataDiv = styled('div')(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"], ["\n  text-align: center;\n  padding: 30px 0;\n  font-weight: 500;\n  font-size: 13px;\n  color: #94a0b2;\n  opacity: 0.8;\n\n  .material-icons {\n    font-size: 40px;\n    margin-bottom: 5px;\n  }\n"])));
-var templateObject_1$3;var PTableContextDefaultValue = {
-    menuOpen: false,
-    openMenuId: undefined,
-    setMenuOpen: function () { },
-    setItemColumnChecked: function () { },
-    setItemColumnCheckDisabled: function () { },
-    setItemColumnCommands: function () { },
-    setHeadColumnChecked: function () { },
-    setHeadColumnCommands: function () { },
-};var PTableContext = createContext(PTableContextDefaultValue);function useTableState() {
+var templateObject_1$3;var PTableContext = createContext({});function useTableState() {
     var value = useContext(PTableContext);
-    if (value === undefined) {
+    if (empty(value)) {
         throw new Error('useFormState should be used within TableContext.Provider');
     }
     return value;

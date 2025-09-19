@@ -184,7 +184,7 @@ const SearchTable = () => {
         </PSearchGroup>
       </PSearch>
       <br />
-      <_SearchTable<TTableDataItem>
+      <_SearchTable
         betweenSearchTableComponent={<div>betweenSearchTableComponent</div>}
         ref={searchTableRef}
         hash={hash}

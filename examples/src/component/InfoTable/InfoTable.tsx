@@ -35,7 +35,7 @@ const info: Info = {
 const InfoTable = () => {
   return (
     <div>
-      <_InfoTable<Info>
+      <_InfoTable
         cols={3}
         labelColor='primary'
         info={info}

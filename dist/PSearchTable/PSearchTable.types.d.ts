@@ -31,12 +31,12 @@ export interface PSearchTableProps<T = PTableItem> extends PTableCommonSxProps {
     search?: PSearchTableSearchProps;
     table: PSearchTableTableProps<T>;
     betweenSearchTableComponent?: ReactNode;
-    onGetData?(data: PFormValueMap): Promise<PSearchTableData<T>>;
-    onRequestHashChange?(hash: string): void;
+    onGetData?: (data: PFormValueMap) => Promise<PSearchTableData<T>>;
+    onRequestHashChange?: (hash: string) => void;
 }
 export interface PSearchTableCommands<T = PTableItem> {
-    reload(page?: number): void;
-    getLastLoadData(): PFormValueMap;
-    getSearch(): PSearchCommands | undefined;
-    getTable(): PTableCommands<T> | undefined;
+    reload: (page?: number) => void;
+    getLastLoadData: () => PFormValueMap;
+    getSearch: () => PSearchCommands | undefined;
+    getTable: () => PTableCommands<T> | undefined;
 }

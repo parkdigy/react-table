@@ -1,6 +1,6 @@
 import { createContext } from 'react';
-import { PTableContextDefaultValue, PTableContextValue } from './PTableContext.types';
+import { PTableContextValue } from './PTableContext.types';
 
-const PTableContext = createContext<PTableContextValue>(PTableContextDefaultValue);
+const PTableContext = createContext<PTableContextValue>({} as PTableContextValue);
 
 export default PTableContext;

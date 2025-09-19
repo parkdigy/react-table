@@ -52,14 +52,14 @@ export interface PInfoTableItem<T = PInfoTableInfo> {
   clipboardIcon?: string;
   clipboardText?: string;
   clipboardProps?: Omit<IconButtonProps, 'children'>;
-  onRender?(info: T): ReactNode;
-  onRenderEmpty?(info: T): ReactNode;
-  onHide?(info: T): boolean;
-  onXs?(info: T): number;
-  onSm?(info: T): number;
-  onMd?(info: T): number;
-  onLg?(info: T): number;
-  onXl?(info: T): number;
+  onRender?: (info: T) => ReactNode;
+  onRenderEmpty?: (info: T) => ReactNode;
+  onHide?: (info: T) => boolean;
+  onXs?: (info: T) => number;
+  onSm?: (info: T) => number;
+  onMd?: (info: T) => number;
+  onLg?: (info: T) => number;
+  onXl?: (info: T) => number;
 }
 
 export type PInfoTableItems<T = PInfoTableInfo> = (PInfoTableItem<T> | false | undefined | null)[];
@@ -94,5 +94,5 @@ export interface PInfoTableProps<T = PInfoTableInfo> {
   valueUnderline?: boolean;
   info: T;
   items: PInfoTableItems<T>;
-  onCopyToClipboard?(item: PInfoTableItem<T>, text: string): void;
+  onCopyToClipboard?: (item: PInfoTableItem<T>, text: string) => void;
 }

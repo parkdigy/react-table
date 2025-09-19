@@ -2,8 +2,8 @@ import { PTableColumn, PTableItem, PTableProps } from '../PTable/PTable.types';
 import { PTableCommonSxProps } from '../@types';
 
 export interface PTableBodyCellCommands {
-  setChecked(checked: boolean): void;
-  setCheckDisabled(disabled: boolean): void;
+  setChecked: (checked: boolean) => void;
+  setCheckDisabled: (disabled: boolean) => void;
 }
 
 export interface PTableBodyCellProps {
@@ -16,5 +16,5 @@ export interface PTableBodyCellProps {
   defaultAlign?: PTableProps['defaultAlign'];
   defaultEllipsis?: boolean;
   onClick: PTableProps['onClick'];
-  onCheckChange(item: PTableItem, column: PTableColumn, checked: boolean): void;
+  onCheckChange: (item: PTableItem, column: PTableColumn, checked: boolean) => void;
 }

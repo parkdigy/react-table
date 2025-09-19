@@ -128,7 +128,7 @@ const Table: React.FC = () => {
         <Alert severity='info'>드래그하여 순서를 변경할 수 있습니다.</Alert>
       )}
       {items && paging && (
-        <_Table<TTableDataItem>
+        <_Table
           ref={tableRef}
           defaultAlign='center'
           stickyHeader={stickyHeader}

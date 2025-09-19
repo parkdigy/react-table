@@ -12,7 +12,7 @@ export interface PTableBodyRowProps extends Omit<TableRowProps, 'id' | 'onClick'
     item: PTableItem;
     onClick: PTableProps['onClick'];
     onCheckChange: PTableBodyCellProps['onCheckChange'];
-    onGetColumnClassName?(column: PTableColumn, item: PTableItem, index: number): PTableCommonSxProps['className'] | undefined;
-    onGetColumnStyle?(column: PTableColumn, item: PTableItem, index: number): PTableCommonSxProps['style'] | undefined;
-    onGetColumnSx?(column: PTableColumn, item: PTableItem, index: number): PTableCommonSxProps['sx'] | undefined;
+    onGetColumnClassName?: (column: PTableColumn, item: PTableItem, index: number) => PTableCommonSxProps['className'] | undefined;
+    onGetColumnStyle?: (column: PTableColumn, item: PTableItem, index: number) => PTableCommonSxProps['style'] | undefined;
+    onGetColumnSx?: (column: PTableColumn, item: PTableItem, index: number) => PTableCommonSxProps['sx'] | undefined;
 }

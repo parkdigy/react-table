@@ -1,8 +1,8 @@
 import { PTableColumn, PTableItem, PTableProps } from '../PTable/PTable.types';
 
 export interface PTableHeadCellCommands {
-  setChecked(checked: boolean): void;
-  setCheckDisabled(checkDisabled: boolean): void;
+  setChecked: (checked: boolean) => void;
+  setCheckDisabled: (checkDisabled: boolean) => void;
 }
 
 export interface PTableHeadCellProps<T = PTableItem> {
@@ -10,5 +10,5 @@ export interface PTableHeadCellProps<T = PTableItem> {
   items?: T[];
   defaultAlign?: PTableProps['defaultAlign'];
   top?: number;
-  onCheckChange(column: PTableColumn, checked: boolean): void;
+  onCheckChange: (column: PTableColumn, checked: boolean) => void;
 }

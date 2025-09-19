@@ -17,5 +17,5 @@ export interface PTableTopHeadProps<T = PTableItem> {
   columns: PTableColumn[];
   items?: T[];
   defaultAlign: PTableProps['defaultAlign'];
-  onCheckChange(column: PTableColumn, checked: boolean): void;
+  onCheckChange: (column: PTableColumn, checked: boolean) => void;
 }
