@@ -38,7 +38,7 @@ export interface PSearchTableProps<T = PTableItem> extends PTableCommonSxProps {
   search?: PSearchTableSearchProps;
   table: PSearchTableTableProps<T>;
   betweenSearchTableComponent?: ReactNode;
-  onGetData?: (data: PFormValueMap) => Promise<PSearchTableData<T>>;
+  onGetData?(data: PFormValueMap): Promise<PSearchTableData<T>>;
   onRequestHashChange?: (hash: string) => void;
 }
 
