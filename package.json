@@ -1,5 +1,5 @@
 {
-  "name": "@pdg/npm-template",
+  "name": "@pdg/npm-react-template",
   "title": "NPM Template Module",
   "description": "NPM Template Module",
   "version": "1.0.0",
@@ -16,13 +16,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/parkdigy/npm-template.git",
-    "baseUrl": "https://github.com/parkdigy/npm-template"
+    "url": "git+https://github.com/parkdigy/npm-react-template.git",
+    "baseUrl": "https://github.com/parkdigy/npm-react-template"
   },
   "bugs": {
-    "url": "https://github.com/parkdigy/npm-template/issues"
+    "url": "https://github.com/parkdigy/npm-react-template/issues"
   },
-  "homepage": "https://github.com/parkdigy/npm-template#readme",
+  "homepage": "https://github.com/parkdigy/npm-react-template#readme",
   "files": [
     "dist",
     "README.md"

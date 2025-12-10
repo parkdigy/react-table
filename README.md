@@ -1,8 +1,8 @@
-# @pdg/npm-template
+# @pdg/npm-react-template
 
-NPM Template Module
+NPM React Template
 
 ## 설치
 ```
-npm install -D @pdg/npm-template
+npm install -D @pdg/npm-react-template
 ```
