@@ -36,7 +36,7 @@
     "git:merge:mirror": "node .git-merge.cjs mirror main",
     "reset:gitignore": "git rm -r --cached . && git add .",
     "pub": "npm i && npm run build && npm publish --access=public && rm ./.git/hooks/pre-commit",
-    "lint": "eslint './src/**/*.ts'",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
     "reinstall": "npm run reinstall:module",
     "reinstall:module": "rm -rf node_modules && rm -f package-lock.json && npm i",
     "test": "jest"

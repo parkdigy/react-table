@@ -1,17 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "Es2017",
-    "module": "ESNext",
-    "lib": ["ES2017"],
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "preserveSymlinks": true,
-    "baseUrl": "./"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.tsx"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
