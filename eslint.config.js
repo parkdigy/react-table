@@ -2,6 +2,8 @@ import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import typescriptEslintParser from '@typescript-eslint/parser';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
   ...tseslint.config(eslint.configs.recommended, tseslint.configs.recommended),
@@ -20,6 +22,15 @@ export default defineConfig([
       globals: {
         // Add any other specific global variables if needed, e.g.,
         // process: 'readonly',
+      },
+    },
+    plugins: {
+      react: pluginReact,
+      'react-hooks': pluginReactHooks,
+    },
+    settings: {
+      react: {
+        version: 'detect', // Auto-detect React version
       },
     },
     rules: {
