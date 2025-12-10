@@ -44,9 +44,18 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': ['warn'],
       'no-empty-pattern': 'off',
       'no-useless-constructor': ['warn'],
+      'react/no-unused-state': ['warn'],
+      'react/state-in-constructor': ['error', 'always'],
+      'react/no-deprecated': ['error'],
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
       'no-plusplus': ['error'],
       'prefer-template': ['error'],
       'jsx-quotes': ['error', 'prefer-single'],
+      'react/prop-types': [
+        'error',
+        { ignore: ['history', 'location', 'match', 'name', 'className', 'style', 'children'] },
+      ],
       'prefer-const': [
         'error',
         {
@@ -59,6 +68,14 @@ export default defineConfig([
         'always',
         {
           exceptAfterSingleLine: true,
+        },
+      ],
+      'react/static-property-placement': [
+        'error',
+        'property assignment',
+        {
+          propTypes: 'static public field',
+          defaultProps: 'static public field',
         },
       ],
     },
