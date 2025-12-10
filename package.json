@@ -1,7 +1,7 @@
 {
   "name": "@pdg/npm-react-template",
-  "title": "NPM Template Module",
-  "description": "NPM Template Module",
+  "title": "NPM React Template",
+  "description": "NPM React Template",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
