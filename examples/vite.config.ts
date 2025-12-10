@@ -8,5 +8,16 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     base: isProduction ? `/${ModulePackageJson.repository.baseUrl.split('/').pop()}/examples/dist/` : '/',
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.startsWith(`${__dirname}/node_modules/`)) {
+              return 'vendor';
+            }
+          },
+        },
+      },
+    },
   };
 });
