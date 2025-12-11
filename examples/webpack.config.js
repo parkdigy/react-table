@@ -76,6 +76,7 @@ const options = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias,
+    modules: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '../node_modules')],
   },
   output: {
     path: outputPath,
