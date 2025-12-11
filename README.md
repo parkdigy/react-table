@@ -1,8 +1,8 @@
-# @pdg/npm-react-template
+# @pdg/npm-react-admin-layout-template
 
-NPM React Template
+NPM React Admin Layout Template
 
 ## 설치
 ```
-npm install -D @pdg/npm-react-template
+npm install -D @pdg/npm-react-admin-layout-template
 ```
