@@ -11,8 +11,9 @@ node_modules/
 .nvmrc
 .prettierignore
 .prettierrc.cjs
+404.html
 eslint.config.js
-jest.config.js
+index.html
 rollup.config.js
 tsconfig.json
 
