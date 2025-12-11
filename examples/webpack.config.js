@@ -85,7 +85,7 @@ const options = {
     chunkFilename: 'chunks/[name].[chunkhash].js',
   },
   devServer: {
-    port: 9800,
+    port: 9801,
     hot: true,
     historyApiFallback: true,
     client: {

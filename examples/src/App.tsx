@@ -5,8 +5,10 @@
 import './init';
 
 import React, { useEffect } from 'react';
-import { BrowserRouter } from 'react-router';
-import MainRouter from './router';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { DefaultLayout } from './layout';
+
+import './sass/index.scss';
 
 const App = () => {
   useEffect(() => {
@@ -16,7 +18,9 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <MainRouter />
+      <Routes>
+        <Route path='/*' element={<DefaultLayout />} />
+      </Routes>
     </BrowserRouter>
   );
 };
