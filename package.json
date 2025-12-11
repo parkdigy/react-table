@@ -29,7 +29,8 @@
   ],
   "scripts": {
     "dev": "cd examples && npm run dev",
-    "build": "npm run test && npm run lint && rollup -c --bundleConfigAsCjs",
+    "watchman:del": "watchman watch-del \"${PWD}\" ; watchman watch-project \"${PWD}\"",
+    "build": "npm run watchman:del && npm run test && npm run lint && rollup -c --bundleConfigAsCjs",
     "git:commit": "node .git-commit.cjs",
     "git:push": "git push",
     "git:commit:push": "npm run git:commit && npm run git:push",
@@ -66,6 +67,8 @@
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-refresh": "0.4.24",
+    "globals": "^16.5.0",
     "jest": "29.7.0",
     "prettier": "3.7.4",
     "rollup": "4.53.3",

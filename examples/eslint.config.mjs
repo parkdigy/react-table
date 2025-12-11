@@ -1,6 +1,4 @@
 import { defineConfig } from 'eslint/config';
-import globals from 'globals';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import typescriptEslintParser from '@typescript-eslint/parser';
@@ -8,7 +6,7 @@ import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
-  ...tseslint.config(eslint.configs.recommended, tseslint.configs.recommended, reactRefresh.configs.recommended),
+  ...tseslint.config(eslint.configs.recommended, tseslint.configs.recommended),
   {
     ignores: ['node_modules/', 'dist/'],
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -18,9 +16,8 @@ export default defineConfig([
         ecmaFeatures: {
           jsx: true,
         },
-        ecmaVersion: 2020,
+        ecmaVersion: 'latest',
         sourceType: 'module',
-        globals: globals.browser,
       },
       globals: {
         module: 'readonly',
@@ -45,7 +42,6 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],
       'no-empty-pattern': 'off',
       'no-useless-constructor': ['warn'],
@@ -81,6 +77,53 @@ export default defineConfig([
         {
           propTypes: 'static public field',
           defaultProps: 'static public field',
+        },
+      ],
+      'react/sort-comp': [
+        'error',
+        {
+          order: [
+            'proptypes',
+            'static-variables',
+            'static-methods',
+            'instance-variables',
+            'lifecycle',
+            'init',
+            'everything-else',
+            'instance-methods',
+            'rendering',
+          ],
+          groups: {
+            proptypes: ['propTypes', 'defaultProps'],
+            init: ['init'],
+            lifecycle: [
+              'displayName',
+              'contextTypes',
+              'childContextTypes',
+              'mixins',
+              'statics',
+              'constructor',
+              'getDefaultProps',
+              'getInitialState',
+              'state',
+              'getChildContext',
+              'getDerivedStateFromProps',
+              'componentWillMount',
+              'UNSAFE_componentWillMount',
+              'componentDidMount',
+              'componentWillReceiveProps',
+              'UNSAFE_componentWillReceiveProps',
+              'shouldComponentUpdate',
+              'componentWillUpdate',
+              'UNSAFE_componentWillUpdate',
+              'getSnapshotBeforeUpdate',
+              'componentDidUpdate',
+              'componentDidCatch',
+              'componentWillUnmount',
+              'componentDidCatch',
+            ],
+            rendering: ['/^render.+$/', 'render'],
+          },
         },
       ],
     },
