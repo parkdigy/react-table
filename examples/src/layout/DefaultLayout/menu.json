@@ -5,5 +5,31 @@
     "depth": 1,
     "uri": "/",
     "icon": "Home"
+  },
+  {
+    "id": "test_menu",
+    "name": "Test Menu",
+    "depth": 1,
+    "icon": "AutoStories",
+    "items": [
+      {
+        "id": "test_menu_1",
+        "name": "Sub Menu 1",
+        "depth": 2,
+        "uri": "/test_menu/sub_1"
+      },
+      {
+        "id": "test_menu_2",
+        "name": "Sub Menu 2 ",
+        "depth": 2,
+        "uri": "/test_menu/sub_2"
+      },
+      {
+        "id": "test_menu_3",
+        "name": "Sub Menu 3",
+        "depth": 2,
+        "uri": "/test_menu/sub_3"
+      }
+    ]
   }
 ]
