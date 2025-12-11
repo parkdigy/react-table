@@ -8,10 +8,10 @@ import MainRouter from '../../router';
 const menu = Menu.map((info) => ({
   ...info,
   uri: !info.uri ? info.uri : env.isProduction ? `/${env.name}${info.uri}` : info.uri,
-  items: info.items?.map((subInfo) => ({
-    ...subInfo,
-    uri: !subInfo.uri ? subInfo.uri : env.isProduction ? `/${env.name}${subInfo.uri}` : subInfo.uri,
-  })),
+  // items: info.items?.map((subInfo) => ({
+  //   ...subInfo,
+  //   uri: !subInfo.uri ? subInfo.uri : env.isProduction ? `/${env.name}${subInfo.uri}` : subInfo.uri,
+  // })),
 }));
 
 const DefaultLayout = () => {

@@ -1,8 +1,13 @@
-# @pdg/npm-react-admin-layout-template
+# @pdg/react-table
 
-NPM React Admin Layout Template
+Typescript React Table Module
 
 ## 설치
 ```
-npm install -D @pdg/npm-react-admin-layout-template
+npm install -D @pdg/react-table
+```
+
+### simplebar-react css 추가
+```
+import 'simplebar-react/dist/simplebar.min.css';
 ```

@@ -1,0 +1,19 @@
+.simplebar-track.simplebar-vertical {
+  width: 8px !important;
+  .simplebar-scrollbar.simplebar-visible:before {
+    opacity: 0.3 !important;
+  }
+}
+
+.PTable {
+  .PTableHead .PTableHeadRow th {
+      position: relative;
+      transform: translateY(-100%);
+  }
+  &.sticky-header {
+    .PTableHead .PTableHeadRow th {
+      position: sticky;
+      transform: none;
+    }
+  }
+}
