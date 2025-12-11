@@ -113,7 +113,7 @@ const options = {
               name(module) {
                 if (module.context.includes('/node_modules/')) {
                   const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-                  return `vendors/_common_${packageName.replace('@', '')}`;
+                  return `vendors/common_${packageName.replace('@', '')}`;
                 }
               },
             },
@@ -124,7 +124,7 @@ const options = {
                 if (module.context.includes('/node_modules/')) {
                   const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
                   if (packageName === '@pdg') {
-                    return `vendors/_pdg_${module.context.match(/[\\/]node_modules\/@pdg[\\/](.*?)([\\/]|$)/)[1]}`;
+                    return `vendors/pdg_${module.context.match(/[\\/]node_modules\/@pdg[\\/](.*?)([\\/]|$)/)[1]}`;
                   }
                   return `vendors/${packageName.replace('@', '')}`;
                 }
