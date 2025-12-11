@@ -5,12 +5,15 @@ node_modules/
 /examples
 /src
 /test
+.git-commit.cjs
+.git-merge.cjs
 .gitignore
 .nvmrc
 .prettierignore
 .prettierrc.cjs
+404.html
 eslint.config.js
-jest.config.js
+index.html
 rollup.config.js
 tsconfig.json
 

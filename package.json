@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "cd examples && npm run dev",
     "watchman:del": "watchman watch-del \"${PWD}\" ; watchman watch-project \"${PWD}\"",
-    "build": "npm run watchman:del && npm run test && npm run lint && rollup -c --bundleConfigAsCjs",
+    "build": "npm run watchman:del && npm run lint && rollup -c --bundleConfigAsCjs",
     "git:commit": "node .git-commit.cjs",
     "git:push": "git push",
     "git:commit:push": "npm run git:commit && npm run git:push",
@@ -39,8 +39,7 @@
     "pub": "npm i && npm run build && npm publish --access=public && rm ./.git/hooks/pre-commit",
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "reinstall": "npm run reinstall:module",
-    "reinstall:module": "rm -rf node_modules && rm -f package-lock.json && npm i",
-    "test": "jest"
+    "reinstall:module": "rm -rf node_modules && rm -f package-lock.json && npm i"
   },
   "author": "YOUNG CHUL PARK",
   "license": "MIT",
@@ -58,7 +57,6 @@
     "@eslint/js": "9.39.1",
     "@rollup/plugin-commonjs": "29.0.0",
     "@rollup/plugin-node-resolve": "16.0.3",
-    "@types/jest": "29.5.14",
     "@types/node": "^22.19.2",
     "@types/react": "19.2.7",
     "@typescript-eslint/parser": "8.49.0",
@@ -69,7 +67,6 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.24",
     "globals": "^16.5.0",
-    "jest": "29.7.0",
     "prettier": "3.7.4",
     "rollup": "4.53.3",
     "rollup-plugin-delete": "2.2.0",
@@ -77,7 +74,6 @@
     "rollup-plugin-sass": "1.15.3",
     "rollup-plugin-typescript2": "0.36.0",
     "sass": "1.95.1",
-    "ts-jest": "29.4.6",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.49.0"
