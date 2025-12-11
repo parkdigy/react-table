@@ -1,5 +1,7 @@
 # 최종 프로젝트에서는 dist 주석 처리
 dist
+/404.html
+/index.html
 
 node_modules
 *.log
