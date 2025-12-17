@@ -38,21 +38,18 @@ const getConfig = () => ({
     }),
     typescript({ useTsconfigDeclarationDir: true }),
     babel({
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
       babelHelpers: 'bundled',
-      presets: [
-        ['@babel/preset-react', { runtime: 'automatic' }],
-        '@babel/preset-typescript', // TS 처리를 위해 추가
-      ],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      exclude: 'node_modules/**',
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
       plugins: [
         [
           'babel-plugin-react-compiler',
           {
-            /* 옵션 필요 시 추가 */
+            panicThreshold: 'all_errors',
           },
         ],
-      ],
-      exclude: 'node_modules/**',
+      ].filter(Boolean),
     }),
     // *.private 디렉토리, *.private.d.ts 파일 제거
     {
