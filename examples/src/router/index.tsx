@@ -1,18 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router';
 import { Home } from '@comp';
 
 const RootRoutes = () => {
-  const rootPath = useMemo(() => (env.isProduction ? `/${env.name}/` : '/'), []);
+  const rootPath = env.isProduction ? `/${env.name}/` : '/';
 
-  const basicRoutes = useMemo(
-    () => (
-      <>
-        <Route path='/' element={<Home />} />
-        <Route path='*' element={<Navigate to={rootPath} />} />
-      </>
-    ),
-    [rootPath]
+  const basicRoutes = (
+    <>
+      <Route path='/' element={<Home />} />
+      <Route path='*' element={<Navigate to={rootPath} />} />
+    </>
   );
 
   return (
