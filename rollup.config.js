@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import sass from 'rollup-plugin-sass';
 import del from 'rollup-plugin-delete';
+import babel from '@rollup/plugin-babel';
 import fs from 'fs';
 import path from 'path';
 import packageJson from './package.json';
@@ -36,6 +37,23 @@ const getConfig = () => ({
       include: /node_modules/,
     }),
     typescript({ useTsconfigDeclarationDir: true }),
+    babel({
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      babelHelpers: 'bundled',
+      presets: [
+        ['@babel/preset-react', { runtime: 'automatic' }],
+        '@babel/preset-typescript', // TS 처리를 위해 추가
+      ],
+      plugins: [
+        [
+          'babel-plugin-react-compiler',
+          {
+            /* 옵션 필요 시 추가 */
+          },
+        ],
+      ],
+      exclude: 'node_modules/**',
+    }),
     // *.private 디렉토리, *.private.d.ts 파일 제거
     {
       name: 'remove-d-ts-plugin',
