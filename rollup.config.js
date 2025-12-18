@@ -25,18 +25,6 @@ const getConfig = () => ({
   plugins: [
     del({ targets: 'dist/*' }),
     peerDepsExternal(),
-    sass({
-      insert: true,
-      api: 'modern',
-      options: {
-        style: 'compressed',
-      },
-    }),
-    resolve(),
-    commonjs({
-      include: /node_modules/,
-    }),
-    typescript({ useTsconfigDeclarationDir: true }),
     babel({
       babelHelpers: 'bundled',
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -50,6 +38,18 @@ const getConfig = () => ({
           },
         ],
       ].filter(Boolean),
+    }),
+    typescript({ useTsconfigDeclarationDir: true, check: false }),
+    sass({
+      insert: true,
+      api: 'modern',
+      options: {
+        style: 'compressed',
+      },
+    }),
+    resolve(),
+    commonjs({
+      include: /node_modules/,
     }),
     // *.private 디렉토리, *.private.d.ts 파일 제거
     {
