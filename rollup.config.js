@@ -46,7 +46,7 @@ const getConfig = () => ({
         ],
       ].filter(Boolean),
     }),
-    resolve(),
+    resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
     commonjs({
       include: /node_modules/,
     }),
