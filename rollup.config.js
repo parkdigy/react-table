@@ -46,6 +46,13 @@ const getConfig = () => ({
         ],
       ].filter(Boolean),
     }),
+    sass({
+      insert: true,
+      api: 'modern',
+      options: {
+        style: 'compressed',
+      },
+    }),
     resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
     commonjs({
       include: /node_modules/,
