@@ -16,7 +16,8 @@
     "reinstall": "npm run reinstall:module",
     "reinstall:module": "rm -rf node_modules && rm -f package-lock.json && npm i",
     "lint": "eslint src",
-    "tsc": "npx tsc --noEmit"
+    "tsc": "npx tsc --noEmit",
+    "pub": "cd .. && npm run pub"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
