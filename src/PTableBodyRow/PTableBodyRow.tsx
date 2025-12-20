@@ -4,7 +4,7 @@ import { PTableBodyRowProps as Props } from './PTableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { PTableColumn } from '../PTable';
+import { PTableColumn, PTableItem } from '../PTable';
 import PTableBodyCell from '../PTableBodyCell';
 
 export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
@@ -16,7 +16,7 @@ export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const PTableBodyRow: React.FC<Props> = ({
+function PTableBodyRow<T extends PTableItem = PTableItem>({
   className,
   style,
   id,
@@ -32,7 +32,7 @@ const PTableBodyRow: React.FC<Props> = ({
   onGetColumnStyle,
   onGetColumnSx,
   ...props
-}) => {
+}: Props<T>) {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
@@ -71,7 +71,7 @@ const PTableBodyRow: React.FC<Props> = ({
         {...props}
         {...sortableProps}
       >
-        {columns.map((column: PTableColumn, columnIdx) => (
+        {columns.map((column: PTableColumn<T>, columnIdx) => (
           <PTableBodyCell
             className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
             sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
@@ -89,6 +89,6 @@ const PTableBodyRow: React.FC<Props> = ({
       </PStyledBodyRow>
     </>
   );
-};
+}
 
 export default PTableBodyRow;

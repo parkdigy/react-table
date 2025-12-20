@@ -4,6 +4,7 @@ import { styled, TableCell, TableHead, TableRow, useTheme } from '@mui/material'
 import { useResizeDetector } from 'react-resize-detector';
 import { PTableTopHeadCaptionRow } from './PTableTopHead.style.private';
 import PTableHeadCell from '../PTableHeadCell';
+import { PTableItem } from '../PTable';
 
 const BottomLine = styled('div')`
   height: 1px;
@@ -13,7 +14,14 @@ const BottomLine = styled('div')`
   bottom: 0;
 `;
 
-const PTableTopHead: React.FC<Props> = ({ columns, items, rows, caption, defaultAlign, onCheckChange }) => {
+function PTableTopHead<T extends PTableItem = PTableItem>({
+  columns,
+  items,
+  rows,
+  caption,
+  defaultAlign,
+  onCheckChange,
+}: Props<T>) {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
@@ -167,6 +175,6 @@ const PTableTopHead: React.FC<Props> = ({ columns, items, rows, caption, default
       </TableHead>
     );
   }
-};
+}
 
 export default PTableTopHead;

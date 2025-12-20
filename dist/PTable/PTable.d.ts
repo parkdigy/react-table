@@ -1,7 +1,4 @@
 import React from 'react';
-import { PTableProps, PTableCommands, PTableItem } from './PTable.types';
-interface WithForwardRefType<T = PTableItem> extends React.FC<PTableProps<T>> {
-    <T = PTableItem>(props: PTableProps<T> & React.RefAttributes<PTableCommands<T>>): ReturnType<React.FC<PTableProps<T>>>;
-}
-declare const PTable: WithForwardRefType;
+import { PTableProps as Props, PTableItem } from './PTable.types';
+declare function PTable<T extends PTableItem = PTableItem>({ ref, className, style: initStyle, sx, caption, topHeadRows, columns: initColumns, items: initItems, paging: initPaging, pagingAlign, defaultAlign, defaultEllipsis, stickyHeader: initStickyHeader, height, minHeight, maxHeight, fullHeight, showOddColor, showEvenColor, cellPadding, footer, noData, pagination, sortable, progressiveVisible, onClick, onGetBodyRowClassName, onGetBodyRowStyle, onGetBodyRowSx, onGetBodyColumnClassName, onGetBodyColumnStyle, onGetBodyColumnSx, onPageChange, onSortChange, onCheckChange, }: Props<T>): React.JSX.Element | null;
 export default PTable;

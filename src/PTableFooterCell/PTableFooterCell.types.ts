@@ -1,7 +1,7 @@
 import { PTableColumn, PTableItem, PTableProps } from '../PTable/PTable.types';
 
-export interface PTableFooterCellProps<T = PTableItem> {
-  column: PTableColumn;
+export interface PTableFooterCellProps<T extends PTableItem = PTableItem> {
+  column: PTableColumn<T>;
   items?: T[];
-  defaultAlign?: PTableProps['defaultAlign'];
+  defaultAlign?: PTableProps<T>['defaultAlign'];
 }

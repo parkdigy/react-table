@@ -17,11 +17,7 @@ import { empty, notEmpty } from '@pdg/compare';
 import { formatBusinessNo, formatNumber, formatPersonalNo, formatTelNo } from '@pdg/formatting';
 import { PCopyToClipboard, PIcon } from '@pdg/react-component';
 
-interface WithType<T = PInfoTableInfo> extends React.FC<Props<T>> {
-  <T = PInfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
-}
-
-const PInfoTable: WithType = ({
+function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
   cols,
   spacing = 2,
   columnSpacing,
@@ -42,7 +38,7 @@ const PInfoTable: WithType = ({
   info,
   items,
   onCopyToClipboard,
-}: Props) => {
+}: Props<T>) {
   /********************************************************************************************************************
    * Memo
    * ******************************************************************************************************************/
@@ -113,7 +109,7 @@ const PInfoTable: WithType = ({
               if (typeof data === 'string' && data.toLowerCase().startsWith('http')) {
                 data = (
                   <>
-                    <a href={data} target='_blank'>
+                    <a href={data} target='_blank' rel='noreferrer'>
                       {data}
                     </a>
                   </>
@@ -321,6 +317,6 @@ const PInfoTable: WithType = ({
       {content}
     </Grid>
   );
-};
+}
 
 export default PInfoTable;

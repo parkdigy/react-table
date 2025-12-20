@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PTableSortableBodyBlockProps as Props } from './PTableSortableBodyBlock.types';
 import PTableBodyRow from '../PTableBodyRow';
 import classNames from 'classnames';
@@ -6,8 +6,10 @@ import { useInView } from 'react-intersection-observer';
 import { TableCell, TableRow } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
 import { ifUndefined } from '@pdg/compare';
+import { PTableItem } from '../PTable';
+import { useChanged } from '@pdg/react-hook';
 
-export const PTableSortableBodyBlock = ({
+function PTableSortableBodyBlock<T extends PTableItem = PTableItem>({
   items,
   baseIndex,
   columns,
@@ -24,7 +26,7 @@ export const PTableSortableBodyBlock = ({
   sortable,
   onClick,
   onCheckChange,
-}: Props) => {
+}: Props<T>) {
   const { progressiveVisible } = useTableState();
 
   /********************************************************************************************************************
@@ -43,7 +45,7 @@ export const PTableSortableBodyBlock = ({
    * Effect
    * ******************************************************************************************************************/
 
-  useEffect(() => {
+  if (useChanged(progressiveVisible, true)) {
     if (progressiveVisible && baseIndex > 0) {
       setTimeout(
         () => {
@@ -52,8 +54,7 @@ export const PTableSortableBodyBlock = ({
         baseIndex * ifUndefined(progressiveVisible.delay, 300)
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progressiveVisible]);
+  }
 
   /********************************************************************************************************************
    * Memo
@@ -124,6 +125,6 @@ export const PTableSortableBodyBlock = ({
    * ******************************************************************************************************************/
 
   return <>{renderItems}</>;
-};
+}
 
 export default PTableSortableBodyBlock;

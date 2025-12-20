@@ -1,8 +1,11 @@
-import { PTableColumn } from '../PTable/PTable.types';
+import { PTableColumn, PTableItem } from '../PTable';
 import { PTableCommonSxProps } from '../@types';
 import { TypographyProps } from '@mui/material';
 
-export function getTableColumnAlign(column: PTableColumn, defaultAlign: PTableColumn['align']): PTableColumn['align'] {
+export function getTableColumnAlign<T extends PTableItem = PTableItem>(
+  column: PTableColumn<T>,
+  defaultAlign: PTableColumn<T>['align']
+): PTableColumn<T>['align'] {
   switch (column.type) {
     case 'number':
       return column.align ? column.align : 'right';

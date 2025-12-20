@@ -5,8 +5,9 @@ import { PTableSortableBodyBlock } from '../PTableSortableBodyBlock';
 import { chunkArray } from '../@util.private/chunkArray';
 import useTableState from '../PTableContext/useTableState';
 import { ifUndefined } from '@pdg/compare';
+import { PTableItem } from '../PTable';
 
-export const PTableSortableBody = ({
+function PTableSortableBody<T extends PTableItem = PTableItem>({
   items,
   columns,
   showOddColor,
@@ -22,12 +23,12 @@ export const PTableSortableBody = ({
   sortable,
   onClick,
   onCheckChange,
-}: Props) => {
+}: Props<T>) {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
 
-  const { progressiveVisible } = useTableState();
+  const { progressiveVisible } = useTableState<T>();
 
   /********************************************************************************************************************
    * Memo
@@ -112,6 +113,6 @@ export const PTableSortableBody = ({
   ) : (
     renderBlock
   );
-};
+}
 
 export default PTableSortableBody;

@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
-import { PTableFooterCellProps } from './PTableFooterCell.types';
+import { PTableFooterCellProps as Props } from './PTableFooterCell.types';
 import PTableCommonCell from '../PTableCommonCell';
+import { PTableItem } from '../PTable';
 
-const PTableFooterCell: React.FC<PTableFooterCellProps> = ({ column, items, defaultAlign }) => {
+function PTableFooterCell<T extends PTableItem = PTableItem>({ column, items, defaultAlign }: Props<T>) {
   /********************************************************************************************************************
    * Memo
    * ******************************************************************************************************************/
@@ -24,6 +25,6 @@ const PTableFooterCell: React.FC<PTableFooterCellProps> = ({ column, items, defa
       {data}
     </PTableCommonCell>
   );
-};
+}
 
 export default PTableFooterCell;

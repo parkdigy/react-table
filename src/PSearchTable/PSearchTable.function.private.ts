@@ -1,5 +1,6 @@
 import { PSearchTableSearchInfo, PSearchTableProps, PSearchTableTableInfo } from './PSearchTable.types';
 import { Dict } from '@pdg/types';
+import { PTableItem } from '../PTable';
 
 export const getSearchInfo = (search: PSearchTableProps['search']) => {
   const searchInfo: PSearchTableSearchInfo = {};
@@ -12,14 +13,15 @@ export const getSearchInfo = (search: PSearchTableProps['search']) => {
   return searchInfo;
 };
 
-export const getTableInfo = (table: PSearchTableProps['table']) => {
-  const tableInfo: PSearchTableTableInfo = {};
+export const getTableInfo = <T extends PTableItem = PTableItem>(
+  table: PSearchTableProps<T>['table']
+): PSearchTableTableInfo<T> => {
   if (table) {
     const { ref, ...props } = table;
-    tableInfo.ref = ref;
-    tableInfo.props = props;
+    return { ref, props };
+  } else {
+    return {};
   }
-  return tableInfo;
 };
 
 export const deHash = () => {

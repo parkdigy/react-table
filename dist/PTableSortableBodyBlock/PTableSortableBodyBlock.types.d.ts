@@ -1,4 +1,5 @@
-import { PTableSortableBodyProps } from '../PTableSortableBody/PTableSortableBody.types';
-export interface PTableSortableBodyBlockProps extends PTableSortableBodyProps {
+import { PTableSortableBodyProps } from '../PTableSortableBody';
+import { PTableItem } from '../PTable';
+export interface PTableSortableBodyBlockProps<T extends PTableItem = PTableItem> extends PTableSortableBodyProps<T> {
     baseIndex: number;
 }

@@ -1,9 +1,10 @@
-import { PTableColumn, PTableItem, PTableProps } from '../PTable/PTable.types';
+import { PTableColumn, PTableItem, PTableProps } from '../PTable';
 import { PTableBodyRowProps } from '../PTableBodyRow';
 
-export interface PTableSortableBodyProps
-  extends Pick<
-      PTableProps,
+export interface PTableSortableBodyProps<T extends PTableItem = PTableItem>
+  extends
+    Pick<
+      PTableProps<T>,
       | 'showOddColor'
       | 'showEvenColor'
       | 'onGetBodyRowSx'
@@ -17,7 +18,7 @@ export interface PTableSortableBodyProps
       | 'sortable'
       | 'onClick'
     >,
-    Pick<PTableBodyRowProps, 'onCheckChange'> {
-  items: (PTableItem & { id: number | string })[];
-  columns: PTableColumn[];
+    Pick<PTableBodyRowProps<T>, 'onCheckChange'> {
+  items: (T & { id: number | string })[];
+  columns: PTableColumn<T>[];
 }

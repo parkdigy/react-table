@@ -1,2 +1,3 @@
 import { PTableContextValue } from './PTableContext.types';
-export default function useTableState(): PTableContextValue;
+import { PTableItem } from '../PTable';
+export default function useTableState<T extends PTableItem = PTableItem>(): PTableContextValue<T>;

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { TableCellProps } from '@mui/material';
-import { PTableColumn, PTableItem, PTableProps } from '../PTable/PTable.types';
+import { PTableColumn, PTableItem, PTableProps } from '../PTable';
 export interface PTableTopHeadRowColumn {
     colSpan?: number;
     rowSpan?: number;
@@ -8,11 +8,11 @@ export interface PTableTopHeadRowColumn {
     align?: TableCellProps['align'];
 }
 export type PTableTopHeadRowColumnValue = PTableTopHeadRowColumn | false | undefined | null;
-export interface PTableTopHeadProps<T = PTableItem> {
+export interface PTableTopHeadProps<T extends PTableItem = PTableItem> {
     caption?: ReactNode;
     rows?: PTableTopHeadRowColumnValue[] | PTableTopHeadRowColumnValue[][];
-    columns: PTableColumn[];
+    columns: PTableColumn<T>[];
     items?: T[];
-    defaultAlign: PTableProps['defaultAlign'];
-    onCheckChange: (column: PTableColumn, checked: boolean) => void;
+    defaultAlign: PTableProps<T>['defaultAlign'];
+    onCheckChange: (column: PTableColumn<T>, checked: boolean) => void;
 }

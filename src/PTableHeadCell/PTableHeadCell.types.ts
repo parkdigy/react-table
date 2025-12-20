@@ -5,10 +5,10 @@ export interface PTableHeadCellCommands {
   setCheckDisabled: (checkDisabled: boolean) => void;
 }
 
-export interface PTableHeadCellProps<T = PTableItem> {
-  column: PTableColumn;
+export interface PTableHeadCellProps<T extends PTableItem = PTableItem> {
+  column: PTableColumn<T>;
   items?: T[];
-  defaultAlign?: PTableProps['defaultAlign'];
+  defaultAlign?: PTableProps<T>['defaultAlign'];
   top?: number;
-  onCheckChange: (column: PTableColumn, checked: boolean) => void;
+  onCheckChange: (column: PTableColumn<T>, checked: boolean) => void;
 }

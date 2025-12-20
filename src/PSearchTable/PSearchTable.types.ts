@@ -10,27 +10,30 @@ export interface PSearchTableSearchInfo {
   props?: Omit<PSearchTableSearchProps, 'ref' | 'searchGroups'>;
 }
 
-export interface PSearchTableTableInfo {
-  ref?: PSearchTableTableProps['ref'];
-  props?: Omit<PSearchTableTableProps, 'ref'>;
+export interface PSearchTableTableInfo<T extends PTableItem = PTableItem> {
+  ref?: PSearchTableTableProps<T>['ref'];
+  props?: Omit<PSearchTableTableProps<T>, 'ref'>;
 }
 
-export interface PSearchTableData<T = PTableItem> {
+export interface PSearchTableData<T extends PTableItem = PTableItem> {
   items: PTableProps<T>['items'];
   paging?: PTableProps<T>['paging'];
 }
 
 export interface PSearchTableSearchProps extends Omit<PSearchProps, 'ref' | 'color' | 'autoSubmit' | 'onSubmit'> {
-  ref?: React.ForwardedRef<PSearchCommands>;
+  ref?: React.Ref<PSearchCommands>;
   searchGroups?: ReactNode;
 }
 
-export interface PSearchTableTableProps<T = PTableItem>
-  extends Omit<PTableProps<T>, 'ref' | 'items' | 'paging' | 'onPageChange'> {
-  ref?: React.ForwardedRef<PTableCommands<T>>;
+export interface PSearchTableTableProps<T extends PTableItem = PTableItem> extends Omit<
+  PTableProps<T>,
+  'ref' | 'items' | 'paging' | 'onPageChange'
+> {
+  ref?: React.Ref<PTableCommands<T>>;
 }
 
-export interface PSearchTableProps<T = PTableItem> extends PTableCommonSxProps {
+export interface PSearchTableProps<T extends PTableItem = PTableItem> extends PTableCommonSxProps {
+  ref?: React.Ref<PSearchTableCommands<T>>;
   color?: PSearchProps['color'];
   hash?: boolean;
   stickyHeader?: boolean;
@@ -42,7 +45,7 @@ export interface PSearchTableProps<T = PTableItem> extends PTableCommonSxProps {
   onRequestHashChange?: (hash: string) => void;
 }
 
-export interface PSearchTableCommands<T = PTableItem> {
+export interface PSearchTableCommands<T extends PTableItem = PTableItem> {
   reload: (page?: number) => void;
   getLastLoadData: () => PFormValueMap;
   getSearch: () => PSearchCommands | undefined;

@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import { PTablePaginationProps } from './PTablePagination.types';
+import { PTablePaginationProps as Props } from './PTablePagination.types';
 import { Pagination, Stack } from '@mui/material';
 
-const PTablePagination: React.FC<PTablePaginationProps> = ({ className, style, sx, paging, align, onChange }) => {
+const PTablePagination = ({ className, style, sx, paging, align, onChange }: Props) => {
   return (
     <Stack alignItems={align}>
       <Pagination

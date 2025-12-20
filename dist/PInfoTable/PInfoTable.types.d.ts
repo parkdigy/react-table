@@ -6,7 +6,7 @@ export interface PInfoTableInfo {
     [key: string]: any;
 }
 export type PInfoTableItemType = 'text' | 'number' | 'tel' | 'url' | 'email' | 'date' | 'datetime' | 'date-hour' | 'date-minute' | 'business_no' | 'personal_no' | 'divider';
-export interface PInfoTableItem<T = PInfoTableInfo> {
+export interface PInfoTableItem<T extends PInfoTableInfo = PInfoTableInfo> {
     icon?: PIconProps['children'];
     label?: ReactNode;
     name?: keyof T;
@@ -46,9 +46,9 @@ export interface PInfoTableItem<T = PInfoTableInfo> {
     onLg?: (info: T) => number;
     onXl?: (info: T) => number;
 }
-export type PInfoTableItems<T = PInfoTableInfo> = (PInfoTableItem<T> | false | undefined | null)[];
+export type PInfoTableItems<T extends PInfoTableInfo = PInfoTableInfo> = (PInfoTableItem<T> | false | undefined | null)[];
 export type PInfoTableCols = 1 | 2 | 3 | 4 | 6 | 12;
-export interface PInfoTableProps<T = PInfoTableInfo> {
+export interface PInfoTableProps<T extends PInfoTableInfo = PInfoTableInfo> {
     cols: PInfoTableCols | {
         xs?: PInfoTableCols;
         sm?: PInfoTableCols;

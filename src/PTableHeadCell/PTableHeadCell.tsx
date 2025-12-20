@@ -1,15 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { PTableHeadCellProps } from './PTableHeadCell.types';
+import { PTableHeadCellProps as Props } from './PTableHeadCell.types';
 import PTableCommonCell from '../PTableCommonCell';
 import { Checkbox } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
+import { PTableItem } from '../PTable';
 
-const PTableHeadCell: React.FC<PTableHeadCellProps> = ({ column, items, defaultAlign, top, onCheckChange }) => {
+function PTableHeadCell<T extends PTableItem = PTableItem>({
+  column,
+  items,
+  defaultAlign,
+  top,
+  onCheckChange,
+}: Props<T>) {
   /********************************************************************************************************************
    * Use
    * ******************************************************************************************************************/
 
-  const { setHeadColumnChecked, setHeadColumnCommands } = useTableState();
+  const { setHeadColumnChecked, setHeadColumnCommands } = useTableState<T>();
 
   /********************************************************************************************************************
    * State
@@ -99,6 +106,6 @@ const PTableHeadCell: React.FC<PTableHeadCellProps> = ({ column, items, defaultA
       {data}
     </PTableCommonCell>
   );
-};
+}
 
 export default PTableHeadCell;

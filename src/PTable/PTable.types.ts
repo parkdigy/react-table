@@ -1,6 +1,6 @@
-import { CSSProperties, ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import { TableCellProps, TooltipProps } from '@mui/material';
-import { PTablePaginationProps } from '../PTablePagination/PTablePagination.types';
+import { PTablePaginationProps } from '../PTablePagination';
 import { PTableCommonSxProps } from '../@types';
 import { PTableTopHeadProps } from '../PTableTopHead';
 
@@ -26,7 +26,7 @@ export interface PTableProgressiveVisibleInfo {
  * PTableColumn
  * ******************************************************************************************************************/
 
-export interface PTableColumn<T = PTableItem> {
+export interface PTableColumn<T extends PTableItem = PTableItem> {
   id?: string;
   type?:
     | 'text'
@@ -95,15 +95,16 @@ export interface PTableColumn<T = PTableItem> {
   onCheckDisabledChange?: (item: T, checkDisabled: boolean) => void;
 }
 
-export type PTableColumns<T = PTableItem> = (PTableColumn<T> | false | undefined | null)[];
+export type PTableColumns<T extends PTableItem = PTableItem> = (PTableColumn<T> | false | undefined | null)[];
 
 /********************************************************************************************************************
  * TableProps
  * ******************************************************************************************************************/
 
-export interface PTableProps<T = PTableItem> extends PTableCommonSxProps {
+export interface PTableProps<T extends PTableItem = PTableItem> extends PTableCommonSxProps {
+  ref?: React.Ref<PTableCommands<T>>;
   caption?: ReactNode;
-  topHeadRows?: PTableTopHeadProps['rows'];
+  topHeadRows?: PTableTopHeadProps<T>['rows'];
   columns?: PTableColumns<T>;
   defaultAlign?: TableCellProps['align'];
   defaultEllipsis?: boolean;
@@ -147,7 +148,7 @@ export interface PTableProps<T = PTableItem> extends PTableCommonSxProps {
  * PTableCommands
  * ******************************************************************************************************************/
 
-export interface PTableCommands<T = PTableItem> {
+export interface PTableCommands<T extends PTableItem = PTableItem> {
   getColumns: () => PTableProps<T>['columns'];
   setColumns: (columns: PTableProps<T>['columns']) => void;
   getItems: () => PTableProps<T>['items'];

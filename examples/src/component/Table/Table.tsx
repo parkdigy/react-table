@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { PTable as _Table, PTableCommands, PTableProps } from '../../../../src';
 import { TableData } from '@ccomp';
 import { Alert, Button, Grid, Stack } from '@mui/material';
 import { TTableDataItem } from '../Common/TableData';
 import { PFormCheckbox, PSearch, PSearchGroup } from '@pdg/react-form';
+import { useChanged } from '@pdg/react-hook';
 
 const Table: React.FC = () => {
   /********************************************************************************************************************
@@ -28,7 +29,7 @@ const Table: React.FC = () => {
    * Effect
    * ******************************************************************************************************************/
 
-  useEffect(() => {
+  if (useChanged(page, true)) {
     const total = TableData.items.length;
     const perPage = 10;
     const lastPage = Math.ceil(total / perPage);
@@ -47,7 +48,7 @@ const Table: React.FC = () => {
       last_page: lastPage,
       total,
     });
-  }, [page]);
+  }
 
   /********************************************************************************************************************
    * Event Handler

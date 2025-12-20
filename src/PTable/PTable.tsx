@@ -3,12 +3,11 @@ import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon, Box } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
-import { PTableProps, PTableCommands, PTableColumn, PTableItem } from './PTable.types';
+import { PTableProps as Props, PTableCommands, PTableColumn, PTableItem } from './PTable.types';
 import { StyledBodyRow, StyledNoDataDiv } from './PTable.styles.private';
 import { PTableHeadCellCommands } from '../PTableHeadCell';
 import PTableFooterCell from '../PTableFooterCell';
 import PTablePagination from '../PTablePagination';
-import { useAutoUpdateState, useForwardLayoutRef } from '@pdg/react-hook';
 import {
   DndContext,
   closestCenter,
@@ -26,19 +25,26 @@ import PTableTopHead from '../PTableTopHead';
 import SimpleBar from 'simplebar-react';
 import { makeSortableItems } from './PTable.function.private';
 import { PTableSortableBody } from '../PTableSortableBody';
+import { useAutoUpdateRef, useChanged, useForwardRef } from '@pdg/react-hook';
 
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
 }
 
-type TLocalBodyData = Record<
+let _columnId = 0;
+const getNewColumnId = () => {
+  _columnId += 1;
+  return `$c$${_columnId}$`;
+};
+
+type TLocalBodyData<T extends PTableItem = PTableItem> = Record<
   string | number,
   {
-    item: PTableItem;
+    item: T;
     columns: Record<
       string,
       {
-        column: PTableColumn;
+        column: PTableColumn<T>;
         checked: boolean;
         checkDisabled: boolean;
         commands?: PTableBodyCellCommands;
@@ -47,818 +53,911 @@ type TLocalBodyData = Record<
   }
 >;
 
-type TLocalHeaderData = Record<string, { column: PTableColumn; checked: boolean; commands?: PTableHeadCellCommands }>;
+type TLocalHeaderData<T extends PTableItem = PTableItem> = Record<
+  string,
+  { column: PTableColumn<T>; checked: boolean; commands?: PTableHeadCellCommands }
+>;
 
-interface WithForwardRefType<T = PTableItem> extends React.FC<PTableProps<T>> {
-  <T = PTableItem>(
-    props: PTableProps<T> & React.RefAttributes<PTableCommands<T>>
-  ): ReturnType<React.FC<PTableProps<T>>>;
-}
+function PTable<T extends PTableItem = PTableItem>({
+  ref,
+  className,
+  style: initStyle,
+  sx,
+  caption,
+  topHeadRows,
+  columns: initColumns,
+  items: initItems,
+  paging: initPaging,
+  pagingAlign = 'center',
+  defaultAlign = 'left',
+  defaultEllipsis,
+  stickyHeader: initStickyHeader,
+  height,
+  minHeight,
+  maxHeight,
+  fullHeight,
+  showOddColor,
+  showEvenColor,
+  cellPadding = 13,
+  footer,
+  noData,
+  pagination,
+  sortable,
+  progressiveVisible,
+  onClick,
+  onGetBodyRowClassName,
+  onGetBodyRowStyle,
+  onGetBodyRowSx,
+  onGetBodyColumnClassName,
+  onGetBodyColumnStyle,
+  onGetBodyColumnSx,
+  onPageChange,
+  onSortChange,
+  onCheckChange,
+}: Props<T>) {
+  /********************************************************************************************************************
+   * Ref
+   * ******************************************************************************************************************/
 
-let _columnId = 0;
+  const localHeaderDataRef = useRef<TLocalHeaderData<T>>({});
+  const localBodyDataRef = useRef<TLocalBodyData<T>>({});
+  const updateHeadCheckTimer = useRef<NodeJS.Timeout>(undefined);
+  const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
+  const simpleBarRef = useRef<SimpleBarCore>(null);
+  // const finalColumnsIdRef = useRef<string[] | undefined>([]);
 
-const PTable: WithForwardRefType = React.forwardRef<PTableCommands, PTableProps>(
-  (
-    {
-      className,
-      style: initStyle,
-      sx,
-      caption,
-      topHeadRows,
-      columns: initColumns,
-      items: initItems,
-      paging: initPaging,
-      pagingAlign = 'center',
-      defaultAlign = 'left',
-      defaultEllipsis,
-      stickyHeader: initStickyHeader,
-      height,
-      minHeight,
-      maxHeight,
-      fullHeight,
-      showOddColor,
-      showEvenColor,
-      cellPadding = 13,
-      footer,
-      noData,
-      pagination,
-      sortable,
-      progressiveVisible,
-      onClick,
-      onGetBodyRowClassName,
-      onGetBodyRowStyle,
-      onGetBodyRowSx,
-      onGetBodyColumnClassName,
-      onGetBodyColumnStyle,
-      onGetBodyColumnSx,
-      onPageChange,
-      onSortChange,
-      onCheckChange,
+  /********************************************************************************************************************
+   * sortable
+   * ******************************************************************************************************************/
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      // Require the mouse to move by 10 pixels before activating
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  /********************************************************************************************************************
+   * State - columns
+   * ******************************************************************************************************************/
+
+  const [columns, setColumns] = useState(initColumns);
+  useChanged(initColumns) && setColumns(initColumns);
+
+  const columnsRef = useAutoUpdateRef(columns);
+
+  /********************************************************************************************************************
+   * State - finalColumns
+   * ******************************************************************************************************************/
+
+  const [finalColumns, setFinalColumns] = useState<PTableColumn<T>[]>();
+  const [finalColumnsId, setFinalColumnsId] = useState<string[] | undefined>(undefined);
+
+  /********************************************************************************************************************
+   * State - items
+   * ******************************************************************************************************************/
+
+  const [items, setItems] = useState(initItems);
+  useChanged(initItems) && setItems(initItems);
+
+  const itemsRef = useAutoUpdateRef(items);
+
+  const [sortableItems, setSortableItems] = useState<(T & { id: number | string })[]>();
+
+  if (useChanged(items, true)) {
+    setSortableItems(makeSortableItems(items));
+  }
+
+  /********************************************************************************************************************
+   * State - paging
+   * ******************************************************************************************************************/
+
+  const [paging, setPaging] = useState(initPaging);
+  useChanged(initPaging) && setPaging(initPaging);
+
+  const pagingRef = useAutoUpdateRef(paging);
+
+  /********************************************************************************************************************
+   * State
+   * ******************************************************************************************************************/
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
+
+  /********************************************************************************************************************
+   * containerHeight
+   * ******************************************************************************************************************/
+
+  const [containerHeight, setContainerHeight] = useState<number | undefined>();
+
+  const { ref: containerHeightDetector } = useResizeDetector({
+    handleHeight: true,
+    handleWidth: false,
+    onResize() {
+      if (containerHeightDetector.current) {
+        setContainerHeight(containerHeightDetector.current.getBoundingClientRect().height);
+      } else {
+        setContainerHeight(undefined);
+      }
     },
-    ref
-  ) => {
-    /********************************************************************************************************************
-     * Ref
-     * ******************************************************************************************************************/
+  });
 
-    const localHeaderDataRef = useRef<TLocalHeaderData>({});
-    const localBodyDataRef = useRef<TLocalBodyData>({});
-    const updateHeadCheckTimer = useRef<NodeJS.Timeout>(undefined);
-    const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
-    const simpleBarRef = useRef<SimpleBarCore>(null);
-    const finalColumnsIdRef = useRef<string[] | undefined>([]);
+  /********************************************************************************************************************
+   * footerHeight
+   * ******************************************************************************************************************/
 
-    /********************************************************************************************************************
-     * sortable
-     * ******************************************************************************************************************/
+  const [pagingHeight, setPagingHeight] = useState<number | undefined>();
 
-    const sensors = useSensors(
-      useSensor(MouseSensor, {
-        // Require the mouse to move by 10 pixels before activating
-        activationConstraint: {
-          distance: 10,
-        },
-      }),
-      useSensor(TouchSensor, {
-        // Press delay of 250ms, with tolerance of 5px of movement
-        activationConstraint: {
-          delay: 250,
-          tolerance: 5,
-        },
-      }),
-      useSensor(KeyboardSensor, {
-        coordinateGetter: sortableKeyboardCoordinates,
-      })
-    );
+  const { ref: pagingHeightResizeDetector } = useResizeDetector({
+    handleHeight: true,
+    handleWidth: false,
+    onResize() {
+      if (pagingHeightResizeDetector.current) {
+        setPagingHeight(pagingHeightResizeDetector.current.getBoundingClientRect().height);
+      } else {
+        setPagingHeight(undefined);
+      }
+    },
+  });
 
-    /********************************************************************************************************************
-     * State
-     * ******************************************************************************************************************/
+  /********************************************************************************************************************
+   * Function
+   * ******************************************************************************************************************/
 
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
-    const [columns, setColumns] = useAutoUpdateState<PTableProps['columns']>(initColumns);
-    const [finalColumns, setFinalColumns] = useState<PTableColumn[]>();
-    const [items, setItems] = useAutoUpdateState<PTableProps['items']>(initItems);
-    const [sortableItems, setSortableItems] = useState<(PTableItem & { id: number | string })[]>();
-    const [paging, setPaging] = useAutoUpdateState<PTableProps['paging']>(initPaging);
+  const getFinalColumnId = useCallback(
+    (column: PTableColumn<T>) => {
+      if (finalColumns && finalColumnsId) {
+        const idx = finalColumns.indexOf(column);
+        return finalColumnsId[idx];
+      } else {
+        return '';
+      }
+    },
+    [finalColumns, finalColumnsId]
+  );
 
-    /********************************************************************************************************************
-     * containerHeight
-     * ******************************************************************************************************************/
-
-    const [containerHeight, setContainerHeight] = useState<number | undefined>();
-
-    const { ref: containerHeightDetector } = useResizeDetector({
-      handleHeight: true,
-      handleWidth: false,
-      onResize() {
-        if (containerHeightDetector.current) {
-          setContainerHeight(containerHeightDetector.current.getBoundingClientRect().height);
-        } else {
-          setContainerHeight(undefined);
-        }
-      },
-    });
-
-    /********************************************************************************************************************
-     * footerHeight
-     * ******************************************************************************************************************/
-
-    const [pagingHeight, setPagingHeight] = useState<number | undefined>();
-
-    const { ref: pagingHeightResizeDetector } = useResizeDetector({
-      handleHeight: true,
-      handleWidth: false,
-      onResize() {
-        if (pagingHeightResizeDetector.current) {
-          setPagingHeight(pagingHeightResizeDetector.current.getBoundingClientRect().height);
-        } else {
-          setPagingHeight(undefined);
-        }
-      },
-    });
-
-    /********************************************************************************************************************
-     * Function
-     * ******************************************************************************************************************/
-
-    const getFinalColumnId = useCallback(
-      (column: PTableColumn) => {
-        if (finalColumns && finalColumnsIdRef.current) {
-          const idx = finalColumns.indexOf(column);
-          return finalColumnsIdRef.current[idx];
-        } else {
-          return '';
-        }
-      },
-      [finalColumns]
-    );
-
-    const updateHeadCheck = useCallback(
-      (column: PTableColumn) => {
-        if (updateHeadCheckTimer.current) {
-          clearTimeout(updateHeadCheckTimer.current);
-          updateHeadCheckTimer.current = undefined;
-        }
-
-        const columnId = getFinalColumnId(column);
-
-        const headColumnData = localHeaderDataRef.current[columnId];
-        if (headColumnData) {
-          updateHeadCheckTimer.current = setTimeout(() => {
-            updateHeadCheckTimer.current = undefined;
-
-            const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
-              const columnData = localBodyDataRef.current[key].columns[columnId];
-              if (columnData) {
-                if (!columnData.checkDisabled) {
-                  return true;
-                }
-              }
-            });
-
-            const allChecked =
-              enabledCheckExists &&
-              !Object.keys(localBodyDataRef.current).find((key) => {
-                const columnData = localBodyDataRef.current[key].columns[columnId];
-                if (columnData) {
-                  if (!columnData.checkDisabled) {
-                    return !columnData.checked;
-                  }
-                }
-              });
-
-            headColumnData.commands?.setCheckDisabled(!enabledCheckExists);
-            headColumnData.commands?.setChecked(allChecked);
-          }, 100);
-        }
-      },
-      [getFinalColumnId]
-    );
-
-    const getChecked = useCallback((itemKey: string, itemValue: any, columnId: string): boolean => {
-      let checked = false;
-      Object.keys(localBodyDataRef.current).find((key) => {
-        const itemData = localBodyDataRef.current[key];
-        if (itemData.item[itemKey] === itemValue) {
-          const columnData = itemData.columns[columnId];
-          checked = !!columnData?.checked;
-          return true;
-        }
-      });
-      return checked;
-    }, []);
-
-    const setChecked = useCallback(
-      (itemKey: string, itemValue: any, columnId: string, checked: boolean) => {
-        Object.keys(localBodyDataRef.current).find((key) => {
-          const itemData = localBodyDataRef.current[key];
-          if (itemData.item[itemKey] === itemValue) {
-            const columnData = itemData.columns[columnId];
-            if (columnData) {
-              columnData.commands?.setChecked(checked);
-              updateHeadCheck(columnData.column);
-            }
-            return true;
-          }
-        });
-      },
-      [updateHeadCheck]
-    );
-
-    const toggleChecked = useCallback(
-      (itemKey: string, itemValue: any, columnId: string) => {
-        Object.keys(localBodyDataRef.current).forEach((key) => {
-          const itemData = localBodyDataRef.current[key];
-          if (itemData.item[itemKey] === itemValue) {
-            const columnData = itemData.columns[columnId];
-            if (columnData) {
-              columnData.commands?.setChecked(!columnData.checked);
-              updateHeadCheck(columnData.column);
-            }
-            return true;
-          }
-        });
-      },
-      [updateHeadCheck]
-    );
-
-    const setCheckedAll = useCallback((columnId: string, checked: boolean) => {
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        const itemData = localBodyDataRef.current[key];
-        const columnData = itemData.columns[columnId];
-        if (columnData) {
-          columnData.commands?.setChecked(checked);
-        }
-      });
-      localHeaderDataRef.current[columnId]?.commands?.setChecked(checked);
-    }, []);
-
-    const getCheckedItems = useCallback((columnId: string): PTableItem[] => {
-      const checkedItems: PTableItem[] = [];
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        const itemData = localBodyDataRef.current[key];
-        const columnData = itemData.columns[columnId];
-        if (columnData) {
-          if (columnData.checked) {
-            checkedItems.push(itemData.item);
-          }
-        }
-      });
-      return checkedItems;
-    }, []);
-
-    const stopHeadCheckTimer = useCallback(() => {
+  const updateHeadCheck = useCallback(
+    (column: PTableColumn<T>) => {
       if (updateHeadCheckTimer.current) {
         clearTimeout(updateHeadCheckTimer.current);
         updateHeadCheckTimer.current = undefined;
       }
-    }, []);
 
-    const clearFireOnCheckChangeTimer = useCallback(() => {
-      Object.keys(fireOnCheckChangeTimer.current).forEach((key) => {
-        if (fireOnCheckChangeTimer.current[key]) {
-          clearTimeout(fireOnCheckChangeTimer.current[key]);
+      const columnId = getFinalColumnId(column);
+
+      const headColumnData = localHeaderDataRef.current[columnId];
+      if (headColumnData) {
+        updateHeadCheckTimer.current = setTimeout(() => {
+          updateHeadCheckTimer.current = undefined;
+
+          const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
+            const columnData = localBodyDataRef.current[key].columns[columnId];
+            if (columnData) {
+              if (!columnData.checkDisabled) {
+                return true;
+              }
+            }
+          });
+
+          const allChecked =
+            enabledCheckExists &&
+            !Object.keys(localBodyDataRef.current).find((key) => {
+              const columnData = localBodyDataRef.current[key].columns[columnId];
+              if (columnData) {
+                if (!columnData.checkDisabled) {
+                  return !columnData.checked;
+                }
+              }
+            });
+
+          headColumnData.commands?.setCheckDisabled(!enabledCheckExists);
+          headColumnData.commands?.setChecked(allChecked);
+        }, 100);
+      }
+    },
+    [getFinalColumnId]
+  );
+
+  const getChecked = useCallback((itemKey: string, itemValue: any, columnId: string): boolean => {
+    let checked = false;
+    Object.keys(localBodyDataRef.current).find((key) => {
+      const itemData = localBodyDataRef.current[key];
+      if (itemData.item[itemKey] === itemValue) {
+        const columnData = itemData.columns[columnId];
+        checked = !!columnData?.checked;
+        return true;
+      }
+    });
+    return checked;
+  }, []);
+
+  const setChecked = useCallback(
+    (itemKey: string, itemValue: any, columnId: string, checked: boolean) => {
+      Object.keys(localBodyDataRef.current).find((key) => {
+        const itemData = localBodyDataRef.current[key];
+        if (itemData.item[itemKey] === itemValue) {
+          const columnData = itemData.columns[columnId];
+          if (columnData) {
+            columnData.commands?.setChecked(checked);
+            updateHeadCheck(columnData.column);
+          }
+          return true;
         }
       });
-      fireOnCheckChangeTimer.current = {};
-    }, []);
+    },
+    [updateHeadCheck]
+  );
 
-    const fireOnCheckChange = useCallback(
-      (columnId: string) => {
-        if (fireOnCheckChangeTimer.current[columnId]) {
-          clearTimeout(fireOnCheckChangeTimer.current[columnId]);
-          fireOnCheckChangeTimer.current[columnId] = undefined;
-        }
-        if (onCheckChange) {
-          fireOnCheckChangeTimer.current[columnId] = setTimeout(() => {
-            fireOnCheckChangeTimer.current[columnId] = undefined;
-
-            onCheckChange && onCheckChange(columnId, getCheckedItems(columnId));
-          }, 100);
-        }
-      },
-      [getCheckedItems, onCheckChange]
-    );
-
-    const simpleBarScrollToTop = useCallback(() => {
-      simpleBarRef.current?.getScrollElement()?.scrollTo({ top: 0 });
-    }, []);
-
-    /********************************************************************************************************************
-     * Effect
-     * ******************************************************************************************************************/
-
-    useEffect(() => {
-      return () => {
-        stopHeadCheckTimer();
-        clearFireOnCheckChangeTimer();
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-      stopHeadCheckTimer();
-      clearFireOnCheckChangeTimer();
-
-      Object.keys(localHeaderDataRef.current).forEach((key) => {
-        if (localHeaderDataRef.current[key].column.type === 'check') {
-          localHeaderDataRef.current[key].commands?.setChecked(false);
-        }
-      });
-
+  const toggleChecked = useCallback(
+    (itemKey: string, itemValue: any, columnId: string) => {
       Object.keys(localBodyDataRef.current).forEach((key) => {
-        Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
-          localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
-        });
+        const itemData = localBodyDataRef.current[key];
+        if (itemData.item[itemKey] === itemValue) {
+          const columnData = itemData.columns[columnId];
+          if (columnData) {
+            columnData.commands?.setChecked(!columnData.checked);
+            updateHeadCheck(columnData.column);
+          }
+          return true;
+        }
       });
+    },
+    [updateHeadCheck]
+  );
 
-      setSortableItems(makeSortableItems(items));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [items]);
+  const setCheckedAll = useCallback((columnId: string, checked: boolean) => {
+    Object.keys(localBodyDataRef.current).forEach((key) => {
+      const itemData = localBodyDataRef.current[key];
+      const columnData = itemData.columns[columnId];
+      if (columnData) {
+        columnData.commands?.setChecked(checked);
+      }
+    });
+    localHeaderDataRef.current[columnId]?.commands?.setChecked(checked);
+  }, []);
 
-    useEffect(() => {
+  const getCheckedItems = useCallback((columnId: string): T[] => {
+    const checkedItems: T[] = [];
+    Object.keys(localBodyDataRef.current).forEach((key) => {
+      const itemData = localBodyDataRef.current[key];
+      const columnData = itemData.columns[columnId];
+      if (columnData) {
+        if (columnData.checked) {
+          checkedItems.push(itemData.item);
+        }
+      }
+    });
+    return checkedItems;
+  }, []);
+
+  const stopHeadCheckTimer = useCallback(() => {
+    if (updateHeadCheckTimer.current) {
+      clearTimeout(updateHeadCheckTimer.current);
+      updateHeadCheckTimer.current = undefined;
+    }
+  }, []);
+
+  const clearFireOnCheckChangeTimer = useCallback(() => {
+    Object.keys(fireOnCheckChangeTimer.current).forEach((key) => {
+      if (fireOnCheckChangeTimer.current[key]) {
+        clearTimeout(fireOnCheckChangeTimer.current[key]);
+      }
+    });
+    fireOnCheckChangeTimer.current = {};
+  }, []);
+
+  const fireOnCheckChange = useCallback(
+    (columnId: string) => {
+      if (fireOnCheckChangeTimer.current[columnId]) {
+        clearTimeout(fireOnCheckChangeTimer.current[columnId]);
+        fireOnCheckChangeTimer.current[columnId] = undefined;
+      }
+      if (onCheckChange) {
+        fireOnCheckChangeTimer.current[columnId] = setTimeout(() => {
+          fireOnCheckChangeTimer.current[columnId] = undefined;
+
+          onCheckChange && onCheckChange(columnId, getCheckedItems(columnId));
+        }, 100);
+      }
+    },
+    [getCheckedItems, onCheckChange]
+  );
+
+  const simpleBarScrollToTop = useCallback(() => {
+    simpleBarRef.current?.getScrollElement()?.scrollTo({ top: 0 });
+  }, []);
+
+  /********************************************************************************************************************
+   * Effect
+   * ******************************************************************************************************************/
+
+  useEffect(() => {
+    return () => {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
+    };
+  }, [
+    // 불변
+    clearFireOnCheckChangeTimer,
+    stopHeadCheckTimer,
+  ]);
 
+  /** items 변경 시 처리 */
+  useEffect(() => {
+    stopHeadCheckTimer();
+    clearFireOnCheckChangeTimer();
+
+    Object.keys(localHeaderDataRef.current).forEach((key) => {
+      if (localHeaderDataRef.current[key].column.type === 'check') {
+        localHeaderDataRef.current[key].commands?.setChecked(false);
+      }
+    });
+
+    Object.keys(localBodyDataRef.current).forEach((key) => {
+      Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
+        localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
+      });
+    });
+  }, [
+    items,
+    // 불변
+    clearFireOnCheckChangeTimer,
+    stopHeadCheckTimer,
+  ]);
+
+  /** columns 변경 시 처리 */
+  {
+    if (useChanged(columns, true)) {
       const newFinalColumns = columns?.filter(columnFilter);
-      setFinalColumns(newFinalColumns);
-      finalColumnsIdRef.current = newFinalColumns?.map((col) => {
+      const newFinalColumnsId = newFinalColumns?.map((col) => {
         if (col.id) {
           return col.id;
         } else {
-          _columnId += 1;
-          return `$c$${_columnId}$`;
+          return getNewColumnId();
         }
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [columns]);
+      setFinalColumns(newFinalColumns);
+      setFinalColumnsId(newFinalColumnsId);
+    }
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+      stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
+    }, [
+      columns,
+      // 불변
+      clearFireOnCheckChangeTimer,
+      stopHeadCheckTimer,
+    ]);
+  }
 
-      if (sortableItems) {
-        localBodyDataRef.current = sortableItems.reduce<TLocalBodyData>((res, item) => {
-          res[item.id] = {
-            item,
-            columns: {},
-          };
+  useLayoutEffect(() => {
+    clearFireOnCheckChangeTimer();
 
-          if (finalColumns) {
-            finalColumns.forEach((c) => {
-              const columnId = getFinalColumnId(c);
-
-              if (localBodyDataRef.current[item.id]?.columns[columnId]) {
-                res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
-              } else {
-                res[item.id].columns[columnId] = {
-                  column: c,
-                  checked: false,
-                  checkDisabled: false,
-                };
-              }
-            });
-          }
-          return res;
-        }, {});
-      } else {
-        localBodyDataRef.current = {};
-      }
-    }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId]);
-
-    useLayoutEffect(() => {
-      if (finalColumns) {
-        localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData>((res, c) => {
-          res[getFinalColumnId(c)] = { column: c, checked: false };
-          return res;
-        }, {});
-      } else {
-        localHeaderDataRef.current = {};
-      }
-    }, [finalColumns, getFinalColumnId]);
-
-    /********************************************************************************************************************
-     * Commands
-     * ******************************************************************************************************************/
-
-    useForwardLayoutRef(
-      ref,
-      useMemo<PTableCommands>(() => {
-        let lastColumns = columns;
-        let lastItems = items;
-        let lastPaging = paging;
-
-        return {
-          getColumns: () => lastColumns,
-          setColumns: (columns) => {
-            lastColumns = columns;
-            setColumns(lastColumns);
-          },
-          getItems: () => lastItems,
-          setItems: (items) => {
-            lastItems = items;
-            setItems(items);
-          },
-          getPaging: () => lastPaging,
-          setItemsPaging: (items, paging) => {
-            lastItems = items;
-            lastPaging = paging;
-            setItems(lastItems);
-            setPaging(lastPaging);
-          },
-          resetSort() {
-            setSortableItems(makeSortableItems(lastItems));
-          },
-          getCheckedItems,
-          getChecked,
-          setChecked,
-          toggleChecked,
-          setCheckedAll,
-          scrollToTop: simpleBarScrollToTop,
+    if (sortableItems) {
+      localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
+        res[item.id] = {
+          item,
+          columns: {},
         };
-      }, [
-        columns,
-        getChecked,
-        getCheckedItems,
-        items,
-        paging,
-        setChecked,
-        setCheckedAll,
-        setColumns,
-        setItems,
-        setPaging,
-        simpleBarScrollToTop,
-        toggleChecked,
-      ])
-    );
 
-    /********************************************************************************************************************
-     * Event Handler
-     * ******************************************************************************************************************/
+        if (finalColumns) {
+          finalColumns.forEach((c) => {
+            const columnId = getFinalColumnId(c);
 
-    const handleDragEnd = useCallback(
-      (event: DragEndEvent) => {
-        const { active, over } = event;
-
-        if (active && over) {
-          setSortableItems((items) => {
-            if (items) {
-              let oldIndex: number | null = null;
-              let newIndex: number | null = null;
-
-              items.find((item, idx) => {
-                if (item.id === active.id) {
-                  oldIndex = idx;
-                } else if (item.id === over.id) {
-                  newIndex = idx;
-                }
-                return oldIndex != null && newIndex != null;
-              });
-
-              if (oldIndex != null && newIndex != null) {
-                const finalItems = arrayMove(items, oldIndex, newIndex);
-                onSortChange && onSortChange(finalItems);
-                return finalItems;
-              } else {
-                return items;
-              }
+            if (localBodyDataRef.current[item.id]?.columns[columnId]) {
+              res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
             } else {
-              return items;
+              res[item.id].columns[columnId] = {
+                column: c,
+                checked: false,
+                checkDisabled: false,
+              };
             }
           });
         }
-      },
-      [onSortChange]
-    );
+        return res;
+      }, {});
+    } else {
+      localBodyDataRef.current = {};
+    }
+  }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId]);
 
-    const handleHeadCheckChange = useCallback(
-      (column: PTableColumn, checked: boolean) => {
-        Object.keys(localBodyDataRef.current).forEach((key) => {
-          const data = localBodyDataRef.current[key].columns[getFinalColumnId(column)];
-          if (data) {
-            if (!data.checkDisabled) {
-              data.commands?.setChecked(checked);
+  useLayoutEffect(() => {
+    if (finalColumns) {
+      localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData<T>>((res, c) => {
+        res[getFinalColumnId(c)] = { column: c, checked: false };
+        return res;
+      }, {});
+    } else {
+      localHeaderDataRef.current = {};
+    }
+  }, [finalColumns, getFinalColumnId]);
+
+  /********************************************************************************************************************
+   * Commands
+   * ******************************************************************************************************************/
+
+  useForwardRef(
+    ref,
+    useMemo((): PTableCommands<T> => {
+      return {
+        getColumns: () => columnsRef.current,
+        setColumns: (columns) => {
+          columnsRef.current = columns;
+          setColumns(columns);
+        },
+        getItems: () => itemsRef.current,
+        setItems: (items) => {
+          itemsRef.current = items;
+          setItems(items);
+        },
+        getPaging: () => pagingRef.current,
+        setItemsPaging: (items, paging) => {
+          itemsRef.current = items;
+          pagingRef.current = paging;
+          setItems(items);
+          setPaging(paging);
+        },
+        resetSort() {
+          setSortableItems(makeSortableItems(itemsRef.current));
+        },
+        getCheckedItems,
+        getChecked,
+        setChecked,
+        toggleChecked,
+        setCheckedAll,
+        scrollToTop: simpleBarScrollToTop,
+      };
+    }, [
+      columnsRef,
+      getChecked,
+      getCheckedItems,
+      itemsRef,
+      pagingRef,
+      setChecked,
+      setCheckedAll,
+      simpleBarScrollToTop,
+      toggleChecked,
+    ])
+  );
+
+  /********************************************************************************************************************
+   * Event Handler
+   * ******************************************************************************************************************/
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+
+      if (active && over) {
+        setSortableItems((items) => {
+          if (items) {
+            let oldIndex: number | null = null;
+            let newIndex: number | null = null;
+
+            items.find((item, idx) => {
+              if (item.id === active.id) {
+                oldIndex = idx;
+              } else if (item.id === over.id) {
+                newIndex = idx;
+              }
+              return oldIndex != null && newIndex != null;
+            });
+
+            if (oldIndex != null && newIndex != null) {
+              const finalItems = arrayMove(items, oldIndex, newIndex);
+              onSortChange && onSortChange(finalItems);
+              return finalItems;
+            } else {
+              return items;
             }
+          } else {
+            return items;
           }
         });
-      },
-      [getFinalColumnId]
-    );
-
-    const handleBodyCheckChange = useCallback(
-      (item: PTableItem, column: PTableColumn) => {
-        updateHeadCheck(column);
-      },
-      [updateHeadCheck]
-    );
-
-    const handlePageChange = useCallback(
-      (page: number) => {
-        simpleBarScrollToTop();
-        onPageChange && onPageChange(page);
-      },
-      [onPageChange, simpleBarScrollToTop]
-    );
-
-    /********************************************************************************************************************
-     * TableContext Function
-     * ******************************************************************************************************************/
-
-    const TableContextSetMenuOpen = useCallback(
-      (newMenuOpen: boolean, newOpenMenuId: string | undefined) => {
-        if (newMenuOpen) {
-          setMenuOpen(newMenuOpen);
-          setOpenMenuId(newOpenMenuId);
-        } else {
-          if (openMenuId === newOpenMenuId) {
-            setMenuOpen(false);
-            setOpenMenuId(undefined);
-          }
-        }
-      },
-      [openMenuId]
-    );
-
-    const TableContextSetItemColumnChecked = useCallback(
-      (item: PTableItem, column: PTableColumn, checked: boolean) => {
-        const columnId = getFinalColumnId(column);
-        const data = localBodyDataRef.current[item.id]?.columns[columnId];
-        if (data) {
-          data.checked = checked;
-          fireOnCheckChange(columnId);
-        }
-      },
-      [fireOnCheckChange, getFinalColumnId]
-    );
-
-    const TableContextSetItemColumnCheckDisabled = useCallback(
-      (item: PTableItem, column: PTableColumn, disabled: boolean) => {
-        const data = localBodyDataRef.current[item.id]?.columns[getFinalColumnId(column)];
-        if (data) {
-          data.checkDisabled = disabled;
-          updateHeadCheck(column);
-        }
-      },
-      [getFinalColumnId, updateHeadCheck]
-    );
-
-    const TableContextSetItemColumnCommands = useCallback(
-      (item: PTableItem, column: PTableColumn, commands: PTableBodyCellCommands) => {
-        const data = localBodyDataRef.current[item.id]?.columns[getFinalColumnId(column)];
-        if (data) {
-          data.commands = commands;
-        }
-      },
-      [getFinalColumnId]
-    );
-
-    const TableContextSetHeadColumnChecked = useCallback(
-      (column: PTableColumn, checked: boolean) => {
-        const data = localHeaderDataRef.current[getFinalColumnId(column)];
-        if (data) {
-          data.checked = checked;
-        }
-      },
-      [getFinalColumnId]
-    );
-
-    const TableContextSetHeadColumnCommands = useCallback(
-      (column: PTableColumn, commands: PTableHeadCellCommands) => {
-        const data = localHeaderDataRef.current[getFinalColumnId(column)];
-        if (data) {
-          data.commands = commands;
-        }
-      },
-      [getFinalColumnId]
-    );
-
-    /********************************************************************************************************************
-     * Memo
-     * ******************************************************************************************************************/
-
-    const isNoData = !!sortableItems && sortableItems.length <= 0;
-
-    const finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
-
-    const stickyHeader = !isNoData && initStickyHeader;
-
-    const { style, tableSx, pagingStyle } = useMemo(() => {
-      const style: CSSProperties = fullHeight
-        ? {
-            width: '100%',
-            ...initStyle,
-            flex: 1,
-            justifyContent: 'flex-end',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-          }
-        : { width: '100%', ...initStyle };
-
-      const sx = { padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding };
-      const tableSx = {
-        '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-        '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
-      };
-
-      // pageStyle
-      const pagingStyle: CSSProperties = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
-      if (fullHeight) {
-        pagingStyle.position = 'sticky';
       }
+    },
+    [onSortChange]
+  );
 
-      return { style, tableSx, pagingStyle };
-    }, [cellPadding, fullHeight, initStyle]);
-
-    const { contentContainerStyle, tableStyle } = useMemo(() => {
-      const contentContainerStyle: CSSProperties = fullHeight
-        ? {
-            height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
-            flex: 1,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            marginBottom: finalPagingHeight || 0,
+  const handleHeadCheckChange = useCallback(
+    (column: PTableColumn<T>, checked: boolean) => {
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        const data = localBodyDataRef.current[key].columns[getFinalColumnId(column)];
+        if (data) {
+          if (!data.checkDisabled) {
+            data.commands?.setChecked(checked);
           }
-        : { height, minHeight, maxHeight, marginBottom: -1 };
+        }
+      });
+    },
+    [getFinalColumnId]
+  );
 
-      const tableStyle =
-        fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+  const handleBodyCheckChange = useCallback(
+    (item: T, column: PTableColumn<T>) => {
+      updateHeadCheck(column);
+    },
+    [updateHeadCheck]
+  );
 
-      return { contentContainerStyle, tableStyle };
-    }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      simpleBarScrollToTop();
+      onPageChange && onPageChange(page);
+    },
+    [onPageChange, simpleBarScrollToTop]
+  );
 
-    const tableTopHead = useMemo(
-      () =>
-        finalColumns && (
-          <PTableTopHead
-            caption={caption}
-            rows={topHeadRows}
-            columns={finalColumns}
-            items={items}
-            defaultAlign={defaultAlign}
-            onCheckChange={handleHeadCheckChange}
-          />
-        ),
-      [caption, defaultAlign, finalColumns, handleHeadCheckChange, items, topHeadRows]
-    );
+  /********************************************************************************************************************
+   * TableContext Function
+   * ******************************************************************************************************************/
 
-    const tableBody = useMemo(
-      () =>
-        finalColumns && (
-          <TableBody>
-            {sortableItems ? (
-              sortableItems.length > 0 ? (
-                <PTableSortableBody
-                  items={sortableItems}
-                  columns={finalColumns}
-                  showOddColor={showOddColor}
-                  showEvenColor={showEvenColor}
-                  defaultAlign={defaultAlign}
-                  defaultEllipsis={defaultEllipsis}
-                  sortable={sortable}
-                  onClick={onClick}
-                  onCheckChange={handleBodyCheckChange}
-                  onGetBodyRowClassName={onGetBodyRowClassName}
-                  onGetBodyRowStyle={onGetBodyRowStyle}
-                  onGetBodyRowSx={onGetBodyRowSx}
-                  onGetBodyColumnClassName={onGetBodyColumnClassName}
-                  onGetBodyColumnSx={onGetBodyColumnSx}
-                  onGetBodyColumnStyle={onGetBodyColumnStyle}
-                />
-              ) : (
-                <StyledBodyRow>
-                  <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
-                    {noData ? (
-                      noData
-                    ) : (
-                      <StyledNoDataDiv>
-                        <div>
-                          <Icon>error</Icon>
-                        </div>
-                        <div>검색된 정보가 없습니다.</div>
-                      </StyledNoDataDiv>
-                    )}
-                  </TableCell>
-                </StyledBodyRow>
-              )
-            ) : undefined}
-          </TableBody>
-        ),
-      [
-        defaultAlign,
-        defaultEllipsis,
-        finalColumns,
-        handleBodyCheckChange,
-        noData,
-        onClick,
-        onGetBodyColumnClassName,
-        onGetBodyColumnStyle,
-        onGetBodyColumnSx,
-        onGetBodyRowClassName,
-        onGetBodyRowStyle,
-        onGetBodyRowSx,
-        showEvenColor,
-        showOddColor,
-        sortable,
-        sortableItems,
-      ]
-    );
+  const TableContextSetMenuOpen = useCallback(
+    (newMenuOpen: boolean, newOpenMenuId: string | undefined) => {
+      if (newMenuOpen) {
+        setMenuOpen(newMenuOpen);
+        setOpenMenuId(newOpenMenuId);
+      } else {
+        if (openMenuId === newOpenMenuId) {
+          setMenuOpen(false);
+          setOpenMenuId(undefined);
+        }
+      }
+    },
+    [openMenuId]
+  );
 
-    const tableFooter = useMemo(
-      () =>
-        finalColumns &&
-        !isNoData &&
-        footer && (
-          <TableFooter>
-            <TableRow>
-              {finalColumns.map((column, idx) => (
-                <PTableFooterCell key={idx} column={column} items={items} defaultAlign={defaultAlign} />
-              ))}
-            </TableRow>
-          </TableFooter>
-        ),
-      [defaultAlign, finalColumns, footer, isNoData, items]
-    );
+  const TableContextSetItemColumnChecked = useCallback(
+    (item: T, column: PTableColumn<T>, checked: boolean) => {
+      const columnId = getFinalColumnId(column);
+      if (localBodyDataRef.current) {
+        const bodyData = localBodyDataRef.current[item.id];
+        if (bodyData) {
+          const columns = bodyData.columns;
+          const data = columns[columnId];
+          if (data) {
+            data.checked = checked;
+            fireOnCheckChange(columnId);
+          }
+        }
+      }
+    },
+    [fireOnCheckChange, getFinalColumnId]
+  );
 
-    /********************************************************************************************************************
-     * Render
-     * ******************************************************************************************************************/
+  const TableContextSetItemColumnCheckDisabled = useCallback(
+    (item: T, column: PTableColumn<T>, disabled: boolean) => {
+      const columnId = getFinalColumnId(column);
+      if (columnId && localBodyDataRef.current[item.id]?.columns[columnId]) {
+        localBodyDataRef.current[item.id].columns[columnId].checkDisabled = disabled;
+        updateHeadCheck(column);
+      } else {
+        let runCount = 0;
+        const run = () => {
+          runCount += 1;
+          if (runCount > 10) return;
 
-    return finalColumns ? (
-      <PTableContextProvider
-        value={{
-          menuOpen,
-          openMenuId,
-          progressiveVisible,
-          setMenuOpen: TableContextSetMenuOpen,
-          setItemColumnChecked: TableContextSetItemColumnChecked,
-          setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
-          setItemColumnCommands: TableContextSetItemColumnCommands,
-          setHeadColumnChecked: TableContextSetHeadColumnChecked,
-          setHeadColumnCommands: TableContextSetHeadColumnCommands,
-        }}
-      >
-        <Paper
-          ref={fullHeight ? containerHeightDetector : undefined}
-          className={classNames(
-            'PTable',
-            className,
-            !!stickyHeader && 'sticky-header',
-            !!fullHeight && 'full-height',
-            !!showOddColor && 'odd-color',
-            !!showEvenColor && 'even-color',
-            !!sortable && 'sortable'
-          )}
-          variant='outlined'
-          style={style}
-          sx={sx}
-        >
-          {fullHeight ? (
-            <SimpleBar ref={simpleBarRef} style={contentContainerStyle}>
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
-                  {tableTopHead}
-                  {tableBody}
-                  {tableFooter}
-                </MuiTable>
-              </DndContext>
-            </SimpleBar>
-          ) : (
-            <Box style={contentContainerStyle}>
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
-                  {tableTopHead}
-                  {tableBody}
-                  {tableFooter}
-                </MuiTable>
-              </DndContext>
-            </Box>
-          )}
-          {finalColumns && paging && paging.total > 0 && (
-            <Stack
-              ref={fullHeight ? pagingHeightResizeDetector : undefined}
-              alignItems={pagingAlign}
-              style={pagingStyle}
-            >
-              <PTablePagination
-                className={pagination?.className}
-                style={pagination?.style}
-                sx={pagination?.sx}
-                paging={paging}
-                align={pagingAlign}
-                onChange={handlePageChange}
+          const columnId = getFinalColumnId(column);
+          if (!localBodyDataRef.current[item.id]?.columns[columnId]) {
+            setTimeout(run);
+            return;
+          }
+          localBodyDataRef.current[item.id].columns[columnId].checkDisabled = disabled;
+          updateHeadCheck(column);
+        };
+        run();
+      }
+    },
+    [getFinalColumnId, updateHeadCheck]
+  );
+
+  const TableContextSetItemColumnCommands = useCallback(
+    (item: T, column: PTableColumn<T>, commands: PTableBodyCellCommands) => {
+      const columnId = getFinalColumnId(column);
+      if (columnId && localBodyDataRef.current[item.id]?.columns[columnId]) {
+        localBodyDataRef.current[item.id].columns[columnId].commands = commands;
+      } else {
+        let runCount = 0;
+        const run = () => {
+          runCount += 1;
+          if (runCount > 10) return;
+
+          const columnId = getFinalColumnId(column);
+          if (!localBodyDataRef.current[item.id]?.columns[columnId]) {
+            setTimeout(run);
+            return;
+          }
+          localBodyDataRef.current[item.id].columns[columnId].commands = commands;
+        };
+        run();
+      }
+    },
+    [getFinalColumnId]
+  );
+
+  const TableContextSetHeadColumnChecked = useCallback(
+    (column: PTableColumn<T>, checked: boolean) => {
+      const columnId = getFinalColumnId(column);
+      if (columnId && localHeaderDataRef.current[columnId]) {
+        localHeaderDataRef.current[columnId].checked = checked;
+      } else {
+        let runCount = 0;
+        const run = () => {
+          runCount += 1;
+          if (runCount > 10) return;
+
+          const columnId = getFinalColumnId(column);
+          if (!localHeaderDataRef.current[columnId]) {
+            setTimeout(run);
+            return;
+          }
+          localHeaderDataRef.current[columnId].checked = checked;
+        };
+        run();
+      }
+    },
+    [getFinalColumnId]
+  );
+
+  const TableContextSetHeadColumnCommands = useCallback(
+    (column: PTableColumn<T>, commands: PTableHeadCellCommands) => {
+      const columnId = getFinalColumnId(column);
+      if (columnId && localHeaderDataRef.current[columnId]) {
+        localHeaderDataRef.current[columnId].commands = commands;
+      } else {
+        let runCount = 0;
+        const run = () => {
+          runCount += 1;
+          if (runCount > 10) return;
+
+          const columnId = getFinalColumnId(column);
+          if (!localHeaderDataRef.current[columnId]) {
+            setTimeout(run);
+            return;
+          }
+          localHeaderDataRef.current[columnId].commands = commands;
+        };
+        run();
+      }
+    },
+    [getFinalColumnId]
+  );
+
+  /********************************************************************************************************************
+   * Memo
+   * ******************************************************************************************************************/
+
+  const isNoData = !!sortableItems && sortableItems.length <= 0;
+
+  const finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
+
+  const stickyHeader = !isNoData && initStickyHeader;
+
+  const { style, tableSx, pagingStyle } = useMemo(() => {
+    const style: CSSProperties = fullHeight
+      ? {
+          width: '100%',
+          ...initStyle,
+          flex: 1,
+          justifyContent: 'flex-end',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+        }
+      : { width: '100%', ...initStyle };
+
+    const sx = { padding: typeof cellPadding === 'number' ? `${cellPadding}px` : cellPadding };
+    const tableSx = {
+      '> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+      '> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+      '> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ': sx,
+    };
+
+    // pageStyle
+    const pagingStyle: CSSProperties = { padding: '13px 0', borderTop: '1px solid rgba(224, 224, 224, 1)' };
+    if (fullHeight) {
+      pagingStyle.position = 'sticky';
+    }
+
+    return { style, tableSx, pagingStyle };
+  }, [cellPadding, fullHeight, initStyle]);
+
+  const { contentContainerStyle, tableStyle } = useMemo(() => {
+    const contentContainerStyle: CSSProperties = fullHeight
+      ? {
+          height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
+          flex: 1,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          marginBottom: finalPagingHeight || 0,
+        }
+      : { height, minHeight, maxHeight, marginBottom: -1 };
+
+    const tableStyle =
+      fullHeight && isNoData ? { flex: 1, height: (containerHeight || 0) - finalPagingHeight - 2 } : undefined;
+
+    return { contentContainerStyle, tableStyle };
+  }, [containerHeight, finalPagingHeight, fullHeight, height, isNoData, maxHeight, minHeight]);
+
+  const tableTopHead = useMemo(
+    () =>
+      finalColumns && (
+        <PTableTopHead
+          caption={caption}
+          rows={topHeadRows}
+          columns={finalColumns}
+          items={items}
+          defaultAlign={defaultAlign}
+          onCheckChange={handleHeadCheckChange}
+        />
+      ),
+    [caption, defaultAlign, finalColumns, handleHeadCheckChange, items, topHeadRows]
+  );
+
+  const tableBody = useMemo(
+    () =>
+      finalColumns && (
+        <TableBody>
+          {sortableItems ? (
+            sortableItems.length > 0 ? (
+              <PTableSortableBody
+                items={sortableItems}
+                columns={finalColumns}
+                showOddColor={showOddColor}
+                showEvenColor={showEvenColor}
+                defaultAlign={defaultAlign}
+                defaultEllipsis={defaultEllipsis}
+                sortable={sortable}
+                onClick={onClick}
+                onCheckChange={handleBodyCheckChange}
+                onGetBodyRowClassName={onGetBodyRowClassName}
+                onGetBodyRowStyle={onGetBodyRowStyle}
+                onGetBodyRowSx={onGetBodyRowSx}
+                onGetBodyColumnClassName={onGetBodyColumnClassName}
+                onGetBodyColumnSx={onGetBodyColumnSx}
+                onGetBodyColumnStyle={onGetBodyColumnStyle}
               />
-            </Stack>
-          )}
-        </Paper>
-      </PTableContextProvider>
-    ) : null;
-  }
-);
+            ) : (
+              <StyledBodyRow>
+                <TableCell colSpan={finalColumns.length} style={{ flex: 1 }}>
+                  {noData ? (
+                    noData
+                  ) : (
+                    <StyledNoDataDiv>
+                      <div>
+                        <Icon>error</Icon>
+                      </div>
+                      <div>검색된 정보가 없습니다.</div>
+                    </StyledNoDataDiv>
+                  )}
+                </TableCell>
+              </StyledBodyRow>
+            )
+          ) : undefined}
+        </TableBody>
+      ),
+    [
+      defaultAlign,
+      defaultEllipsis,
+      finalColumns,
+      handleBodyCheckChange,
+      noData,
+      onClick,
+      onGetBodyColumnClassName,
+      onGetBodyColumnStyle,
+      onGetBodyColumnSx,
+      onGetBodyRowClassName,
+      onGetBodyRowStyle,
+      onGetBodyRowSx,
+      showEvenColor,
+      showOddColor,
+      sortable,
+      sortableItems,
+    ]
+  );
+
+  const tableFooter = useMemo(
+    () =>
+      finalColumns &&
+      !isNoData &&
+      footer && (
+        <TableFooter>
+          <TableRow>
+            {finalColumns.map((column, idx) => (
+              <PTableFooterCell key={idx} column={column} items={items} defaultAlign={defaultAlign} />
+            ))}
+          </TableRow>
+        </TableFooter>
+      ),
+    [defaultAlign, finalColumns, footer, isNoData, items]
+  );
+
+  /********************************************************************************************************************
+   * Render
+   * ******************************************************************************************************************/
+
+  return finalColumns ? (
+    <PTableContextProvider
+      value={{
+        menuOpen,
+        openMenuId,
+        progressiveVisible,
+        setMenuOpen: TableContextSetMenuOpen,
+        setItemColumnChecked: TableContextSetItemColumnChecked,
+        setItemColumnCheckDisabled: TableContextSetItemColumnCheckDisabled,
+        setItemColumnCommands: TableContextSetItemColumnCommands,
+        setHeadColumnChecked: TableContextSetHeadColumnChecked,
+        setHeadColumnCommands: TableContextSetHeadColumnCommands,
+      }}
+    >
+      <Paper
+        ref={fullHeight ? containerHeightDetector : undefined}
+        className={classNames(
+          'PTable',
+          className,
+          !!stickyHeader && 'sticky-header',
+          !!fullHeight && 'full-height',
+          !!showOddColor && 'odd-color',
+          !!showEvenColor && 'even-color',
+          !!sortable && 'sortable'
+        )}
+        variant='outlined'
+        style={style}
+        sx={sx}
+      >
+        {fullHeight ? (
+          <SimpleBar ref={simpleBarRef} style={contentContainerStyle}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
+                {tableTopHead}
+                {tableBody}
+                {tableFooter}
+              </MuiTable>
+            </DndContext>
+          </SimpleBar>
+        ) : (
+          <Box style={contentContainerStyle}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <MuiTable stickyHeader={stickyHeader} sx={tableSx} style={tableStyle}>
+                {tableTopHead}
+                {tableBody}
+                {tableFooter}
+              </MuiTable>
+            </DndContext>
+          </Box>
+        )}
+        {finalColumns && paging && paging.total > 0 && (
+          <Stack ref={fullHeight ? pagingHeightResizeDetector : undefined} alignItems={pagingAlign} style={pagingStyle}>
+            <PTablePagination
+              className={pagination?.className}
+              style={pagination?.style}
+              sx={pagination?.sx}
+              paging={paging}
+              align={pagingAlign}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        )}
+      </Paper>
+    </PTableContextProvider>
+  ) : null;
+}
 
 export default PTable;

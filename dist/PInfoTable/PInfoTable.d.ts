@@ -1,7 +1,4 @@
 import React from 'react';
 import { PInfoTableProps as Props, PInfoTableInfo } from './PInfoTable.types';
-interface WithType<T = PInfoTableInfo> extends React.FC<Props<T>> {
-    <T = PInfoTableInfo>(props: Props<T>): ReturnType<React.FC<Props<T>>>;
-}
-declare const PInfoTable: WithType;
+declare function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({ cols, spacing, columnSpacing, rowSpacing, className, style, sx, labelClassName, labelColor, labelStyle, labelSx, dividerColor, valueClassName, valueStyle, valueSx, ellipsis, valueUnderline, info, items, onCopyToClipboard, }: Props<T>): React.JSX.Element;
 export default PInfoTable;
