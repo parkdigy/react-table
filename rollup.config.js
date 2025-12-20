@@ -3,7 +3,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import sass from 'rollup-plugin-sass';
+import eslint from '@rollup/plugin-eslint';
 import del from 'rollup-plugin-delete';
+import babel from '@rollup/plugin-babel';
 import fs from 'fs';
 import path from 'path';
 import packageJson from './package.json';
@@ -21,9 +23,47 @@ const getConfig = () => ({
   output: [getOutput(packageJson.main, 'cjs'), getOutput(packageJson.module, 'esm')],
   external: Object.keys(packageJson.dependencies || {}),
   context: 'window',
+  onwarn(warning, warn) {
+    // 'Unused external imports' 경고 중에서 react의 useMemo, useCallback 관련은 무시
+    if (
+      warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
+      warning.exporter === 'react' &&
+      (warning.names.includes('useMemo') || warning.names.includes('useCallback'))
+    ) {
+      return;
+    }
+    warn(warning);
+  },
   plugins: [
     del({ targets: 'dist/*' }),
     peerDepsExternal(),
+    eslint({
+      throwOnError: true,
+      throwOnWarning: true,
+      include: ['src/**'],
+      exclude: ['node_modules/**', 'dist/**', 'examples/**', 'test/**'],
+    }),
+    typescript({
+      useTsconfigDeclarationDir: true,
+      tsconfigOverride: {
+        compilerOptions: {
+          emitDeclarationOnly: true,
+        },
+      },
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+      plugins: [
+        [
+          'babel-plugin-react-compiler',
+          {
+            panicThreshold: 'all_errors',
+          },
+        ],
+      ].filter(Boolean),
+    }),
     sass({
       insert: true,
       api: 'modern',
@@ -31,11 +71,10 @@ const getConfig = () => ({
         style: 'compressed',
       },
     }),
-    resolve(),
+    resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
     commonjs({
       include: /node_modules/,
     }),
-    typescript({ useTsconfigDeclarationDir: true }),
     // *.private 디렉토리, *.private.d.ts 파일 제거
     {
       name: 'remove-d-ts-plugin',
