@@ -1,4 +1,4 @@
-'use strict';var compilerRuntime=require('react/compiler-runtime'),React=require('react'),classNames=require('classnames'),material=require('@mui/material'),dayjs=require('dayjs'),compare=require('@pdg/compare'),formatting=require('@pdg/formatting'),reactComponent=require('@pdg/react-component'),reactForm=require('@pdg/react-form'),core=require('@dnd-kit/core'),sortable=require('@dnd-kit/sortable'),SimpleBar=require('simplebar-react'),uuid=require('uuid'),reactHook=require('@pdg/react-hook'),reactIntersectionObserver=require('react-intersection-observer'),reactRouter=require('react-router');function _interopNamespaceDefault(e){var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n.default=e;return Object.freeze(n)}var React__namespace=/*#__PURE__*/_interopNamespaceDefault(React);function insertStyle(css) {
+'use strict';var compilerRuntime=require('react/compiler-runtime'),React=require('react'),classNames=require('classnames'),material=require('@mui/material'),dayjs=require('dayjs'),compare=require('@pdg/compare'),formatting=require('@pdg/formatting'),reactComponent=require('@pdg/react-component'),reactHook=require('@pdg/react-hook'),reactForm=require('@pdg/react-form'),core=require('@dnd-kit/core'),sortable=require('@dnd-kit/sortable'),SimpleBar=require('simplebar-react'),uuid=require('uuid'),reactIntersectionObserver=require('react-intersection-observer'),reactRouter=require('react-router');function _interopNamespaceDefault(e){var n=Object.create(null);if(e){Object.keys(e).forEach(function(k){if(k!=='default'){var d=Object.getOwnPropertyDescriptor(e,k);Object.defineProperty(n,k,d.get?d:{enumerable:true,get:function(){return e[k]}});}})}n.default=e;return Object.freeze(n)}var React__namespace=/*#__PURE__*/_interopNamespaceDefault(React);function insertStyle(css) {
     if (typeof window === 'undefined')
         return;
     const style = document.createElement('style');
@@ -190,7 +190,7 @@ function typographyColorToSxColor(color) {
     return color;
   }
 }function PInfoTable(t0) {
-  var $ = compilerRuntime.c(44);
+  var $ = compilerRuntime.c(32);
   var cols = t0.cols,
     t1 = t0.spacing,
     columnSpacing = t0.columnSpacing,
@@ -215,6 +215,7 @@ function typographyColorToSxColor(color) {
   var rowSpacing = t2 === undefined ? 3 : t2;
   var labelColor = t3 === undefined ? "primary" : t3;
   var dividerColor = t4 === undefined ? "gray" : t4;
+  var onCopyToClipboardRef = reactHook.useAutoUpdateRef(onCopyToClipboard);
   var t5;
   if ($[0] !== cols || $[1] !== info || $[2] !== items) {
     var _t;
@@ -435,102 +436,85 @@ function typographyColorToSxColor(color) {
   }
   var renderItems = t5;
   var t6;
-  if ($[9] !== dividerColor || $[10] !== ellipsis || $[11] !== labelClassName || $[12] !== labelColor || $[13] !== labelStyle || $[14] !== labelSx || $[15] !== onCopyToClipboard || $[16] !== renderItems || $[17] !== valueClassName || $[18] !== valueStyle || $[19] !== valueSx || $[20] !== valueUnderline) {
-    var _t3;
-    if ($[22] !== dividerColor || $[23] !== ellipsis || $[24] !== labelClassName || $[25] !== labelColor || $[26] !== labelStyle || $[27] !== labelSx || $[28] !== onCopyToClipboard || $[29] !== valueClassName || $[30] !== valueStyle || $[31] !== valueSx || $[32] !== valueUnderline) {
-      _t3 = function _t3(t8, idx) {
-        var item_1 = t8.item,
-          data_0 = t8.data,
-          copyToClipboardText_0 = t8.copyToClipboardText,
-          sizeProps_0 = t8.sizeProps;
-        var finalLabelColor = typographyColorToSxColor(item_1.type === "divider" ? item_1.dividerColor || dividerColor : item_1.labelColor || labelColor);
-        var finalLabelSx = combineSx(labelSx, item_1.labelSx, !!finalLabelColor && {
+  if ($[9] !== dividerColor || $[10] !== ellipsis || $[11] !== labelClassName || $[12] !== labelColor || $[13] !== labelStyle || $[14] !== labelSx || $[15] !== onCopyToClipboardRef || $[16] !== renderItems || $[17] !== valueClassName || $[18] !== valueStyle || $[19] !== valueSx || $[20] !== valueUnderline) {
+    t6 = renderItems.map(function (t7, idx) {
+      var item_1 = t7.item,
+        data_0 = t7.data,
+        copyToClipboardText_0 = t7.copyToClipboardText,
+        sizeProps_0 = t7.sizeProps;
+      var finalLabelColor = typographyColorToSxColor(item_1.type === "divider" ? item_1.dividerColor || dividerColor : item_1.labelColor || labelColor);
+      var finalLabelSx = combineSx(labelSx, item_1.labelSx, !!finalLabelColor && {
+        color: finalLabelColor
+      });
+      var finalValueSx = combineSx(valueSx, item_1.valueSx);
+      var valueUnderlineStyle = valueUnderline ? {
+        borderBottom: "1px solid #efefef",
+        paddingBottom: 5
+      } : undefined;
+      return item_1.type === "divider" ? /*#__PURE__*/React.createElement(material.Grid, {
+        key: idx,
+        size: {
+          xs: 12
+        }
+      }, /*#__PURE__*/React.createElement(material.Stack, {
+        direction: "row",
+        spacing: 0.5,
+        alignItems: "center"
+      }, item_1.icon && /*#__PURE__*/React.createElement(reactComponent.PIcon, {
+        sx: {
+          color: item_1.dividerColor || dividerColor
+        },
+        size: "small"
+      }, item_1.icon), item_1.label && /*#__PURE__*/React.createElement(Label, {
+        className: classNames(labelClassName, item_1.labelClassName),
+        style: _objectSpread2(_objectSpread2({}, item_1.labelStyle), labelStyle),
+        sx: finalLabelSx
+      }, item_1.label), item_1.dividerLine && /*#__PURE__*/React.createElement(React.Fragment, null, item_1.icon || item_1.label ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          paddingLeft: 5
+        }
+      }, /*#__PURE__*/React.createElement(Line, null)) : /*#__PURE__*/React.createElement(Line, null)))) : /*#__PURE__*/React.createElement(material.Grid, {
+        key: idx,
+        size: sizeProps_0,
+        className: item_1.className,
+        style: item_1.style,
+        sx: item_1.sx
+      }, /*#__PURE__*/React.createElement(material.Stack, {
+        direction: "row",
+        spacing: 0.5,
+        alignItems: "center"
+      }, item_1.icon && /*#__PURE__*/React.createElement(reactComponent.PIcon, {
+        sx: {
           color: finalLabelColor
-        });
-        var finalValueSx = combineSx(valueSx, item_1.valueSx);
-        var valueUnderlineStyle = valueUnderline ? {
-          borderBottom: "1px solid #efefef",
-          paddingBottom: 5
-        } : undefined;
-        return item_1.type === "divider" ? /*#__PURE__*/React.createElement(material.Grid, {
-          key: idx,
-          size: {
-            xs: 12
-          }
-        }, /*#__PURE__*/React.createElement(material.Stack, {
-          direction: "row",
-          spacing: 0.5,
-          alignItems: "center"
-        }, item_1.icon && /*#__PURE__*/React.createElement(reactComponent.PIcon, {
-          sx: {
-            color: item_1.dividerColor || dividerColor
-          },
-          size: "small"
-        }, item_1.icon), item_1.label && /*#__PURE__*/React.createElement(Label, {
-          className: classNames(labelClassName, item_1.labelClassName),
-          style: _objectSpread2(_objectSpread2({}, item_1.labelStyle), labelStyle),
-          sx: finalLabelSx
-        }, item_1.label), item_1.dividerLine && /*#__PURE__*/React.createElement(React.Fragment, null, item_1.icon || item_1.label ? /*#__PURE__*/React.createElement("div", {
-          style: {
-            flex: 1,
-            paddingLeft: 5
-          }
-        }, /*#__PURE__*/React.createElement(Line, null)) : /*#__PURE__*/React.createElement(Line, null)))) : /*#__PURE__*/React.createElement(material.Grid, {
-          key: idx,
-          size: sizeProps_0,
-          className: item_1.className,
-          style: item_1.style,
-          sx: item_1.sx
-        }, /*#__PURE__*/React.createElement(material.Stack, {
-          direction: "row",
-          spacing: 0.5,
-          alignItems: "center"
-        }, item_1.icon && /*#__PURE__*/React.createElement(reactComponent.PIcon, {
-          sx: {
-            color: finalLabelColor
-          },
-          size: "small"
-        }, "CalendarMonth"), /*#__PURE__*/React.createElement(Label, {
-          className: classNames(labelClassName, item_1.labelClassName),
-          style: _objectSpread2(_objectSpread2({}, item_1.labelStyle), labelStyle),
-          sx: finalLabelSx
-        }, item_1.label)), /*#__PURE__*/React.createElement(ValueWrap, {
-          className: classNames(valueClassName, item_1.valueClassName),
-          style: _objectSpread2(_objectSpread2(_objectSpread2({}, valueStyle), item_1.valueStyle), valueUnderlineStyle),
-          sx: finalValueSx
-        }, item_1.ellipsis || ellipsis ? /*#__PURE__*/React.createElement(ValueEllipsis, null, data_0) : /*#__PURE__*/React.createElement(Value, null, data_0), item_1.clipboard && compare.notEmpty(copyToClipboardText_0) && /*#__PURE__*/React.createElement(ValueClipboard, null, /*#__PURE__*/React.createElement(reactComponent.PCopyToClipboard, {
-          text: copyToClipboardText_0,
-          onCopy: onCopyToClipboard ? function () {
-            return onCopyToClipboard(item_1, copyToClipboardText_0);
-          } : undefined
-        }, /*#__PURE__*/React.createElement(ClipboardIconButton, _extends({
-          size: "small",
-          color: "primary"
-        }, item_1.clipboardProps), /*#__PURE__*/React.createElement(reactComponent.PIcon, null, item_1.clipboardIcon || "ContentPaste"))))));
-      };
-      $[22] = dividerColor;
-      $[23] = ellipsis;
-      $[24] = labelClassName;
-      $[25] = labelColor;
-      $[26] = labelStyle;
-      $[27] = labelSx;
-      $[28] = onCopyToClipboard;
-      $[29] = valueClassName;
-      $[30] = valueStyle;
-      $[31] = valueSx;
-      $[32] = valueUnderline;
-      $[33] = _t3;
-    } else {
-      _t3 = $[33];
-    }
-    t6 = renderItems.map(_t3);
+        },
+        size: "small"
+      }, "CalendarMonth"), /*#__PURE__*/React.createElement(Label, {
+        className: classNames(labelClassName, item_1.labelClassName),
+        style: _objectSpread2(_objectSpread2({}, item_1.labelStyle), labelStyle),
+        sx: finalLabelSx
+      }, item_1.label)), /*#__PURE__*/React.createElement(ValueWrap, {
+        className: classNames(valueClassName, item_1.valueClassName),
+        style: _objectSpread2(_objectSpread2(_objectSpread2({}, valueStyle), item_1.valueStyle), valueUnderlineStyle),
+        sx: finalValueSx
+      }, item_1.ellipsis || ellipsis ? /*#__PURE__*/React.createElement(ValueEllipsis, null, data_0) : /*#__PURE__*/React.createElement(Value, null, data_0), item_1.clipboard && compare.notEmpty(copyToClipboardText_0) && /*#__PURE__*/React.createElement(ValueClipboard, null, /*#__PURE__*/React.createElement(reactComponent.PCopyToClipboard, {
+        text: copyToClipboardText_0,
+        onCopy: function onCopy() {
+          var _onCopyToClipboardRef;
+          return (_onCopyToClipboardRef = onCopyToClipboardRef.current) === null || _onCopyToClipboardRef === void 0 ? void 0 : _onCopyToClipboardRef.call(onCopyToClipboardRef, item_1, copyToClipboardText_0);
+        }
+      }, /*#__PURE__*/React.createElement(ClipboardIconButton, _extends({
+        size: "small",
+        color: "primary"
+      }, item_1.clipboardProps), /*#__PURE__*/React.createElement(reactComponent.PIcon, null, item_1.clipboardIcon || "ContentPaste"))))));
+    });
     $[9] = dividerColor;
     $[10] = ellipsis;
     $[11] = labelClassName;
     $[12] = labelColor;
     $[13] = labelStyle;
     $[14] = labelSx;
-    $[15] = onCopyToClipboard;
+    $[15] = onCopyToClipboardRef;
     $[16] = renderItems;
     $[17] = valueClassName;
     $[18] = valueStyle;
@@ -542,15 +526,15 @@ function typographyColorToSxColor(color) {
   }
   var content = t6;
   var t7;
-  if ($[34] !== className) {
+  if ($[22] !== className) {
     t7 = classNames("PInfoTable", className);
-    $[34] = className;
-    $[35] = t7;
+    $[22] = className;
+    $[23] = t7;
   } else {
-    t7 = $[35];
+    t7 = $[23];
   }
   var t8;
-  if ($[36] !== columnSpacing || $[37] !== content || $[38] !== rowSpacing || $[39] !== spacing || $[40] !== style || $[41] !== sx || $[42] !== t7) {
+  if ($[24] !== columnSpacing || $[25] !== content || $[26] !== rowSpacing || $[27] !== spacing || $[28] !== style || $[29] !== sx || $[30] !== t7) {
     t8 = /*#__PURE__*/React.createElement(material.Grid, {
       container: true,
       spacing: spacing,
@@ -560,16 +544,16 @@ function typographyColorToSxColor(color) {
       style: style,
       sx: sx
     }, content);
-    $[36] = columnSpacing;
-    $[37] = content;
-    $[38] = rowSpacing;
-    $[39] = spacing;
-    $[40] = style;
-    $[41] = sx;
-    $[42] = t7;
-    $[43] = t8;
+    $[24] = columnSpacing;
+    $[25] = content;
+    $[26] = rowSpacing;
+    $[27] = spacing;
+    $[28] = style;
+    $[29] = sx;
+    $[30] = t7;
+    $[31] = t8;
   } else {
-    t8 = $[43];
+    t8 = $[31];
   }
   return t8;
 }function debounce$1(func, debounceMs, { signal, edges } = {}) {
@@ -1424,7 +1408,7 @@ function _temp$4(sx_1) {
     }
   };
 });function PTableHeadCell(t0) {
-  var $ = compilerRuntime.c(33);
+  var $ = compilerRuntime.c(40);
   var column = t0.column,
     items = t0.items,
     defaultAlign = t0.defaultAlign,
@@ -1442,28 +1426,43 @@ function _temp$4(sx_1) {
     checkDisabled = _useState4[0],
     _setCheckDisabled = _useState4[1];
   var t1;
-  var t2;
   if ($[0] !== checked || $[1] !== column || $[2] !== setHeadColumnChecked) {
     t1 = function t1() {
       if (column.type === "check") {
         setHeadColumnChecked(column, checked);
       }
     };
-    t2 = [column, checked, setHeadColumnChecked];
     $[0] = checked;
     $[1] = column;
     $[2] = setHeadColumnChecked;
     $[3] = t1;
-    $[4] = t2;
   } else {
     t1 = $[3];
-    t2 = $[4];
   }
-  React.useEffect(t1, t2);
+  var effectEvent = React.useEffectEvent(t1);
+  var t2;
+  if ($[4] !== effectEvent) {
+    t2 = function t2() {
+      effectEvent();
+    };
+    $[4] = effectEvent;
+    $[5] = t2;
+  } else {
+    t2 = $[5];
+  }
   var t3;
+  if ($[6] !== checked || $[7] !== column) {
+    t3 = [column, checked];
+    $[6] = checked;
+    $[7] = column;
+    $[8] = t3;
+  } else {
+    t3 = $[8];
+  }
+  React.useEffect(t2, t3);
   var t4;
-  if ($[5] !== column || $[6] !== setHeadColumnCommands) {
-    t3 = function t3() {
+  if ($[9] !== column || $[10] !== setHeadColumnCommands) {
+    t4 = function t4() {
       setHeadColumnCommands(column, {
         setChecked: function setChecked(checked_0) {
           if (column.type === "check") {
@@ -1477,143 +1476,159 @@ function _temp$4(sx_1) {
         }
       });
     };
-    t4 = [setHeadColumnCommands, column];
-    $[5] = column;
-    $[6] = setHeadColumnCommands;
-    $[7] = t3;
-    $[8] = t4;
+    $[9] = column;
+    $[10] = setHeadColumnCommands;
+    $[11] = t4;
   } else {
-    t3 = $[7];
-    t4 = $[8];
+    t4 = $[11];
   }
-  React.useEffect(t3, t4);
+  var effectEvent_0 = React.useEffectEvent(t4);
   var t5;
+  if ($[12] !== effectEvent_0) {
+    t5 = function t5() {
+      effectEvent_0();
+    };
+    $[12] = effectEvent_0;
+    $[13] = t5;
+  } else {
+    t5 = $[13];
+  }
+  var t6;
+  if ($[14] !== column) {
+    t6 = [column];
+    $[14] = column;
+    $[15] = t6;
+  } else {
+    t6 = $[15];
+  }
+  React.useEffect(t5, t6);
+  var t7;
   if (column.type === "check") {
     if (column.hideAllCheck) {
       var _column$head;
       if ((_column$head = column.head) !== null && _column$head !== void 0 && _column$head.onRender) {
         var _t;
-        if ($[9] !== column.head || $[10] !== items) {
+        if ($[16] !== column.head || $[17] !== items) {
           var _column$head2;
           _t = (_column$head2 = column.head) === null || _column$head2 === void 0 ? void 0 : _column$head2.onRender(items);
-          $[9] = column.head;
-          $[10] = items;
-          $[11] = _t;
+          $[16] = column.head;
+          $[17] = items;
+          $[18] = _t;
         } else {
-          _t = $[11];
+          _t = $[18];
         }
-        t5 = _t;
+        t7 = _t;
       } else {
         if (typeof column.label === "string") {
           var _t2;
-          if ($[12] !== column.label) {
+          if ($[19] !== column.label) {
             _t2 = /*#__PURE__*/React.createElement("div", {
               dangerouslySetInnerHTML: {
                 __html: column.label
               }
             });
-            $[12] = column.label;
-            $[13] = _t2;
+            $[19] = column.label;
+            $[20] = _t2;
           } else {
-            _t2 = $[13];
+            _t2 = $[20];
           }
-          t5 = _t2;
+          t7 = _t2;
         } else {
-          t5 = column.label;
+          t7 = column.label;
         }
       }
     } else {
       var _t3;
-      if ($[14] !== column || $[15] !== onCheckChange) {
+      if ($[21] !== column || $[22] !== onCheckChange) {
         _t3 = function _t3(e, newChecked) {
           _setChecked(newChecked);
           onCheckChange && onCheckChange(column, newChecked);
         };
-        $[14] = column;
-        $[15] = onCheckChange;
-        $[16] = _t3;
+        $[21] = column;
+        $[22] = onCheckChange;
+        $[23] = _t3;
       } else {
-        _t3 = $[16];
+        _t3 = $[23];
       }
       var _t4;
-      if ($[17] !== checkDisabled || $[18] !== checked || $[19] !== _t3) {
+      if ($[24] !== checkDisabled || $[25] !== checked || $[26] !== _t3) {
         _t4 = /*#__PURE__*/React.createElement(material.Checkbox, {
           checked: checked,
           disabled: checkDisabled,
           onChange: _t3
         });
-        $[17] = checkDisabled;
-        $[18] = checked;
-        $[19] = _t3;
-        $[20] = _t4;
+        $[24] = checkDisabled;
+        $[25] = checked;
+        $[26] = _t3;
+        $[27] = _t4;
       } else {
-        _t4 = $[20];
+        _t4 = $[27];
       }
-      t5 = _t4;
+      t7 = _t4;
     }
   } else {
     var _column$head3;
     if ((_column$head3 = column.head) !== null && _column$head3 !== void 0 && _column$head3.onRender) {
       var _t5;
-      if ($[21] !== column.head || $[22] !== items) {
+      if ($[28] !== column.head || $[29] !== items) {
         var _column$head4;
         _t5 = (_column$head4 = column.head) === null || _column$head4 === void 0 ? void 0 : _column$head4.onRender(items);
-        $[21] = column.head;
-        $[22] = items;
-        $[23] = _t5;
+        $[28] = column.head;
+        $[29] = items;
+        $[30] = _t5;
       } else {
-        _t5 = $[23];
+        _t5 = $[30];
       }
-      t5 = _t5;
+      t7 = _t5;
     } else {
       if (typeof column.label === "string") {
         var _t6;
-        if ($[24] !== column.label) {
+        if ($[31] !== column.label) {
           _t6 = /*#__PURE__*/React.createElement("div", {
             dangerouslySetInnerHTML: {
               __html: column.label
             }
           });
-          $[24] = column.label;
-          $[25] = _t6;
+          $[31] = column.label;
+          $[32] = _t6;
         } else {
-          _t6 = $[25];
+          _t6 = $[32];
         }
-        t5 = _t6;
+        t7 = _t6;
       } else {
-        t5 = column.label;
+        t7 = column.label;
       }
     }
   }
-  var data = t5;
-  var t6;
-  if ($[26] !== top) {
-    t6 = top !== undefined ? {
+  var data = t7;
+  var t8;
+  if ($[33] !== top) {
+    t8 = top !== undefined ? {
       top: top
     } : undefined;
-    $[26] = top;
-    $[27] = t6;
+    $[33] = top;
+    $[34] = t8;
   } else {
-    t6 = $[27];
+    t8 = $[34];
   }
-  var t7;
-  if ($[28] !== column || $[29] !== data || $[30] !== defaultAlign || $[31] !== t6) {
-    t7 = /*#__PURE__*/React.createElement(PTableCommonCell, {
+  var t9;
+  if ($[35] !== column || $[36] !== data || $[37] !== defaultAlign || $[38] !== t8) {
+    t9 = /*#__PURE__*/React.createElement(PTableCommonCell, {
       type: "head",
       className: "PTableHeadCell",
-      style: t6,
+      style: t8,
       column: column,
       defaultAlign: defaultAlign
     }, data);
-    $[28] = column;
-    $[29] = data;
-    $[30] = defaultAlign;
-    $[31] = t6;
-    $[32] = t7;
+    $[35] = column;
+    $[36] = data;
+    $[37] = defaultAlign;
+    $[38] = t8;
+    $[39] = t9;
   } else {
-    t7 = $[32];
+    t9 = $[39];
   }
-  return t7;
+  return t9;
 }var _templateObject$1;
 var BottomLine = material.styled('div')(_templateObject$1 || (_templateObject$1 = _taggedTemplateLiteral(["\n  height: 1px;\n  position: absolute;\n  left: 3px;\n  right: 3px;\n  bottom: 0;\n"])));
 function PTableTopHead(t0) {
@@ -1779,60 +1794,61 @@ function PTableTopHead(t0) {
     t8 = $[22];
   }
   var captionRow = t8;
+  var t9;
+  if ($[23] !== captionHeight || $[24] !== makeRowCells || $[25] !== row1Height || $[26] !== row2Height || $[27] !== row3Height || $[28] !== rows) {
+    t9 = rows && Array.isArray(rows[0]) && rows.map(function (row_0, idx_1) {
+      var ref = undefined;
+      var top_1 = undefined;
+      bb52: switch (idx_1) {
+        case 0:
+          {
+            ref = row1Ref;
+            top_1 = captionHeight;
+            break bb52;
+          }
+        case 1:
+          {
+            ref = row2Ref;
+            top_1 = (captionHeight || 0) + (row1Height || 0);
+            break bb52;
+          }
+        case 2:
+          {
+            ref = row3Ref;
+            top_1 = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
+            break bb52;
+          }
+        case 3:
+          {
+            top_1 = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+          }
+      }
+      return /*#__PURE__*/React.createElement(material.TableRow, {
+        key: idx_1,
+        ref: ref,
+        className: "PTableHeadRow"
+      }, makeRowCells(row_0, top_1));
+    });
+    $[23] = captionHeight;
+    $[24] = makeRowCells;
+    $[25] = row1Height;
+    $[26] = row2Height;
+    $[27] = row3Height;
+    $[28] = rows;
+    $[29] = t9;
+  } else {
+    t9 = $[29];
+  }
+  var tableRows = t9;
   if (rows) {
     if (Array.isArray(rows[0])) {
-      var t9;
-      if ($[23] !== captionHeight || $[24] !== makeRowCells || $[25] !== row1Height || $[26] !== row2Height || $[27] !== row3Height || $[28] !== rows) {
-        t9 = rows.map(function (row_0, idx_1) {
-          var ref = undefined;
-          var top_1 = undefined;
-          bb48: switch (idx_1) {
-            case 0:
-              {
-                ref = row1Ref;
-                top_1 = captionHeight;
-                break bb48;
-              }
-            case 1:
-              {
-                ref = row2Ref;
-                top_1 = (captionHeight || 0) + (row1Height || 0);
-                break bb48;
-              }
-            case 2:
-              {
-                ref = row3Ref;
-                top_1 = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
-                break bb48;
-              }
-            case 3:
-              {
-                top_1 = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
-              }
-          }
-          return /*#__PURE__*/React.createElement(material.TableRow, {
-            key: idx_1,
-            ref: ref,
-            className: "PTableHeadRow"
-          }, makeRowCells(row_0, top_1));
-        });
-        $[23] = captionHeight;
-        $[24] = makeRowCells;
-        $[25] = row1Height;
-        $[26] = row2Height;
-        $[27] = row3Height;
-        $[28] = rows;
-        $[29] = t9;
-      } else {
-        t9 = $[29];
-      }
       var t10;
-      if ($[30] !== captionRow || $[31] !== t9) {
+      if ($[30] !== captionRow || $[31] !== tableRows) {
         t10 = /*#__PURE__*/React.createElement(material.TableHead, {
           className: "PTableHead"
-        }, captionRow, t9);
+        }, captionRow, tableRows);
         $[30] = captionRow;
-        $[31] = t9;
+        $[31] = tableRows;
         $[32] = t10;
       } else {
         t10 = $[32];
@@ -1840,54 +1856,54 @@ function PTableTopHead(t0) {
       return t10;
     } else {
       var _t2 = rows;
-      var _t3;
+      var t11;
       if ($[33] !== captionHeight || $[34] !== makeRowCells || $[35] !== _t2) {
-        _t3 = makeRowCells(_t2, captionHeight);
+        t11 = makeRowCells(_t2, captionHeight);
         $[33] = captionHeight;
         $[34] = makeRowCells;
         $[35] = _t2;
-        $[36] = _t3;
+        $[36] = t11;
       } else {
-        _t3 = $[36];
-      }
-      var t11;
-      if ($[37] !== _t3) {
-        t11 = /*#__PURE__*/React.createElement(material.TableRow, {
-          ref: row1Ref,
-          className: "PTableHeadRow"
-        }, _t3);
-        $[37] = _t3;
-        $[38] = t11;
-      } else {
-        t11 = $[38];
+        t11 = $[36];
       }
       var t12;
-      if ($[39] !== captionRow || $[40] !== columnRow || $[41] !== t11) {
-        t12 = /*#__PURE__*/React.createElement(material.TableHead, {
+      if ($[37] !== t11) {
+        t12 = /*#__PURE__*/React.createElement(material.TableRow, {
+          ref: row1Ref,
+          className: "PTableHeadRow"
+        }, t11);
+        $[37] = t11;
+        $[38] = t12;
+      } else {
+        t12 = $[38];
+      }
+      var t13;
+      if ($[39] !== captionRow || $[40] !== columnRow || $[41] !== t12) {
+        t13 = /*#__PURE__*/React.createElement(material.TableHead, {
           className: "PTableHead"
-        }, captionRow, t11, columnRow);
+        }, captionRow, t12, columnRow);
         $[39] = captionRow;
         $[40] = columnRow;
-        $[41] = t11;
-        $[42] = t12;
+        $[41] = t12;
+        $[42] = t13;
       } else {
-        t12 = $[42];
+        t13 = $[42];
       }
-      return t12;
+      return t13;
     }
   } else {
-    var _t4;
+    var _t3;
     if ($[43] !== captionRow || $[44] !== columnRow) {
-      _t4 = /*#__PURE__*/React.createElement(material.TableHead, {
+      _t3 = /*#__PURE__*/React.createElement(material.TableHead, {
         className: "PTableHead"
       }, captionRow, columnRow);
       $[43] = captionRow;
       $[44] = columnRow;
-      $[45] = _t4;
+      $[45] = _t3;
     } else {
-      _t4 = $[45];
+      _t3 = $[45];
     }
-    return _t4;
+    return _t3;
   }
 }
 function _temp$3(cell) {
@@ -1938,7 +1954,7 @@ function _temp$3(cell) {
 });var _templateObject;
 var StyledButtonsBox = material.styled(material.Box)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  display: flex;\n  flex-wrap: wrap;\n  gap: 5px;\n"])));
 function PTableBodyCell(t0) {
-  var $ = compilerRuntime.c(79);
+  var $ = compilerRuntime.c(107);
   var ref = t0.ref,
     className = t0.className,
     style = t0.style,
@@ -1963,69 +1979,157 @@ function PTableBodyCell(t0) {
     _useState4 = _slicedToArray(_useState3, 2),
     checkDisabled = _useState4[0],
     _setCheckDisabled = _useState4[1];
-  var isColumnChanged = reactHook.useChanged(column, true);
-  var isItemChanged = reactHook.useChanged(item, true);
-  var isSetItemColumnCommandsChanged = reactHook.useChanged(setItemColumnCommands, true);
-  if (isColumnChanged || isItemChanged || isSetItemColumnCommandsChanged) {
-    if (column.type === "check") {
-      _setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
-      _setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
-    }
-    setItemColumnCommands(item, column, {
-      setChecked: function setChecked(checked_0) {
-        if (column.type === "check") {
-          _setChecked(checked_0);
-        }
-      },
-      setCheckDisabled: function setCheckDisabled(disabled) {
-        if (column.type === "check") {
-          _setCheckDisabled(disabled);
-        }
-      }
-    });
-  }
-  if (reactHook.useChanged(checked, true)) {
-    if (column.type === "check") {
-      setItemColumnChecked(item, column, checked);
-    }
-  }
-  if (reactHook.useChanged(checkDisabled, true)) {
-    if (column.type === "check") {
-      setItemColumnCheckDisabled(item, column, checkDisabled);
-      column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
-    }
-  }
   var t1;
-  if ($[0] !== column || $[1] !== index || $[2] !== item) {
-    t1 = column.onHide ? column.onHide(item, index) : false;
+  if ($[0] !== column || $[1] !== item || $[2] !== setItemColumnCommands) {
+    t1 = function t1() {
+      if (column.type === "check") {
+        _setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
+        _setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
+      }
+      setItemColumnCommands(item, column, {
+        setChecked: function setChecked(checked_0) {
+          if (column.type === "check") {
+            _setChecked(checked_0);
+          }
+        },
+        setCheckDisabled: function setCheckDisabled(disabled) {
+          if (column.type === "check") {
+            _setCheckDisabled(disabled);
+          }
+        }
+      });
+    };
     $[0] = column;
-    $[1] = index;
-    $[2] = item;
+    $[1] = item;
+    $[2] = setItemColumnCommands;
     $[3] = t1;
   } else {
     t1 = $[3];
   }
-  var isHidden = t1;
+  var effectEvent = React.useEffectEvent(t1);
   var t2;
+  if ($[4] !== effectEvent) {
+    t2 = function t2() {
+      effectEvent();
+    };
+    $[4] = effectEvent;
+    $[5] = t2;
+  } else {
+    t2 = $[5];
+  }
+  var t3;
+  if ($[6] !== column || $[7] !== item || $[8] !== setItemColumnCommands) {
+    t3 = [column, item, setItemColumnCommands];
+    $[6] = column;
+    $[7] = item;
+    $[8] = setItemColumnCommands;
+    $[9] = t3;
+  } else {
+    t3 = $[9];
+  }
+  React.useEffect(t2, t3);
+  var t4;
+  if ($[10] !== checked || $[11] !== column || $[12] !== item || $[13] !== setItemColumnChecked) {
+    t4 = function t4() {
+      if (column.type === "check") {
+        setItemColumnChecked(item, column, checked);
+      }
+    };
+    $[10] = checked;
+    $[11] = column;
+    $[12] = item;
+    $[13] = setItemColumnChecked;
+    $[14] = t4;
+  } else {
+    t4 = $[14];
+  }
+  var effectEvent_0 = React.useEffectEvent(t4);
+  var t5;
+  if ($[15] !== effectEvent_0) {
+    t5 = function t5() {
+      effectEvent_0();
+    };
+    $[15] = effectEvent_0;
+    $[16] = t5;
+  } else {
+    t5 = $[16];
+  }
+  var t6;
+  if ($[17] !== checked) {
+    t6 = [checked];
+    $[17] = checked;
+    $[18] = t6;
+  } else {
+    t6 = $[18];
+  }
+  React.useEffect(t5, t6);
+  var t7;
+  if ($[19] !== checkDisabled || $[20] !== column || $[21] !== item || $[22] !== setItemColumnCheckDisabled) {
+    t7 = function t7() {
+      if (column.type === "check") {
+        setItemColumnCheckDisabled(item, column, checkDisabled);
+        column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
+      }
+    };
+    $[19] = checkDisabled;
+    $[20] = column;
+    $[21] = item;
+    $[22] = setItemColumnCheckDisabled;
+    $[23] = t7;
+  } else {
+    t7 = $[23];
+  }
+  var effectEvent_1 = React.useEffectEvent(t7);
+  var t8;
+  if ($[24] !== effectEvent_1) {
+    t8 = function t8() {
+      effectEvent_1();
+    };
+    $[24] = effectEvent_1;
+    $[25] = t8;
+  } else {
+    t8 = $[25];
+  }
+  var t9;
+  if ($[26] !== checkDisabled) {
+    t9 = [checkDisabled];
+    $[26] = checkDisabled;
+    $[27] = t9;
+  } else {
+    t9 = $[27];
+  }
+  React.useEffect(t8, t9);
+  var t10;
+  if ($[28] !== column || $[29] !== index || $[30] !== item) {
+    t10 = column.onHide ? column.onHide(item, index) : false;
+    $[28] = column;
+    $[29] = index;
+    $[30] = item;
+    $[31] = t10;
+  } else {
+    t10 = $[31];
+  }
+  var isHidden = t10;
+  var t11;
   bb0: switch (getTableColumnAlign(column, defaultAlign)) {
     case "center":
       {
-        t2 = "center";
+        t11 = "center";
         break bb0;
       }
     case "right":
       {
-        t2 = "end";
+        t11 = "end";
         break bb0;
       }
     default:
       {
-        t2 = "start";
+        t11 = "start";
       }
   }
-  var buttonsBoxJustifyContent = t2;
+  var buttonsBoxJustifyContent = t11;
   var newData;
-  if ($[4] !== buttonsBoxJustifyContent || $[5] !== checkDisabled || $[6] !== checked || $[7] !== column || $[8] !== index || $[9] !== item || $[10] !== menuOpen || $[11] !== onCheckChange) {
+  if ($[32] !== buttonsBoxJustifyContent || $[33] !== checkDisabled || $[34] !== checked || $[35] !== column || $[36] !== index || $[37] !== item || $[38] !== menuOpen || $[39] !== onCheckChange) {
     if (column.type !== "check") {
       if (column.onRender) {
         newData = column.onRender(item, index);
@@ -2045,47 +2149,47 @@ function PTableBodyCell(t0) {
           }
           if (column.numberPrefix) {
             var _t;
-            if ($[13] === Symbol["for"]("react.memo_cache_sentinel")) {
+            if ($[41] === Symbol["for"]("react.memo_cache_sentinel")) {
               _t = {
                 opacity: 0.5,
                 marginRight: 2
               };
-              $[13] = _t;
+              $[41] = _t;
             } else {
-              _t = $[13];
+              _t = $[41];
             }
             var _t2;
-            if ($[14] !== column.numberPrefix) {
+            if ($[42] !== column.numberPrefix) {
               _t2 = /*#__PURE__*/React.createElement("span", {
                 style: _t
               }, column.numberPrefix);
-              $[14] = column.numberPrefix;
-              $[15] = _t2;
+              $[42] = column.numberPrefix;
+              $[43] = _t2;
             } else {
-              _t2 = $[15];
+              _t2 = $[43];
             }
             newData = /*#__PURE__*/React.createElement(React.Fragment, null, _t2, newData);
           }
           if (column.numberSuffix) {
             var _t3;
-            if ($[16] === Symbol["for"]("react.memo_cache_sentinel")) {
+            if ($[44] === Symbol["for"]("react.memo_cache_sentinel")) {
               _t3 = {
                 opacity: 0.5,
                 marginLeft: 2
               };
-              $[16] = _t3;
+              $[44] = _t3;
             } else {
-              _t3 = $[16];
+              _t3 = $[44];
             }
             var _t4;
-            if ($[17] !== column.numberSuffix) {
+            if ($[45] !== column.numberSuffix) {
               _t4 = /*#__PURE__*/React.createElement("span", {
                 style: _t3
               }, column.numberSuffix);
-              $[17] = column.numberSuffix;
-              $[18] = _t4;
+              $[45] = column.numberSuffix;
+              $[46] = _t4;
             } else {
-              _t4 = $[18];
+              _t4 = $[46];
             }
             newData = /*#__PURE__*/React.createElement(React.Fragment, null, newData, _t4);
           }
@@ -2116,45 +2220,45 @@ function PTableBodyCell(t0) {
         {
           var _t5 = menuOpen ? undefined : _temp$2;
           var _t6;
-          if ($[19] !== column || $[20] !== item || $[21] !== onCheckChange) {
+          if ($[47] !== column || $[48] !== item || $[49] !== onCheckChange) {
             _t6 = function _t6(e_3, newChecked) {
               var _column$onCheckChange;
               _setChecked(newChecked);
               (_column$onCheckChange = column.onCheckChange) === null || _column$onCheckChange === void 0 || _column$onCheckChange.call(column, item, newChecked);
               onCheckChange(item, column, newChecked);
             };
-            $[19] = column;
-            $[20] = item;
-            $[21] = onCheckChange;
-            $[22] = _t6;
+            $[47] = column;
+            $[48] = item;
+            $[49] = onCheckChange;
+            $[50] = _t6;
           } else {
-            _t6 = $[22];
+            _t6 = $[50];
           }
           var _t7;
-          if ($[23] !== checkDisabled || $[24] !== checked || $[25] !== _t6) {
+          if ($[51] !== checkDisabled || $[52] !== checked || $[53] !== _t6) {
             _t7 = /*#__PURE__*/React.createElement(material.Checkbox, {
               checked: checked,
               disabled: checkDisabled,
               onChange: _t6
             });
-            $[23] = checkDisabled;
-            $[24] = checked;
-            $[25] = _t6;
-            $[26] = _t7;
+            $[51] = checkDisabled;
+            $[52] = checked;
+            $[53] = _t6;
+            $[54] = _t7;
           } else {
-            _t7 = $[26];
+            _t7 = $[54];
           }
           var _t8;
-          if ($[27] !== _t5 || $[28] !== _t7) {
+          if ($[55] !== _t5 || $[56] !== _t7) {
             _t8 = /*#__PURE__*/React.createElement(material.Box, {
               className: "PTableBoxyCell-check-box",
               onClick: _t5
             }, _t7);
-            $[27] = _t5;
-            $[28] = _t7;
-            $[29] = _t8;
+            $[55] = _t5;
+            $[56] = _t7;
+            $[57] = _t8;
           } else {
-            _t8 = $[29];
+            _t8 = $[57];
           }
           newData = _t8;
           break bb1;
@@ -2180,14 +2284,14 @@ function PTableBodyCell(t0) {
         {
           var _column$tooltipProps, _column$tooltipProps2;
           var _t9;
-          if ($[30] === Symbol["for"]("react.memo_cache_sentinel")) {
+          if ($[58] === Symbol["for"]("react.memo_cache_sentinel")) {
             _t9 = {
               maxWidth: "100%",
               verticalAlign: "middle"
             };
-            $[30] = _t9;
+            $[58] = _t9;
           } else {
-            _t9 = $[30];
+            _t9 = $[58];
           }
           var img = /*#__PURE__*/React.createElement("img", {
             src: newData,
@@ -2198,57 +2302,57 @@ function PTableBodyCell(t0) {
           var _t0 = newData;
           var _t1 = menuOpen ? undefined : _temp4;
           var _t10;
-          if ($[31] === Symbol["for"]("react.memo_cache_sentinel")) {
+          if ($[59] === Symbol["for"]("react.memo_cache_sentinel")) {
             _t10 = {
               paddingTop: 3,
               paddingBottom: 3
             };
-            $[31] = _t10;
+            $[59] = _t10;
           } else {
-            _t10 = $[31];
+            _t10 = $[59];
           }
           var _t11;
-          if ($[32] !== img) {
+          if ($[60] !== img) {
             _t11 = /*#__PURE__*/React.createElement("div", {
               style: _t10
             }, img);
-            $[32] = img;
-            $[33] = _t11;
+            $[60] = img;
+            $[61] = _t11;
           } else {
-            _t11 = $[33];
+            _t11 = $[61];
           }
-          var t8;
-          if ($[34] !== column.tooltipProps || $[35] !== img || $[36] !== placement || $[37] !== _t11) {
-            t8 = /*#__PURE__*/React.createElement(material.Tooltip, _extends({
+          var t17;
+          if ($[62] !== column.tooltipProps || $[63] !== img || $[64] !== placement || $[65] !== _t11) {
+            t17 = /*#__PURE__*/React.createElement(material.Tooltip, _extends({
               className: "PTableBodyCell-tooltip",
               title: _t11
             }, column.tooltipProps, {
               placement: placement
             }), img);
-            $[34] = column.tooltipProps;
-            $[35] = img;
-            $[36] = placement;
-            $[37] = _t11;
-            $[38] = t8;
+            $[62] = column.tooltipProps;
+            $[63] = img;
+            $[64] = placement;
+            $[65] = _t11;
+            $[66] = t17;
           } else {
-            t8 = $[38];
+            t17 = $[66];
           }
-          var t9;
-          if ($[39] !== _t0 || $[40] !== _t1 || $[41] !== t8) {
-            t9 = /*#__PURE__*/React.createElement("a", {
+          var t18;
+          if ($[67] !== _t0 || $[68] !== _t1 || $[69] !== t17) {
+            t18 = /*#__PURE__*/React.createElement("a", {
               href: _t0,
               target: "_blank",
               rel: "noreferrer",
               onClick: _t1
-            }, t8);
-            $[39] = _t0;
-            $[40] = _t1;
-            $[41] = t8;
-            $[42] = t9;
+            }, t17);
+            $[67] = _t0;
+            $[68] = _t1;
+            $[69] = t17;
+            $[70] = t18;
           } else {
-            t9 = $[42];
+            t18 = $[70];
           }
-          newData = t9;
+          newData = t18;
           break bb1;
         }
       case "date":
@@ -2263,21 +2367,21 @@ function PTableBodyCell(t0) {
           if (newData) {
             var dt_1 = dayjs(newData, column.dateFormat);
             var _t12;
-            if ($[43] !== column.dateTwoLine) {
+            if ($[71] !== column.dateTwoLine) {
               _t12 = column.dateTwoLine ? /*#__PURE__*/React.createElement("br", null) : " ";
-              $[43] = column.dateTwoLine;
-              $[44] = _t12;
+              $[71] = column.dateTwoLine;
+              $[72] = _t12;
             } else {
-              _t12 = $[44];
+              _t12 = $[72];
             }
             var _t13;
-            if ($[45] === Symbol["for"]("react.memo_cache_sentinel")) {
+            if ($[73] === Symbol["for"]("react.memo_cache_sentinel")) {
               _t13 = {
                 opacity: 0.5
               };
-              $[45] = _t13;
+              $[73] = _t13;
             } else {
-              _t13 = $[45];
+              _t13 = $[73];
             }
             newData = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, dt_1.format("YYYY-MM-DD")), _t12, /*#__PURE__*/React.createElement("span", {
               style: _t13
@@ -2290,21 +2394,21 @@ function PTableBodyCell(t0) {
           if (newData) {
             var dt_0 = dayjs(newData, column.dateFormat);
             var _t14;
-            if ($[46] !== column.dateTwoLine) {
+            if ($[74] !== column.dateTwoLine) {
               _t14 = column.dateTwoLine ? /*#__PURE__*/React.createElement("br", null) : " ";
-              $[46] = column.dateTwoLine;
-              $[47] = _t14;
+              $[74] = column.dateTwoLine;
+              $[75] = _t14;
             } else {
-              _t14 = $[47];
+              _t14 = $[75];
             }
             var _t15;
-            if ($[48] === Symbol["for"]("react.memo_cache_sentinel")) {
+            if ($[76] === Symbol["for"]("react.memo_cache_sentinel")) {
               _t15 = {
                 opacity: 0.5
               };
-              $[48] = _t15;
+              $[76] = _t15;
             } else {
-              _t15 = $[48];
+              _t15 = $[76];
             }
             newData = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, dt_0.format("YYYY-MM-DD")), _t14, /*#__PURE__*/React.createElement("span", {
               style: _t15
@@ -2317,21 +2421,21 @@ function PTableBodyCell(t0) {
           if (newData) {
             var dt = dayjs(newData, column.dateFormat);
             var _t16;
-            if ($[49] !== column.dateTwoLine) {
+            if ($[77] !== column.dateTwoLine) {
               _t16 = column.dateTwoLine ? /*#__PURE__*/React.createElement("br", null) : " ";
-              $[49] = column.dateTwoLine;
-              $[50] = _t16;
+              $[77] = column.dateTwoLine;
+              $[78] = _t16;
             } else {
-              _t16 = $[50];
+              _t16 = $[78];
             }
             var _t17;
-            if ($[51] === Symbol["for"]("react.memo_cache_sentinel")) {
+            if ($[79] === Symbol["for"]("react.memo_cache_sentinel")) {
               _t17 = {
                 opacity: 0.5
               };
-              $[51] = _t17;
+              $[79] = _t17;
             } else {
-              _t17 = $[51];
+              _t17 = $[79];
             }
             newData = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, dt.format("YYYY-MM-DD")), _t16, /*#__PURE__*/React.createElement("span", {
               style: _t17
@@ -2339,62 +2443,62 @@ function PTableBodyCell(t0) {
           }
         }
     }
-    $[4] = buttonsBoxJustifyContent;
-    $[5] = checkDisabled;
-    $[6] = checked;
-    $[7] = column;
-    $[8] = index;
-    $[9] = item;
-    $[10] = menuOpen;
-    $[11] = onCheckChange;
-    $[12] = newData;
+    $[32] = buttonsBoxJustifyContent;
+    $[33] = checkDisabled;
+    $[34] = checked;
+    $[35] = column;
+    $[36] = index;
+    $[37] = item;
+    $[38] = menuOpen;
+    $[39] = onCheckChange;
+    $[40] = newData;
   } else {
-    newData = $[12];
+    newData = $[40];
   }
   if (column.type !== "img") {
     var tooltip;
     if (column.onGetTooltip) {
       var _t18;
-      if ($[52] !== column || $[53] !== index || $[54] !== item) {
+      if ($[80] !== column || $[81] !== index || $[82] !== item) {
         _t18 = column.onGetTooltip(item, index);
-        $[52] = column;
-        $[53] = index;
-        $[54] = item;
-        $[55] = _t18;
+        $[80] = column;
+        $[81] = index;
+        $[82] = item;
+        $[83] = _t18;
       } else {
-        _t18 = $[55];
+        _t18 = $[83];
       }
       tooltip = _t18;
     }
     if (tooltip) {
       var _t19;
-      if ($[56] !== newData) {
+      if ($[84] !== newData) {
         _t19 = /*#__PURE__*/React.isValidElement(newData) ? newData.type === React.Fragment ? /*#__PURE__*/React.createElement("span", null, newData) : newData : /*#__PURE__*/React.createElement("span", null, newData);
-        $[56] = newData;
-        $[57] = _t19;
+        $[84] = newData;
+        $[85] = _t19;
       } else {
-        _t19 = $[57];
+        _t19 = $[85];
       }
       var _t20;
-      if ($[58] !== column.tooltipProps || $[59] !== _t19 || $[60] !== tooltip) {
+      if ($[86] !== column.tooltipProps || $[87] !== _t19 || $[88] !== tooltip) {
         _t20 = /*#__PURE__*/React.createElement(material.Tooltip, _extends({
           className: "PTableBodyCell-tooltip",
           title: tooltip
         }, column.tooltipProps), _t19);
-        $[58] = column.tooltipProps;
-        $[59] = _t19;
-        $[60] = tooltip;
-        $[61] = _t20;
+        $[86] = column.tooltipProps;
+        $[87] = _t19;
+        $[88] = tooltip;
+        $[89] = _t20;
       } else {
-        _t20 = $[61];
+        _t20 = $[89];
       }
       newData = _t20;
     }
   }
   var data = newData;
-  var t3;
-  if ($[62] !== column || $[63] !== onClick) {
-    t3 = function t3(item_0, index_0) {
+  var t12;
+  if ($[90] !== column || $[91] !== onClick) {
+    t12 = function t12(item_0, index_0) {
       if (column.onClick) {
         column.onClick(item_0, index_0);
       } else {
@@ -2403,29 +2507,29 @@ function PTableBodyCell(t0) {
         }
       }
     };
-    $[62] = column;
-    $[63] = onClick;
-    $[64] = t3;
+    $[90] = column;
+    $[91] = onClick;
+    $[92] = t12;
   } else {
-    t3 = $[64];
+    t12 = $[92];
   }
-  var handleClick = t3;
-  var t4;
-  if ($[65] !== className) {
-    t4 = classNames("PTableBodyCell", className);
-    $[65] = className;
-    $[66] = t4;
+  var handleClick = t12;
+  var t13;
+  if ($[93] !== className) {
+    t13 = classNames("PTableBodyCell", className);
+    $[93] = className;
+    $[94] = t13;
   } else {
-    t4 = $[66];
+    t13 = $[94];
   }
-  var t5 = column.onClick || onClick ? handleClick : undefined;
-  var t6 = !isHidden && data;
-  var t7;
-  if ($[67] !== column || $[68] !== defaultAlign || $[69] !== defaultEllipsis || $[70] !== index || $[71] !== item || $[72] !== ref || $[73] !== style || $[74] !== sx || $[75] !== t4 || $[76] !== t5 || $[77] !== t6) {
-    t7 = /*#__PURE__*/React.createElement(PTableCommonCell, {
+  var t14 = column.onClick || onClick ? handleClick : undefined;
+  var t15 = !isHidden && data;
+  var t16;
+  if ($[95] !== column || $[96] !== defaultAlign || $[97] !== defaultEllipsis || $[98] !== index || $[99] !== item || $[100] !== ref || $[101] !== style || $[102] !== sx || $[103] !== t13 || $[104] !== t14 || $[105] !== t15) {
+    t16 = /*#__PURE__*/React.createElement(PTableCommonCell, {
       ref: ref,
       type: "body",
-      className: t4,
+      className: t13,
       style: style,
       sx: sx,
       column: column,
@@ -2433,24 +2537,24 @@ function PTableBodyCell(t0) {
       defaultEllipsis: defaultEllipsis,
       item: item,
       index: index,
-      onClick: t5
-    }, t6);
-    $[67] = column;
-    $[68] = defaultAlign;
-    $[69] = defaultEllipsis;
-    $[70] = index;
-    $[71] = item;
-    $[72] = ref;
-    $[73] = style;
-    $[74] = sx;
-    $[75] = t4;
-    $[76] = t5;
-    $[77] = t6;
-    $[78] = t7;
+      onClick: t14
+    }, t15);
+    $[95] = column;
+    $[96] = defaultAlign;
+    $[97] = defaultEllipsis;
+    $[98] = index;
+    $[99] = item;
+    $[100] = ref;
+    $[101] = style;
+    $[102] = sx;
+    $[103] = t13;
+    $[104] = t14;
+    $[105] = t15;
+    $[106] = t16;
   } else {
-    t7 = $[78];
+    t16 = $[106];
   }
-  return t7;
+  return t16;
 }
 function _temp4(e) {
   e.stopPropagation();
@@ -2483,6 +2587,7 @@ function PTableBodyRow(t0) {
   var defaultEllipsis;
   var id;
   var index;
+  var initStyle;
   var item;
   var onCheckChange;
   var onClick;
@@ -2491,11 +2596,10 @@ function PTableBodyRow(t0) {
   var onGetColumnSx;
   var props;
   var sortable$1;
-  var style;
   if ($[0] !== t0) {
     var _t = t0;
     className = _t.className;
-    style = _t.style;
+    initStyle = _t.style;
     id = _t.id;
     index = _t.index;
     defaultAlign = _t.defaultAlign;
@@ -2516,15 +2620,15 @@ function PTableBodyRow(t0) {
     $[4] = defaultEllipsis;
     $[5] = id;
     $[6] = index;
-    $[7] = item;
-    $[8] = onCheckChange;
-    $[9] = onClick;
-    $[10] = onGetColumnClassName;
-    $[11] = onGetColumnStyle;
-    $[12] = onGetColumnSx;
-    $[13] = props;
-    $[14] = sortable$1;
-    $[15] = style;
+    $[7] = initStyle;
+    $[8] = item;
+    $[9] = onCheckChange;
+    $[10] = onClick;
+    $[11] = onGetColumnClassName;
+    $[12] = onGetColumnStyle;
+    $[13] = onGetColumnSx;
+    $[14] = props;
+    $[15] = sortable$1;
   } else {
     className = $[1];
     columns = $[2];
@@ -2532,15 +2636,15 @@ function PTableBodyRow(t0) {
     defaultEllipsis = $[4];
     id = $[5];
     index = $[6];
-    item = $[7];
-    onCheckChange = $[8];
-    onClick = $[9];
-    onGetColumnClassName = $[10];
-    onGetColumnStyle = $[11];
-    onGetColumnSx = $[12];
-    props = $[13];
-    sortable$1 = $[14];
-    style = $[15];
+    initStyle = $[7];
+    item = $[8];
+    onCheckChange = $[9];
+    onClick = $[10];
+    onGetColumnClassName = $[11];
+    onGetColumnStyle = $[12];
+    onGetColumnSx = $[13];
+    props = $[14];
+    sortable$1 = $[15];
   }
   var t1;
   if ($[16] !== id) {
@@ -2573,31 +2677,24 @@ function PTableBodyRow(t0) {
   }
   var sortableProps = t2;
   var t3;
-  if ($[23] !== className) {
-    t3 = classNames("PTableBodyRow", className);
-    $[23] = className;
-    $[24] = t3;
-  } else {
-    t3 = $[24];
-  }
-  var t4;
-  if ($[25] !== sortable$1 || $[26] !== style || $[27] !== transform || $[28] !== transition) {
-    t4 = sortable$1 ? _objectSpread2(_objectSpread2({}, style), {}, {
+  if ($[23] !== initStyle || $[24] !== sortable$1 || $[25] !== transform || $[26] !== transition) {
+    t3 = sortable$1 ? _objectSpread2(_objectSpread2({}, initStyle), {}, {
       transform: CSS.Transform.toString(transform),
       transition: transition
-    }) : style;
-    $[25] = sortable$1;
-    $[26] = style;
-    $[27] = transform;
-    $[28] = transition;
-    $[29] = t4;
+    }) : initStyle;
+    $[23] = initStyle;
+    $[24] = sortable$1;
+    $[25] = transform;
+    $[26] = transition;
+    $[27] = t3;
   } else {
-    t4 = $[29];
+    t3 = $[27];
   }
-  var t5;
-  if ($[30] !== columns || $[31] !== defaultAlign || $[32] !== defaultEllipsis || $[33] !== index || $[34] !== item || $[35] !== onCheckChange || $[36] !== onClick || $[37] !== onGetColumnClassName || $[38] !== onGetColumnStyle || $[39] !== onGetColumnSx) {
+  var style = t3;
+  var t4;
+  if ($[28] !== columns || $[29] !== defaultAlign || $[30] !== defaultEllipsis || $[31] !== index || $[32] !== item || $[33] !== onCheckChange || $[34] !== onClick || $[35] !== onGetColumnClassName || $[36] !== onGetColumnStyle || $[37] !== onGetColumnSx) {
     var _t2;
-    if ($[41] !== defaultAlign || $[42] !== defaultEllipsis || $[43] !== index || $[44] !== item || $[45] !== onCheckChange || $[46] !== onClick || $[47] !== onGetColumnClassName || $[48] !== onGetColumnStyle || $[49] !== onGetColumnSx) {
+    if ($[39] !== defaultAlign || $[40] !== defaultEllipsis || $[41] !== index || $[42] !== item || $[43] !== onCheckChange || $[44] !== onClick || $[45] !== onGetColumnClassName || $[46] !== onGetColumnStyle || $[47] !== onGetColumnSx) {
       _t2 = function _t2(column, columnIdx) {
         return /*#__PURE__*/React.createElement(PTableBodyCell, {
           className: onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined,
@@ -2613,44 +2710,53 @@ function PTableBodyRow(t0) {
           onCheckChange: onCheckChange
         });
       };
-      $[41] = defaultAlign;
-      $[42] = defaultEllipsis;
-      $[43] = index;
-      $[44] = item;
-      $[45] = onCheckChange;
-      $[46] = onClick;
-      $[47] = onGetColumnClassName;
-      $[48] = onGetColumnStyle;
-      $[49] = onGetColumnSx;
-      $[50] = _t2;
+      $[39] = defaultAlign;
+      $[40] = defaultEllipsis;
+      $[41] = index;
+      $[42] = item;
+      $[43] = onCheckChange;
+      $[44] = onClick;
+      $[45] = onGetColumnClassName;
+      $[46] = onGetColumnStyle;
+      $[47] = onGetColumnSx;
+      $[48] = _t2;
     } else {
-      _t2 = $[50];
+      _t2 = $[48];
     }
-    t5 = columns.map(_t2);
-    $[30] = columns;
-    $[31] = defaultAlign;
-    $[32] = defaultEllipsis;
-    $[33] = index;
-    $[34] = item;
-    $[35] = onCheckChange;
-    $[36] = onClick;
-    $[37] = onGetColumnClassName;
-    $[38] = onGetColumnStyle;
-    $[39] = onGetColumnSx;
-    $[40] = t5;
+    t4 = columns.map(_t2);
+    $[28] = columns;
+    $[29] = defaultAlign;
+    $[30] = defaultEllipsis;
+    $[31] = index;
+    $[32] = item;
+    $[33] = onCheckChange;
+    $[34] = onClick;
+    $[35] = onGetColumnClassName;
+    $[36] = onGetColumnStyle;
+    $[37] = onGetColumnSx;
+    $[38] = t4;
   } else {
-    t5 = $[40];
+    t4 = $[38];
+  }
+  var cellList = t4;
+  var t5;
+  if ($[49] !== className) {
+    t5 = classNames("PTableBodyRow", className);
+    $[49] = className;
+    $[50] = t5;
+  } else {
+    t5 = $[50];
   }
   var t6;
-  if ($[51] !== props || $[52] !== sortableProps || $[53] !== t3 || $[54] !== t4 || $[55] !== t5) {
+  if ($[51] !== cellList || $[52] !== props || $[53] !== sortableProps || $[54] !== style || $[55] !== t5) {
     t6 = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(PStyledBodyRow, _extends({
-      className: t3,
-      style: t4
-    }, props, sortableProps), t5));
-    $[51] = props;
-    $[52] = sortableProps;
-    $[53] = t3;
-    $[54] = t4;
+      className: t5,
+      style: style
+    }, props, sortableProps), cellList));
+    $[51] = cellList;
+    $[52] = props;
+    $[53] = sortableProps;
+    $[54] = style;
     $[55] = t5;
     $[56] = t6;
   } else {
@@ -2658,7 +2764,7 @@ function PTableBodyRow(t0) {
   }
   return t6;
 }function PTableSortableBodyBlock(t0) {
-  var $ = compilerRuntime.c(24);
+  var $ = compilerRuntime.c(31);
   var items = t0.items,
     baseIndex = t0.baseIndex,
     columns = t0.columns,
@@ -2694,16 +2800,44 @@ function PTableBodyRow(t0) {
     _useState2 = _slicedToArray(_useState, 2),
     canInView = _useState2[0],
     setCanInView = _useState2[1];
-  if (reactHook.useChanged(progressiveVisible, true)) {
-    if (progressiveVisible && baseIndex > 0) {
-      setTimeout(function () {
-        setCanInView(true);
-      }, baseIndex * compare.ifUndefined(progressiveVisible.delay, 300));
-    }
-  }
   var t2;
-  if ($[1] !== baseIndex || $[2] !== canInView || $[3] !== columns || $[4] !== defaultAlign || $[5] !== defaultEllipsis || $[6] !== inView || $[7] !== items || $[8] !== onCheckChange || $[9] !== onClick || $[10] !== onGetBodyColumnClassName || $[11] !== onGetBodyColumnStyle || $[12] !== onGetBodyColumnSx || $[13] !== onGetBodyRowClassName || $[14] !== onGetBodyRowStyle || $[15] !== onGetBodyRowSx || $[16] !== progressiveVisible || $[17] !== ref || $[18] !== showEvenColor || $[19] !== showOddColor || $[20] !== sortable) {
-    t2 = !progressiveVisible || inView ? items.map(function (item, idx) {
+  if ($[1] !== baseIndex || $[2] !== progressiveVisible) {
+    t2 = function t2() {
+      if (progressiveVisible && baseIndex > 0) {
+        setTimeout(function () {
+          setCanInView(true);
+        }, baseIndex * compare.ifUndefined(progressiveVisible.delay, 300));
+      }
+    };
+    $[1] = baseIndex;
+    $[2] = progressiveVisible;
+    $[3] = t2;
+  } else {
+    t2 = $[3];
+  }
+  var effectEvent = React.useEffectEvent(t2);
+  var t3;
+  if ($[4] !== effectEvent) {
+    t3 = function t3() {
+      effectEvent();
+    };
+    $[4] = effectEvent;
+    $[5] = t3;
+  } else {
+    t3 = $[5];
+  }
+  var t4;
+  if ($[6] !== progressiveVisible) {
+    t4 = [progressiveVisible];
+    $[6] = progressiveVisible;
+    $[7] = t4;
+  } else {
+    t4 = $[7];
+  }
+  React.useEffect(t3, t4);
+  var t5;
+  if ($[8] !== baseIndex || $[9] !== canInView || $[10] !== columns || $[11] !== defaultAlign || $[12] !== defaultEllipsis || $[13] !== inView || $[14] !== items || $[15] !== onCheckChange || $[16] !== onClick || $[17] !== onGetBodyColumnClassName || $[18] !== onGetBodyColumnStyle || $[19] !== onGetBodyColumnSx || $[20] !== onGetBodyRowClassName || $[21] !== onGetBodyRowStyle || $[22] !== onGetBodyRowSx || $[23] !== progressiveVisible || $[24] !== ref || $[25] !== showEvenColor || $[26] !== showOddColor || $[27] !== sortable) {
+    t5 = !progressiveVisible || inView ? items.map(function (item, idx) {
       return /*#__PURE__*/React.createElement(PTableBodyRow, {
         key: item.id,
         id: item.id,
@@ -2732,40 +2866,40 @@ function PTableBodyRow(t0) {
         border: "none"
       }
     }));
-    $[1] = baseIndex;
-    $[2] = canInView;
-    $[3] = columns;
-    $[4] = defaultAlign;
-    $[5] = defaultEllipsis;
-    $[6] = inView;
-    $[7] = items;
-    $[8] = onCheckChange;
-    $[9] = onClick;
-    $[10] = onGetBodyColumnClassName;
-    $[11] = onGetBodyColumnStyle;
-    $[12] = onGetBodyColumnSx;
-    $[13] = onGetBodyRowClassName;
-    $[14] = onGetBodyRowStyle;
-    $[15] = onGetBodyRowSx;
-    $[16] = progressiveVisible;
-    $[17] = ref;
-    $[18] = showEvenColor;
-    $[19] = showOddColor;
-    $[20] = sortable;
-    $[21] = t2;
+    $[8] = baseIndex;
+    $[9] = canInView;
+    $[10] = columns;
+    $[11] = defaultAlign;
+    $[12] = defaultEllipsis;
+    $[13] = inView;
+    $[14] = items;
+    $[15] = onCheckChange;
+    $[16] = onClick;
+    $[17] = onGetBodyColumnClassName;
+    $[18] = onGetBodyColumnStyle;
+    $[19] = onGetBodyColumnSx;
+    $[20] = onGetBodyRowClassName;
+    $[21] = onGetBodyRowStyle;
+    $[22] = onGetBodyRowSx;
+    $[23] = progressiveVisible;
+    $[24] = ref;
+    $[25] = showEvenColor;
+    $[26] = showOddColor;
+    $[27] = sortable;
+    $[28] = t5;
   } else {
-    t2 = $[21];
+    t5 = $[28];
   }
-  var renderItems = t2;
-  var t3;
-  if ($[22] !== renderItems) {
-    t3 = /*#__PURE__*/React.createElement(React.Fragment, null, renderItems);
-    $[22] = renderItems;
-    $[23] = t3;
+  var renderItems = t5;
+  var t6;
+  if ($[29] !== renderItems) {
+    t6 = /*#__PURE__*/React.createElement(React.Fragment, null, renderItems);
+    $[29] = renderItems;
+    $[30] = t6;
   } else {
-    t3 = $[23];
+    t6 = $[30];
   }
-  return t3;
+  return t6;
 }var chunkArray = function chunkArray(array, size) {
   var result = [];
   for (var i = 0; i < array.length; i += size) {
@@ -2923,16 +3057,37 @@ function PTableBodyRow(t0) {
     t2 = $[53];
   }
   return t2;
-}function columnFilter(v) {
+}/********************************************************************************************************************
+ * columnFilter
+ * ******************************************************************************************************************/
+
+function columnFilter(v) {
   return v !== undefined && v !== null && v !== false;
 }
+
+/********************************************************************************************************************
+ * getNewColumnId
+ * ******************************************************************************************************************/
 var _columnId = 0;
 var getNewColumnId = function getNewColumnId() {
   _columnId += 1;
   return "$c$".concat(_columnId, "$");
 };
+
+/********************************************************************************************************************
+ * TLocalBodyData
+ * ******************************************************************************************************************/
+
+/********************************************************************************************************************
+ * TLocalHeaderData
+ * ******************************************************************************************************************/
+
+/********************************************************************************************************************
+ * PTable
+ * ******************************************************************************************************************/
+
 function PTable(t0) {
-  var $ = compilerRuntime.c(175);
+  var $ = compilerRuntime.c(200);
   var ref = t0.ref,
     className = t0.className,
     initStyle = t0.style,
@@ -2997,6 +3152,9 @@ function PTable(t0) {
   }
   var fireOnCheckChangeTimer = React.useRef(t6);
   var simpleBarRef = React.useRef(null);
+  var onPageChangeRef = reactHook.useAutoUpdateRef(onPageChange);
+  var onSortChangeRef = reactHook.useAutoUpdateRef(onSortChange);
+  var onCheckChangeRef = reactHook.useAutoUpdateRef(onCheckChange);
   var t7;
   if ($[3] === Symbol["for"]("react.memo_cache_sentinel")) {
     t7 = {
@@ -3030,51 +3188,129 @@ function PTable(t0) {
     t9 = $[5];
   }
   var sensors = core.useSensors(core.useSensor(core.MouseSensor, t7), core.useSensor(core.TouchSensor, t8), core.useSensor(core.KeyboardSensor, t9));
-  var _useState = React.useState(initColumns),
+  var _useState = React.useState(),
     _useState2 = _slicedToArray(_useState, 2),
-    columns = _useState2[0],
-    setColumns = _useState2[1];
-  reactHook.useChanged(initColumns) && setColumns(initColumns);
-  var columnsRef = reactHook.useAutoUpdateRef(columns);
-  var _useState3 = React.useState(),
+    sortableItems = _useState2[0],
+    setSortableItems = _useState2[1];
+  var _useState3 = React.useState(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    finalColumns = _useState4[0],
-    setFinalColumns = _useState4[1];
+    menuOpen = _useState4[0],
+    setMenuOpen = _useState4[1];
   var _useState5 = React.useState(undefined),
     _useState6 = _slicedToArray(_useState5, 2),
-    finalColumnsId = _useState6[0],
-    setFinalColumnsId = _useState6[1];
-  var _useState7 = React.useState(initItems),
+    openMenuId = _useState6[0],
+    setOpenMenuId = _useState6[1];
+  var _useState7 = React.useState(),
     _useState8 = _slicedToArray(_useState7, 2),
-    items = _useState8[0],
-    setItems = _useState8[1];
-  reactHook.useChanged(initItems) && setItems(initItems);
-  var itemsRef = reactHook.useAutoUpdateRef(items);
+    containerHeight = _useState8[0],
+    setContainerHeight = _useState8[1];
   var _useState9 = React.useState(),
     _useState0 = _slicedToArray(_useState9, 2),
-    sortableItems = _useState0[0],
-    setSortableItems = _useState0[1];
-  if (reactHook.useChanged(items, true)) {
-    setSortableItems(makeSortableItems(items));
-  }
-  var _useState1 = React.useState(initPaging),
+    pagingHeight = _useState0[0],
+    setPagingHeight = _useState0[1];
+  var _useState1 = React.useState(),
     _useState10 = _slicedToArray(_useState1, 2),
-    paging = _useState10[0],
-    setPaging = _useState10[1];
-  reactHook.useChanged(initPaging) && setPaging(initPaging);
-  var pagingRef = reactHook.useAutoUpdateRef(paging);
-  var _useState11 = React.useState(false),
+    finalColumns = _useState10[0],
+    _setFinalColumns = _useState10[1];
+  var finalColumnsRef = reactHook.useAutoUpdateRef(finalColumns);
+  var t10;
+  if ($[6] !== finalColumnsRef) {
+    t10 = function t10(value) {
+      _setFinalColumns(function (prev) {
+        var finalValue = typeof value === "function" ? value(prev) : value;
+        finalColumnsRef.current = finalValue;
+        return finalValue;
+      });
+    };
+    $[6] = finalColumnsRef;
+    $[7] = t10;
+  } else {
+    t10 = $[7];
+  }
+  var setFinalColumns = t10;
+  var _useState11 = React.useState(undefined),
     _useState12 = _slicedToArray(_useState11, 2),
-    menuOpen = _useState12[0],
-    setMenuOpen = _useState12[1];
-  var _useState13 = React.useState(undefined),
+    finalColumnsId = _useState12[0],
+    _setFinalColumnsId = _useState12[1];
+  var finalColumnsIdRef = reactHook.useAutoUpdateRef(finalColumnsId);
+  var t11;
+  if ($[8] !== finalColumnsIdRef) {
+    t11 = function t11(value_0) {
+      _setFinalColumnsId(function (prev_0) {
+        var finalValue_0 = typeof value_0 === "function" ? value_0(prev_0) : value_0;
+        finalColumnsIdRef.current = finalValue_0;
+        return finalValue_0;
+      });
+    };
+    $[8] = finalColumnsIdRef;
+    $[9] = t11;
+  } else {
+    t11 = $[9];
+  }
+  var setFinalColumnsId = t11;
+  var _useState13 = React.useState(initColumns),
     _useState14 = _slicedToArray(_useState13, 2),
-    openMenuId = _useState14[0],
-    setOpenMenuId = _useState14[1];
-  var _useState15 = React.useState(),
+    columns = _useState14[0],
+    _setColumns = _useState14[1];
+  reactHook.useChanged(initColumns) && _setColumns(initColumns);
+  var columnsRef = reactHook.useAutoUpdateRef(columns);
+  var t12;
+  if ($[10] !== columnsRef) {
+    t12 = function t12(value_1) {
+      _setColumns(function (prev_1) {
+        var finalValue_1 = typeof value_1 === "function" ? value_1(prev_1) : value_1;
+        columnsRef.current = finalValue_1;
+        return finalValue_1;
+      });
+    };
+    $[10] = columnsRef;
+    $[11] = t12;
+  } else {
+    t12 = $[11];
+  }
+  var setColumns = t12;
+  var _useState15 = React.useState(initItems),
     _useState16 = _slicedToArray(_useState15, 2),
-    containerHeight = _useState16[0],
-    setContainerHeight = _useState16[1];
+    items = _useState16[0],
+    _setItems = _useState16[1];
+  reactHook.useChanged(initItems) && _setItems(initItems);
+  var itemsRef = reactHook.useAutoUpdateRef(items);
+  var t13;
+  if ($[12] !== itemsRef) {
+    t13 = function t13(value_2) {
+      _setItems(function (prev_2) {
+        var finalValue_2 = typeof value_2 === "function" ? value_2(prev_2) : value_2;
+        itemsRef.current = finalValue_2;
+        return finalValue_2;
+      });
+    };
+    $[12] = itemsRef;
+    $[13] = t13;
+  } else {
+    t13 = $[13];
+  }
+  var setItems = t13;
+  var _useState17 = React.useState(initPaging),
+    _useState18 = _slicedToArray(_useState17, 2),
+    paging = _useState18[0],
+    _setPaging = _useState18[1];
+  reactHook.useChanged(initPaging) && _setPaging(initPaging);
+  var pagingRef = reactHook.useAutoUpdateRef(paging);
+  var t14;
+  if ($[14] !== pagingRef) {
+    t14 = function t14(value_3) {
+      _setPaging(function (prev_3) {
+        var finalValue_3 = typeof value_3 === "function" ? value_3(prev_3) : value_3;
+        pagingRef.current = finalValue_3;
+        return finalValue_3;
+      });
+    };
+    $[14] = pagingRef;
+    $[15] = t14;
+  } else {
+    t14 = $[15];
+  }
+  var setPaging = t14;
   var _useResizeDetector = useResizeDetector({
       handleHeight: true,
       handleWidth: false,
@@ -3086,12 +3322,8 @@ function PTable(t0) {
         }
       }
     }),
-    t10 = _useResizeDetector.ref;
-  var containerHeightDetector = t10;
-  var _useState17 = React.useState(),
-    _useState18 = _slicedToArray(_useState17, 2),
-    pagingHeight = _useState18[0],
-    setPagingHeight = _useState18[1];
+    t15 = _useResizeDetector.ref;
+  var containerHeightDetector = t15;
   var _useResizeDetector2 = useResizeDetector({
       handleHeight: true,
       handleWidth: false,
@@ -3103,28 +3335,28 @@ function PTable(t0) {
         }
       }
     }),
-    t11 = _useResizeDetector2.ref;
-  var pagingHeightResizeDetector = t11;
-  var t12;
-  if ($[6] !== finalColumns || $[7] !== finalColumnsId) {
-    t12 = function t12(column) {
-      if (finalColumns && finalColumnsId) {
-        var idx = finalColumns.indexOf(column);
-        return finalColumnsId[idx];
+    t16 = _useResizeDetector2.ref;
+  var pagingHeightResizeDetector = t16;
+  var t17;
+  if ($[16] !== finalColumnsIdRef || $[17] !== finalColumnsRef) {
+    t17 = function t17(column) {
+      if (finalColumnsRef.current && finalColumnsIdRef.current) {
+        var idx = finalColumnsRef.current.indexOf(column);
+        return finalColumnsIdRef.current[idx];
       } else {
         return "";
       }
     };
-    $[6] = finalColumns;
-    $[7] = finalColumnsId;
-    $[8] = t12;
+    $[16] = finalColumnsIdRef;
+    $[17] = finalColumnsRef;
+    $[18] = t17;
   } else {
-    t12 = $[8];
+    t17 = $[18];
   }
-  var getFinalColumnId = t12;
-  var t13;
-  if ($[9] !== getFinalColumnId) {
-    t13 = function t13(column_0) {
+  var getFinalColumnId = t17;
+  var t18;
+  if ($[19] !== getFinalColumnId) {
+    t18 = function t18(column_0) {
       if (updateHeadCheckTimer.current) {
         clearTimeout(updateHeadCheckTimer.current);
         updateHeadCheckTimer.current = undefined;
@@ -3156,15 +3388,15 @@ function PTable(t0) {
         }, 100);
       }
     };
-    $[9] = getFinalColumnId;
-    $[10] = t13;
+    $[19] = getFinalColumnId;
+    $[20] = t18;
   } else {
-    t13 = $[10];
+    t18 = $[20];
   }
-  var updateHeadCheck = t13;
-  var t14;
-  if ($[11] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t14 = function t14(itemKey, itemValue, columnId_0) {
+  var updateHeadCheck = t18;
+  var t19;
+  if ($[21] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t19 = function t19(itemKey, itemValue, columnId_0) {
       var checked = false;
       Object.keys(localBodyDataRef.current).find(function (key_1) {
         var itemData = localBodyDataRef.current[key_1];
@@ -3176,14 +3408,14 @@ function PTable(t0) {
       });
       return checked;
     };
-    $[11] = t14;
+    $[21] = t19;
   } else {
-    t14 = $[11];
+    t19 = $[21];
   }
-  var getChecked = t14;
-  var t15;
-  if ($[12] !== updateHeadCheck) {
-    t15 = function t15(itemKey_0, itemValue_0, columnId_1, checked_0) {
+  var getChecked = t19;
+  var t20;
+  if ($[22] !== updateHeadCheck) {
+    t20 = function t20(itemKey_0, itemValue_0, columnId_1, checked_0) {
       Object.keys(localBodyDataRef.current).find(function (key_2) {
         var itemData_0 = localBodyDataRef.current[key_2];
         if (itemData_0.item[itemKey_0] === itemValue_0) {
@@ -3197,15 +3429,15 @@ function PTable(t0) {
         }
       });
     };
-    $[12] = updateHeadCheck;
-    $[13] = t15;
+    $[22] = updateHeadCheck;
+    $[23] = t20;
   } else {
-    t15 = $[13];
+    t20 = $[23];
   }
-  var setChecked = t15;
-  var t16;
-  if ($[14] !== updateHeadCheck) {
-    t16 = function t16(itemKey_1, itemValue_1, columnId_2) {
+  var setChecked = t20;
+  var t21;
+  if ($[24] !== updateHeadCheck) {
+    t21 = function t21(itemKey_1, itemValue_1, columnId_2) {
       Object.keys(localBodyDataRef.current).forEach(function (key_3) {
         var itemData_1 = localBodyDataRef.current[key_3];
         if (itemData_1.item[itemKey_1] === itemValue_1) {
@@ -3219,15 +3451,15 @@ function PTable(t0) {
         }
       });
     };
-    $[14] = updateHeadCheck;
-    $[15] = t16;
+    $[24] = updateHeadCheck;
+    $[25] = t21;
   } else {
-    t16 = $[15];
+    t21 = $[25];
   }
-  var toggleChecked = t16;
-  var t17;
-  if ($[16] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t17 = function t17(columnId_3, checked_1) {
+  var toggleChecked = t21;
+  var t22;
+  if ($[26] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t22 = function t22(columnId_3, checked_1) {
       var _localHeaderDataRef$c;
       Object.keys(localBodyDataRef.current).forEach(function (key_4) {
         var itemData_2 = localBodyDataRef.current[key_4];
@@ -3239,14 +3471,14 @@ function PTable(t0) {
       });
       (_localHeaderDataRef$c = localHeaderDataRef.current[columnId_3]) === null || _localHeaderDataRef$c === void 0 || (_localHeaderDataRef$c = _localHeaderDataRef$c.commands) === null || _localHeaderDataRef$c === void 0 || _localHeaderDataRef$c.setChecked(checked_1);
     };
-    $[16] = t17;
+    $[26] = t22;
   } else {
-    t17 = $[16];
+    t22 = $[26];
   }
-  var setCheckedAll = t17;
-  var t18;
-  if ($[17] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t18 = function t18(columnId_4) {
+  var setCheckedAll = t22;
+  var t23;
+  if ($[27] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t23 = function t23(columnId_4) {
       var checkedItems = [];
       Object.keys(localBodyDataRef.current).forEach(function (key_5) {
         var itemData_3 = localBodyDataRef.current[key_5];
@@ -3259,27 +3491,27 @@ function PTable(t0) {
       });
       return checkedItems;
     };
-    $[17] = t18;
+    $[27] = t23;
   } else {
-    t18 = $[17];
+    t23 = $[27];
   }
-  var getCheckedItems = t18;
-  var t19;
-  if ($[18] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t19 = function t19() {
+  var getCheckedItems = t23;
+  var t24;
+  if ($[28] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t24 = function t24() {
       if (updateHeadCheckTimer.current) {
         clearTimeout(updateHeadCheckTimer.current);
         updateHeadCheckTimer.current = undefined;
       }
     };
-    $[18] = t19;
+    $[28] = t24;
   } else {
-    t19 = $[18];
+    t24 = $[28];
   }
-  var stopHeadCheckTimer = t19;
-  var t20;
-  if ($[19] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t20 = function t20() {
+  var stopHeadCheckTimer = t24;
+  var t25;
+  if ($[29] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t25 = function t25() {
       Object.keys(fireOnCheckChangeTimer.current).forEach(function (key_6) {
         if (fireOnCheckChangeTimer.current[key_6]) {
           clearTimeout(fireOnCheckChangeTimer.current[key_6]);
@@ -3287,64 +3519,48 @@ function PTable(t0) {
       });
       fireOnCheckChangeTimer.current = {};
     };
-    $[19] = t20;
+    $[29] = t25;
   } else {
-    t20 = $[19];
+    t25 = $[29];
   }
-  var clearFireOnCheckChangeTimer = t20;
-  var t21;
-  if ($[20] !== onCheckChange) {
-    t21 = function t21(columnId_5) {
+  var clearFireOnCheckChangeTimer = t25;
+  var t26;
+  if ($[30] !== onCheckChangeRef) {
+    t26 = function t26(columnId_5) {
       if (fireOnCheckChangeTimer.current[columnId_5]) {
         clearTimeout(fireOnCheckChangeTimer.current[columnId_5]);
         fireOnCheckChangeTimer.current[columnId_5] = undefined;
       }
-      if (onCheckChange) {
+      if (onCheckChangeRef.current) {
         fireOnCheckChangeTimer.current[columnId_5] = setTimeout(function () {
+          var _onCheckChangeRef$cur;
           fireOnCheckChangeTimer.current[columnId_5] = undefined;
-          onCheckChange && onCheckChange(columnId_5, getCheckedItems(columnId_5));
+          (_onCheckChangeRef$cur = onCheckChangeRef.current) === null || _onCheckChangeRef$cur === void 0 || _onCheckChangeRef$cur.call(onCheckChangeRef, columnId_5, getCheckedItems(columnId_5));
         }, 100);
       }
     };
-    $[20] = onCheckChange;
-    $[21] = t21;
+    $[30] = onCheckChangeRef;
+    $[31] = t26;
   } else {
-    t21 = $[21];
+    t26 = $[31];
   }
-  var fireOnCheckChange = t21;
-  var t22;
-  if ($[22] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t22 = function t22() {
+  var fireOnCheckChange = t26;
+  var t27;
+  if ($[32] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t27 = function t27() {
       var _simpleBarRef$current;
       (_simpleBarRef$current = simpleBarRef.current) === null || _simpleBarRef$current === void 0 || (_simpleBarRef$current = _simpleBarRef$current.getScrollElement()) === null || _simpleBarRef$current === void 0 || _simpleBarRef$current.scrollTo({
         top: 0
       });
     };
-    $[22] = t22;
+    $[32] = t27;
   } else {
-    t22 = $[22];
+    t27 = $[32];
   }
-  var simpleBarScrollToTop = t22;
-  var t23;
-  var t24;
-  if ($[23] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t23 = function t23() {
-      return function () {
-        stopHeadCheckTimer();
-        clearFireOnCheckChangeTimer();
-      };
-    };
-    t24 = [clearFireOnCheckChangeTimer, stopHeadCheckTimer];
-    $[23] = t23;
-    $[24] = t24;
-  } else {
-    t23 = $[23];
-    t24 = $[24];
-  }
-  React.useEffect(t23, t24);
-  var t25;
-  if ($[25] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t25 = function t25() {
+  var simpleBarScrollToTop = t27;
+  var t28;
+  if ($[33] !== items) {
+    t28 = function t28() {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
       Object.keys(localHeaderDataRef.current).forEach(function (key_7) {
@@ -3359,49 +3575,103 @@ function PTable(t0) {
           (_localBodyDataRef$cur = localBodyDataRef.current[key_8].columns[cKey].commands) === null || _localBodyDataRef$cur === void 0 || _localBodyDataRef$cur.setChecked(false);
         });
       });
+      setSortableItems(makeSortableItems(items));
     };
-    $[25] = t25;
+    $[33] = items;
+    $[34] = t28;
   } else {
-    t25 = $[25];
+    t28 = $[34];
   }
-  var t26;
-  if ($[26] !== items) {
-    t26 = [items, clearFireOnCheckChangeTimer, stopHeadCheckTimer];
-    $[26] = items;
-    $[27] = t26;
+  var effectEvent = React.useEffectEvent(t28);
+  var t29;
+  if ($[35] !== effectEvent) {
+    t29 = function t29() {
+      effectEvent();
+    };
+    $[35] = effectEvent;
+    $[36] = t29;
   } else {
-    t26 = $[27];
+    t29 = $[36];
   }
-  React.useEffect(t25, t26);
-  if (reactHook.useChanged(columns, true)) {
-    var newFinalColumns = columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter);
-    var newFinalColumnsId = newFinalColumns === null || newFinalColumns === void 0 ? void 0 : newFinalColumns.map(_temp$1);
-    setFinalColumns(newFinalColumns);
-    setFinalColumnsId(newFinalColumnsId);
+  var t30;
+  if ($[37] !== items) {
+    t30 = [items];
+    $[37] = items;
+    $[38] = t30;
+  } else {
+    t30 = $[38];
   }
-  var t27;
-  if ($[28] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t27 = function t27() {
+  React.useEffect(t29, t30);
+  var t31;
+  if ($[39] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t31 = function t31() {
+      return function () {
+        stopHeadCheckTimer();
+        clearFireOnCheckChangeTimer();
+      };
+    };
+    $[39] = t31;
+  } else {
+    t31 = $[39];
+  }
+  var effectEvent_0 = React.useEffectEvent(t31);
+  var t32;
+  if ($[40] !== effectEvent_0) {
+    t32 = function t32() {
+      return effectEvent_0();
+    };
+    $[40] = effectEvent_0;
+    $[41] = t32;
+  } else {
+    t32 = $[41];
+  }
+  var t33;
+  if ($[42] === Symbol["for"]("react.memo_cache_sentinel")) {
+    t33 = [];
+    $[42] = t33;
+  } else {
+    t33 = $[42];
+  }
+  React.useEffect(t32, t33);
+  var t34;
+  if ($[43] !== columns || $[44] !== setFinalColumns || $[45] !== setFinalColumnsId) {
+    t34 = function t34() {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
+      var newFinalColumns = columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter);
+      setFinalColumns(newFinalColumns);
+      setFinalColumnsId(newFinalColumns === null || newFinalColumns === void 0 ? void 0 : newFinalColumns.map(_temp$1));
     };
-    $[28] = t27;
+    $[43] = columns;
+    $[44] = setFinalColumns;
+    $[45] = setFinalColumnsId;
+    $[46] = t34;
   } else {
-    t27 = $[28];
+    t34 = $[46];
   }
-  var t28;
-  if ($[29] !== columns) {
-    t28 = [columns, clearFireOnCheckChangeTimer, stopHeadCheckTimer];
-    $[29] = columns;
-    $[30] = t28;
+  var effectEvent_1 = React.useEffectEvent(t34);
+  var t35;
+  if ($[47] !== effectEvent_1) {
+    t35 = function t35() {
+      effectEvent_1();
+    };
+    $[47] = effectEvent_1;
+    $[48] = t35;
   } else {
-    t28 = $[30];
+    t35 = $[48];
   }
-  React.useEffect(t27, t28);
-  var t29;
-  var t30;
-  if ($[31] !== finalColumns || $[32] !== getFinalColumnId || $[33] !== sortableItems) {
-    t29 = function t29() {
+  var t36;
+  if ($[49] !== columns) {
+    t36 = [columns];
+    $[49] = columns;
+    $[50] = t36;
+  } else {
+    t36 = $[50];
+  }
+  React.useEffect(t35, t36);
+  var t37;
+  if ($[51] !== finalColumns || $[52] !== getFinalColumnId || $[53] !== sortableItems) {
+    t37 = function t37() {
       clearFireOnCheckChangeTimer();
       if (sortableItems) {
         localBodyDataRef.current = sortableItems.reduce(function (res, item) {
@@ -3430,21 +3700,37 @@ function PTable(t0) {
         localBodyDataRef.current = {};
       }
     };
-    t30 = [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId];
-    $[31] = finalColumns;
-    $[32] = getFinalColumnId;
-    $[33] = sortableItems;
-    $[34] = t29;
-    $[35] = t30;
+    $[51] = finalColumns;
+    $[52] = getFinalColumnId;
+    $[53] = sortableItems;
+    $[54] = t37;
   } else {
-    t29 = $[34];
-    t30 = $[35];
+    t37 = $[54];
   }
-  React.useLayoutEffect(t29, t30);
-  var t31;
-  var t32;
-  if ($[36] !== finalColumns || $[37] !== getFinalColumnId) {
-    t31 = function t31() {
+  var effectEvent_2 = React.useEffectEvent(t37);
+  var t38;
+  if ($[55] !== effectEvent_2) {
+    t38 = function t38() {
+      effectEvent_2();
+    };
+    $[55] = effectEvent_2;
+    $[56] = t38;
+  } else {
+    t38 = $[56];
+  }
+  var t39;
+  if ($[57] !== finalColumns || $[58] !== sortableItems) {
+    t39 = [sortableItems, finalColumns];
+    $[57] = finalColumns;
+    $[58] = sortableItems;
+    $[59] = t39;
+  } else {
+    t39 = $[59];
+  }
+  React.useLayoutEffect(t38, t39);
+  var t40;
+  if ($[60] !== finalColumns || $[61] !== getFinalColumnId) {
+    t40 = function t40() {
       if (finalColumns) {
         localHeaderDataRef.current = finalColumns.reduce(function (res_0, c_0) {
           res_0[getFinalColumnId(c_0)] = {
@@ -3457,83 +3743,83 @@ function PTable(t0) {
         localHeaderDataRef.current = {};
       }
     };
-    t32 = [finalColumns, getFinalColumnId];
-    $[36] = finalColumns;
-    $[37] = getFinalColumnId;
-    $[38] = t31;
-    $[39] = t32;
+    $[60] = finalColumns;
+    $[61] = getFinalColumnId;
+    $[62] = t40;
   } else {
-    t31 = $[38];
-    t32 = $[39];
+    t40 = $[62];
   }
-  React.useLayoutEffect(t31, t32);
-  var t33;
-  var t34;
-  if ($[40] !== columnsRef) {
-    t33 = function t33() {
+  var effectEvent_3 = React.useEffectEvent(t40);
+  var t41;
+  if ($[63] !== effectEvent_3) {
+    t41 = function t41() {
+      effectEvent_3();
+    };
+    $[63] = effectEvent_3;
+    $[64] = t41;
+  } else {
+    t41 = $[64];
+  }
+  var t42;
+  if ($[65] !== finalColumns) {
+    t42 = [finalColumns];
+    $[65] = finalColumns;
+    $[66] = t42;
+  } else {
+    t42 = $[66];
+  }
+  React.useLayoutEffect(t41, t42);
+  var t43;
+  if ($[67] !== columnsRef) {
+    t43 = function t43() {
       return columnsRef.current;
     };
-    t34 = function t34(columns_0) {
-      columnsRef.current = columns_0;
-      setColumns(columns_0);
-    };
-    $[40] = columnsRef;
-    $[41] = t33;
-    $[42] = t34;
+    $[67] = columnsRef;
+    $[68] = t43;
   } else {
-    t33 = $[41];
-    t34 = $[42];
+    t43 = $[68];
   }
-  var t35;
-  var t36;
-  if ($[43] !== itemsRef) {
-    t35 = function t35() {
+  var t44;
+  if ($[69] !== itemsRef) {
+    t44 = function t44() {
       return itemsRef.current;
     };
-    t36 = function t36(items_0) {
-      itemsRef.current = items_0;
-      setItems(items_0);
-    };
-    $[43] = itemsRef;
-    $[44] = t35;
-    $[45] = t36;
+    $[69] = itemsRef;
+    $[70] = t44;
   } else {
-    t35 = $[44];
-    t36 = $[45];
+    t44 = $[70];
   }
-  var t37;
-  if ($[46] !== pagingRef) {
-    t37 = function t37() {
+  var t45;
+  if ($[71] !== pagingRef) {
+    t45 = function t45() {
       return pagingRef.current;
     };
-    $[46] = pagingRef;
-    $[47] = t37;
+    $[71] = pagingRef;
+    $[72] = t45;
   } else {
-    t37 = $[47];
+    t45 = $[72];
   }
-  var t38;
-  if ($[48] !== itemsRef || $[49] !== pagingRef) {
-    t38 = function t38(items_1, paging_0) {
-      itemsRef.current = items_1;
-      pagingRef.current = paging_0;
-      setItems(items_1);
+  var t46;
+  if ($[73] !== setItems || $[74] !== setPaging) {
+    t46 = function t46(items_0, paging_0) {
+      setItems(items_0);
       setPaging(paging_0);
     };
-    $[48] = itemsRef;
-    $[49] = pagingRef;
-    $[50] = t38;
+    $[73] = setItems;
+    $[74] = setPaging;
+    $[75] = t46;
   } else {
-    t38 = $[50];
+    t46 = $[75];
   }
-  var t39;
-  if ($[51] !== itemsRef || $[52] !== setChecked || $[53] !== t33 || $[54] !== t34 || $[55] !== t35 || $[56] !== t36 || $[57] !== t37 || $[58] !== t38 || $[59] !== toggleChecked) {
-    t39 = {
-      getColumns: t33,
-      setColumns: t34,
-      getItems: t35,
-      setItems: t36,
-      getPaging: t37,
-      setItemsPaging: t38,
+  var t47;
+  if ($[76] !== itemsRef || $[77] !== setChecked || $[78] !== setColumns || $[79] !== setItems || $[80] !== t43 || $[81] !== t44 || $[82] !== t45 || $[83] !== t46 || $[84] !== toggleChecked) {
+    t47 = {
+      getColumns: t43,
+      setColumns: setColumns,
+      getItems: t44,
+      setItems: setItems,
+      getPaging: t45,
+      setItemsPaging: t46,
       resetSort: function resetSort() {
         setSortableItems(makeSortableItems(itemsRef.current));
       },
@@ -3544,31 +3830,31 @@ function PTable(t0) {
       setCheckedAll: setCheckedAll,
       scrollToTop: simpleBarScrollToTop
     };
-    $[51] = itemsRef;
-    $[52] = setChecked;
-    $[53] = t33;
-    $[54] = t34;
-    $[55] = t35;
-    $[56] = t36;
-    $[57] = t37;
-    $[58] = t38;
-    $[59] = toggleChecked;
-    $[60] = t39;
+    $[76] = itemsRef;
+    $[77] = setChecked;
+    $[78] = setColumns;
+    $[79] = setItems;
+    $[80] = t43;
+    $[81] = t44;
+    $[82] = t45;
+    $[83] = t46;
+    $[84] = toggleChecked;
+    $[85] = t47;
   } else {
-    t39 = $[60];
+    t47 = $[85];
   }
-  reactHook.useForwardRef(ref, t39);
-  var t40;
-  if ($[61] !== onSortChange) {
-    t40 = function t40(event) {
+  reactHook.useForwardRef(ref, t47);
+  var t48;
+  if ($[86] !== onSortChangeRef) {
+    t48 = function t48(event) {
       var active = event.active,
         over = event.over;
       if (active && over) {
-        setSortableItems(function (items_2) {
-          if (items_2) {
+        setSortableItems(function (items_1) {
+          if (items_1) {
             var oldIndex = null;
             var newIndex = null;
-            items_2.find(function (item_0, idx_0) {
+            items_1.find(function (item_0, idx_0) {
               if (item_0.id === active.id) {
                 oldIndex = idx_0;
               } else {
@@ -3579,27 +3865,28 @@ function PTable(t0) {
               return oldIndex != null && newIndex != null;
             });
             if (oldIndex != null && newIndex != null) {
-              var finalItems = sortable.arrayMove(items_2, oldIndex, newIndex);
-              onSortChange && onSortChange(finalItems);
+              var _onSortChangeRef$curr;
+              var finalItems = sortable.arrayMove(items_1, oldIndex, newIndex);
+              (_onSortChangeRef$curr = onSortChangeRef.current) === null || _onSortChangeRef$curr === void 0 || _onSortChangeRef$curr.call(onSortChangeRef, finalItems);
               return finalItems;
             } else {
-              return items_2;
+              return items_1;
             }
           } else {
-            return items_2;
+            return items_1;
           }
         });
       }
     };
-    $[61] = onSortChange;
-    $[62] = t40;
+    $[86] = onSortChangeRef;
+    $[87] = t48;
   } else {
-    t40 = $[62];
+    t48 = $[87];
   }
-  var handleDragEnd = t40;
-  var t41;
-  if ($[63] !== getFinalColumnId) {
-    t41 = function t41(column_1, checked_2) {
+  var handleDragEnd = t48;
+  var t49;
+  if ($[88] !== getFinalColumnId) {
+    t49 = function t49(column_1, checked_2) {
       Object.keys(localBodyDataRef.current).forEach(function (key_9) {
         var data = localBodyDataRef.current[key_9].columns[getFinalColumnId(column_1)];
         if (data) {
@@ -3610,38 +3897,39 @@ function PTable(t0) {
         }
       });
     };
-    $[63] = getFinalColumnId;
-    $[64] = t41;
+    $[88] = getFinalColumnId;
+    $[89] = t49;
   } else {
-    t41 = $[64];
+    t49 = $[89];
   }
-  var handleHeadCheckChange = t41;
-  var t42;
-  if ($[65] !== updateHeadCheck) {
-    t42 = function t42(item_1, column_2) {
+  var handleHeadCheckChange = t49;
+  var t50;
+  if ($[90] !== updateHeadCheck) {
+    t50 = function t50(item_1, column_2) {
       updateHeadCheck(column_2);
     };
-    $[65] = updateHeadCheck;
-    $[66] = t42;
+    $[90] = updateHeadCheck;
+    $[91] = t50;
   } else {
-    t42 = $[66];
+    t50 = $[91];
   }
-  var handleBodyCheckChange = t42;
-  var t43;
-  if ($[67] !== onPageChange) {
-    t43 = function t43(page) {
+  var handleBodyCheckChange = t50;
+  var t51;
+  if ($[92] !== onPageChangeRef) {
+    t51 = function t51(page) {
+      var _onPageChangeRef$curr;
       simpleBarScrollToTop();
-      onPageChange && onPageChange(page);
+      (_onPageChangeRef$curr = onPageChangeRef.current) === null || _onPageChangeRef$curr === void 0 || _onPageChangeRef$curr.call(onPageChangeRef, page);
     };
-    $[67] = onPageChange;
-    $[68] = t43;
+    $[92] = onPageChangeRef;
+    $[93] = t51;
   } else {
-    t43 = $[68];
+    t51 = $[93];
   }
-  var handlePageChange = t43;
-  var t44;
-  if ($[69] !== openMenuId) {
-    t44 = function t44(newMenuOpen, newOpenMenuId) {
+  var handlePageChange = t51;
+  var t52;
+  if ($[94] !== openMenuId) {
+    t52 = function t52(newMenuOpen, newOpenMenuId) {
       if (newMenuOpen) {
         setMenuOpen(newMenuOpen);
         setOpenMenuId(newOpenMenuId);
@@ -3652,21 +3940,21 @@ function PTable(t0) {
         }
       }
     };
-    $[69] = openMenuId;
-    $[70] = t44;
+    $[94] = openMenuId;
+    $[95] = t52;
   } else {
-    t44 = $[70];
+    t52 = $[95];
   }
-  var TableContextSetMenuOpen = t44;
-  var t45;
-  if ($[71] !== fireOnCheckChange || $[72] !== getFinalColumnId) {
-    t45 = function t45(item_2, column_3, checked_3) {
+  var TableContextSetMenuOpen = t52;
+  var t53;
+  if ($[96] !== fireOnCheckChange || $[97] !== getFinalColumnId) {
+    t53 = function t53(item_2, column_3, checked_3) {
       var columnId_7 = getFinalColumnId(column_3);
       if (localBodyDataRef.current) {
         var bodyData = localBodyDataRef.current[item_2.id];
         if (bodyData) {
-          var columns_1 = bodyData.columns;
-          var data_0 = columns_1[columnId_7];
+          var columns_0 = bodyData.columns;
+          var data_0 = columns_0[columnId_7];
           if (data_0) {
             data_0.checked = checked_3;
             fireOnCheckChange(columnId_7);
@@ -3674,16 +3962,16 @@ function PTable(t0) {
         }
       }
     };
-    $[71] = fireOnCheckChange;
-    $[72] = getFinalColumnId;
-    $[73] = t45;
+    $[96] = fireOnCheckChange;
+    $[97] = getFinalColumnId;
+    $[98] = t53;
   } else {
-    t45 = $[73];
+    t53 = $[98];
   }
-  var TableContextSetItemColumnChecked = t45;
-  var t46;
-  if ($[74] !== getFinalColumnId || $[75] !== updateHeadCheck) {
-    t46 = function t46(item_3, column_4, disabled) {
+  var TableContextSetItemColumnChecked = t53;
+  var t54;
+  if ($[99] !== getFinalColumnId || $[100] !== updateHeadCheck) {
+    t54 = function t54(item_3, column_4, disabled) {
       var _localBodyDataRef$cur3;
       var columnId_8 = getFinalColumnId(column_4);
       if (columnId_8 && (_localBodyDataRef$cur3 = localBodyDataRef.current[item_3.id]) !== null && _localBodyDataRef$cur3 !== void 0 && _localBodyDataRef$cur3.columns[columnId_8]) {
@@ -3708,16 +3996,16 @@ function PTable(t0) {
         _run();
       }
     };
-    $[74] = getFinalColumnId;
-    $[75] = updateHeadCheck;
-    $[76] = t46;
+    $[99] = getFinalColumnId;
+    $[100] = updateHeadCheck;
+    $[101] = t54;
   } else {
-    t46 = $[76];
+    t54 = $[101];
   }
-  var TableContextSetItemColumnCheckDisabled = t46;
-  var t47;
-  if ($[77] !== getFinalColumnId) {
-    t47 = function t47(item_4, column_5, commands) {
+  var TableContextSetItemColumnCheckDisabled = t54;
+  var t55;
+  if ($[102] !== getFinalColumnId) {
+    t55 = function t55(item_4, column_5, commands) {
       var _localBodyDataRef$cur5;
       var columnId_10 = getFinalColumnId(column_5);
       if (columnId_10 && (_localBodyDataRef$cur5 = localBodyDataRef.current[item_4.id]) !== null && _localBodyDataRef$cur5 !== void 0 && _localBodyDataRef$cur5.columns[columnId_10]) {
@@ -3740,15 +4028,15 @@ function PTable(t0) {
         _run_();
       }
     };
-    $[77] = getFinalColumnId;
-    $[78] = t47;
+    $[102] = getFinalColumnId;
+    $[103] = t55;
   } else {
-    t47 = $[78];
+    t55 = $[103];
   }
-  var TableContextSetItemColumnCommands = t47;
-  var t48;
-  if ($[79] !== getFinalColumnId) {
-    t48 = function t48(column_6, checked_4) {
+  var TableContextSetItemColumnCommands = t55;
+  var t56;
+  if ($[104] !== getFinalColumnId) {
+    t56 = function t56(column_6, checked_4) {
       var columnId_12 = getFinalColumnId(column_6);
       if (columnId_12 && localHeaderDataRef.current[columnId_12]) {
         localHeaderDataRef.current[columnId_12].checked = checked_4;
@@ -3769,15 +4057,15 @@ function PTable(t0) {
         _run_2();
       }
     };
-    $[79] = getFinalColumnId;
-    $[80] = t48;
+    $[104] = getFinalColumnId;
+    $[105] = t56;
   } else {
-    t48 = $[80];
+    t56 = $[105];
   }
-  var TableContextSetHeadColumnChecked = t48;
-  var t49;
-  if ($[81] !== getFinalColumnId) {
-    t49 = function t49(column_7, commands_0) {
+  var TableContextSetHeadColumnChecked = t56;
+  var t57;
+  if ($[106] !== getFinalColumnId) {
+    t57 = function t57(column_7, commands_0) {
       var columnId_14 = getFinalColumnId(column_7);
       if (columnId_14 && localHeaderDataRef.current[columnId_14]) {
         localHeaderDataRef.current[columnId_14].commands = commands_0;
@@ -3798,18 +4086,18 @@ function PTable(t0) {
         _run_3();
       }
     };
-    $[81] = getFinalColumnId;
-    $[82] = t49;
+    $[106] = getFinalColumnId;
+    $[107] = t57;
   } else {
-    t49 = $[82];
+    t57 = $[107];
   }
-  var TableContextSetHeadColumnCommands = t49;
+  var TableContextSetHeadColumnCommands = t57;
   var isNoData = !!sortableItems && sortableItems.length <= 0;
   var finalPagingHeight = paging && paging.total > 0 ? pagingHeight || 0 : 0;
   var stickyHeader = !isNoData && initStickyHeader;
-  var t50;
-  if ($[83] !== fullHeight || $[84] !== initStyle) {
-    t50 = fullHeight ? _objectSpread2(_objectSpread2({
+  var t58;
+  if ($[108] !== fullHeight || $[109] !== initStyle) {
+    t58 = fullHeight ? _objectSpread2(_objectSpread2({
       width: "100%"
     }, initStyle), {}, {
       flex: 1,
@@ -3821,32 +4109,32 @@ function PTable(t0) {
     }) : _objectSpread2({
       width: "100%"
     }, initStyle);
-    $[83] = fullHeight;
-    $[84] = initStyle;
-    $[85] = t50;
+    $[108] = fullHeight;
+    $[109] = initStyle;
+    $[110] = t58;
   } else {
-    t50 = $[85];
+    t58 = $[110];
   }
-  var style = t50;
-  var t51 = typeof cellPadding === "number" ? "".concat(cellPadding, "px") : cellPadding;
-  var t52;
-  if ($[86] !== t51) {
+  var style = t58;
+  var t59 = typeof cellPadding === "number" ? "".concat(cellPadding, "px") : cellPadding;
+  var t60;
+  if ($[111] !== t59) {
     var sx_0 = {
-      padding: t51
+      padding: t59
     };
-    t52 = {
+    t60 = {
       "> .MuiTableHead-root > .MuiTableRow-root > .MuiTableCell-root ": sx_0,
       "> .MuiTableBody-root > .MuiTableRow-root > .MuiTableCell-root ": sx_0,
       "> .MuiTableFooter-root > .MuiTableRow-root > .MuiTableCell-root ": sx_0
     };
-    $[86] = t51;
-    $[87] = t52;
+    $[111] = t59;
+    $[112] = t60;
   } else {
-    t52 = $[87];
+    t60 = $[112];
   }
-  var tableSx = t52;
+  var tableSx = t60;
   var pagingStyle;
-  if ($[88] !== fullHeight) {
+  if ($[113] !== fullHeight) {
     pagingStyle = {
       padding: "13px 0",
       borderTop: "1px solid rgba(224, 224, 224, 1)"
@@ -3854,32 +4142,32 @@ function PTable(t0) {
     if (fullHeight) {
       pagingStyle.position = "sticky";
     }
-    $[88] = fullHeight;
-    $[89] = pagingStyle;
+    $[113] = fullHeight;
+    $[114] = pagingStyle;
   } else {
-    pagingStyle = $[89];
+    pagingStyle = $[114];
   }
-  var t53;
-  if ($[90] !== pagingStyle || $[91] !== style || $[92] !== tableSx) {
-    t53 = {
+  var t61;
+  if ($[115] !== pagingStyle || $[116] !== style || $[117] !== tableSx) {
+    t61 = {
       style: style,
       tableSx: tableSx,
       pagingStyle: pagingStyle
     };
-    $[90] = pagingStyle;
-    $[91] = style;
-    $[92] = tableSx;
-    $[93] = t53;
+    $[115] = pagingStyle;
+    $[116] = style;
+    $[117] = tableSx;
+    $[118] = t61;
   } else {
-    t53 = $[93];
+    t61 = $[118];
   }
-  var _t = t53,
+  var _t = t61,
     style_0 = _t.style,
     tableSx_0 = _t.tableSx,
     pagingStyle_0 = _t.pagingStyle;
-  var t54;
-  if ($[94] !== containerHeight || $[95] !== finalPagingHeight || $[96] !== fullHeight || $[97] !== height || $[98] !== maxHeight || $[99] !== minHeight) {
-    t54 = fullHeight ? {
+  var t62;
+  if ($[119] !== containerHeight || $[120] !== finalPagingHeight || $[121] !== fullHeight || $[122] !== height || $[123] !== maxHeight || $[124] !== minHeight) {
+    t62 = fullHeight ? {
       height: (containerHeight || 0) - (finalPagingHeight || 0) - 1,
       flex: 1,
       position: "absolute",
@@ -3893,50 +4181,50 @@ function PTable(t0) {
       maxHeight: maxHeight,
       marginBottom: -1
     };
-    $[94] = containerHeight;
-    $[95] = finalPagingHeight;
-    $[96] = fullHeight;
-    $[97] = height;
-    $[98] = maxHeight;
-    $[99] = minHeight;
-    $[100] = t54;
+    $[119] = containerHeight;
+    $[120] = finalPagingHeight;
+    $[121] = fullHeight;
+    $[122] = height;
+    $[123] = maxHeight;
+    $[124] = minHeight;
+    $[125] = t62;
   } else {
-    t54 = $[100];
+    t62 = $[125];
   }
-  var contentContainerStyle = t54;
-  var t55;
-  if ($[101] !== containerHeight || $[102] !== finalPagingHeight || $[103] !== fullHeight || $[104] !== isNoData) {
-    t55 = fullHeight && isNoData ? {
+  var contentContainerStyle = t62;
+  var t63;
+  if ($[126] !== containerHeight || $[127] !== finalPagingHeight || $[128] !== fullHeight || $[129] !== isNoData) {
+    t63 = fullHeight && isNoData ? {
       flex: 1,
       height: (containerHeight || 0) - finalPagingHeight - 2
     } : undefined;
-    $[101] = containerHeight;
-    $[102] = finalPagingHeight;
-    $[103] = fullHeight;
-    $[104] = isNoData;
-    $[105] = t55;
+    $[126] = containerHeight;
+    $[127] = finalPagingHeight;
+    $[128] = fullHeight;
+    $[129] = isNoData;
+    $[130] = t63;
   } else {
-    t55 = $[105];
+    t63 = $[130];
   }
-  var tableStyle = t55;
-  var t56;
-  if ($[106] !== contentContainerStyle || $[107] !== tableStyle) {
-    t56 = {
+  var tableStyle = t63;
+  var t64;
+  if ($[131] !== contentContainerStyle || $[132] !== tableStyle) {
+    t64 = {
       contentContainerStyle: contentContainerStyle,
       tableStyle: tableStyle
     };
-    $[106] = contentContainerStyle;
-    $[107] = tableStyle;
-    $[108] = t56;
+    $[131] = contentContainerStyle;
+    $[132] = tableStyle;
+    $[133] = t64;
   } else {
-    t56 = $[108];
+    t64 = $[133];
   }
-  var _t2 = t56,
+  var _t2 = t64,
     contentContainerStyle_0 = _t2.contentContainerStyle,
     tableStyle_0 = _t2.tableStyle;
-  var t57;
-  if ($[109] !== caption || $[110] !== defaultAlign || $[111] !== finalColumns || $[112] !== handleHeadCheckChange || $[113] !== items || $[114] !== topHeadRows) {
-    t57 = finalColumns && /*#__PURE__*/React.createElement(PTableTopHead, {
+  var t65;
+  if ($[134] !== caption || $[135] !== defaultAlign || $[136] !== finalColumns || $[137] !== handleHeadCheckChange || $[138] !== items || $[139] !== topHeadRows) {
+    t65 = finalColumns && /*#__PURE__*/React.createElement(PTableTopHead, {
       caption: caption,
       rows: topHeadRows,
       columns: finalColumns,
@@ -3944,20 +4232,20 @@ function PTable(t0) {
       defaultAlign: defaultAlign,
       onCheckChange: handleHeadCheckChange
     });
-    $[109] = caption;
-    $[110] = defaultAlign;
-    $[111] = finalColumns;
-    $[112] = handleHeadCheckChange;
-    $[113] = items;
-    $[114] = topHeadRows;
-    $[115] = t57;
+    $[134] = caption;
+    $[135] = defaultAlign;
+    $[136] = finalColumns;
+    $[137] = handleHeadCheckChange;
+    $[138] = items;
+    $[139] = topHeadRows;
+    $[140] = t65;
   } else {
-    t57 = $[115];
+    t65 = $[140];
   }
-  var tableTopHead = t57;
-  var t58;
-  if ($[116] !== defaultAlign || $[117] !== defaultEllipsis || $[118] !== finalColumns || $[119] !== handleBodyCheckChange || $[120] !== noData || $[121] !== onClick || $[122] !== onGetBodyColumnClassName || $[123] !== onGetBodyColumnStyle || $[124] !== onGetBodyColumnSx || $[125] !== onGetBodyRowClassName || $[126] !== onGetBodyRowStyle || $[127] !== onGetBodyRowSx || $[128] !== showEvenColor || $[129] !== showOddColor || $[130] !== sortable$1 || $[131] !== sortableItems) {
-    t58 = finalColumns && /*#__PURE__*/React.createElement(material.TableBody, null, sortableItems ? sortableItems.length > 0 ? /*#__PURE__*/React.createElement(PTableSortableBody, {
+  var tableTopHead = t65;
+  var t66;
+  if ($[141] !== defaultAlign || $[142] !== defaultEllipsis || $[143] !== finalColumns || $[144] !== handleBodyCheckChange || $[145] !== noData || $[146] !== onClick || $[147] !== onGetBodyColumnClassName || $[148] !== onGetBodyColumnStyle || $[149] !== onGetBodyColumnSx || $[150] !== onGetBodyRowClassName || $[151] !== onGetBodyRowStyle || $[152] !== onGetBodyRowSx || $[153] !== showEvenColor || $[154] !== showOddColor || $[155] !== sortable$1 || $[156] !== sortableItems) {
+    t66 = finalColumns && /*#__PURE__*/React.createElement(material.TableBody, null, sortableItems ? sortableItems.length > 0 ? /*#__PURE__*/React.createElement(PTableSortableBody, {
       items: sortableItems,
       columns: finalColumns,
       showOddColor: showOddColor,
@@ -3979,30 +4267,30 @@ function PTable(t0) {
         flex: 1
       }
     }, noData ? noData : /*#__PURE__*/React.createElement(StyledNoDataDiv, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(material.Icon, null, "error")), /*#__PURE__*/React.createElement("div", null, "\uAC80\uC0C9\uB41C \uC815\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.")))) : undefined);
-    $[116] = defaultAlign;
-    $[117] = defaultEllipsis;
-    $[118] = finalColumns;
-    $[119] = handleBodyCheckChange;
-    $[120] = noData;
-    $[121] = onClick;
-    $[122] = onGetBodyColumnClassName;
-    $[123] = onGetBodyColumnStyle;
-    $[124] = onGetBodyColumnSx;
-    $[125] = onGetBodyRowClassName;
-    $[126] = onGetBodyRowStyle;
-    $[127] = onGetBodyRowSx;
-    $[128] = showEvenColor;
-    $[129] = showOddColor;
-    $[130] = sortable$1;
-    $[131] = sortableItems;
-    $[132] = t58;
+    $[141] = defaultAlign;
+    $[142] = defaultEllipsis;
+    $[143] = finalColumns;
+    $[144] = handleBodyCheckChange;
+    $[145] = noData;
+    $[146] = onClick;
+    $[147] = onGetBodyColumnClassName;
+    $[148] = onGetBodyColumnStyle;
+    $[149] = onGetBodyColumnSx;
+    $[150] = onGetBodyRowClassName;
+    $[151] = onGetBodyRowStyle;
+    $[152] = onGetBodyRowSx;
+    $[153] = showEvenColor;
+    $[154] = showOddColor;
+    $[155] = sortable$1;
+    $[156] = sortableItems;
+    $[157] = t66;
   } else {
-    t58 = $[132];
+    t66 = $[157];
   }
-  var tableBody = t58;
-  var t59;
-  if ($[133] !== defaultAlign || $[134] !== finalColumns || $[135] !== footer || $[136] !== isNoData || $[137] !== items) {
-    t59 = finalColumns && !isNoData && footer && /*#__PURE__*/React.createElement(material.TableFooter, null, /*#__PURE__*/React.createElement(material.TableRow, null, finalColumns.map(function (column_8, idx_1) {
+  var tableBody = t66;
+  var t67;
+  if ($[158] !== defaultAlign || $[159] !== finalColumns || $[160] !== footer || $[161] !== isNoData || $[162] !== items) {
+    t67 = finalColumns && !isNoData && footer && /*#__PURE__*/React.createElement(material.TableFooter, null, /*#__PURE__*/React.createElement(material.TableRow, null, finalColumns.map(function (column_8, idx_1) {
       return /*#__PURE__*/React.createElement(PTableFooterCell, {
         key: idx_1,
         column: column_8,
@@ -4010,19 +4298,19 @@ function PTable(t0) {
         defaultAlign: defaultAlign
       });
     })));
-    $[133] = defaultAlign;
-    $[134] = finalColumns;
-    $[135] = footer;
-    $[136] = isNoData;
-    $[137] = items;
-    $[138] = t59;
+    $[158] = defaultAlign;
+    $[159] = finalColumns;
+    $[160] = footer;
+    $[161] = isNoData;
+    $[162] = items;
+    $[163] = t67;
   } else {
-    t59 = $[138];
+    t67 = $[163];
   }
-  var tableFooter = t59;
-  var t60;
-  if ($[139] !== TableContextSetHeadColumnChecked || $[140] !== TableContextSetHeadColumnCommands || $[141] !== TableContextSetItemColumnCheckDisabled || $[142] !== TableContextSetItemColumnChecked || $[143] !== TableContextSetItemColumnCommands || $[144] !== TableContextSetMenuOpen || $[145] !== className || $[146] !== containerHeightDetector || $[147] !== contentContainerStyle_0 || $[148] !== finalColumns || $[149] !== fullHeight || $[150] !== handleDragEnd || $[151] !== handlePageChange || $[152] !== menuOpen || $[153] !== openMenuId || $[154] !== (pagination === null || pagination === void 0 ? void 0 : pagination.className) || $[155] !== (pagination === null || pagination === void 0 ? void 0 : pagination.style) || $[156] !== (pagination === null || pagination === void 0 ? void 0 : pagination.sx) || $[157] !== paging || $[158] !== pagingAlign || $[159] !== pagingHeightResizeDetector || $[160] !== pagingStyle_0 || $[161] !== progressiveVisible || $[162] !== sensors || $[163] !== showEvenColor || $[164] !== showOddColor || $[165] !== sortable$1 || $[166] !== stickyHeader || $[167] !== style_0 || $[168] !== sx || $[169] !== tableBody || $[170] !== tableFooter || $[171] !== tableStyle_0 || $[172] !== tableSx_0 || $[173] !== tableTopHead) {
-    t60 = finalColumns ? /*#__PURE__*/React.createElement(PTableContextProvider, {
+  var tableFooter = t67;
+  var t68;
+  if ($[164] !== TableContextSetHeadColumnChecked || $[165] !== TableContextSetHeadColumnCommands || $[166] !== TableContextSetItemColumnCheckDisabled || $[167] !== TableContextSetItemColumnChecked || $[168] !== TableContextSetItemColumnCommands || $[169] !== TableContextSetMenuOpen || $[170] !== className || $[171] !== containerHeightDetector || $[172] !== contentContainerStyle_0 || $[173] !== finalColumns || $[174] !== fullHeight || $[175] !== handleDragEnd || $[176] !== handlePageChange || $[177] !== menuOpen || $[178] !== openMenuId || $[179] !== (pagination === null || pagination === void 0 ? void 0 : pagination.className) || $[180] !== (pagination === null || pagination === void 0 ? void 0 : pagination.style) || $[181] !== (pagination === null || pagination === void 0 ? void 0 : pagination.sx) || $[182] !== paging || $[183] !== pagingAlign || $[184] !== pagingHeightResizeDetector || $[185] !== pagingStyle_0 || $[186] !== progressiveVisible || $[187] !== sensors || $[188] !== showEvenColor || $[189] !== showOddColor || $[190] !== sortable$1 || $[191] !== stickyHeader || $[192] !== style_0 || $[193] !== sx || $[194] !== tableBody || $[195] !== tableFooter || $[196] !== tableStyle_0 || $[197] !== tableSx_0 || $[198] !== tableTopHead) {
+    t68 = finalColumns ? /*#__PURE__*/React.createElement(PTableContextProvider, {
       value: {
         menuOpen: menuOpen,
         openMenuId: openMenuId,
@@ -4073,46 +4361,46 @@ function PTable(t0) {
       align: pagingAlign,
       onChange: handlePageChange
     })))) : null;
-    $[139] = TableContextSetHeadColumnChecked;
-    $[140] = TableContextSetHeadColumnCommands;
-    $[141] = TableContextSetItemColumnCheckDisabled;
-    $[142] = TableContextSetItemColumnChecked;
-    $[143] = TableContextSetItemColumnCommands;
-    $[144] = TableContextSetMenuOpen;
-    $[145] = className;
-    $[146] = containerHeightDetector;
-    $[147] = contentContainerStyle_0;
-    $[148] = finalColumns;
-    $[149] = fullHeight;
-    $[150] = handleDragEnd;
-    $[151] = handlePageChange;
-    $[152] = menuOpen;
-    $[153] = openMenuId;
-    $[154] = pagination === null || pagination === void 0 ? void 0 : pagination.className;
-    $[155] = pagination === null || pagination === void 0 ? void 0 : pagination.style;
-    $[156] = pagination === null || pagination === void 0 ? void 0 : pagination.sx;
-    $[157] = paging;
-    $[158] = pagingAlign;
-    $[159] = pagingHeightResizeDetector;
-    $[160] = pagingStyle_0;
-    $[161] = progressiveVisible;
-    $[162] = sensors;
-    $[163] = showEvenColor;
-    $[164] = showOddColor;
-    $[165] = sortable$1;
-    $[166] = stickyHeader;
-    $[167] = style_0;
-    $[168] = sx;
-    $[169] = tableBody;
-    $[170] = tableFooter;
-    $[171] = tableStyle_0;
-    $[172] = tableSx_0;
-    $[173] = tableTopHead;
-    $[174] = t60;
+    $[164] = TableContextSetHeadColumnChecked;
+    $[165] = TableContextSetHeadColumnCommands;
+    $[166] = TableContextSetItemColumnCheckDisabled;
+    $[167] = TableContextSetItemColumnChecked;
+    $[168] = TableContextSetItemColumnCommands;
+    $[169] = TableContextSetMenuOpen;
+    $[170] = className;
+    $[171] = containerHeightDetector;
+    $[172] = contentContainerStyle_0;
+    $[173] = finalColumns;
+    $[174] = fullHeight;
+    $[175] = handleDragEnd;
+    $[176] = handlePageChange;
+    $[177] = menuOpen;
+    $[178] = openMenuId;
+    $[179] = pagination === null || pagination === void 0 ? void 0 : pagination.className;
+    $[180] = pagination === null || pagination === void 0 ? void 0 : pagination.style;
+    $[181] = pagination === null || pagination === void 0 ? void 0 : pagination.sx;
+    $[182] = paging;
+    $[183] = pagingAlign;
+    $[184] = pagingHeightResizeDetector;
+    $[185] = pagingStyle_0;
+    $[186] = progressiveVisible;
+    $[187] = sensors;
+    $[188] = showEvenColor;
+    $[189] = showOddColor;
+    $[190] = sortable$1;
+    $[191] = stickyHeader;
+    $[192] = style_0;
+    $[193] = sx;
+    $[194] = tableBody;
+    $[195] = tableFooter;
+    $[196] = tableStyle_0;
+    $[197] = tableSx_0;
+    $[198] = tableTopHead;
+    $[199] = t68;
   } else {
-    t60 = $[174];
+    t68 = $[199];
   }
-  return t60;
+  return t68;
 }
 function _temp$1(col) {
   if (col.id) {
@@ -4181,6 +4469,8 @@ var deHash = function deHash() {
     t1 = $[0];
   }
   var lastGetDataDataRef = React.useRef(t1);
+  var onGetDataRef = reactHook.useAutoUpdateRef(onGetData);
+  var onRequestHashChangeRef = reactHook.useAutoUpdateRef(onRequestHashChange);
   var _useState = React.useState(true),
     _useState2 = _slicedToArray(_useState, 2),
     isFirstSearchSubmit = _useState2[0],
@@ -4220,14 +4510,14 @@ var deHash = function deHash() {
     setTableInfo = _useState8[1];
   reactHook.useChanged(table) && setTableInfo(getTableInfo(table));
   var t4;
-  if ($[5] !== onGetData) {
+  if ($[5] !== onGetDataRef) {
     t4 = function t4(data) {
       lastGetDataDataRef.current = data;
-      if (onGetData) {
-        onGetData(data).then(setTableData);
+      if (onGetDataRef.current) {
+        onGetDataRef.current(data).then(setTableData);
       }
     };
-    $[5] = onGetData;
+    $[5] = onGetDataRef;
     $[6] = t4;
   } else {
     t4 = $[6];
@@ -4460,23 +4750,32 @@ var deHash = function deHash() {
   } else {
     t11 = $[20];
   }
+  var effectEvent = React.useEffectEvent(t11);
   var t12;
-  if ($[21] !== getDataRef || $[22] !== hash || $[23] !== hashToSearchValueRef || $[24] !== location.hash || $[25] !== location.pathname) {
-    t12 = [location.pathname, location.hash, hash, hashToSearchValueRef, getDataRef];
-    $[21] = getDataRef;
-    $[22] = hash;
-    $[23] = hashToSearchValueRef;
+  if ($[21] !== effectEvent) {
+    t12 = function t12() {
+      effectEvent();
+    };
+    $[21] = effectEvent;
+    $[22] = t12;
+  } else {
+    t12 = $[22];
+  }
+  var t13;
+  if ($[23] !== hash || $[24] !== location.hash || $[25] !== location.pathname) {
+    t13 = [hash, location.pathname, location.hash];
+    $[23] = hash;
     $[24] = location.hash;
     $[25] = location.pathname;
-    $[26] = t12;
+    $[26] = t13;
   } else {
-    t12 = $[26];
+    t13 = $[26];
   }
-  React.useEffect(t11, t12);
-  var t13;
-  if ($[27] !== getData || $[28] !== onRequestHashChange) {
-    t13 = function t13(params) {
-      if (onRequestHashChange) {
+  React.useEffect(t12, t13);
+  var t14;
+  if ($[27] !== getData || $[28] !== onRequestHashChangeRef) {
+    t14 = function t14(params) {
+      if (onRequestHashChangeRef.current) {
         var hashes = [];
         Object.keys(params).forEach(function (name_0) {
           var value_0 = params[name_0];
@@ -4489,7 +4788,7 @@ var deHash = function deHash() {
               var itemCommands_0 = searchRef.current.getItem(name_0);
               if (itemCommands_0) {
                 var resetValue = null;
-                bb225: switch (itemCommands_0.getType()) {
+                bb226: switch (itemCommands_0.getType()) {
                   case "PFormDateRangePicker":
                   case "PFormYearRangePicker":
                     {
@@ -4506,7 +4805,7 @@ var deHash = function deHash() {
                           resetValue = searchRef.current.getFormReset(itemName_1, toSuffix);
                         }
                       }
-                      break bb225;
+                      break bb226;
                     }
                   case "PFormMonthPicker":
                     {
@@ -4523,7 +4822,7 @@ var deHash = function deHash() {
                           resetValue = searchRef.current.getFormReset(itemName_0, monthSuffix);
                         }
                       }
-                      break bb225;
+                      break bb226;
                     }
                   case "PFormMonthRangePicker":
                     {
@@ -4552,7 +4851,7 @@ var deHash = function deHash() {
                           }
                         }
                       }
-                      break bb225;
+                      break bb226;
                     }
                   default:
                     {
@@ -4570,20 +4869,20 @@ var deHash = function deHash() {
         if (window.location.hash.substring(1) === finalHash) {
           getData(params);
         } else {
-          onRequestHashChange(hashes.join("&"));
+          onRequestHashChangeRef.current(hashes.join("&"));
         }
       }
     };
     $[27] = getData;
-    $[28] = onRequestHashChange;
-    $[29] = t13;
+    $[28] = onRequestHashChangeRef;
+    $[29] = t14;
   } else {
-    t13 = $[29];
+    t14 = $[29];
   }
-  var hashChange = t13;
-  var t14;
+  var hashChange = t14;
+  var t15;
   if ($[30] !== getData || $[31] !== hash || $[32] !== hashChange) {
-    t14 = function t14(page_0) {
+    t15 = function t15(page_0) {
       var _searchRef$current4;
       (_searchRef$current4 = searchRef.current) === null || _searchRef$current4 === void 0 || _searchRef$current4.setValue("page", page_0);
       var finalData_0;
@@ -4603,14 +4902,14 @@ var deHash = function deHash() {
     $[30] = getData;
     $[31] = hash;
     $[32] = hashChange;
-    $[33] = t14;
+    $[33] = t15;
   } else {
-    t14 = $[33];
+    t15 = $[33];
   }
-  var handlePageChange = t14;
-  var t15;
+  var handlePageChange = t15;
+  var t16;
   if ($[34] !== getData || $[35] !== hash || $[36] !== hashChange || $[37] !== isFirstSearchSubmit) {
-    t15 = function t15(data_1) {
+    t16 = function t16(data_1) {
       var _tableRef$current2;
       (_tableRef$current2 = tableRef.current) === null || _tableRef$current2 === void 0 || _tableRef$current2.scrollToTop();
       if (isFirstSearchSubmit) {
@@ -4635,25 +4934,25 @@ var deHash = function deHash() {
     $[35] = hash;
     $[36] = hashChange;
     $[37] = isFirstSearchSubmit;
-    $[38] = t15;
+    $[38] = t16;
   } else {
-    t15 = $[38];
+    t16 = $[38];
   }
-  var handleSearchSubmit = t15;
-  var t16 = searchInfo.searchGroups ? undefined : "none";
-  var t17;
-  if ($[39] !== t16) {
-    t17 = {
-      display: t16
-    };
-    $[39] = t16;
-    $[40] = t17;
-  } else {
-    t17 = $[40];
-  }
+  var handleSearchSubmit = t16;
+  var t17 = searchInfo.searchGroups ? undefined : "none";
   var t18;
+  if ($[39] !== t17) {
+    t18 = {
+      display: t17
+    };
+    $[39] = t17;
+    $[40] = t18;
+  } else {
+    t18 = $[40];
+  }
+  var t19;
   if ($[41] !== searchInfo) {
-    t18 = function t18(commands_3) {
+    t19 = function t19(commands_3) {
       if (searchInfo.ref) {
         if (typeof searchInfo.ref === "function") {
           searchInfo.ref(commands_3);
@@ -4670,57 +4969,57 @@ var deHash = function deHash() {
       searchRef.current = commands_3 || undefined;
     };
     $[41] = searchInfo;
-    $[42] = t18;
+    $[42] = t19;
   } else {
-    t18 = $[42];
+    t19 = $[42];
   }
-  var t19;
+  var t20;
   if ($[43] === Symbol["for"]("react.memo_cache_sentinel")) {
-    t19 = /*#__PURE__*/React.createElement(reactForm.PSearchGroup, {
+    t20 = /*#__PURE__*/React.createElement(reactForm.PSearchGroup, {
       hidden: true
     }, /*#__PURE__*/React.createElement(reactForm.PFormHidden, {
       name: "page",
       value: 1
     }));
-    $[43] = t19;
+    $[43] = t20;
   } else {
-    t19 = $[43];
+    t20 = $[43];
   }
-  var t20;
-  if ($[44] !== color || $[45] !== handleSearchSubmit || $[46] !== searchInfo.props || $[47] !== searchInfo.searchGroups || $[48] !== t18) {
-    t20 = /*#__PURE__*/React.createElement(reactForm.PSearch, _extends({
+  var t21;
+  if ($[44] !== color || $[45] !== handleSearchSubmit || $[46] !== searchInfo.props || $[47] !== searchInfo.searchGroups || $[48] !== t19) {
+    t21 = /*#__PURE__*/React.createElement(reactForm.PSearch, _extends({
       color: color
     }, searchInfo.props, {
-      ref: t18,
+      ref: t19,
       autoSubmit: true,
       onSubmit: handleSearchSubmit
-    }), t19, searchInfo.searchGroups);
+    }), t20, searchInfo.searchGroups);
     $[44] = color;
     $[45] = handleSearchSubmit;
     $[46] = searchInfo.props;
     $[47] = searchInfo.searchGroups;
-    $[48] = t18;
-    $[49] = t20;
+    $[48] = t19;
+    $[49] = t21;
   } else {
-    t20 = $[49];
+    t21 = $[49];
   }
-  var t21;
-  if ($[50] !== t17 || $[51] !== t20) {
-    t21 = /*#__PURE__*/React.createElement(material.Grid, {
-      sx: t17
-    }, t20);
-    $[50] = t17;
-    $[51] = t20;
-    $[52] = t21;
-  } else {
-    t21 = $[52];
-  }
-  var searchView = t21;
   var t22;
+  if ($[50] !== t18 || $[51] !== t21) {
+    t22 = /*#__PURE__*/React.createElement(material.Grid, {
+      sx: t18
+    }, t21);
+    $[50] = t18;
+    $[51] = t21;
+    $[52] = t22;
+  } else {
+    t22 = $[52];
+  }
+  var searchView = t22;
+  var t23;
   if ($[53] !== fullHeight || $[54] !== handlePageChange || $[55] !== stickyHeader || $[56] !== (tableData === null || tableData === void 0 ? void 0 : tableData.items) || $[57] !== (tableData === null || tableData === void 0 ? void 0 : tableData.paging) || $[58] !== tableInfo) {
     tableData === null || tableData === void 0 || tableData.items;
     tableData === null || tableData === void 0 || tableData.paging;
-    t22 = function (_tableInfo$props, _tableInfo$props2) {
+    t23 = function (_tableInfo$props, _tableInfo$props2) {
       return /*#__PURE__*/React.createElement(material.Grid, {
         style: fullHeight ? {
           flex: 1,
@@ -4751,60 +5050,60 @@ var deHash = function deHash() {
     $[56] = tableData === null || tableData === void 0 ? void 0 : tableData.items;
     $[57] = tableData === null || tableData === void 0 ? void 0 : tableData.paging;
     $[58] = tableInfo;
-    $[59] = t22;
+    $[59] = t23;
   } else {
-    t22 = $[59];
+    t23 = $[59];
   }
-  var tableView = t22;
-  var t23;
-  if ($[60] !== className) {
-    t23 = classNames("PSearchTable", className);
-    $[60] = className;
-    $[61] = t23;
-  } else {
-    t23 = $[61];
-  }
+  var tableView = t23;
   var t24;
+  if ($[60] !== className) {
+    t24 = classNames("PSearchTable", className);
+    $[60] = className;
+    $[61] = t24;
+  } else {
+    t24 = $[61];
+  }
+  var t25;
   if ($[62] !== fullHeight || $[63] !== initStyle) {
-    t24 = fullHeight ? _objectSpread2(_objectSpread2({}, initStyle), {}, {
+    t25 = fullHeight ? _objectSpread2(_objectSpread2({}, initStyle), {}, {
       flex: 1,
       display: "flex"
     }) : initStyle;
     $[62] = fullHeight;
     $[63] = initStyle;
-    $[64] = t24;
+    $[64] = t25;
   } else {
-    t24 = $[64];
-  }
-  var t25;
-  if ($[65] !== betweenSearchTableComponent) {
-    t25 = betweenSearchTableComponent && /*#__PURE__*/React.createElement(material.Grid, null, betweenSearchTableComponent);
-    $[65] = betweenSearchTableComponent;
-    $[66] = t25;
-  } else {
-    t25 = $[66];
+    t25 = $[64];
   }
   var t26;
-  if ($[67] !== searchView || $[68] !== sx || $[69] !== t23 || $[70] !== t24 || $[71] !== t25 || $[72] !== tableView) {
-    t26 = /*#__PURE__*/React.createElement(material.Grid, {
+  if ($[65] !== betweenSearchTableComponent) {
+    t26 = betweenSearchTableComponent && /*#__PURE__*/React.createElement(material.Grid, null, betweenSearchTableComponent);
+    $[65] = betweenSearchTableComponent;
+    $[66] = t26;
+  } else {
+    t26 = $[66];
+  }
+  var t27;
+  if ($[67] !== searchView || $[68] !== sx || $[69] !== t24 || $[70] !== t25 || $[71] !== t26 || $[72] !== tableView) {
+    t27 = /*#__PURE__*/React.createElement(material.Grid, {
       container: true,
       direction: "column",
       spacing: 1,
-      className: t23,
-      style: t24,
+      className: t24,
+      style: t25,
       sx: sx
-    }, searchView, t25, tableView);
+    }, searchView, t26, tableView);
     $[67] = searchView;
     $[68] = sx;
-    $[69] = t23;
-    $[70] = t24;
-    $[71] = t25;
+    $[69] = t24;
+    $[70] = t25;
+    $[71] = t26;
     $[72] = tableView;
-    $[73] = t26;
+    $[73] = t27;
   } else {
-    t26 = $[73];
+    t27 = $[73];
   }
-  return t26;
+  return t27;
 }var _excluded$1 = ["children", "className", "sx", "variant", "color", "startIcon", "endIcon", "onClick"];
 var PTableButton = function PTableButton(t0) {
   var $ = compilerRuntime.c(25);
@@ -4902,7 +5201,7 @@ var PTableButton = function PTableButton(t0) {
 };
 var PTableButton$1 = /*#__PURE__*/React.memo(PTableButton);var _excluded = ["ref", "children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"];
 var PTableMenuButton = function PTableMenuButton(t0) {
-  var $ = compilerRuntime.c(72);
+  var $ = compilerRuntime.c(84);
   var children;
   var className;
   var inModal;
@@ -4973,18 +5272,47 @@ var PTableMenuButton = function PTableMenuButton(t0) {
     _useState4 = _slicedToArray(_useState3, 2),
     open = _useState4[0],
     setOpen = _useState4[1];
-  var isMenuIdChanged = reactHook.useChanged(menuId, true);
-  var isMenuOpenChanged = reactHook.useChanged(menuOpen, true);
-  var isOpenChanged = reactHook.useChanged(open, true);
-  var isOpenMenuIdChanged = reactHook.useChanged(openMenuId, true);
-  if (isMenuIdChanged || isMenuOpenChanged || isOpenChanged || isOpenMenuIdChanged) {
-    if (open && menuOpen && openMenuId !== menuId) {
-      setOpen(false);
-    }
-  }
   var t4;
-  if ($[13] !== menuId || $[14] !== open || $[15] !== setMenuOpen) {
+  if ($[13] !== menuId || $[14] !== menuOpen || $[15] !== open || $[16] !== openMenuId) {
     t4 = function t4() {
+      if (open && menuOpen && openMenuId !== menuId) {
+        setOpen(false);
+      }
+    };
+    $[13] = menuId;
+    $[14] = menuOpen;
+    $[15] = open;
+    $[16] = openMenuId;
+    $[17] = t4;
+  } else {
+    t4 = $[17];
+  }
+  var effectEvent = React.useEffectEvent(t4);
+  var t5;
+  if ($[18] !== effectEvent) {
+    t5 = function t5() {
+      effectEvent();
+    };
+    $[18] = effectEvent;
+    $[19] = t5;
+  } else {
+    t5 = $[19];
+  }
+  var t6;
+  if ($[20] !== menuId || $[21] !== menuOpen || $[22] !== open || $[23] !== openMenuId) {
+    t6 = [menuId, menuOpen, open, openMenuId];
+    $[20] = menuId;
+    $[21] = menuOpen;
+    $[22] = open;
+    $[23] = openMenuId;
+    $[24] = t6;
+  } else {
+    t6 = $[24];
+  }
+  React.useEffect(t5, t6);
+  var t7;
+  if ($[25] !== menuId || $[26] !== open || $[27] !== setMenuOpen) {
+    t7 = function t7() {
       setOpen(_temp);
       if (!open) {
         setMenuOpen(true, menuId);
@@ -4992,33 +5320,33 @@ var PTableMenuButton = function PTableMenuButton(t0) {
         setMenuOpen(false, menuId);
       }
     };
-    $[13] = menuId;
-    $[14] = open;
-    $[15] = setMenuOpen;
-    $[16] = t4;
+    $[25] = menuId;
+    $[26] = open;
+    $[27] = setMenuOpen;
+    $[28] = t7;
   } else {
-    t4 = $[16];
+    t7 = $[28];
   }
-  var handleClick = t4;
-  var t5;
-  if ($[17] !== menuId || $[18] !== open || $[19] !== setMenuOpen) {
-    t5 = function t5() {
+  var handleClick = t7;
+  var t8;
+  if ($[29] !== menuId || $[30] !== open || $[31] !== setMenuOpen) {
+    t8 = function t8() {
       if (open) {
         setOpen(false);
         setMenuOpen(false, menuId);
       }
     };
-    $[17] = menuId;
-    $[18] = open;
-    $[19] = setMenuOpen;
-    $[20] = t5;
+    $[29] = menuId;
+    $[30] = open;
+    $[31] = setMenuOpen;
+    $[32] = t8;
   } else {
-    t5 = $[20];
+    t8 = $[32];
   }
-  var handleClose = t5;
-  var t6;
-  if ($[21] !== menuId || $[22] !== open || $[23] !== setMenuOpen) {
-    t6 = function t6(event) {
+  var handleClose = t8;
+  var t9;
+  if ($[33] !== menuId || $[34] !== open || $[35] !== setMenuOpen) {
+    t9 = function t9(event) {
       if (event.key === "Tab") {
         event.preventDefault();
         if (open) {
@@ -5034,18 +5362,18 @@ var PTableMenuButton = function PTableMenuButton(t0) {
         }
       }
     };
-    $[21] = menuId;
-    $[22] = open;
-    $[23] = setMenuOpen;
-    $[24] = t6;
+    $[33] = menuId;
+    $[34] = open;
+    $[35] = setMenuOpen;
+    $[36] = t9;
   } else {
-    t6 = $[24];
+    t9 = $[36];
   }
-  var handleListKeyDown = t6;
-  var t7;
-  if ($[25] !== buttonId || $[26] !== handleClose || $[27] !== handleListKeyDown || $[28] !== menuId || $[29] !== menuList || $[30] !== open) {
+  var handleListKeyDown = t9;
+  var t10;
+  if ($[37] !== buttonId || $[38] !== handleClose || $[39] !== handleListKeyDown || $[40] !== menuId || $[41] !== menuList || $[42] !== open) {
     var _t2;
-    if ($[32] !== buttonId || $[33] !== handleClose || $[34] !== handleListKeyDown || $[35] !== menuId || $[36] !== open) {
+    if ($[44] !== buttonId || $[45] !== handleClose || $[46] !== handleListKeyDown || $[47] !== menuId || $[48] !== open) {
       _t2 = {
         autoFocusItem: open,
         id: menuId,
@@ -5053,31 +5381,31 @@ var PTableMenuButton = function PTableMenuButton(t0) {
         onKeyDown: handleListKeyDown,
         onClick: handleClose
       };
-      $[32] = buttonId;
-      $[33] = handleClose;
-      $[34] = handleListKeyDown;
-      $[35] = menuId;
-      $[36] = open;
-      $[37] = _t2;
+      $[44] = buttonId;
+      $[45] = handleClose;
+      $[46] = handleListKeyDown;
+      $[47] = menuId;
+      $[48] = open;
+      $[49] = _t2;
     } else {
-      _t2 = $[37];
+      _t2 = $[49];
     }
-    t7 = /*#__PURE__*/React.cloneElement(menuList, _t2);
-    $[25] = buttonId;
-    $[26] = handleClose;
-    $[27] = handleListKeyDown;
-    $[28] = menuId;
-    $[29] = menuList;
-    $[30] = open;
-    $[31] = t7;
+    t10 = /*#__PURE__*/React.cloneElement(menuList, _t2);
+    $[37] = buttonId;
+    $[38] = handleClose;
+    $[39] = handleListKeyDown;
+    $[40] = menuId;
+    $[41] = menuList;
+    $[42] = open;
+    $[43] = t10;
   } else {
-    t7 = $[31];
+    t10 = $[43];
   }
-  var finalMenuList = t7;
+  var finalMenuList = t10;
   var icon = !startIcon && !children ? "MoreVert" : undefined;
-  var t8;
-  if ($[38] !== ref) {
-    t8 = function t8(r) {
+  var t11;
+  if ($[50] !== ref) {
+    t11 = function t11(r) {
       if (ref) {
         if (typeof ref === "function") {
           ref(r);
@@ -5087,83 +5415,83 @@ var PTableMenuButton = function PTableMenuButton(t0) {
       }
       setAnchorEl(r);
     };
-    $[38] = ref;
-    $[39] = t8;
+    $[50] = ref;
+    $[51] = t11;
   } else {
-    t8 = $[39];
+    t11 = $[51];
   }
-  var t9 = open ? menuId : undefined;
-  var t10 = open ? "true" : undefined;
-  var t11;
-  if ($[40] !== className) {
-    t11 = classNames(className, "PTableMenuButton");
-    $[40] = className;
-    $[41] = t11;
-  } else {
-    t11 = $[41];
-  }
-  var t12 = !children ? 0.7 : icon || startIcon ? 0.7 : variant === "text" ? 1.2 : 0.7;
-  var t13;
-  if ($[42] !== initSx || $[43] !== t12) {
-    t13 = _objectSpread2({
-      minWidth: 0,
-      pl: t12
-    }, initSx);
-    $[42] = initSx;
-    $[43] = t12;
-    $[44] = t13;
-  } else {
-    t13 = $[44];
-  }
+  var t12 = open ? menuId : undefined;
+  var t13 = open ? "true" : undefined;
   var t14;
-  if ($[45] !== buttonId || $[46] !== children || $[47] !== color || $[48] !== handleClick || $[49] !== icon || $[50] !== props || $[51] !== t10 || $[52] !== t11 || $[53] !== t13 || $[54] !== t8 || $[55] !== t9 || $[56] !== variant) {
-    t14 = /*#__PURE__*/React.createElement(reactComponent.PButton, _extends({
-      ref: t8,
+  if ($[52] !== className) {
+    t14 = classNames(className, "PTableMenuButton");
+    $[52] = className;
+    $[53] = t14;
+  } else {
+    t14 = $[53];
+  }
+  var t15 = !children ? 0.7 : icon || startIcon ? 0.7 : variant === "text" ? 1.2 : 0.7;
+  var t16;
+  if ($[54] !== initSx || $[55] !== t15) {
+    t16 = _objectSpread2({
+      minWidth: 0,
+      pl: t15
+    }, initSx);
+    $[54] = initSx;
+    $[55] = t15;
+    $[56] = t16;
+  } else {
+    t16 = $[56];
+  }
+  var t17;
+  if ($[57] !== buttonId || $[58] !== children || $[59] !== color || $[60] !== handleClick || $[61] !== icon || $[62] !== props || $[63] !== t11 || $[64] !== t12 || $[65] !== t13 || $[66] !== t14 || $[67] !== t16 || $[68] !== variant) {
+    t17 = /*#__PURE__*/React.createElement(reactComponent.PButton, _extends({
+      ref: t11,
       id: buttonId,
       variant: variant,
-      "aria-controls": t9,
-      "aria-expanded": t10,
+      "aria-controls": t12,
+      "aria-expanded": t13,
       "aria-haspopup": "true",
-      className: t11,
+      className: t14,
       type: "button",
       size: "small",
-      sx: t13,
+      sx: t16,
       color: color,
       startIcon: icon,
       onClick: handleClick
     }, props), children);
-    $[45] = buttonId;
-    $[46] = children;
-    $[47] = color;
-    $[48] = handleClick;
-    $[49] = icon;
-    $[50] = props;
-    $[51] = t10;
-    $[52] = t11;
-    $[53] = t13;
-    $[54] = t8;
-    $[55] = t9;
-    $[56] = variant;
-    $[57] = t14;
+    $[57] = buttonId;
+    $[58] = children;
+    $[59] = color;
+    $[60] = handleClick;
+    $[61] = icon;
+    $[62] = props;
+    $[63] = t11;
+    $[64] = t12;
+    $[65] = t13;
+    $[66] = t14;
+    $[67] = t16;
+    $[68] = variant;
+    $[69] = t17;
   } else {
-    t14 = $[57];
+    t17 = $[69];
   }
-  var t15 = inModal ? zIndex === undefined ? 1301 : zIndex : zIndex;
-  var t16;
-  if ($[58] !== t15) {
-    t16 = {
-      zIndex: t15
+  var t18 = inModal ? zIndex === undefined ? 1301 : zIndex : zIndex;
+  var t19;
+  if ($[70] !== t18) {
+    t19 = {
+      zIndex: t18
     };
-    $[58] = t15;
-    $[59] = t16;
+    $[70] = t18;
+    $[71] = t19;
   } else {
-    t16 = $[59];
+    t19 = $[71];
   }
-  var t17;
-  if ($[60] !== finalMenuList || $[61] !== handleClose) {
-    t17 = function t17(t18) {
-      var TransitionProps = t18.TransitionProps,
-        placement_0 = t18.placement;
+  var t20;
+  if ($[72] !== finalMenuList || $[73] !== handleClose) {
+    t20 = function t20(t21) {
+      var TransitionProps = t21.TransitionProps,
+        placement_0 = t21.placement;
       var placements = placement_0.split("-");
       var transformOrigin;
       if (placements[0] === "left") {
@@ -5191,42 +5519,42 @@ var PTableMenuButton = function PTableMenuButton(t0) {
         onClickAway: handleClose
       }, finalMenuList)));
     };
-    $[60] = finalMenuList;
-    $[61] = handleClose;
-    $[62] = t17;
+    $[72] = finalMenuList;
+    $[73] = handleClose;
+    $[74] = t20;
   } else {
-    t17 = $[62];
+    t20 = $[74];
   }
-  var t18;
-  if ($[63] !== anchorEl || $[64] !== open || $[65] !== placement || $[66] !== t16 || $[67] !== t17) {
-    t18 = /*#__PURE__*/React.createElement(material.Popper, {
+  var t21;
+  if ($[75] !== anchorEl || $[76] !== open || $[77] !== placement || $[78] !== t19 || $[79] !== t20) {
+    t21 = /*#__PURE__*/React.createElement(material.Popper, {
       className: "PTableMenuButton-Popper",
       open: open,
       anchorEl: anchorEl,
       role: undefined,
       placement: placement,
       transition: true,
-      style: t16
-    }, t17);
-    $[63] = anchorEl;
-    $[64] = open;
-    $[65] = placement;
-    $[66] = t16;
-    $[67] = t17;
-    $[68] = t18;
+      style: t19
+    }, t20);
+    $[75] = anchorEl;
+    $[76] = open;
+    $[77] = placement;
+    $[78] = t19;
+    $[79] = t20;
+    $[80] = t21;
   } else {
-    t18 = $[68];
+    t21 = $[80];
   }
-  var t19;
-  if ($[69] !== t14 || $[70] !== t18) {
-    t19 = /*#__PURE__*/React.createElement("span", null, t14, t18);
-    $[69] = t14;
-    $[70] = t18;
-    $[71] = t19;
+  var t22;
+  if ($[81] !== t17 || $[82] !== t21) {
+    t22 = /*#__PURE__*/React.createElement("span", null, t17, t21);
+    $[81] = t17;
+    $[82] = t21;
+    $[83] = t22;
   } else {
-    t19 = $[71];
+    t22 = $[83];
   }
-  return t19;
+  return t22;
 };
 function _temp(old) {
   return !old;

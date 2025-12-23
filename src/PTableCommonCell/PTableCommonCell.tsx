@@ -41,6 +41,7 @@ function PTableCommonCell<T extends PTableItem = PTableItem>({
    * Memo
    * ******************************************************************************************************************/
 
+  /** align, ellipsis */
   const { align, ellipsis } = useMemo(() => {
     const align = getTableColumnAlign(column, defaultAlign);
 
@@ -55,6 +56,7 @@ function PTableCommonCell<T extends PTableItem = PTableItem>({
     return { align, ellipsis };
   }, [column, defaultAlign, initDefaultEllipsis, type]);
 
+  /** className */
   const className = useMemo(() => {
     let className: PTableCommonSxProps['className'];
     let getClassName: PTableCommonSxProps['className'];
@@ -83,6 +85,7 @@ function PTableCommonCell<T extends PTableItem = PTableItem>({
     }
   }, [column, index, initClassName, item, type]);
 
+  /** style */
   const style = useMemo(() => {
     let style: PTableCommonSxProps['style'];
     let getStyle: PTableCommonSxProps['style'];
@@ -120,6 +123,7 @@ function PTableCommonCell<T extends PTableItem = PTableItem>({
     };
   }, [column, index, initStyle, item, onClick, type]);
 
+  /** sx */
   const sx = useMemo(() => {
     let sx: PTableCommonSxProps['sx'];
     let getSx: PTableCommonSxProps['sx'];

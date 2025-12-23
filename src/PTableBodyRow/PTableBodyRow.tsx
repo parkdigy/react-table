@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 import classNames from 'classnames';
 import { PTableBodyRowProps as Props } from './PTableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
@@ -18,7 +18,7 @@ export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
 
 function PTableBodyRow<T extends PTableItem = PTableItem>({
   className,
-  style,
+  style: initStyle,
   id,
   index,
   defaultAlign,
@@ -40,16 +40,63 @@ function PTableBodyRow<T extends PTableItem = PTableItem>({
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   /********************************************************************************************************************
-   * Variable
+   * Memo
    * ******************************************************************************************************************/
 
-  const sortableProps = sortable
-    ? {
-        ref: setNodeRef,
-        ...attributes,
-        ...listeners,
-      }
-    : {};
+  const sortableProps = useMemo(
+    () =>
+      sortable
+        ? {
+            ref: setNodeRef,
+            ...attributes,
+            ...listeners,
+          }
+        : {},
+    [attributes, listeners, setNodeRef, sortable]
+  );
+
+  const style = useMemo(
+    (): CSSProperties | undefined =>
+      sortable
+        ? {
+            ...initStyle,
+            transform: CSS.Transform.toString(transform),
+            transition,
+          }
+        : initStyle,
+    [initStyle, sortable, transform, transition]
+  );
+
+  const cellList = useMemo(
+    () =>
+      columns.map((column: PTableColumn<T>, columnIdx) => (
+        <PTableBodyCell
+          className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
+          sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
+          style={onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined}
+          key={columnIdx}
+          index={index}
+          item={item}
+          defaultAlign={defaultAlign}
+          defaultEllipsis={defaultEllipsis}
+          column={column}
+          onClick={onClick}
+          onCheckChange={onCheckChange}
+        />
+      )),
+    [
+      columns,
+      defaultAlign,
+      defaultEllipsis,
+      index,
+      item,
+      onCheckChange,
+      onClick,
+      onGetColumnClassName,
+      onGetColumnStyle,
+      onGetColumnSx,
+    ]
+  );
 
   /********************************************************************************************************************
    * Render
@@ -57,35 +104,8 @@ function PTableBodyRow<T extends PTableItem = PTableItem>({
 
   return (
     <>
-      <PStyledBodyRow
-        className={classNames('PTableBodyRow', className)}
-        style={
-          sortable
-            ? {
-                ...style,
-                transform: CSS.Transform.toString(transform),
-                transition,
-              }
-            : style
-        }
-        {...props}
-        {...sortableProps}
-      >
-        {columns.map((column: PTableColumn<T>, columnIdx) => (
-          <PTableBodyCell
-            className={onGetColumnClassName ? onGetColumnClassName(column, item, index) : undefined}
-            sx={onGetColumnSx ? onGetColumnSx(column, item, index) : undefined}
-            style={onGetColumnStyle ? onGetColumnStyle(column, item, index) : undefined}
-            key={columnIdx}
-            index={index}
-            item={item}
-            defaultAlign={defaultAlign}
-            defaultEllipsis={defaultEllipsis}
-            column={column}
-            onClick={onClick}
-            onCheckChange={onCheckChange}
-          />
-        ))}
+      <PStyledBodyRow className={classNames('PTableBodyRow', className)} style={style} {...props} {...sortableProps}>
+        {cellList}
       </PStyledBodyRow>
     </>
   );

@@ -90,6 +90,10 @@ function PTableTopHead<T extends PTableItem = PTableItem>({
     [columns, theme.palette.divider]
   );
 
+  /********************************************************************************************************************
+   * Memo
+   * ******************************************************************************************************************/
+
   const columnRow = useMemo(() => {
     const top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
 
@@ -109,14 +113,47 @@ function PTableTopHead<T extends PTableItem = PTableItem>({
     );
   }, [captionHeight, columns, defaultAlign, items, onCheckChange, row1Height, row2Height, row3Height]);
 
-  /********************************************************************************************************************
-   * Variable
-   * ******************************************************************************************************************/
+  const captionRow = useMemo(
+    () =>
+      !!caption && (
+        <PTableTopHeadCaptionRow ref={captionRef} className='PTableTopHeadCaptionRow'>
+          <TableCell colSpan={columns.length}>{caption}</TableCell>
+        </PTableTopHeadCaptionRow>
+      ),
+    [caption, columns.length]
+  );
 
-  const captionRow = !!caption && (
-    <PTableTopHeadCaptionRow ref={captionRef} className='PTableTopHeadCaptionRow'>
-      <TableCell colSpan={columns.length}>{caption}</TableCell>
-    </PTableTopHeadCaptionRow>
+  const tableRows = useMemo(
+    () =>
+      rows &&
+      Array.isArray(rows[0]) &&
+      rows.map((row, idx) => {
+        let ref: React.Ref<HTMLTableRowElement> | undefined = undefined;
+        let top: number | undefined = undefined;
+
+        switch (idx) {
+          case 0:
+            ref = row1Ref;
+            top = captionHeight;
+            break;
+          case 1:
+            ref = row2Ref;
+            top = (captionHeight || 0) + (row1Height || 0);
+            break;
+          case 2:
+            ref = row3Ref;
+            top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
+            break;
+          case 3:
+            top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
+        }
+        return (
+          <TableRow key={idx} ref={ref} className='PTableHeadRow'>
+            {makeRowCells(row as PTableTopHeadRowColumnValue[], top)}
+          </TableRow>
+        );
+      }),
+    [captionHeight, makeRowCells, row1Height, row2Height, row3Height, rows]
   );
 
   /********************************************************************************************************************
@@ -128,32 +165,7 @@ function PTableTopHead<T extends PTableItem = PTableItem>({
       return (
         <TableHead className='PTableHead'>
           {captionRow}
-          {rows.map((row, idx) => {
-            let ref: React.Ref<HTMLTableRowElement> | undefined = undefined;
-            let top: number | undefined = undefined;
-
-            switch (idx) {
-              case 0:
-                ref = row1Ref;
-                top = captionHeight;
-                break;
-              case 1:
-                ref = row2Ref;
-                top = (captionHeight || 0) + (row1Height || 0);
-                break;
-              case 2:
-                ref = row3Ref;
-                top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0);
-                break;
-              case 3:
-                top = (captionHeight || 0) + (row1Height || 0) + (row2Height || 0) + (row3Height || 0);
-            }
-            return (
-              <TableRow key={idx} ref={ref} className='PTableHeadRow'>
-                {makeRowCells(row as PTableTopHeadRowColumnValue[], top)}
-              </TableRow>
-            );
-          })}
+          {tableRows}
         </TableHead>
       );
     } else {

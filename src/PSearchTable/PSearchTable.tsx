@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
@@ -59,6 +59,8 @@ function PSearchTable<T extends PTableItem = PTableItem>({
   const searchRef = useRef<PSearchCommands>(undefined);
   const tableRef = useRef<PTableCommands<T>>(undefined);
   const lastGetDataDataRef = useRef<PFormValueMap>({});
+  const onGetDataRef = useAutoUpdateRef(onGetData);
+  const onRequestHashChangeRef = useAutoUpdateRef(onRequestHashChange);
 
   /********************************************************************************************************************
    * State
@@ -90,11 +92,11 @@ function PSearchTable<T extends PTableItem = PTableItem>({
     (data: PFormValueMap) => {
       lastGetDataDataRef.current = data;
 
-      if (onGetData) {
-        onGetData(data).then(setTableData);
+      if (onGetDataRef.current) {
+        onGetDataRef.current(data).then(setTableData);
       }
     },
-    [onGetData]
+    [onGetDataRef]
   );
   const getDataRef = useAutoUpdateRef(getData);
 
@@ -265,23 +267,21 @@ function PSearchTable<T extends PTableItem = PTableItem>({
    * hash
    * ******************************************************************************************************************/
 
-  useEffect(() => {
-    if (hash && location.pathname === initPathRef.current) {
-      const data = hashToSearchValueRef.current();
-      if (data) getDataRef.current(data);
-    }
-  }, [
-    location.pathname,
-    location.hash,
-    hash,
-    // 불변
-    hashToSearchValueRef,
-    getDataRef,
-  ]);
+  {
+    const effectEvent = useEffectEvent(() => {
+      if (hash && location.pathname === initPathRef.current) {
+        const data = hashToSearchValueRef.current();
+        if (data) getDataRef.current(data);
+      }
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [hash, location.pathname, location.hash]);
+  }
 
   const hashChange = useCallback(
     (params: PFormValueMap) => {
-      if (onRequestHashChange) {
+      if (onRequestHashChangeRef.current) {
         const hashes: string[] = [];
         Object.keys(params).forEach((name) => {
           const value = params[name];
@@ -370,11 +370,11 @@ function PSearchTable<T extends PTableItem = PTableItem>({
         if (window.location.hash.substring(1) === finalHash) {
           getData(params);
         } else {
-          onRequestHashChange(hashes.join('&'));
+          onRequestHashChangeRef.current(hashes.join('&'));
         }
       }
     },
-    [onRequestHashChange, getData]
+    [onRequestHashChangeRef, getData]
   );
 
   /********************************************************************************************************************

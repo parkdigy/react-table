@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import { empty, notEmpty } from '@pdg/compare';
 import { formatBusinessNo, formatNumber, formatPersonalNo, formatTelNo } from '@pdg/formatting';
 import { PCopyToClipboard, PIcon } from '@pdg/react-component';
+import { useAutoUpdateRef } from '@pdg/react-hook';
 
 function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
   cols,
@@ -40,9 +41,16 @@ function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
   onCopyToClipboard,
 }: Props<T>) {
   /********************************************************************************************************************
+   * Ref
+   * ******************************************************************************************************************/
+
+  const onCopyToClipboardRef = useAutoUpdateRef(onCopyToClipboard);
+
+  /********************************************************************************************************************
    * Memo
    * ******************************************************************************************************************/
 
+  /** renderItems */
   const renderItems: {
     item: PInfoTableItem;
     data: ReactNode | string | number | undefined;
@@ -204,6 +212,7 @@ function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
     [info, items, cols]
   );
 
+  /** content */
   const content = useMemo(
     () =>
       renderItems.map(({ item, data, copyToClipboardText, sizeProps }, idx) => {
@@ -272,7 +281,7 @@ function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
                 <ValueClipboard>
                   <PCopyToClipboard
                     text={copyToClipboardText}
-                    onCopy={onCopyToClipboard ? () => onCopyToClipboard(item, copyToClipboardText) : undefined}
+                    onCopy={() => onCopyToClipboardRef.current?.(item, copyToClipboardText)}
                   >
                     <ClipboardIconButton size='small' color='primary' {...item.clipboardProps}>
                       <PIcon>{item.clipboardIcon || 'ContentPaste'}</PIcon>
@@ -291,7 +300,7 @@ function PInfoTable<T extends PInfoTableInfo = PInfoTableInfo>({
       labelColor,
       labelStyle,
       labelSx,
-      onCopyToClipboard,
+      onCopyToClipboardRef,
       renderItems,
       valueClassName,
       valueStyle,

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
 import { PTableBodyCellProps as Props } from './PTableBodyCell.types';
 import { getTableColumnAlign } from '../@util.private';
@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import useTableState from '../PTableContext/useTableState';
 import classNames from 'classnames';
 import { formatBusinessNo, formatNumber, formatPersonalNo, formatTelNo } from '@pdg/formatting';
-import { useChanged } from '@pdg/react-hook';
 
 const StyledButtonsBox = styled(Box)`
   display: flex;
@@ -47,11 +46,7 @@ function PTableBodyCell<T extends PTableItem = PTableItem>({
    * ******************************************************************************************************************/
 
   {
-    const isColumnChanged = useChanged(column, true);
-    const isItemChanged = useChanged(item, true);
-    const isSetItemColumnCommandsChanged = useChanged(setItemColumnCommands, true);
-
-    if (isColumnChanged || isItemChanged || isSetItemColumnCommandsChanged) {
+    const effectEvent = useEffectEvent(() => {
       if (column.type === 'check') {
         setChecked(column.onInitChecked ? column.onInitChecked(item) : false);
         setCheckDisabled(column.onCheckDisabled ? column.onCheckDisabled(item) : false);
@@ -69,20 +64,33 @@ function PTableBodyCell<T extends PTableItem = PTableItem>({
           }
         },
       });
-    }
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [column, item, setItemColumnCommands]);
   }
 
-  if (useChanged(checked, true)) {
-    if (column.type === 'check') {
-      setItemColumnChecked(item, column, checked);
-    }
+  {
+    const effectEvent = useEffectEvent(() => {
+      if (column.type === 'check') {
+        setItemColumnChecked(item, column, checked);
+      }
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [checked]);
   }
 
-  if (useChanged(checkDisabled, true)) {
-    if (column.type === 'check') {
-      setItemColumnCheckDisabled(item, column, checkDisabled);
-      column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
-    }
+  {
+    const effectEvent = useEffectEvent(() => {
+      if (column.type === 'check') {
+        setItemColumnCheckDisabled(item, column, checkDisabled);
+        column.onCheckDisabledChange && column.onCheckDisabledChange(item, checkDisabled);
+      }
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [checkDisabled]);
   }
 
   /********************************************************************************************************************

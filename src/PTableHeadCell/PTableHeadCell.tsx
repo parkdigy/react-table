@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { PTableHeadCellProps as Props } from './PTableHeadCell.types';
 import PTableCommonCell from '../PTableCommonCell';
 import { Checkbox } from '@mui/material';
@@ -29,26 +29,36 @@ function PTableHeadCell<T extends PTableItem = PTableItem>({
    * Effect
    * ******************************************************************************************************************/
 
-  useEffect(() => {
-    if (column.type === 'check') {
-      setHeadColumnChecked(column, checked);
-    }
-  }, [column, checked, setHeadColumnChecked]);
-
-  useEffect(() => {
-    setHeadColumnCommands(column, {
-      setChecked(checked: boolean) {
-        if (column.type === 'check') {
-          setChecked(checked);
-        }
-      },
-      setCheckDisabled(checkDisabled: boolean) {
-        if (column.type === 'check') {
-          setCheckDisabled(checkDisabled);
-        }
-      },
+  {
+    const effectEvent = useEffectEvent(() => {
+      if (column.type === 'check') {
+        setHeadColumnChecked(column, checked);
+      }
     });
-  }, [setHeadColumnCommands, column]);
+    useEffect(() => {
+      effectEvent();
+    }, [column, checked]);
+  }
+
+  {
+    const effectEvent = useEffectEvent(() => {
+      setHeadColumnCommands(column, {
+        setChecked(checked: boolean) {
+          if (column.type === 'check') {
+            setChecked(checked);
+          }
+        },
+        setCheckDisabled(checkDisabled: boolean) {
+          if (column.type === 'check') {
+            setCheckDisabled(checkDisabled);
+          }
+        },
+      });
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [column]);
+  }
 
   /********************************************************************************************************************
    * Memo

@@ -1,4 +1,13 @@
-import React, { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon, Box } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
@@ -27,16 +36,26 @@ import { makeSortableItems } from './PTable.function.private';
 import { PTableSortableBody } from '../PTableSortableBody';
 import { useAutoUpdateRef, useChanged, useForwardRef } from '@pdg/react-hook';
 
+/********************************************************************************************************************
+ * columnFilter
+ * ******************************************************************************************************************/
+
 function columnFilter<T>(v: T | undefined | null | false): v is T {
   return v !== undefined && v !== null && v !== false;
 }
 
+/********************************************************************************************************************
+ * getNewColumnId
+ * ******************************************************************************************************************/
 let _columnId = 0;
 const getNewColumnId = () => {
   _columnId += 1;
   return `$c$${_columnId}$`;
 };
 
+/********************************************************************************************************************
+ * TLocalBodyData
+ * ******************************************************************************************************************/
 type TLocalBodyData<T extends PTableItem = PTableItem> = Record<
   string | number,
   {
@@ -53,10 +72,17 @@ type TLocalBodyData<T extends PTableItem = PTableItem> = Record<
   }
 >;
 
+/********************************************************************************************************************
+ * TLocalHeaderData
+ * ******************************************************************************************************************/
 type TLocalHeaderData<T extends PTableItem = PTableItem> = Record<
   string,
   { column: PTableColumn<T>; checked: boolean; commands?: PTableHeadCellCommands }
 >;
+
+/********************************************************************************************************************
+ * PTable
+ * ******************************************************************************************************************/
 
 function PTable<T extends PTableItem = PTableItem>({
   ref,
@@ -104,7 +130,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const updateHeadCheckTimer = useRef<NodeJS.Timeout>(undefined);
   const fireOnCheckChangeTimer = useRef<Record<string, NodeJS.Timeout | undefined>>({});
   const simpleBarRef = useRef<SimpleBarCore>(null);
-  // const finalColumnsIdRef = useRef<string[] | undefined>([]);
+  const onPageChangeRef = useAutoUpdateRef(onPageChange);
+  const onSortChangeRef = useAutoUpdateRef(onSortChange);
+  const onCheckChangeRef = useAutoUpdateRef(onCheckChange);
 
   /********************************************************************************************************************
    * sortable
@@ -130,57 +158,91 @@ function PTable<T extends PTableItem = PTableItem>({
   );
 
   /********************************************************************************************************************
-   * State - columns
-   * ******************************************************************************************************************/
-
-  const [columns, setColumns] = useState(initColumns);
-  useChanged(initColumns) && setColumns(initColumns);
-
-  const columnsRef = useAutoUpdateRef(columns);
-
-  /********************************************************************************************************************
-   * State - finalColumns
-   * ******************************************************************************************************************/
-
-  const [finalColumns, setFinalColumns] = useState<PTableColumn<T>[]>();
-  const [finalColumnsId, setFinalColumnsId] = useState<string[] | undefined>(undefined);
-
-  /********************************************************************************************************************
-   * State - items
-   * ******************************************************************************************************************/
-
-  const [items, setItems] = useState(initItems);
-  useChanged(initItems) && setItems(initItems);
-
-  const itemsRef = useAutoUpdateRef(items);
-
-  const [sortableItems, setSortableItems] = useState<(T & { id: number | string })[]>();
-
-  if (useChanged(items, true)) {
-    setSortableItems(makeSortableItems(items));
-  }
-
-  /********************************************************************************************************************
-   * State - paging
-   * ******************************************************************************************************************/
-
-  const [paging, setPaging] = useState(initPaging);
-  useChanged(initPaging) && setPaging(initPaging);
-
-  const pagingRef = useAutoUpdateRef(paging);
-
-  /********************************************************************************************************************
    * State
    * ******************************************************************************************************************/
 
+  const [sortableItems, setSortableItems] = useState<(T & { id: number | string })[]>();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | undefined>(undefined);
+  const [containerHeight, setContainerHeight] = useState<number | undefined>();
+  const [pagingHeight, setPagingHeight] = useState<number | undefined>();
+
+  /** finalColumns */
+  const [finalColumns, _setFinalColumns] = useState<PTableColumn<T>[]>();
+  const finalColumnsRef = useAutoUpdateRef(finalColumns);
+  const setFinalColumns = useCallback(
+    (value: React.SetStateAction<typeof finalColumns>) => {
+      _setFinalColumns((prev) => {
+        const finalValue = typeof value === 'function' ? value(prev) : value;
+        finalColumnsRef.current = finalValue;
+        return finalValue;
+      });
+    },
+    [finalColumnsRef]
+  );
+
+  /** finalColumnsId */
+  const [finalColumnsId, _setFinalColumnsId] = useState<string[] | undefined>(undefined);
+  const finalColumnsIdRef = useAutoUpdateRef(finalColumnsId);
+  const setFinalColumnsId = useCallback(
+    (value: React.SetStateAction<typeof finalColumnsId>) => {
+      _setFinalColumnsId((prev) => {
+        const finalValue = typeof value === 'function' ? value(prev) : value;
+        finalColumnsIdRef.current = finalValue;
+        return finalValue;
+      });
+    },
+    [finalColumnsIdRef]
+  );
+
+  /** columns */
+  const [columns, _setColumns] = useState(initColumns);
+  useChanged(initColumns) && _setColumns(initColumns);
+  const columnsRef = useAutoUpdateRef(columns);
+  const setColumns = useCallback(
+    (value: React.SetStateAction<typeof columns>) => {
+      _setColumns((prev) => {
+        const finalValue = typeof value === 'function' ? value(prev) : value;
+        columnsRef.current = finalValue;
+        return finalValue;
+      });
+    },
+    [columnsRef]
+  );
+
+  /** items */
+  const [items, _setItems] = useState(initItems);
+  useChanged(initItems) && _setItems(initItems);
+  const itemsRef = useAutoUpdateRef(items);
+  const setItems = useCallback(
+    (value: React.SetStateAction<typeof items>) => {
+      _setItems((prev) => {
+        const finalValue = typeof value === 'function' ? value(prev) : value;
+        itemsRef.current = finalValue;
+        return finalValue;
+      });
+    },
+    [itemsRef]
+  );
+
+  /** paging */
+  const [paging, _setPaging] = useState(initPaging);
+  useChanged(initPaging) && _setPaging(initPaging);
+  const pagingRef = useAutoUpdateRef(paging);
+  const setPaging = useCallback(
+    (value: React.SetStateAction<typeof paging>) => {
+      _setPaging((prev) => {
+        const finalValue = typeof value === 'function' ? value(prev) : value;
+        pagingRef.current = finalValue;
+        return finalValue;
+      });
+    },
+    [pagingRef]
+  );
 
   /********************************************************************************************************************
-   * containerHeight
+   * ResizeDetector
    * ******************************************************************************************************************/
-
-  const [containerHeight, setContainerHeight] = useState<number | undefined>();
 
   const { ref: containerHeightDetector } = useResizeDetector({
     handleHeight: true,
@@ -193,12 +255,6 @@ function PTable<T extends PTableItem = PTableItem>({
       }
     },
   });
-
-  /********************************************************************************************************************
-   * footerHeight
-   * ******************************************************************************************************************/
-
-  const [pagingHeight, setPagingHeight] = useState<number | undefined>();
 
   const { ref: pagingHeightResizeDetector } = useResizeDetector({
     handleHeight: true,
@@ -216,18 +272,20 @@ function PTable<T extends PTableItem = PTableItem>({
    * Function
    * ******************************************************************************************************************/
 
+  /** getFinalColumnId */
   const getFinalColumnId = useCallback(
     (column: PTableColumn<T>) => {
-      if (finalColumns && finalColumnsId) {
-        const idx = finalColumns.indexOf(column);
-        return finalColumnsId[idx];
+      if (finalColumnsRef.current && finalColumnsIdRef.current) {
+        const idx = finalColumnsRef.current.indexOf(column);
+        return finalColumnsIdRef.current[idx];
       } else {
         return '';
       }
     },
-    [finalColumns, finalColumnsId]
+    [finalColumnsIdRef, finalColumnsRef]
   );
 
+  /** updateHeadCheck */
   const updateHeadCheck = useCallback(
     (column: PTableColumn<T>) => {
       if (updateHeadCheckTimer.current) {
@@ -270,6 +328,7 @@ function PTable<T extends PTableItem = PTableItem>({
     [getFinalColumnId]
   );
 
+  /** getChecked */
   const getChecked = useCallback((itemKey: string, itemValue: any, columnId: string): boolean => {
     let checked = false;
     Object.keys(localBodyDataRef.current).find((key) => {
@@ -283,6 +342,7 @@ function PTable<T extends PTableItem = PTableItem>({
     return checked;
   }, []);
 
+  /** setChecked */
   const setChecked = useCallback(
     (itemKey: string, itemValue: any, columnId: string, checked: boolean) => {
       Object.keys(localBodyDataRef.current).find((key) => {
@@ -300,6 +360,7 @@ function PTable<T extends PTableItem = PTableItem>({
     [updateHeadCheck]
   );
 
+  /** toggleChecked */
   const toggleChecked = useCallback(
     (itemKey: string, itemValue: any, columnId: string) => {
       Object.keys(localBodyDataRef.current).forEach((key) => {
@@ -317,6 +378,7 @@ function PTable<T extends PTableItem = PTableItem>({
     [updateHeadCheck]
   );
 
+  /** setCheckedAll */
   const setCheckedAll = useCallback((columnId: string, checked: boolean) => {
     Object.keys(localBodyDataRef.current).forEach((key) => {
       const itemData = localBodyDataRef.current[key];
@@ -328,6 +390,7 @@ function PTable<T extends PTableItem = PTableItem>({
     localHeaderDataRef.current[columnId]?.commands?.setChecked(checked);
   }, []);
 
+  /** getCheckedItems */
   const getCheckedItems = useCallback((columnId: string): T[] => {
     const checkedItems: T[] = [];
     Object.keys(localBodyDataRef.current).forEach((key) => {
@@ -342,6 +405,7 @@ function PTable<T extends PTableItem = PTableItem>({
     return checkedItems;
   }, []);
 
+  /** stopHeadCheckTimer */
   const stopHeadCheckTimer = useCallback(() => {
     if (updateHeadCheckTimer.current) {
       clearTimeout(updateHeadCheckTimer.current);
@@ -349,6 +413,7 @@ function PTable<T extends PTableItem = PTableItem>({
     }
   }, []);
 
+  /** clearFireOnCheckChangeTimer */
   const clearFireOnCheckChangeTimer = useCallback(() => {
     Object.keys(fireOnCheckChangeTimer.current).forEach((key) => {
       if (fireOnCheckChangeTimer.current[key]) {
@@ -358,23 +423,25 @@ function PTable<T extends PTableItem = PTableItem>({
     fireOnCheckChangeTimer.current = {};
   }, []);
 
+  /** fireOnCheckChange */
   const fireOnCheckChange = useCallback(
     (columnId: string) => {
       if (fireOnCheckChangeTimer.current[columnId]) {
         clearTimeout(fireOnCheckChangeTimer.current[columnId]);
         fireOnCheckChangeTimer.current[columnId] = undefined;
       }
-      if (onCheckChange) {
+      if (onCheckChangeRef.current) {
         fireOnCheckChangeTimer.current[columnId] = setTimeout(() => {
           fireOnCheckChangeTimer.current[columnId] = undefined;
 
-          onCheckChange && onCheckChange(columnId, getCheckedItems(columnId));
+          onCheckChangeRef.current?.(columnId, getCheckedItems(columnId));
         }, 100);
       }
     },
-    [getCheckedItems, onCheckChange]
+    [getCheckedItems, onCheckChangeRef]
   );
 
+  /** simpleBarScrollToTop */
   const simpleBarScrollToTop = useCallback(() => {
     simpleBarRef.current?.getScrollElement()?.scrollTo({ top: 0 });
   }, []);
@@ -383,108 +450,116 @@ function PTable<T extends PTableItem = PTableItem>({
    * Effect
    * ******************************************************************************************************************/
 
-  useEffect(() => {
-    return () => {
+  {
+    const effectEvent = useEffectEvent(() => {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
-    };
-  }, [
-    // 불변
-    clearFireOnCheckChangeTimer,
-    stopHeadCheckTimer,
-  ]);
 
-  /** items 변경 시 처리 */
-  useEffect(() => {
-    stopHeadCheckTimer();
-    clearFireOnCheckChangeTimer();
-
-    Object.keys(localHeaderDataRef.current).forEach((key) => {
-      if (localHeaderDataRef.current[key].column.type === 'check') {
-        localHeaderDataRef.current[key].commands?.setChecked(false);
-      }
-    });
-
-    Object.keys(localBodyDataRef.current).forEach((key) => {
-      Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
-        localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
-      });
-    });
-  }, [
-    items,
-    // 불변
-    clearFireOnCheckChangeTimer,
-    stopHeadCheckTimer,
-  ]);
-
-  /** columns 변경 시 처리 */
-  {
-    if (useChanged(columns, true)) {
-      const newFinalColumns = columns?.filter(columnFilter);
-      const newFinalColumnsId = newFinalColumns?.map((col) => {
-        if (col.id) {
-          return col.id;
-        } else {
-          return getNewColumnId();
+      Object.keys(localHeaderDataRef.current).forEach((key) => {
+        if (localHeaderDataRef.current[key].column.type === 'check') {
+          localHeaderDataRef.current[key].commands?.setChecked(false);
         }
       });
-      setFinalColumns(newFinalColumns);
-      setFinalColumnsId(newFinalColumnsId);
-    }
 
+      Object.keys(localBodyDataRef.current).forEach((key) => {
+        Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
+          localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
+        });
+      });
+
+      setSortableItems(makeSortableItems(items));
+    });
     useEffect(() => {
-      stopHeadCheckTimer();
-      clearFireOnCheckChangeTimer();
-    }, [
-      columns,
-      // 불변
-      clearFireOnCheckChangeTimer,
-      stopHeadCheckTimer,
-    ]);
+      effectEvent();
+    }, [items]);
   }
 
-  useLayoutEffect(() => {
-    clearFireOnCheckChangeTimer();
+  {
+    const effectEvent = useEffectEvent(() => {
+      return () => {
+        stopHeadCheckTimer();
+        clearFireOnCheckChangeTimer();
+      };
+    });
+    useEffect(() => {
+      return effectEvent();
+    }, []);
+  }
 
-    if (sortableItems) {
-      localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
-        res[item.id] = {
-          item,
-          columns: {},
-        };
+  {
+    const effectEvent = useEffectEvent(() => {
+      stopHeadCheckTimer();
+      clearFireOnCheckChangeTimer();
 
-        if (finalColumns) {
-          finalColumns.forEach((c) => {
-            const columnId = getFinalColumnId(c);
+      const newFinalColumns = columns?.filter(columnFilter);
+      setFinalColumns(newFinalColumns);
+      setFinalColumnsId(
+        newFinalColumns?.map((col) => {
+          if (col.id) {
+            return col.id;
+          } else {
+            return getNewColumnId();
+          }
+        })
+      );
+    });
+    useEffect(() => {
+      effectEvent();
+    }, [columns]);
+  }
 
-            if (localBodyDataRef.current[item.id]?.columns[columnId]) {
-              res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
-            } else {
-              res[item.id].columns[columnId] = {
-                column: c,
-                checked: false,
-                checkDisabled: false,
-              };
-            }
-          });
-        }
-        return res;
-      }, {});
-    } else {
-      localBodyDataRef.current = {};
-    }
-  }, [sortableItems, finalColumns, clearFireOnCheckChangeTimer, getFinalColumnId]);
+  {
+    const effectEvent = useEffectEvent(() => {
+      clearFireOnCheckChangeTimer();
 
-  useLayoutEffect(() => {
-    if (finalColumns) {
-      localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData<T>>((res, c) => {
-        res[getFinalColumnId(c)] = { column: c, checked: false };
-        return res;
-      }, {});
-    } else {
-      localHeaderDataRef.current = {};
-    }
-  }, [finalColumns, getFinalColumnId]);
+      if (sortableItems) {
+        localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
+          res[item.id] = {
+            item,
+            columns: {},
+          };
+
+          if (finalColumns) {
+            finalColumns.forEach((c) => {
+              const columnId = getFinalColumnId(c);
+
+              if (localBodyDataRef.current[item.id]?.columns[columnId]) {
+                res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
+              } else {
+                res[item.id].columns[columnId] = {
+                  column: c,
+                  checked: false,
+                  checkDisabled: false,
+                };
+              }
+            });
+          }
+          return res;
+        }, {});
+      } else {
+        localBodyDataRef.current = {};
+      }
+    });
+    useLayoutEffect(() => {
+      effectEvent();
+    }, [sortableItems, finalColumns]);
+  }
+
+  {
+    const effectEvent = useEffectEvent(() => {
+      if (finalColumns) {
+        localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData<T>>((res, c) => {
+          res[getFinalColumnId(c)] = { column: c, checked: false };
+          return res;
+        }, {});
+      } else {
+        localHeaderDataRef.current = {};
+      }
+    });
+    useLayoutEffect(() => {
+      effectEvent();
+    }, [finalColumns]);
+  }
 
   /********************************************************************************************************************
    * Commands
@@ -495,19 +570,11 @@ function PTable<T extends PTableItem = PTableItem>({
     useMemo((): PTableCommands<T> => {
       return {
         getColumns: () => columnsRef.current,
-        setColumns: (columns) => {
-          columnsRef.current = columns;
-          setColumns(columns);
-        },
+        setColumns,
         getItems: () => itemsRef.current,
-        setItems: (items) => {
-          itemsRef.current = items;
-          setItems(items);
-        },
+        setItems,
         getPaging: () => pagingRef.current,
         setItemsPaging: (items, paging) => {
-          itemsRef.current = items;
-          pagingRef.current = paging;
           setItems(items);
           setPaging(paging);
         },
@@ -529,6 +596,9 @@ function PTable<T extends PTableItem = PTableItem>({
       pagingRef,
       setChecked,
       setCheckedAll,
+      setColumns,
+      setItems,
+      setPaging,
       simpleBarScrollToTop,
       toggleChecked,
     ])
@@ -559,7 +629,7 @@ function PTable<T extends PTableItem = PTableItem>({
 
             if (oldIndex != null && newIndex != null) {
               const finalItems = arrayMove(items, oldIndex, newIndex);
-              onSortChange && onSortChange(finalItems);
+              onSortChangeRef.current?.(finalItems);
               return finalItems;
             } else {
               return items;
@@ -570,7 +640,7 @@ function PTable<T extends PTableItem = PTableItem>({
         });
       }
     },
-    [onSortChange]
+    [onSortChangeRef]
   );
 
   const handleHeadCheckChange = useCallback(
@@ -597,9 +667,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const handlePageChange = useCallback(
     (page: number) => {
       simpleBarScrollToTop();
-      onPageChange && onPageChange(page);
+      onPageChangeRef.current?.(page);
     },
-    [onPageChange, simpleBarScrollToTop]
+    [onPageChangeRef, simpleBarScrollToTop]
   );
 
   /********************************************************************************************************************
