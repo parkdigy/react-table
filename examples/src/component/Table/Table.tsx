@@ -6,7 +6,7 @@ import { TTableDataItem } from '../Common/TableData';
 import { PFormCheckbox, PSearch, PSearchGroup } from '@pdg/react-form';
 import { useChanged } from '@pdg/react-hook';
 
-const Table: React.FC = () => {
+const Table = () => {
   /********************************************************************************************************************
    * Ref
    * ******************************************************************************************************************/

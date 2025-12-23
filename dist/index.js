@@ -5198,8 +5198,7 @@ var PTableButton = function PTableButton(t0) {
     t6 = $[24];
   }
   return t6;
-};
-var PTableButton$1 = /*#__PURE__*/React.memo(PTableButton);var _excluded = ["ref", "children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"];
+};var _excluded = ["ref", "children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"];
 var PTableMenuButton = function PTableMenuButton(t0) {
   var $ = compilerRuntime.c(84);
   var children;
@@ -5558,4 +5557,4 @@ var PTableMenuButton = function PTableMenuButton(t0) {
 };
 function _temp(old) {
   return !old;
-}exports.PInfoTable=PInfoTable;exports.PSearchTable=PSearchTable;exports.PTable=PTable;exports.PTableBodyCell=PTableBodyCell;exports.PTableBodyRow=PTableBodyRow;exports.PTableButton=PTableButton$1;exports.PTableCommonCell=PTableCommonCell;exports.PTableFooterCell=PTableFooterCell;exports.PTableHeadCell=PTableHeadCell;exports.PTableMenuButton=PTableMenuButton;exports.PTablePagination=PTablePagination;exports.PTableSortableBody=PTableSortableBody;exports.PTableSortableBodyBlock=PTableSortableBodyBlock;exports.PTableTopHead=PTableTopHead;
+}exports.PInfoTable=PInfoTable;exports.PSearchTable=PSearchTable;exports.PTable=PTable;exports.PTableBodyCell=PTableBodyCell;exports.PTableBodyRow=PTableBodyRow;exports.PTableButton=PTableButton;exports.PTableCommonCell=PTableCommonCell;exports.PTableFooterCell=PTableFooterCell;exports.PTableHeadCell=PTableHeadCell;exports.PTableMenuButton=PTableMenuButton;exports.PTablePagination=PTablePagination;exports.PTableSortableBody=PTableSortableBody;exports.PTableSortableBodyBlock=PTableSortableBodyBlock;exports.PTableTopHead=PTableTopHead;

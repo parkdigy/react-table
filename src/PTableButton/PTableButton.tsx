@@ -37,4 +37,4 @@ const PTableButton = ({
     </PButton>
   );
 };
-export default React.memo(PTableButton);
+export default PTableButton;

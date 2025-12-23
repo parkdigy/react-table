@@ -5105,7 +5105,7 @@ var deHash = function deHash() {
   }
   return t27;
 }var _excluded$1 = ["children", "className", "sx", "variant", "color", "startIcon", "endIcon", "onClick"];
-var PTableButton$1 = function PTableButton(t0) {
+var PTableButton = function PTableButton(t0) {
   var $ = c(25);
   var children;
   var className;
@@ -5198,8 +5198,7 @@ var PTableButton$1 = function PTableButton(t0) {
     t6 = $[24];
   }
   return t6;
-};
-var PTableButton = /*#__PURE__*/React__default.memo(PTableButton$1);var _excluded = ["ref", "children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"];
+};var _excluded = ["ref", "children", "className", "sx", "color", "variant", "startIcon", "placement", "inModal", "zIndex", "menuList"];
 var PTableMenuButton = function PTableMenuButton(t0) {
   var $ = c(84);
   var children;
