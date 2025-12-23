@@ -77,32 +77,22 @@ export default defineConfig([
           defaultProps: 'static public field',
         },
       ],
-      'no-restricted-properties': [
-        'error',
-        {
-          object: 'React',
-          property: 'memo',
-          message: 'React.memo 사용이 금지되었습니다. 제거해 주세요.',
-        },
-        {
-          object: 'React',
-          property: 'forwardRef',
-          message: 'React.forwardRef 사용이 금지되었습니다. 제거해 주세요.',
-        },
-      ],
       'no-restricted-syntax': [
         'error',
         {
-          selector: "TSTypeReference[typeName.left.name='React'][typeName.right.name='FC']",
-          message: 'React.FC 사용이 금지되었습니다. 제거해 주세요.',
+          selector:
+            "TSTypeReference[typeName.left.name='React'][typeName.right.name='FC'], TSTypeReference[typeName.name='FC']",
+          message: 'React.FC 사용이 금지되었습니다.',
         },
         {
-          selector: "TSTypeReference[typeName.left.name='React'][typeName.right.name='FunctionComponent']",
-          message: 'React.FunctionComponent 사용이 금지되었습니다. 제거해 주세요.',
+          selector:
+            "CallExpression[callee.object.name='React'][callee.property.name='memo'], CallExpression[callee.name='memo']",
+          message: 'React.memo 사용이 금지되었습니다.',
         },
         {
-          selector: "TSTypeReference[typeName.name='FC'], TSTypeReference[typeName.name='FunctionComponent']",
-          message: 'React.FC 사용이 금지되었습니다. 제거해 주세요.',
+          selector:
+            "CallExpression[callee.object.name='React'][callee.property.name='forwardRef'], CallExpression[callee.name='forwardRef']",
+          message: 'React.forwardRef 사용이 금지되었습니다.',
         },
       ],
     },
