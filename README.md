@@ -9,7 +9,7 @@ npm install -D @pdg/react-table
 
 ### 추가 패키지 설치
 ```
-npm install -D @dnd-kit/core @dnd-kit/sortable @emotion/react @emotion/styled @mui/icons-material @mui/material @mui/x-date-pickers @pdg/react-component @pdg/react-form dayjs simplebar-react
+npm install -D @dnd-kit/core @dnd-kit/sortable @emotion/react @emotion/styled @mui/icons-material @mui/material @mui/x-date-pickers @pdg/react-component @pdg/react-form @pdg/react-hook dayjs simplebar-react
 ```
 
 ## simplebar-react css 추가
