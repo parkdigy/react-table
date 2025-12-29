@@ -132,6 +132,7 @@ const SearchTable = () => {
    * ******************************************************************************************************************/
 
   const handleGetData = useCallback((params: PFormValueMap) => {
+    ll('handleGetData', params);
     return new Promise<PSearchTableData<TTableDataItem>>((resolve) => {
       const page = params.page as number;
       const total = TableData.items.length;

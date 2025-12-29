@@ -1,13 +1,4 @@
-import React, {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useEffectEvent,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon, Box } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
@@ -34,7 +25,13 @@ import PTableTopHead from '../PTableTopHead';
 import SimpleBar from 'simplebar-react';
 import { makeSortableItems } from './PTable.function.private';
 import { PTableSortableBody } from '../PTableSortableBody';
-import { useAutoUpdateRef, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
+import {
+  useAutoUpdateRef,
+  useEventEffect,
+  useEventLayoutEffect,
+  useFirstSkipChanged,
+  useForwardRef,
+} from '@pdg/react-hook';
 
 /********************************************************************************************************************
  * columnFilter
@@ -171,12 +168,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const [finalColumns, _setFinalColumns] = useState<PTableColumn<T>[]>();
   const finalColumnsRef = useAutoUpdateRef(finalColumns);
   const setFinalColumns = useCallback(
-    (value: React.SetStateAction<typeof finalColumns>) => {
-      _setFinalColumns((prev) => {
-        const finalValue = typeof value === 'function' ? value(prev) : value;
-        finalColumnsRef.current = finalValue;
-        return finalValue;
-      });
+    (newValue: typeof finalColumns) => {
+      _setFinalColumns(newValue);
+      finalColumnsRef.current = newValue;
     },
     [finalColumnsRef]
   );
@@ -185,12 +179,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const [finalColumnsId, _setFinalColumnsId] = useState<string[] | undefined>(undefined);
   const finalColumnsIdRef = useAutoUpdateRef(finalColumnsId);
   const setFinalColumnsId = useCallback(
-    (value: React.SetStateAction<typeof finalColumnsId>) => {
-      _setFinalColumnsId((prev) => {
-        const finalValue = typeof value === 'function' ? value(prev) : value;
-        finalColumnsIdRef.current = finalValue;
-        return finalValue;
-      });
+    (newValue: typeof finalColumnsId) => {
+      _setFinalColumnsId(newValue);
+      finalColumnsIdRef.current = newValue;
     },
     [finalColumnsIdRef]
   );
@@ -200,12 +191,9 @@ function PTable<T extends PTableItem = PTableItem>({
   useFirstSkipChanged(() => _setColumns(initColumns), [initColumns]);
   const columnsRef = useAutoUpdateRef(columns);
   const setColumns = useCallback(
-    (value: React.SetStateAction<typeof columns>) => {
-      _setColumns((prev) => {
-        const finalValue = typeof value === 'function' ? value(prev) : value;
-        columnsRef.current = finalValue;
-        return finalValue;
-      });
+    (newValue: typeof columns) => {
+      _setColumns(newValue);
+      columnsRef.current = newValue;
     },
     [columnsRef]
   );
@@ -215,12 +203,9 @@ function PTable<T extends PTableItem = PTableItem>({
   useFirstSkipChanged(() => _setItems(initItems), [initItems]);
   const itemsRef = useAutoUpdateRef(items);
   const setItems = useCallback(
-    (value: React.SetStateAction<typeof items>) => {
-      _setItems((prev) => {
-        const finalValue = typeof value === 'function' ? value(prev) : value;
-        itemsRef.current = finalValue;
-        return finalValue;
-      });
+    (newValue: typeof items) => {
+      _setItems(newValue);
+      itemsRef.current = newValue;
     },
     [itemsRef]
   );
@@ -230,12 +215,9 @@ function PTable<T extends PTableItem = PTableItem>({
   useFirstSkipChanged(() => _setPaging(initPaging), [initPaging]);
   const pagingRef = useAutoUpdateRef(paging);
   const setPaging = useCallback(
-    (value: React.SetStateAction<typeof paging>) => {
-      _setPaging((prev) => {
-        const finalValue = typeof value === 'function' ? value(prev) : value;
-        pagingRef.current = finalValue;
-        return finalValue;
-      });
+    (newValue: typeof paging) => {
+      _setPaging(newValue);
+      pagingRef.current = newValue;
     },
     [pagingRef]
   );
@@ -450,116 +432,91 @@ function PTable<T extends PTableItem = PTableItem>({
    * Effect
    * ******************************************************************************************************************/
 
-  {
-    const effectEvent = useEffectEvent(() => {
+  useEventEffect(() => {
+    return () => {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
+    };
+  }, []);
 
-      Object.keys(localHeaderDataRef.current).forEach((key) => {
-        if (localHeaderDataRef.current[key].column.type === 'check') {
-          localHeaderDataRef.current[key].commands?.setChecked(false);
+  useEventEffect(() => {
+    stopHeadCheckTimer();
+    clearFireOnCheckChangeTimer();
+
+    Object.keys(localHeaderDataRef.current).forEach((key) => {
+      if (localHeaderDataRef.current[key].column.type === 'check') {
+        localHeaderDataRef.current[key].commands?.setChecked(false);
+      }
+    });
+
+    Object.keys(localBodyDataRef.current).forEach((key) => {
+      Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
+        localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
+      });
+    });
+
+    setSortableItems(makeSortableItems(items));
+  }, [items]);
+
+  useEventEffect(() => {
+    stopHeadCheckTimer();
+    clearFireOnCheckChangeTimer();
+
+    const newFinalColumns = columns?.filter(columnFilter);
+    setFinalColumns(newFinalColumns);
+    setFinalColumnsId(
+      newFinalColumns?.map((col) => {
+        if (col.id) {
+          return col.id;
+        } else {
+          return getNewColumnId();
         }
-      });
+      })
+    );
+  }, [columns]);
 
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
-          localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
-        });
-      });
+  useEventEffect(() => {
+    clearFireOnCheckChangeTimer();
 
-      setSortableItems(makeSortableItems(items));
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [items]);
-  }
+    if (sortableItems) {
+      localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
+        res[item.id] = {
+          item,
+          columns: {},
+        };
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      return () => {
-        stopHeadCheckTimer();
-        clearFireOnCheckChangeTimer();
-      };
-    });
-    useEffect(() => {
-      return effectEvent();
-    }, []);
-  }
+        if (finalColumns) {
+          finalColumns.forEach((c) => {
+            const columnId = getFinalColumnId(c);
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      stopHeadCheckTimer();
-      clearFireOnCheckChangeTimer();
+            if (localBodyDataRef.current[item.id]?.columns[columnId]) {
+              res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
+            } else {
+              res[item.id].columns[columnId] = {
+                column: c,
+                checked: false,
+                checkDisabled: false,
+              };
+            }
+          });
+        }
+        return res;
+      }, {});
+    } else {
+      localBodyDataRef.current = {};
+    }
+  }, [sortableItems, finalColumns]);
 
-      const newFinalColumns = columns?.filter(columnFilter);
-      setFinalColumns(newFinalColumns);
-      setFinalColumnsId(
-        newFinalColumns?.map((col) => {
-          if (col.id) {
-            return col.id;
-          } else {
-            return getNewColumnId();
-          }
-        })
-      );
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [columns]);
-  }
-
-  {
-    const effectEvent = useEffectEvent(() => {
-      clearFireOnCheckChangeTimer();
-
-      if (sortableItems) {
-        localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
-          res[item.id] = {
-            item,
-            columns: {},
-          };
-
-          if (finalColumns) {
-            finalColumns.forEach((c) => {
-              const columnId = getFinalColumnId(c);
-
-              if (localBodyDataRef.current[item.id]?.columns[columnId]) {
-                res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
-              } else {
-                res[item.id].columns[columnId] = {
-                  column: c,
-                  checked: false,
-                  checkDisabled: false,
-                };
-              }
-            });
-          }
-          return res;
-        }, {});
-      } else {
-        localBodyDataRef.current = {};
-      }
-    });
-    useLayoutEffect(() => {
-      effectEvent();
-    }, [sortableItems, finalColumns]);
-  }
-
-  {
-    const effectEvent = useEffectEvent(() => {
-      if (finalColumns) {
-        localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData<T>>((res, c) => {
-          res[getFinalColumnId(c)] = { column: c, checked: false };
-          return res;
-        }, {});
-      } else {
-        localHeaderDataRef.current = {};
-      }
-    });
-    useLayoutEffect(() => {
-      effectEvent();
-    }, [finalColumns]);
-  }
+  useEventLayoutEffect(() => {
+    if (finalColumns) {
+      localHeaderDataRef.current = finalColumns.reduce<TLocalHeaderData<T>>((res, c) => {
+        res[getFinalColumnId(c)] = { column: c, checked: false };
+        return res;
+      }, {});
+    } else {
+      localHeaderDataRef.current = {};
+    }
+  }, [finalColumns]);
 
   /********************************************************************************************************************
    * Commands

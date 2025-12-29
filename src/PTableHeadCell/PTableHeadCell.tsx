@@ -1,9 +1,10 @@
-import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PTableHeadCellProps as Props } from './PTableHeadCell.types';
 import PTableCommonCell from '../PTableCommonCell';
 import { Checkbox } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
 import { PTableItem } from '../PTable';
+import { useChanged } from '@pdg/react-hook';
 
 function PTableHeadCell<T extends PTableItem = PTableItem>({
   column,
@@ -26,39 +27,29 @@ function PTableHeadCell<T extends PTableItem = PTableItem>({
   const [checkDisabled, setCheckDisabled] = useState(false);
 
   /********************************************************************************************************************
-   * Effect
+   * Changed
    * ******************************************************************************************************************/
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      if (column.type === 'check') {
-        setHeadColumnChecked(column, checked);
-      }
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [column, checked]);
-  }
+  useChanged(() => {
+    if (column.type === 'check') {
+      setHeadColumnChecked(column, checked);
+    }
+  }, [column, checked]);
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      setHeadColumnCommands(column, {
-        setChecked(checked: boolean) {
-          if (column.type === 'check') {
-            setChecked(checked);
-          }
-        },
-        setCheckDisabled(checkDisabled: boolean) {
-          if (column.type === 'check') {
-            setCheckDisabled(checkDisabled);
-          }
-        },
-      });
+  useChanged(() => {
+    setHeadColumnCommands(column, {
+      setChecked(checked: boolean) {
+        if (column.type === 'check') {
+          setChecked(checked);
+        }
+      },
+      setCheckDisabled(checkDisabled: boolean) {
+        if (column.type === 'check') {
+          setCheckDisabled(checkDisabled);
+        }
+      },
     });
-    useEffect(() => {
-      effectEvent();
-    }, [column]);
-  }
+  }, [column]);
 
   /********************************************************************************************************************
    * Memo

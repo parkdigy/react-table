@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useEffectEvent, useId, useMemo, useState } from 'react';
+import React, { useCallback, useId, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
 import { PTableMenuButtonProps as Props } from './PTableMenuButton.types';
 import useTableState from '../PTableContext/useTableState';
 import { PButton } from '@pdg/react-component';
+import { useFirstSkipChanged } from '@pdg/react-hook';
 
 const PTableMenuButton = ({
   ref,
@@ -40,19 +41,14 @@ const PTableMenuButton = ({
   const [open, setOpen] = useState(false);
 
   /********************************************************************************************************************
-   * Effect
+   * Changed
    * ******************************************************************************************************************/
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      if (open && menuOpen && openMenuId !== menuId) {
-        setOpen(false);
-      }
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [menuId, menuOpen, open, openMenuId]);
-  }
+  useFirstSkipChanged(() => {
+    if (open && menuOpen && openMenuId !== menuId) {
+      setOpen(false);
+    }
+  }, [menuId, menuOpen, open, openMenuId]);
 
   /********************************************************************************************************************
    * Event Handler

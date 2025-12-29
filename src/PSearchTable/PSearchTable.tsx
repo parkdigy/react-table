@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Grid } from '@mui/material';
 import {
@@ -27,7 +27,7 @@ import { PTable, PTableCommands, PTableItem } from '../PTable';
 import dayjs from 'dayjs';
 import { equal, notEmpty } from '@pdg/compare';
 import { deHash, getSearchInfo, getTableInfo } from './PSearchTable.function.private';
-import { useAutoUpdateRef, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
+import { useAutoUpdateRef, useEventEffect, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
 import { useLocation } from 'react-router';
 
 function PSearchTable<T extends PTableItem = PTableItem>({
@@ -267,17 +267,12 @@ function PSearchTable<T extends PTableItem = PTableItem>({
    * hash
    * ******************************************************************************************************************/
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      if (hash && location.pathname === initPathRef.current) {
-        const data = hashToSearchValueRef.current();
-        if (data) getDataRef.current(data);
-      }
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [hash, location.pathname, location.hash]);
-  }
+  useEventEffect(() => {
+    if (hash && location.pathname === initPathRef.current) {
+      const data = hashToSearchValueRef.current();
+      if (data) getDataRef.current(data);
+    }
+  }, [hash, location.pathname, location.hash]);
 
   const hashChange = useCallback(
     (params: PFormValueMap) => {
@@ -367,14 +362,14 @@ function PSearchTable<T extends PTableItem = PTableItem>({
           }
         });
         const finalHash = hashes.join('&');
-        if (window.location.hash.substring(1) === finalHash) {
-          getData(params);
+        if (location.hash.substring(1) === finalHash) {
+          getDataRef.current(params);
         } else {
           onRequestHashChangeRef.current(hashes.join('&'));
         }
       }
     },
-    [onRequestHashChangeRef, getData]
+    [onRequestHashChangeRef, location.hash, getDataRef]
   );
 
   /********************************************************************************************************************
@@ -421,7 +416,7 @@ function PSearchTable<T extends PTableItem = PTableItem>({
         }
       }
     },
-    [searchRef, hash, hashChange, getData, isFirstSearchSubmit]
+    [isFirstSearchSubmit, hash, getData, hashChange]
   );
 
   /********************************************************************************************************************

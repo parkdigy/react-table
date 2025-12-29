@@ -1,4 +1,4 @@
-import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PTableSortableBodyBlockProps as Props } from './PTableSortableBodyBlock.types';
 import PTableBodyRow from '../PTableBodyRow';
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import { TableCell, TableRow } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
 import { ifUndefined } from '@pdg/compare';
 import { PTableItem } from '../PTable';
+import { useEventEffect } from '@pdg/react-hook';
 
 function PTableSortableBodyBlock<T extends PTableItem = PTableItem>({
   items,
@@ -44,21 +45,16 @@ function PTableSortableBodyBlock<T extends PTableItem = PTableItem>({
    * Effect
    * ******************************************************************************************************************/
 
-  {
-    const effectEvent = useEffectEvent(() => {
-      if (progressiveVisible && baseIndex > 0) {
-        setTimeout(
-          () => {
-            setCanInView(true);
-          },
-          baseIndex * ifUndefined(progressiveVisible.delay, 300)
-        );
-      }
-    });
-    useEffect(() => {
-      effectEvent();
-    }, [progressiveVisible]);
-  }
+  useEventEffect(() => {
+    if (progressiveVisible && baseIndex > 0) {
+      setTimeout(
+        () => {
+          setCanInView(true);
+        },
+        baseIndex * ifUndefined(progressiveVisible.delay, 300)
+      );
+    }
+  }, [progressiveVisible]);
 
   /********************************************************************************************************************
    * Memo
