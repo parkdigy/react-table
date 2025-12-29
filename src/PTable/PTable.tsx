@@ -34,7 +34,7 @@ import PTableTopHead from '../PTableTopHead';
 import SimpleBar from 'simplebar-react';
 import { makeSortableItems } from './PTable.function.private';
 import { PTableSortableBody } from '../PTableSortableBody';
-import { useAutoUpdateRef, useChanged, useForwardRef } from '@pdg/react-hook';
+import { useAutoUpdateRef, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
 
 /********************************************************************************************************************
  * columnFilter
@@ -197,7 +197,7 @@ function PTable<T extends PTableItem = PTableItem>({
 
   /** columns */
   const [columns, _setColumns] = useState(initColumns);
-  useChanged(initColumns) && _setColumns(initColumns);
+  useFirstSkipChanged(() => _setColumns(initColumns), [initColumns]);
   const columnsRef = useAutoUpdateRef(columns);
   const setColumns = useCallback(
     (value: React.SetStateAction<typeof columns>) => {
@@ -212,7 +212,7 @@ function PTable<T extends PTableItem = PTableItem>({
 
   /** items */
   const [items, _setItems] = useState(initItems);
-  useChanged(initItems) && _setItems(initItems);
+  useFirstSkipChanged(() => _setItems(initItems), [initItems]);
   const itemsRef = useAutoUpdateRef(items);
   const setItems = useCallback(
     (value: React.SetStateAction<typeof items>) => {
@@ -227,7 +227,7 @@ function PTable<T extends PTableItem = PTableItem>({
 
   /** paging */
   const [paging, _setPaging] = useState(initPaging);
-  useChanged(initPaging) && _setPaging(initPaging);
+  useFirstSkipChanged(() => _setPaging(initPaging), [initPaging]);
   const pagingRef = useAutoUpdateRef(paging);
   const setPaging = useCallback(
     (value: React.SetStateAction<typeof paging>) => {

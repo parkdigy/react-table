@@ -27,7 +27,7 @@ import { PTable, PTableCommands, PTableItem } from '../PTable';
 import dayjs from 'dayjs';
 import { equal, notEmpty } from '@pdg/compare';
 import { deHash, getSearchInfo, getTableInfo } from './PSearchTable.function.private';
-import { useAutoUpdateRef, useChanged, useForwardRef } from '@pdg/react-hook';
+import { useAutoUpdateRef, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
 import { useLocation } from 'react-router';
 
 function PSearchTable<T extends PTableItem = PTableItem>({
@@ -74,14 +74,14 @@ function PSearchTable<T extends PTableItem = PTableItem>({
    * ******************************************************************************************************************/
 
   const [searchInfo, setSearchInfo] = useState<PSearchTableSearchInfo>(() => getSearchInfo(search));
-  useChanged(search) && setSearchInfo(getSearchInfo(search));
+  useFirstSkipChanged(() => setSearchInfo(getSearchInfo(search)), [search]);
 
   /********************************************************************************************************************
    * tableInfo
    * ******************************************************************************************************************/
 
   const [tableInfo, setTableInfo] = useState<PSearchTableTableInfo<T>>(() => getTableInfo(table));
-  useChanged(table) && setTableInfo(getTableInfo(table));
+  useFirstSkipChanged(() => setTableInfo(getTableInfo(table)), [table]);
 
   /********************************************************************************************************************
    * Function

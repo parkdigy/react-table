@@ -29,7 +29,7 @@ const Table = () => {
    * Effect
    * ******************************************************************************************************************/
 
-  if (useChanged(page, true)) {
+  useChanged(() => {
     const total = TableData.items.length;
     const perPage = 10;
     const lastPage = Math.ceil(total / perPage);
@@ -48,7 +48,7 @@ const Table = () => {
       last_page: lastPage,
       total,
     });
-  }
+  }, [page]);
 
   /********************************************************************************************************************
    * Event Handler
