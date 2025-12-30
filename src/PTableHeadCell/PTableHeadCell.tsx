@@ -74,7 +74,7 @@ function PTableHeadCell<T extends PTableItem = PTableItem>({
             disabled={checkDisabled}
             onChange={(e, newChecked) => {
               setChecked(newChecked);
-              onCheckChange && onCheckChange(column, newChecked);
+              onCheckChange?.(column, newChecked);
             }}
           />
         );

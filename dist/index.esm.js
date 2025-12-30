@@ -1520,7 +1520,7 @@ function _temp$4(sx_1) {
       if ($[17] !== column || $[18] !== onCheckChange) {
         _t3 = function _t3(e, newChecked) {
           _setChecked(newChecked);
-          onCheckChange && onCheckChange(column, newChecked);
+          onCheckChange === null || onCheckChange === void 0 || onCheckChange(column, newChecked);
         };
         $[17] = column;
         $[18] = onCheckChange;
