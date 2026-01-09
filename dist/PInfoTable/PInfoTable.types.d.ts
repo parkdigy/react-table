@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { BoxProps, GridProps, IconButtonProps, TypographyProps } from '@mui/material';
-import { PTableCommonSxProps } from '../@types';
-import { PIconProps } from '@pdg/react-component';
+import { type ReactNode } from 'react';
+import { type BoxProps, type GridProps, type IconButtonProps, type TypographyProps } from '@mui/material';
+import { type PTableCommonSxProps } from '../@types';
+import { type PIconProps } from '@pdg/react-component';
 export interface PInfoTableInfo {
     [key: string]: any;
 }

@@ -1,8 +1,8 @@
 import PTableContext from './PTableContext';
-import { PTableContextValue } from './PTableContext.types';
+import { type PTableContextValue } from './PTableContext.types';
 import { useContext } from 'react';
 import { empty } from '@pdg/compare';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 
 export default function useTableState<T extends PTableItem = PTableItem>(): PTableContextValue<T> {
   const value = useContext(PTableContext);

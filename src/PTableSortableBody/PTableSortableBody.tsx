@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import { PTableSortableBodyProps as Props } from './PTableSortableBody.types';
+import { type PTableSortableBodyProps as Props } from './PTableSortableBody.types';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { PTableSortableBodyBlock } from '../PTableSortableBodyBlock';
 import { chunkArray } from '../@util.private/chunkArray';
 import useTableState from '../PTableContext/useTableState';
 import { ifUndefined } from '@pdg/compare';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 
 function PTableSortableBody<T extends PTableItem = PTableItem>({
   items,

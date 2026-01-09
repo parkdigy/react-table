@@ -1,5 +1,5 @@
-import { StackProps } from '@mui/material';
-import { PTableCommonSxProps } from '../@types';
+import { type StackProps } from '@mui/material';
+import { type PTableCommonSxProps } from '../@types';
 export interface PTablePaging {
     current_page: number;
     per_page: number;

@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
-import { TableCellProps } from '@mui/material';
-import { PTableColumn, PTableItem, PTableProps } from '../PTable';
+import { type ReactNode } from 'react';
+import { type TableCellProps } from '@mui/material';
+import { type PTableColumn, type PTableItem, type PTableProps } from '../PTable';
 export interface PTableTopHeadRowColumn {
     colSpan?: number;
     rowSpan?: number;

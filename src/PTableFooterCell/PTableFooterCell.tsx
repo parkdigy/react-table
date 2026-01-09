@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { PTableFooterCellProps as Props } from './PTableFooterCell.types';
+import { type PTableFooterCellProps as Props } from './PTableFooterCell.types';
 import PTableCommonCell from '../PTableCommonCell';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 
 function PTableFooterCell<T extends PTableItem = PTableItem>({ column, items, defaultAlign }: Props<T>) {
   /********************************************************************************************************************

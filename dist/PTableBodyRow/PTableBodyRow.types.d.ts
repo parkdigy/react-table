@@ -1,7 +1,7 @@
-import { TableCellProps, TableRowProps } from '@mui/material';
-import { PTableColumn, PTableItem, PTableProps } from '../PTable';
-import { PTableBodyCellProps } from '../PTableBodyCell';
-import { PTableCommonSxProps } from '../@types';
+import { type TableCellProps, type TableRowProps } from '@mui/material';
+import { type PTableColumn, type PTableItem, type PTableProps } from '../PTable';
+import { type PTableBodyCellProps } from '../PTableBodyCell';
+import { type PTableCommonSxProps } from '../@types';
 export interface PTableBodyRowProps<T extends PTableItem = PTableItem> extends Omit<TableRowProps, 'id' | 'onClick'> {
     id: string | number;
     index: number;

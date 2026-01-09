@@ -1,7 +1,7 @@
 import React, { useCallback, useId, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material';
-import { PTableMenuButtonProps as Props } from './PTableMenuButton.types';
+import { type PTableMenuButtonProps as Props } from './PTableMenuButton.types';
 import useTableState from '../PTableContext/useTableState';
 import { PButton } from '@pdg/react-component';
 import { useFirstSkipChanged } from '@pdg/react-hook';

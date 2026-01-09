@@ -1,5 +1,5 @@
-import { PTableColumn, PTableItem, PTableProps } from '../PTable';
-import { PTableCommonSxProps } from '../@types';
+import { type PTableColumn, type PTableItem, type PTableProps } from '../PTable';
+import { type PTableCommonSxProps } from '../@types';
 import React from 'react';
 export interface PTableBodyCellCommands {
     setChecked: (checked: boolean) => void;

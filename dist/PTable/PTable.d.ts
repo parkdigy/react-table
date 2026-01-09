@@ -1,5 +1,5 @@
 import React from 'react';
-import { PTableProps as Props, PTableItem } from './PTable.types';
+import { type PTableProps as Props, type PTableItem } from './PTable.types';
 /********************************************************************************************************************
  * PTable
  * ******************************************************************************************************************/

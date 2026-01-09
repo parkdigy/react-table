@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { TableCell, styled } from '@mui/material';
-import { PTableCommonCellProps as Props } from './PTableCommonCell.types';
+import { type PTableCommonCellProps as Props } from './PTableCommonCell.types';
 import { getTableColumnAlign } from '../@util.private';
-import { PTableCommonSxProps } from '../@types';
+import { type PTableCommonSxProps } from '../@types';
 import useTableState from '../PTableContext/useTableState';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 
 const StyledTableCell = styled(TableCell)`
   &.ellipsis {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { PTableProps, PTableCommands, PTableItem } from '../PTable';
-import { PFormValueMap, PSearchCommands, PSearchProps } from '@pdg/react-form';
-import { ReactNode } from 'react';
-import { PTableCommonSxProps } from '../@types';
+import { type PTableProps, type PTableCommands, type PTableItem } from '../PTable';
+import { type PFormValueMap, type PSearchCommands, type PSearchProps } from '@pdg/react-form';
+import { type ReactNode } from 'react';
+import { type PTableCommonSxProps } from '../@types';
 export interface PSearchTableSearchInfo {
     ref?: PSearchTableSearchProps['ref'];
     searchGroups?: PSearchTableSearchProps['searchGroups'];

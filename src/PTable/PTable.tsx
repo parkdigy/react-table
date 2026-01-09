@@ -1,11 +1,11 @@
-import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react';
+import React, { type CSSProperties, useCallback, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Table as MuiTable, TableBody, TableRow, TableCell, Paper, Stack, TableFooter, Icon, Box } from '@mui/material';
 import SimpleBarCore from 'simplebar-core';
 import { useResizeDetector } from 'react-resize-detector';
-import { PTableProps as Props, PTableCommands, PTableColumn, PTableItem } from './PTable.types';
+import { type PTableProps as Props, type PTableCommands, type PTableColumn, type PTableItem } from './PTable.types';
 import { StyledBodyRow, StyledNoDataDiv } from './PTable.styles.private';
-import { PTableHeadCellCommands } from '../PTableHeadCell';
+import { type PTableHeadCellCommands } from '../PTableHeadCell';
 import PTableFooterCell from '../PTableFooterCell';
 import PTablePagination from '../PTablePagination';
 import {
@@ -16,11 +16,11 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  type DragEndEvent,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import PTableContextProvider from '../PTableContextProvider';
-import { PTableBodyCellCommands } from '../PTableBodyCell';
+import { type PTableBodyCellCommands } from '../PTableBodyCell';
 import PTableTopHead from '../PTableTopHead';
 import SimpleBar from 'simplebar-react';
 import { makeSortableItems } from './PTable.function.private';

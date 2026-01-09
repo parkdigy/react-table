@@ -1,8 +1,8 @@
-import React, { CSSProperties, ReactNode } from 'react';
-import { TableCellProps, TooltipProps } from '@mui/material';
-import { PTablePaginationProps } from '../PTablePagination';
-import { PTableCommonSxProps } from '../@types';
-import { PTableTopHeadProps } from '../PTableTopHead';
+import React, { type CSSProperties, type ReactNode } from 'react';
+import { type TableCellProps, type TooltipProps } from '@mui/material';
+import { type PTablePaginationProps } from '../PTablePagination';
+import { type PTableCommonSxProps } from '../@types';
+import { type PTableTopHeadProps } from '../PTableTopHead';
 /********************************************************************************************************************
  * PTableItem
  * ******************************************************************************************************************/

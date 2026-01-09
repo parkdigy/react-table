@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
-import { PTableContextValue } from '../PTableContext';
-import { PTableItem } from '../PTable';
+import { type ReactNode } from 'react';
+import { type PTableContextValue } from '../PTableContext';
+import { type PTableItem } from '../PTable';
 
 export interface PTableContextProviderProps<T extends PTableItem = PTableItem> {
   value: PTableContextValue<T>;

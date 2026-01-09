@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { PTableSortableBodyBlockProps as Props } from './PTableSortableBodyBlock.types';
+import { type PTableSortableBodyBlockProps as Props } from './PTableSortableBodyBlock.types';
 import PTableBodyRow from '../PTableBodyRow';
 import classNames from 'classnames';
 import { useInView } from 'react-intersection-observer';
 import { TableCell, TableRow } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
 import { ifUndefined } from '@pdg/compare';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 import { useEventEffect } from '@pdg/react-hook';
 
 function PTableSortableBodyBlock<T extends PTableItem = PTableItem>({

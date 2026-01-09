@@ -1,6 +1,6 @@
-import { PTableColumn, PTableItem, PTableProgressiveVisibleInfo } from '../PTable';
-import { PTableBodyCellCommands } from '../PTableBodyCell';
-import { PTableHeadCellCommands } from '../PTableHeadCell';
+import { type PTableColumn, type PTableItem, type PTableProgressiveVisibleInfo } from '../PTable';
+import { type PTableBodyCellCommands } from '../PTableBodyCell';
+import { type PTableHeadCellCommands } from '../PTableHeadCell';
 
 export interface PTableContextValue<T extends PTableItem = PTableItem> {
   menuOpen: boolean;

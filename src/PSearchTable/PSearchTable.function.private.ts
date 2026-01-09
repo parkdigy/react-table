@@ -1,6 +1,6 @@
-import { PSearchTableSearchInfo, PSearchTableProps, PSearchTableTableInfo } from './PSearchTable.types';
-import { Dict } from '@pdg/types';
-import { PTableItem } from '../PTable';
+import { type PSearchTableSearchInfo, type PSearchTableProps, type PSearchTableTableInfo } from './PSearchTable.types';
+import { type Dict } from '@pdg/types';
+import { type PTableItem } from '../PTable';
 
 export const getSearchInfo = (search: PSearchTableProps['search']) => {
   const searchInfo: PSearchTableSearchInfo = {};

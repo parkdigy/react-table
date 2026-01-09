@@ -1,5 +1,5 @@
-import { PTableColumn, PTableItem, PTableProps } from '../PTable';
-import { PTableBodyRowProps } from '../PTableBodyRow';
+import { type PTableColumn, type PTableItem, type PTableProps } from '../PTable';
+import { type PTableBodyRowProps } from '../PTableBodyRow';
 
 export interface PTableSortableBodyProps<T extends PTableItem = PTableItem>
   extends

@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { PTableHeadCellProps as Props } from './PTableHeadCell.types';
+import { type PTableHeadCellProps as Props } from './PTableHeadCell.types';
 import PTableCommonCell from '../PTableCommonCell';
 import { Checkbox } from '@mui/material';
 import useTableState from '../PTableContext/useTableState';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 import { useChanged } from '@pdg/react-hook';
 
 function PTableHeadCell<T extends PTableItem = PTableItem>({

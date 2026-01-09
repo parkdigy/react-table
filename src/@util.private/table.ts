@@ -1,6 +1,6 @@
-import { PTableColumn, PTableItem } from '../PTable';
-import { PTableCommonSxProps } from '../@types';
-import { TypographyProps } from '@mui/material';
+import { type PTableColumn, type PTableItem } from '../PTable';
+import { type PTableCommonSxProps } from '../@types';
+import { type TypographyProps } from '@mui/material';
 
 export function getTableColumnAlign<T extends PTableItem = PTableItem>(
   column: PTableColumn<T>,

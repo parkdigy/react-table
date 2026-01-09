@@ -1,10 +1,10 @@
-import React, { ReactNode, useCallback, useMemo, useRef } from 'react';
-import { PTableTopHeadProps as Props, PTableTopHeadRowColumnValue } from './PTableTopHead.types';
+import React, { type ReactNode, useCallback, useMemo, useRef } from 'react';
+import { type PTableTopHeadProps as Props, type PTableTopHeadRowColumnValue } from './PTableTopHead.types';
 import { styled, TableCell, TableHead, TableRow, useTheme } from '@mui/material';
 import { useResizeDetector } from 'react-resize-detector';
 import { PTableTopHeadCaptionRow } from './PTableTopHead.style.private';
 import PTableHeadCell from '../PTableHeadCell';
-import { PTableItem } from '../PTable';
+import { type PTableItem } from '../PTable';
 
 const BottomLine = styled('div')`
   height: 1px;

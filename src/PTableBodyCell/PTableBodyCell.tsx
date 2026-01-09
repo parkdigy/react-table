@@ -1,9 +1,9 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { type ReactNode, useCallback, useMemo, useState } from 'react';
 import { Box, Checkbox, styled, Tooltip } from '@mui/material';
-import { PTableBodyCellProps as Props } from './PTableBodyCell.types';
+import { type PTableBodyCellProps as Props } from './PTableBodyCell.types';
 import { getTableColumnAlign } from '../@util.private';
 import PTableCommonCell from '../PTableCommonCell';
-import { PTableItem } from '../PTable/PTable.types';
+import { type PTableItem } from '../PTable/PTable.types';
 import dayjs from 'dayjs';
 import useTableState from '../PTableContext/useTableState';
 import classNames from 'classnames';

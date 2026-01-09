@@ -1,10 +1,10 @@
-import React, { CSSProperties, useMemo } from 'react';
+import React, { type CSSProperties, useMemo } from 'react';
 import classNames from 'classnames';
-import { PTableBodyRowProps as Props } from './PTableBodyRow.types';
+import { type PTableBodyRowProps as Props } from './PTableBodyRow.types';
 import { styled, TableRow, lighten } from '@mui/material';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { PTableColumn, PTableItem } from '../PTable';
+import { type PTableColumn, type PTableItem } from '../PTable';
 import PTableBodyCell from '../PTableBodyCell';
 
 export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({

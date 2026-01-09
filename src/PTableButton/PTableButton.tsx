@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { PTableButtonProps as Props } from './PTableButton.types';
+import { type PTableButtonProps as Props } from './PTableButton.types';
 import { PButton } from '@pdg/react-component';
 import { empty } from '@pdg/compare';
 

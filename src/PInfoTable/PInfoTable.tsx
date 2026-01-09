@@ -1,6 +1,6 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { type ReactNode, useMemo } from 'react';
 import classNames from 'classnames';
-import { PInfoTableProps as Props, PInfoTableInfo, PInfoTableItem } from './PInfoTable.types';
+import { type PInfoTableProps as Props, type PInfoTableInfo, type PInfoTableItem } from './PInfoTable.types';
 import {
   ClipboardIconButton,
   Label,
