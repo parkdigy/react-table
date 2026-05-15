@@ -192,6 +192,7 @@ function PTableBodyCell<T extends PTableItem = PTableItem>({
               href={newData as any}
               target='_blank'
               rel='noreferrer'
+              tabIndex={-1}
               onClick={
                 menuOpen
                   ? undefined

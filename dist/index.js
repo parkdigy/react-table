@@ -2283,6 +2283,7 @@ function PTableBodyCell(t0) {
               href: _t0,
               target: "_blank",
               rel: "noreferrer",
+              tabIndex: -1,
               onClick: _t1
             }, t14);
             $[58] = _t0;
