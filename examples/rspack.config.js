@@ -1,15 +1,12 @@
 /* eslint-disable */
 const path = require('path');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const { SourceMapDevToolPlugin } = require('webpack');
-const MyDefinePlugin = require('./webpack.DefinePlugin');
-const MyProvidePlugin = require('./webpack.ProvidePlugin');
+const ESLintPlugin = require('eslint-rspack-plugin').default;
+const HtmlRspackPlugin = require('html-rspack-plugin');
+const { TsCheckerRspackPlugin } = require('ts-checker-rspack-plugin');
+const { ReactRefreshRspackPlugin } = require('@rspack/plugin-react-refresh');
+const { rspack } = require('@rspack/core');
+const MyDefinePlugin = require('./rspack.DefinePlugin');
+const MyProvidePlugin = require('./rspack.ProvidePlugin');
 const sass = require('sass');
 const TsConfigJson = require('./tsconfig.json');
 const RootPackageJson = require('../package.json');
@@ -32,7 +29,7 @@ const repositoryName = RootPackageJson.repository.baseUrl.split('/').pop();
 class MyHtmlPlugin {
   apply(compiler) {
     compiler.hooks.compilation.tap('MyPlugin', (compilation) => {
-      HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('MyHtmlPlugin', (data, cb) => {
+      HtmlRspackPlugin.getHooks(compilation).beforeEmit.tapAsync('MyHtmlPlugin', (data, cb) => {
         const splitText = '</head>';
         const htmls = data.html.split(splitText);
         const inject = `
@@ -57,7 +54,10 @@ class MyHtmlPlugin {
  * Alias
  * ******************************************************************************************************************/
 
-const alias = {};
+const alias = {
+  react: path.dirname(require.resolve('react/package.json')),
+  'react-dom': path.dirname(require.resolve('react-dom/package.json')),
+};
 if (TsConfigJson.compilerOptions.paths) {
   const paths = TsConfigJson.compilerOptions.paths;
   Object.keys(paths).forEach((key) => {
@@ -82,6 +82,7 @@ const options = {
   },
   output: {
     path: outputPath,
+    clean: isProduction,
     publicPath: isProduction ? `/${repositoryName}/examples/dist/` : '/',
     filename: '[name].[chunkhash].js',
     chunkFilename: 'chunks/[name].[chunkhash].js',
@@ -142,41 +143,32 @@ const options = {
       name: repositoryName,
     }),
     new MyProvidePlugin(),
-    new ForkTsCheckerWebpackPlugin(),
+    new TsCheckerRspackPlugin(),
     new ESLintPlugin({
       extensions: ['js', 'jsx', 'ts', 'tsx'],
-      failOnError: isProduction,
+      ...(isProduction ? {} : { severity: { error: 'warning' } }),
       exclude: [
         path.resolve(__dirname, 'node_modules'),
         path.resolve(__dirname, 'dist'),
         path.resolve(__dirname, 'public'),
       ],
     }),
-    new HtmlWebpackPlugin({
+    new HtmlRspackPlugin({
       template: './public/index.html',
     }),
-    new CopyPlugin({
+    new rspack.CopyRspackPlugin({
       patterns: [{ from: './public/robots.txt', to: outputPath }],
     }),
     new MyHtmlPlugin(),
-    ...(isProduction
-      ? [
-          new CleanWebpackPlugin.CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ['*'],
-          }),
-        ]
-      : [
-          new SourceMapDevToolPlugin({
-            filename: '[file].map',
-          }),
-          new FriendlyErrorsWebpackPlugin({
-            clearConsole: true,
-          }),
-          new ReactRefreshWebpackPlugin({ overlay: false }),
-        ]),
+    ...(!isProduction ? [new ReactRefreshRspackPlugin()] : []),
   ],
+  experiments: { css: true },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        resolve: { fullySpecified: false },
+      },
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
@@ -187,30 +179,19 @@ const options = {
         ],
       },
       {
-        test: /\.m?js$/,
-        enforce: 'pre',
-        resolve: {
-          fullySpecified: false,
-        },
-        use: ['source-map-loader'],
-      },
-      {
         test: /\.html$/,
-        use: {
-          loader: 'html-loader',
-          options: { minimize: true },
-        },
+        exclude: path.resolve(__dirname, 'public/index.html'),
+        type: 'asset/source',
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        type: 'css/auto',
       },
       {
         test: /\.(sa|sc)ss$/,
         exclude: /node_modules/,
+        type: 'css/auto',
         use: [
-          'style-loader',
-          'css-loader',
           {
             loader: 'sass-loader',
             options: {
@@ -221,7 +202,9 @@ const options = {
       },
       {
         test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
-        use: 'url-loader?limit=100000&name=[name].[ext]',
+        type: 'asset',
+        parser: { dataUrlCondition: { maxSize: 100000 } },
+        generator: { filename: '[name][ext]' },
       },
     ],
   },

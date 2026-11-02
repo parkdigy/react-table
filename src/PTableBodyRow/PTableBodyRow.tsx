@@ -7,7 +7,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { type PTableColumn, type PTableItem } from '../PTable';
 import PTableBodyCell from '../PTableBodyCell';
 
-export const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
+const PStyledBodyRow = styled(TableRow)(({ theme }) => ({
   '&.odd-color:nth-of-type(odd):not(:hover)': {
     backgroundColor: lighten(theme.palette.action.hover, 0.4),
   },

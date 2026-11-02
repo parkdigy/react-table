@@ -30,6 +30,11 @@ import { deHash, getSearchInfo, getTableInfo } from './PSearchTable.function.pri
 import { useAutoUpdateRef, useEventEffect, useFirstSkipChanged, useForwardRef } from '@pdg/react-hook';
 import { useLocation } from 'react-router';
 
+function assignTableRef<T extends PTableItem>(ref: Props<T>['table']['ref'], commands: PTableCommands<T>) {
+  if (typeof ref === 'function') ref(commands);
+  else if (ref) ref.current = commands;
+}
+
 function PSearchTable<T extends PTableItem = PTableItem>({
   ref,
   className,
@@ -452,6 +457,12 @@ function PSearchTable<T extends PTableItem = PTableItem>({
     [color, handleSearchSubmit, searchInfo]
   );
 
+  const externalTableRef = tableInfo.ref;
+  const handleTableRef = useCallback((commands: PTableCommands<T>) => {
+    assignTableRef(externalTableRef, commands);
+    tableRef.current = commands || undefined;
+  }, [externalTableRef]);
+
   const tableView = useMemo(
     () => (
       <Grid style={fullHeight ? { flex: 1, display: 'flex', flexDirection: 'column' } : undefined}>
@@ -459,23 +470,14 @@ function PSearchTable<T extends PTableItem = PTableItem>({
           {...tableInfo.props}
           stickyHeader={stickyHeader || tableInfo.props?.stickyHeader}
           fullHeight={fullHeight || tableInfo.props?.fullHeight}
-          ref={(commands: PTableCommands<T>) => {
-            if (tableInfo.ref) {
-              if (typeof tableInfo.ref === 'function') {
-                tableInfo.ref(commands);
-              } else {
-                tableInfo.ref.current = commands;
-              }
-            }
-            tableRef.current = commands || undefined;
-          }}
+          ref={handleTableRef}
           items={tableData?.items}
           paging={tableData?.paging}
           onPageChange={handlePageChange}
         />
       </Grid>
     ),
-    [fullHeight, handlePageChange, stickyHeader, tableData?.items, tableData?.paging, tableInfo]
+    [fullHeight, handlePageChange, handleTableRef, stickyHeader, tableData?.items, tableData?.paging, tableInfo]
   );
 
   return (

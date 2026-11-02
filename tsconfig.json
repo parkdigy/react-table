@@ -4,9 +4,10 @@
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ES2017"],
     "jsx": "react",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "declaration": true,
     "declarationDir": "dist",
+    "rootDir": "src",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "allowImportingTsExtensions": false,
@@ -15,10 +16,10 @@
     "experimentalDecorators": true,
     "preserveSymlinks": true,
     "skipLibCheck": true,
+    "types": ["node"],
     "sourceMap": true,
     "strict": true,
-    "outDir": "dist",
-    "baseUrl": "./src"
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "test", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "examples", "rollup.config.js"]
