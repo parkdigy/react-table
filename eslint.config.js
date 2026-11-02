@@ -6,7 +6,7 @@ import typescriptEslintParser from '@typescript-eslint/parser';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactRefresh from 'eslint-plugin-react-refresh';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
-import pluginPdgReactHooks from '@pdg/react-hook-eslint/eslint-plugin';
+import pluginPdgReactHooks from '@pdg/eslint-plugin-react-hook';
 
 export default defineConfig([
   ...tseslint.config(eslint.configs.recommended, tseslint.configs.recommended, pluginReactRefresh.configs.recommended),

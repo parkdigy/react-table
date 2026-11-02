@@ -121,15 +121,15 @@ function _taggedTemplateLiteral(e, t) {
 function _toConsumableArray(r) {
   return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
 }
-function _toPrimitive(t, r) {
+function _toPrimitive(t, e) {
   if ("object" != typeof t || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r);
+  var r;
+  if ("undefined" != typeof Symbol && void 0 !== (r = t[Symbol.toPrimitive])) {
+    var i = r.call(t, e);
     if ("object" != typeof i) return i;
     throw new TypeError("@@toPrimitive must return a primitive value.");
   }
-  return ("string" === r ? String : Number)(t);
+  return ("string" === e ? String : Number)(t);
 }
 function _toPropertyKey(t) {
   var i = _toPrimitive(t, "string");
@@ -556,113 +556,166 @@ function typographyColorToSxColor(color) {
     t8 = $[31];
   }
   return t8;
-}function debounce$1(func, debounceMs, { signal, edges } = {}) {
-    let pendingThis = undefined;
-    let pendingArgs = null;
-    const leading = edges != null && edges.includes('leading');
-    const trailing = edges == null || edges.includes('trailing');
-    const invoke = () => {
-        if (pendingArgs !== null) {
-            func.apply(pendingThis, pendingArgs);
-            pendingThis = undefined;
-            pendingArgs = null;
-        }
-    };
-    const onTimerEnd = () => {
-        if (trailing) {
-            invoke();
-        }
-        cancel();
-    };
-    let timeoutId = null;
-    const schedule = () => {
-        if (timeoutId != null) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            timeoutId = null;
-            onTimerEnd();
-        }, debounceMs);
-    };
-    const cancelTimer = () => {
-        if (timeoutId !== null) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-        }
-    };
-    const cancel = () => {
-        cancelTimer();
-        pendingThis = undefined;
-        pendingArgs = null;
-    };
-    const flush = () => {
-        invoke();
-    };
-    const debounced = function (...args) {
-        if (signal?.aborted) {
-            return;
-        }
-        pendingThis = this;
-        pendingArgs = args;
-        const isFirstCall = timeoutId == null;
-        schedule();
-        if (leading && isFirstCall) {
-            invoke();
-        }
-    };
-    debounced.schedule = schedule;
-    debounced.cancel = cancel;
-    debounced.flush = flush;
-    signal?.addEventListener('abort', cancel, { once: true });
-    return debounced;
-}function debounce(func, debounceMs = 0, options = {}) {
-    if (typeof options !== 'object') {
-        options = {};
-    }
-    const { leading = false, trailing = true, maxWait } = options;
-    const edges = Array(2);
-    if (leading) {
-        edges[0] = 'leading';
-    }
-    if (trailing) {
-        edges[1] = 'trailing';
-    }
-    let result = undefined;
-    let pendingAt = null;
-    const _debounced = debounce$1(function (...args) {
-        result = func.apply(this, args);
-        pendingAt = null;
-    }, debounceMs, { edges });
-    const debounced = function (...args) {
-        if (maxWait != null) {
-            if (pendingAt === null) {
-                pendingAt = Date.now();
-            }
-            if (Date.now() - pendingAt >= maxWait) {
-                result = func.apply(this, args);
-                pendingAt = Date.now();
-                _debounced.cancel();
-                _debounced.schedule();
-                return result;
-            }
-        }
-        _debounced.apply(this, args);
-        return result;
-    };
-    const flush = () => {
-        _debounced.flush();
-        return result;
-    };
-    debounced.cancel = _debounced.cancel;
-    debounced.flush = flush;
-    return debounced;
-}function throttle(func, throttleMs = 0, options = {}) {
-    const { leading = true, trailing = true } = options;
-    return debounce(func, throttleMs, {
-        leading,
-        maxWait: throttleMs,
-        trailing,
-    });
+}// src/function/debounce.ts
+/**
+* Creates a debounced function that delays invoking the provided function until after `debounceMs` milliseconds
+* have elapsed since the last time the debounced function was invoked. The debounced function also has a `cancel`
+* method to cancel any pending execution.
+*
+* @template F - The type of function.
+* @param func - The function to debounce.
+* @param debounceMs - The number of milliseconds to delay.
+* @param options - The options object
+* @param options.signal - An optional AbortSignal to cancel the debounced function.
+* @param options.edges - An optional array specifying whether the function should be invoked on the leading edge, trailing edge, or both.
+* @returns A new debounced function with a `cancel` method.
+*
+* @example
+* const debouncedFunction = debounce(() => {
+*   console.log('Function executed');
+* }, 1000);
+*
+* // Will log 'Function executed' after 1 second if not called again in that time
+* debouncedFunction();
+*
+* // Will not log anything as the previous call is canceled
+* debouncedFunction.cancel();
+*
+* // With AbortSignal
+* const controller = new AbortController();
+* const signal = controller.signal;
+* const debouncedWithSignal = debounce(() => {
+*  console.log('Function executed');
+* }, 1000, { signal });
+*
+* debouncedWithSignal();
+*
+* // Will cancel the debounced function call
+* controller.abort();
+*/
+function debounce$1(func, debounceMs, { signal, edges } = {}) {
+	let pendingThis = void 0;
+	let pendingArgs = null;
+	const leading = edges != null && edges.includes("leading");
+	const trailing = edges == null || edges.includes("trailing");
+	const invoke = () => {
+		if (pendingArgs !== null) {
+			func.apply(pendingThis, pendingArgs);
+			pendingThis = void 0;
+			pendingArgs = null;
+		}
+	};
+	const onTimerEnd = () => {
+		if (trailing) invoke();
+		cancel();
+	};
+	let timeoutId = null;
+	const schedule = () => {
+		if (timeoutId != null) clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			timeoutId = null;
+			onTimerEnd();
+		}, debounceMs);
+	};
+	const cancelTimer = () => {
+		if (timeoutId !== null) {
+			clearTimeout(timeoutId);
+			timeoutId = null;
+		}
+	};
+	const cancel = () => {
+		cancelTimer();
+		pendingThis = void 0;
+		pendingArgs = null;
+	};
+	const flush = () => {
+		invoke();
+	};
+	const debounced = function(...args) {
+		if (signal === null || signal === void 0 ? void 0 : signal.aborted) return;
+		pendingThis = this;
+		pendingArgs = args;
+		const isFirstCall = timeoutId == null;
+		schedule();
+		if (leading && isFirstCall) invoke();
+	};
+	debounced.schedule = schedule;
+	debounced.cancel = cancel;
+	debounced.flush = flush;
+	signal === null || signal === void 0 || signal.addEventListener("abort", cancel, { once: true });
+	return debounced;
+}// src/compat/function/debounce.ts
+function debounce(func, debounceMs = 0, options = {}) {
+	if (typeof options !== "object") options = {};
+	const { leading = false, trailing = true, maxWait } = options;
+	const edges = Array(2);
+	if (leading) edges[0] = "leading";
+	if (trailing) edges[1] = "trailing";
+	let result = void 0;
+	let pendingAt = null;
+	const _debounced = debounce$1(function(...args) {
+		result = func.apply(this, args);
+		pendingAt = null;
+	}, debounceMs, { edges });
+	const debounced = function(...args) {
+		if (maxWait != null) {
+			if (pendingAt === null) pendingAt = Date.now();
+			if (Date.now() - pendingAt >= maxWait) {
+				if (leading || trailing) result = func.apply(this, args);
+				pendingAt = Date.now();
+				_debounced.cancel();
+				_debounced.schedule();
+				return result;
+			}
+		}
+		_debounced.apply(this, args);
+		return result;
+	};
+	const flush = () => {
+		_debounced.flush();
+		return result;
+	};
+	debounced.cancel = _debounced.cancel;
+	debounced.flush = flush;
+	return debounced;
+}// src/compat/function/throttle.ts
+/**
+* Creates a throttled function that only invokes the provided function at most once
+* per every `throttleMs` milliseconds. Subsequent calls to the throttled function
+* within the wait time will not trigger the execution of the original function.
+*
+* @template F - The type of function.
+* @param func - The function to throttle.
+* @param throttleMs - The number of milliseconds to throttle executions to.
+* @param options - The options object
+* @param options.signal - An optional AbortSignal to cancel the throttled function.
+* @param options.leading - If `true`, the function will be invoked on the leading edge of the timeout.
+* @param options.trailing - If `true`, the function will be invoked on the trailing edge of the timeout.
+* @returns A new throttled function that accepts the same parameters as the original function.
+*
+* @example
+* const throttledFunction = throttle(() => {
+*   console.log('Function executed');
+* }, 1000);
+*
+* // Will log 'Function executed' immediately
+* throttledFunction();
+*
+* // Will not log anything as it is within the throttle time
+* throttledFunction();
+*
+* // After 1 second
+* setTimeout(() => {
+*   throttledFunction(); // Will log 'Function executed'
+* }, 1000);
+*/
+function throttle(func, throttleMs = 0, options = {}) {
+	const { leading = true, trailing = true } = options;
+	return debounce(func, throttleMs, {
+		leading,
+		maxWait: throttleMs,
+		trailing
+	});
 }/**
  * Wraps the resize callback with a es-toolkit debounce / throttle based on the refresh mode
  */
@@ -4337,8 +4390,11 @@ var deHash = function deHash() {
     return substring;
   });
   return values;
-};function PSearchTable(t0) {
-  var $ = compilerRuntime.c(79);
+};function assignTableRef(ref, commands) {
+  if (typeof ref === 'function') ref(commands);else if (ref) ref.current = commands;
+}
+function PSearchTable(t0) {
+  var $ = compilerRuntime.c(84);
   var ref = t0.ref,
     className = t0.className,
     initStyle = t0.style,
@@ -4928,11 +4984,23 @@ var deHash = function deHash() {
     t25 = $[57];
   }
   var searchView = t25;
+  var externalTableRef = tableInfo.ref;
   var t26;
-  if ($[58] !== fullHeight || $[59] !== handlePageChange || $[60] !== stickyHeader || $[61] !== (tableData === null || tableData === void 0 ? void 0 : tableData.items) || $[62] !== (tableData === null || tableData === void 0 ? void 0 : tableData.paging) || $[63] !== tableInfo) {
-    tableData === null || tableData === void 0 || tableData.items;
-    tableData === null || tableData === void 0 || tableData.paging;
-    t26 = function (_tableInfo$props, _tableInfo$props2) {
+  if ($[58] !== externalTableRef) {
+    t26 = function t26(commands_4) {
+      assignTableRef(externalTableRef, commands_4);
+      tableRef.current = commands_4 || undefined;
+    };
+    $[58] = externalTableRef;
+    $[59] = t26;
+  } else {
+    t26 = $[59];
+  }
+  var handleTableRef = t26;
+  var t27;
+  if ($[60] !== fullHeight || $[61] !== handlePageChange || $[62] !== handleTableRef || $[63] !== stickyHeader || $[64] !== (tableData === null || tableData === void 0 ? void 0 : tableData.items) || $[65] !== (tableData === null || tableData === void 0 ? void 0 : tableData.paging) || $[66] !== tableInfo.props) {
+    t27 = function t27() {
+      var _tableInfo$props, _tableInfo$props2;
       return /*#__PURE__*/React.createElement(material.Grid, {
         style: fullHeight ? {
           flex: 1,
@@ -4942,81 +5010,83 @@ var deHash = function deHash() {
       }, /*#__PURE__*/React.createElement(PTable, _extends({}, tableInfo.props, {
         stickyHeader: stickyHeader || ((_tableInfo$props = tableInfo.props) === null || _tableInfo$props === void 0 ? void 0 : _tableInfo$props.stickyHeader),
         fullHeight: fullHeight || ((_tableInfo$props2 = tableInfo.props) === null || _tableInfo$props2 === void 0 ? void 0 : _tableInfo$props2.fullHeight),
-        ref: function ref(commands_4) {
-          if (tableInfo.ref) {
-            if (typeof tableInfo.ref === "function") {
-              tableInfo.ref(commands_4);
-            } else {
-              tableInfo.ref.current = commands_4;
-            }
-          }
-          tableRef.current = commands_4 || undefined;
-        },
+        ref: handleTableRef,
         items: tableData === null || tableData === void 0 ? void 0 : tableData.items,
         paging: tableData === null || tableData === void 0 ? void 0 : tableData.paging,
         onPageChange: handlePageChange
       })));
-    }();
-    $[58] = fullHeight;
-    $[59] = handlePageChange;
-    $[60] = stickyHeader;
-    $[61] = tableData === null || tableData === void 0 ? void 0 : tableData.items;
-    $[62] = tableData === null || tableData === void 0 ? void 0 : tableData.paging;
-    $[63] = tableInfo;
-    $[64] = t26;
+    };
+    $[60] = fullHeight;
+    $[61] = handlePageChange;
+    $[62] = handleTableRef;
+    $[63] = stickyHeader;
+    $[64] = tableData === null || tableData === void 0 ? void 0 : tableData.items;
+    $[65] = tableData === null || tableData === void 0 ? void 0 : tableData.paging;
+    $[66] = tableInfo.props;
+    $[67] = t27;
   } else {
-    t26 = $[64];
+    t27 = $[67];
   }
-  var tableView = t26;
-  var t27;
-  if ($[65] !== className) {
-    t27 = classNames("PSearchTable", className);
-    $[65] = className;
-    $[66] = t27;
-  } else {
-    t27 = $[66];
-  }
+  tableData === null || tableData === void 0 || tableData.items;
+  tableData === null || tableData === void 0 || tableData.paging;
   var t28;
-  if ($[67] !== fullHeight || $[68] !== initStyle) {
-    t28 = fullHeight ? _objectSpread2(_objectSpread2({}, initStyle), {}, {
-      flex: 1,
-      display: "flex"
-    }) : initStyle;
-    $[67] = fullHeight;
-    $[68] = initStyle;
+  if ($[68] !== t27) {
+    t28 = t27();
+    $[68] = t27;
     $[69] = t28;
   } else {
     t28 = $[69];
   }
+  var tableView = t28;
   var t29;
-  if ($[70] !== betweenSearchTableComponent) {
-    t29 = betweenSearchTableComponent && /*#__PURE__*/React.createElement(material.Grid, null, betweenSearchTableComponent);
-    $[70] = betweenSearchTableComponent;
+  if ($[70] !== className) {
+    t29 = classNames("PSearchTable", className);
+    $[70] = className;
     $[71] = t29;
   } else {
     t29 = $[71];
   }
   var t30;
-  if ($[72] !== searchView || $[73] !== sx || $[74] !== t27 || $[75] !== t28 || $[76] !== t29 || $[77] !== tableView) {
-    t30 = /*#__PURE__*/React.createElement(material.Grid, {
+  if ($[72] !== fullHeight || $[73] !== initStyle) {
+    t30 = fullHeight ? _objectSpread2(_objectSpread2({}, initStyle), {}, {
+      flex: 1,
+      display: "flex"
+    }) : initStyle;
+    $[72] = fullHeight;
+    $[73] = initStyle;
+    $[74] = t30;
+  } else {
+    t30 = $[74];
+  }
+  var t31;
+  if ($[75] !== betweenSearchTableComponent) {
+    t31 = betweenSearchTableComponent && /*#__PURE__*/React.createElement(material.Grid, null, betweenSearchTableComponent);
+    $[75] = betweenSearchTableComponent;
+    $[76] = t31;
+  } else {
+    t31 = $[76];
+  }
+  var t32;
+  if ($[77] !== searchView || $[78] !== sx || $[79] !== t29 || $[80] !== t30 || $[81] !== t31 || $[82] !== tableView) {
+    t32 = /*#__PURE__*/React.createElement(material.Grid, {
       container: true,
       direction: "column",
       spacing: 1,
-      className: t27,
-      style: t28,
+      className: t29,
+      style: t30,
       sx: sx
-    }, searchView, t29, tableView);
-    $[72] = searchView;
-    $[73] = sx;
-    $[74] = t27;
-    $[75] = t28;
-    $[76] = t29;
-    $[77] = tableView;
-    $[78] = t30;
+    }, searchView, t31, tableView);
+    $[77] = searchView;
+    $[78] = sx;
+    $[79] = t29;
+    $[80] = t30;
+    $[81] = t31;
+    $[82] = tableView;
+    $[83] = t32;
   } else {
-    t30 = $[78];
+    t32 = $[83];
   }
-  return t30;
+  return t32;
 }var _excluded$1 = ["children", "className", "sx", "variant", "color", "startIcon", "endIcon", "onClick"];
 var PTableButton = function PTableButton(t0) {
   var $ = compilerRuntime.c(25);
