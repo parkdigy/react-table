@@ -652,14 +652,24 @@ function PTable<T extends PTableItem = PTableItem>({
     (item: T, column: PTableColumn<T>, checked: boolean) => {
       const columnId = getFinalColumnId(column);
       if (localBodyDataRef.current) {
-        const bodyData = localBodyDataRef.current[item.id];
-        if (bodyData) {
-          const columns = bodyData.columns;
-          const data = columns[columnId];
-          if (data) {
-            data.checked = checked;
-            fireOnCheckChange(columnId);
+        const run = () => {
+          const bodyData = localBodyDataRef.current[item.id];
+          if (bodyData) {
+            const columns = bodyData.columns;
+            const data = columns[columnId];
+            if (data) {
+              data.checked = checked;
+              fireOnCheckChange(columnId);
+            }
           }
+        };
+
+        if (localBodyDataRef.current[item.id]) {
+          run();
+        } else {
+          setTimeout(() => {
+            run();
+          });
         }
       }
     },

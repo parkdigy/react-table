@@ -3899,14 +3899,23 @@ function PTable(t0) {
     t54 = function t54(item_2, column_3, checked_3) {
       var columnId_7 = getFinalColumnId(column_3);
       if (localBodyDataRef.current) {
-        var bodyData = localBodyDataRef.current[item_2.id];
-        if (bodyData) {
-          var columns_0 = bodyData.columns;
-          var data_0 = columns_0[columnId_7];
-          if (data_0) {
-            data_0.checked = checked_3;
-            fireOnCheckChange(columnId_7);
+        var run = function run() {
+          var bodyData = localBodyDataRef.current[item_2.id];
+          if (bodyData) {
+            var columns_0 = bodyData.columns;
+            var data_0 = columns_0[columnId_7];
+            if (data_0) {
+              data_0.checked = checked_3;
+              fireOnCheckChange(columnId_7);
+            }
           }
+        };
+        if (localBodyDataRef.current[item_2.id]) {
+          run();
+        } else {
+          setTimeout(function () {
+            run();
+          });
         }
       }
     };
@@ -3927,7 +3936,7 @@ function PTable(t0) {
         updateHeadCheck(column_4);
       } else {
         var runCount = 0;
-        var _run = function run() {
+        var _run_ = function run_0() {
           var _localBodyDataRef$cur4;
           runCount = runCount + 1;
           if (runCount > 10) {
@@ -3935,13 +3944,13 @@ function PTable(t0) {
           }
           var columnId_9 = getFinalColumnId(column_4);
           if (!((_localBodyDataRef$cur4 = localBodyDataRef.current[item_3.id]) !== null && _localBodyDataRef$cur4 !== void 0 && _localBodyDataRef$cur4.columns[columnId_9])) {
-            setTimeout(_run);
+            setTimeout(_run_);
             return;
           }
           localBodyDataRef.current[item_3.id].columns[columnId_9].checkDisabled = disabled;
           updateHeadCheck(column_4);
         };
-        _run();
+        _run_();
       }
     };
     $[97] = getFinalColumnId;
@@ -3960,7 +3969,7 @@ function PTable(t0) {
         localBodyDataRef.current[item_4.id].columns[columnId_10].commands = commands;
       } else {
         var runCount_0 = 0;
-        var _run_ = function run_0() {
+        var _run_2 = function run_1() {
           var _localBodyDataRef$cur6;
           runCount_0 = runCount_0 + 1;
           if (runCount_0 > 10) {
@@ -3968,12 +3977,12 @@ function PTable(t0) {
           }
           var columnId_11 = getFinalColumnId(column_5);
           if (!((_localBodyDataRef$cur6 = localBodyDataRef.current[item_4.id]) !== null && _localBodyDataRef$cur6 !== void 0 && _localBodyDataRef$cur6.columns[columnId_11])) {
-            setTimeout(_run_);
+            setTimeout(_run_2);
             return;
           }
           localBodyDataRef.current[item_4.id].columns[columnId_11].commands = commands;
         };
-        _run_();
+        _run_2();
       }
     };
     $[100] = getFinalColumnId;
@@ -3990,19 +3999,19 @@ function PTable(t0) {
         localHeaderDataRef.current[columnId_12].checked = checked_4;
       } else {
         var runCount_1 = 0;
-        var _run_2 = function run_1() {
+        var _run_3 = function run_2() {
           runCount_1 = runCount_1 + 1;
           if (runCount_1 > 10) {
             return;
           }
           var columnId_13 = getFinalColumnId(column_6);
           if (!localHeaderDataRef.current[columnId_13]) {
-            setTimeout(_run_2);
+            setTimeout(_run_3);
             return;
           }
           localHeaderDataRef.current[columnId_13].checked = checked_4;
         };
-        _run_2();
+        _run_3();
       }
     };
     $[102] = getFinalColumnId;
@@ -4019,19 +4028,19 @@ function PTable(t0) {
         localHeaderDataRef.current[columnId_14].commands = commands_0;
       } else {
         var runCount_2 = 0;
-        var _run_3 = function run_2() {
+        var _run_4 = function run_3() {
           runCount_2 = runCount_2 + 1;
           if (runCount_2 > 10) {
             return;
           }
           var columnId_15 = getFinalColumnId(column_7);
           if (!localHeaderDataRef.current[columnId_15]) {
-            setTimeout(_run_3);
+            setTimeout(_run_4);
             return;
           }
           localHeaderDataRef.current[columnId_15].commands = commands_0;
         };
-        _run_3();
+        _run_4();
       }
     };
     $[104] = getFinalColumnId;
