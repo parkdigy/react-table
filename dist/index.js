@@ -1243,7 +1243,7 @@ function PTableCommonCell(t0) {
           break bb2;
         } else {
           if (!sxList.find(_temp$4)) {
-            t6 = sxList.reduce(_temp2$1, {});
+            t6 = sxList.reduce(_temp2$2, {});
             break bb2;
           }
         }
@@ -1325,7 +1325,7 @@ function PTableCommonCell(t0) {
   }
   return t12;
 }
-function _temp2$1(res, sx_0) {
+function _temp2$2(res, sx_0) {
   res = _objectSpread2(_objectSpread2({}, res), sx_0);
   return res;
 }
@@ -2260,7 +2260,7 @@ function PTableBodyCell(t0) {
         {
           newData = /*#__PURE__*/React.createElement(material.Box, {
             className: "PTableBoxyCell-button-box",
-            onClick: menuOpen ? undefined : _temp2
+            onClick: menuOpen ? undefined : _temp2$1
           }, newData);
           break bb1;
         }
@@ -2269,7 +2269,7 @@ function PTableBodyCell(t0) {
           newData = /*#__PURE__*/React.createElement(StyledButtonsBox, {
             className: "PTableBodyCell-buttons-box",
             justifyContent: buttonsBoxJustifyContent,
-            onClick: menuOpen ? undefined : _temp3
+            onClick: menuOpen ? undefined : _temp3$1
           }, newData);
           break bb1;
         }
@@ -2293,7 +2293,7 @@ function PTableBodyCell(t0) {
           });
           var placement = (_column$tooltipProps = column.tooltipProps) !== null && _column$tooltipProps !== void 0 && _column$tooltipProps.placement ? (_column$tooltipProps2 = column.tooltipProps) === null || _column$tooltipProps2 === void 0 ? void 0 : _column$tooltipProps2.placement : "left";
           var _t0 = newData;
-          var _t1 = menuOpen ? undefined : _temp4;
+          var _t1 = menuOpen ? undefined : _temp4$1;
           var _t10;
           if ($[50] === Symbol["for"]("react.memo_cache_sentinel")) {
             _t10 = {
@@ -2550,13 +2550,13 @@ function PTableBodyCell(t0) {
   }
   return t13;
 }
-function _temp4(e) {
+function _temp4$1(e) {
   e.stopPropagation();
 }
-function _temp3(e_0) {
+function _temp3$1(e_0) {
   return e_0.stopPropagation();
 }
-function _temp2(e_1) {
+function _temp2$1(e_1) {
   return e_1.stopPropagation();
 }
 function _temp$2(e_2) {
@@ -3351,8 +3351,9 @@ function PTable(t0) {
   if ($[25] !== finalColumnsIdRef || $[26] !== finalColumnsRef) {
     t23 = function t23(column) {
       if (finalColumnsRef.current && finalColumnsIdRef.current) {
+        var _finalColumnsIdRef$cu;
         var idx = finalColumnsRef.current.indexOf(column);
-        return finalColumnsIdRef.current[idx];
+        return (_finalColumnsIdRef$cu = finalColumnsIdRef.current[idx]) !== null && _finalColumnsIdRef$cu !== void 0 ? _finalColumnsIdRef$cu : "";
       } else {
         return "";
       }
@@ -3377,16 +3378,16 @@ function PTable(t0) {
         updateHeadCheckTimer.current = setTimeout(function () {
           var _headColumnData$comma, _headColumnData$comma2;
           updateHeadCheckTimer.current = undefined;
-          var enabledCheckExists = !!Object.keys(localBodyDataRef.current).find(function (key) {
-            var columnData = localBodyDataRef.current[key].columns[columnId];
+          var enabledCheckExists = !!Object.values(localBodyDataRef.current).find(function (itemData) {
+            var columnData = itemData.columns[columnId];
             if (columnData) {
               if (!columnData.checkDisabled) {
                 return true;
               }
             }
           });
-          var allChecked = enabledCheckExists && !Object.keys(localBodyDataRef.current).find(function (key_0) {
-            var columnData_0 = localBodyDataRef.current[key_0].columns[columnId];
+          var allChecked = enabledCheckExists && !Object.values(localBodyDataRef.current).find(function (itemData_0) {
+            var columnData_0 = itemData_0.columns[columnId];
             if (columnData_0) {
               if (!columnData_0.checkDisabled) {
                 return !columnData_0.checked;
@@ -3408,10 +3409,9 @@ function PTable(t0) {
   if ($[30] === Symbol["for"]("react.memo_cache_sentinel")) {
     t25 = function t25(itemKey, itemValue, columnId_0) {
       var checked = false;
-      Object.keys(localBodyDataRef.current).find(function (key_1) {
-        var itemData = localBodyDataRef.current[key_1];
-        if (itemData.item[itemKey] === itemValue) {
-          var columnData_1 = itemData.columns[columnId_0];
+      Object.values(localBodyDataRef.current).find(function (itemData_1) {
+        if (itemData_1.item[itemKey] === itemValue) {
+          var columnData_1 = itemData_1.columns[columnId_0];
           checked = !!(columnData_1 !== null && columnData_1 !== void 0 && columnData_1.checked);
           return true;
         }
@@ -3426,10 +3426,9 @@ function PTable(t0) {
   var t26;
   if ($[31] !== updateHeadCheck) {
     t26 = function t26(itemKey_0, itemValue_0, columnId_1, checked_0) {
-      Object.keys(localBodyDataRef.current).find(function (key_2) {
-        var itemData_0 = localBodyDataRef.current[key_2];
-        if (itemData_0.item[itemKey_0] === itemValue_0) {
-          var columnData_2 = itemData_0.columns[columnId_1];
+      Object.values(localBodyDataRef.current).find(function (itemData_2) {
+        if (itemData_2.item[itemKey_0] === itemValue_0) {
+          var columnData_2 = itemData_2.columns[columnId_1];
           if (columnData_2) {
             var _columnData_2$command;
             (_columnData_2$command = columnData_2.commands) === null || _columnData_2$command === void 0 || _columnData_2$command.setChecked(checked_0);
@@ -3448,10 +3447,9 @@ function PTable(t0) {
   var t27;
   if ($[33] !== updateHeadCheck) {
     t27 = function t27(itemKey_1, itemValue_1, columnId_2) {
-      Object.keys(localBodyDataRef.current).forEach(function (key_3) {
-        var itemData_1 = localBodyDataRef.current[key_3];
-        if (itemData_1.item[itemKey_1] === itemValue_1) {
-          var columnData_3 = itemData_1.columns[columnId_2];
+      Object.values(localBodyDataRef.current).forEach(function (itemData_3) {
+        if (itemData_3.item[itemKey_1] === itemValue_1) {
+          var columnData_3 = itemData_3.columns[columnId_2];
           if (columnData_3) {
             var _columnData_3$command;
             (_columnData_3$command = columnData_3.commands) === null || _columnData_3$command === void 0 || _columnData_3$command.setChecked(!columnData_3.checked);
@@ -3471,9 +3469,8 @@ function PTable(t0) {
   if ($[35] === Symbol["for"]("react.memo_cache_sentinel")) {
     t28 = function t28(columnId_3, checked_1) {
       var _localHeaderDataRef$c;
-      Object.keys(localBodyDataRef.current).forEach(function (key_4) {
-        var itemData_2 = localBodyDataRef.current[key_4];
-        var columnData_4 = itemData_2.columns[columnId_3];
+      Object.values(localBodyDataRef.current).forEach(function (itemData_4) {
+        var columnData_4 = itemData_4.columns[columnId_3];
         if (columnData_4) {
           var _columnData_4$command;
           (_columnData_4$command = columnData_4.commands) === null || _columnData_4$command === void 0 || _columnData_4$command.setChecked(checked_1);
@@ -3490,12 +3487,11 @@ function PTable(t0) {
   if ($[36] === Symbol["for"]("react.memo_cache_sentinel")) {
     t29 = function t29(columnId_4) {
       var checkedItems = [];
-      Object.keys(localBodyDataRef.current).forEach(function (key_5) {
-        var itemData_3 = localBodyDataRef.current[key_5];
-        var columnData_5 = itemData_3.columns[columnId_4];
+      Object.values(localBodyDataRef.current).forEach(function (itemData_5) {
+        var columnData_5 = itemData_5.columns[columnId_4];
         if (columnData_5) {
           if (columnData_5.checked) {
-            checkedItems.push(itemData_3.item);
+            checkedItems.push(itemData_5.item);
           }
         }
       });
@@ -3522,9 +3518,9 @@ function PTable(t0) {
   var t31;
   if ($[38] === Symbol["for"]("react.memo_cache_sentinel")) {
     t31 = function t31() {
-      Object.keys(fireOnCheckChangeTimer.current).forEach(function (key_6) {
-        if (fireOnCheckChangeTimer.current[key_6]) {
-          clearTimeout(fireOnCheckChangeTimer.current[key_6]);
+      Object.keys(fireOnCheckChangeTimer.current).forEach(function (key) {
+        if (fireOnCheckChangeTimer.current[key]) {
+          clearTimeout(fireOnCheckChangeTimer.current[key]);
         }
       });
       fireOnCheckChangeTimer.current = {};
@@ -3591,18 +3587,8 @@ function PTable(t0) {
     t36 = function t36() {
       stopHeadCheckTimer();
       clearFireOnCheckChangeTimer();
-      Object.keys(localHeaderDataRef.current).forEach(function (key_7) {
-        if (localHeaderDataRef.current[key_7].column.type === "check") {
-          var _localHeaderDataRef$c2;
-          (_localHeaderDataRef$c2 = localHeaderDataRef.current[key_7].commands) === null || _localHeaderDataRef$c2 === void 0 || _localHeaderDataRef$c2.setChecked(false);
-        }
-      });
-      Object.keys(localBodyDataRef.current).forEach(function (key_8) {
-        Object.keys(localBodyDataRef.current[key_8].columns).forEach(function (cKey) {
-          var _localBodyDataRef$cur;
-          (_localBodyDataRef$cur = localBodyDataRef.current[key_8].columns[cKey].commands) === null || _localBodyDataRef$cur === void 0 || _localBodyDataRef$cur.setChecked(false);
-        });
-      });
+      Object.values(localHeaderDataRef.current).forEach(_temp$1);
+      Object.values(localBodyDataRef.current).forEach(_temp3);
       setSortableItems(makeSortableItems(items));
     };
     t37 = [items];
@@ -3621,7 +3607,7 @@ function PTable(t0) {
       clearFireOnCheckChangeTimer();
       var newFinalColumns = columns === null || columns === void 0 ? void 0 : columns.filter(columnFilter);
       setFinalColumns(newFinalColumns);
-      setFinalColumnsId(newFinalColumns === null || newFinalColumns === void 0 ? void 0 : newFinalColumns.map(_temp$1));
+      setFinalColumnsId(newFinalColumns === null || newFinalColumns === void 0 ? void 0 : newFinalColumns.map(_temp4));
     };
     $[47] = columns;
     $[48] = setFinalColumns;
@@ -3645,25 +3631,21 @@ function PTable(t0) {
       clearFireOnCheckChangeTimer();
       if (sortableItems) {
         localBodyDataRef.current = sortableItems.reduce(function (res, item) {
-          res[item.id] = {
+          var rowData = {
             item: item,
             columns: {}
           };
-          if (finalColumns) {
-            finalColumns.forEach(function (c) {
-              var _localBodyDataRef$cur2;
-              var columnId_6 = getFinalColumnId(c);
-              if ((_localBodyDataRef$cur2 = localBodyDataRef.current[item.id]) !== null && _localBodyDataRef$cur2 !== void 0 && _localBodyDataRef$cur2.columns[columnId_6]) {
-                res[item.id].columns[columnId_6] = localBodyDataRef.current[item.id].columns[columnId_6];
-              } else {
-                res[item.id].columns[columnId_6] = {
-                  column: c,
-                  checked: false,
-                  checkDisabled: false
-                };
-              }
-            });
-          }
+          res[item.id] = rowData;
+          finalColumns === null || finalColumns === void 0 || finalColumns.forEach(function (c) {
+            var _localBodyDataRef$cur;
+            var columnId_6 = getFinalColumnId(c);
+            var previousData = (_localBodyDataRef$cur = localBodyDataRef.current[item.id]) === null || _localBodyDataRef$cur === void 0 ? void 0 : _localBodyDataRef$cur.columns[columnId_6];
+            rowData.columns[columnId_6] = previousData !== null && previousData !== void 0 ? previousData : {
+              column: c,
+              checked: false,
+              checkDisabled: false
+            };
+          });
           return res;
         }, {});
       } else {
@@ -3834,13 +3816,13 @@ function PTable(t0) {
   var handleDragEnd = t49;
   var t50;
   if ($[86] !== getFinalColumnId) {
-    t50 = function t50(column_1, checked_2) {
-      Object.keys(localBodyDataRef.current).forEach(function (key_9) {
-        var data = localBodyDataRef.current[key_9].columns[getFinalColumnId(column_1)];
-        if (data) {
-          if (!data.checkDisabled) {
-            var _data$commands;
-            (_data$commands = data.commands) === null || _data$commands === void 0 || _data$commands.setChecked(checked_2);
+    t50 = function t50(column_2, checked_2) {
+      Object.values(localBodyDataRef.current).forEach(function (itemData_6) {
+        var data_1 = itemData_6.columns[getFinalColumnId(column_2)];
+        if (data_1) {
+          if (!data_1.checkDisabled) {
+            var _data_1$commands;
+            (_data_1$commands = data_1.commands) === null || _data_1$commands === void 0 || _data_1$commands.setChecked(checked_2);
           }
         }
       });
@@ -3853,8 +3835,8 @@ function PTable(t0) {
   var handleHeadCheckChange = t50;
   var t51;
   if ($[88] !== updateHeadCheck) {
-    t51 = function t51(item_1, column_2) {
-      updateHeadCheck(column_2);
+    t51 = function t51(item_1, column_3) {
+      updateHeadCheck(column_3);
     };
     $[88] = updateHeadCheck;
     $[89] = t51;
@@ -3896,16 +3878,16 @@ function PTable(t0) {
   var TableContextSetMenuOpen = t53;
   var t54;
   if ($[94] !== fireOnCheckChange || $[95] !== getFinalColumnId) {
-    t54 = function t54(item_2, column_3, checked_3) {
-      var columnId_7 = getFinalColumnId(column_3);
+    t54 = function t54(item_2, column_4, checked_3) {
+      var columnId_7 = getFinalColumnId(column_4);
       if (localBodyDataRef.current) {
         var run = function run() {
           var bodyData = localBodyDataRef.current[item_2.id];
           if (bodyData) {
             var columns_0 = bodyData.columns;
-            var data_0 = columns_0[columnId_7];
-            if (data_0) {
-              data_0.checked = checked_3;
+            var data_2 = columns_0[columnId_7];
+            if (data_2) {
+              data_2.checked = checked_3;
               fireOnCheckChange(columnId_7);
             }
           }
@@ -3928,27 +3910,28 @@ function PTable(t0) {
   var TableContextSetItemColumnChecked = t54;
   var t55;
   if ($[97] !== getFinalColumnId || $[98] !== updateHeadCheck) {
-    t55 = function t55(item_3, column_4, disabled) {
-      var _localBodyDataRef$cur3;
-      var columnId_8 = getFinalColumnId(column_4);
-      if (columnId_8 && (_localBodyDataRef$cur3 = localBodyDataRef.current[item_3.id]) !== null && _localBodyDataRef$cur3 !== void 0 && _localBodyDataRef$cur3.columns[columnId_8]) {
-        localBodyDataRef.current[item_3.id].columns[columnId_8].checkDisabled = disabled;
-        updateHeadCheck(column_4);
+    t55 = function t55(item_3, column_5, disabled) {
+      var columnId_8 = getFinalColumnId(column_5);
+      var bodyData_0 = localBodyDataRef.current[item_3.id];
+      if (columnId_8 && bodyData_0 !== null && bodyData_0 !== void 0 && bodyData_0.columns[columnId_8]) {
+        bodyData_0.columns[columnId_8].checkDisabled = disabled;
+        updateHeadCheck(column_5);
       } else {
         var runCount = 0;
         var _run_ = function run_0() {
-          var _localBodyDataRef$cur4;
+          var _localBodyDataRef$cur2;
           runCount = runCount + 1;
           if (runCount > 10) {
             return;
           }
-          var columnId_9 = getFinalColumnId(column_4);
-          if (!((_localBodyDataRef$cur4 = localBodyDataRef.current[item_3.id]) !== null && _localBodyDataRef$cur4 !== void 0 && _localBodyDataRef$cur4.columns[columnId_9])) {
+          var columnId_9 = getFinalColumnId(column_5);
+          var columnData_6 = (_localBodyDataRef$cur2 = localBodyDataRef.current[item_3.id]) === null || _localBodyDataRef$cur2 === void 0 ? void 0 : _localBodyDataRef$cur2.columns[columnId_9];
+          if (!columnData_6) {
             setTimeout(_run_);
             return;
           }
-          localBodyDataRef.current[item_3.id].columns[columnId_9].checkDisabled = disabled;
-          updateHeadCheck(column_4);
+          columnData_6.checkDisabled = disabled;
+          updateHeadCheck(column_5);
         };
         _run_();
       }
@@ -3962,25 +3945,26 @@ function PTable(t0) {
   var TableContextSetItemColumnCheckDisabled = t55;
   var t56;
   if ($[100] !== getFinalColumnId) {
-    t56 = function t56(item_4, column_5, commands) {
-      var _localBodyDataRef$cur5;
-      var columnId_10 = getFinalColumnId(column_5);
-      if (columnId_10 && (_localBodyDataRef$cur5 = localBodyDataRef.current[item_4.id]) !== null && _localBodyDataRef$cur5 !== void 0 && _localBodyDataRef$cur5.columns[columnId_10]) {
-        localBodyDataRef.current[item_4.id].columns[columnId_10].commands = commands;
+    t56 = function t56(item_4, column_6, commands) {
+      var columnId_10 = getFinalColumnId(column_6);
+      var bodyData_1 = localBodyDataRef.current[item_4.id];
+      if (columnId_10 && bodyData_1 !== null && bodyData_1 !== void 0 && bodyData_1.columns[columnId_10]) {
+        bodyData_1.columns[columnId_10].commands = commands;
       } else {
         var runCount_0 = 0;
         var _run_2 = function run_1() {
-          var _localBodyDataRef$cur6;
+          var _localBodyDataRef$cur3;
           runCount_0 = runCount_0 + 1;
           if (runCount_0 > 10) {
             return;
           }
-          var columnId_11 = getFinalColumnId(column_5);
-          if (!((_localBodyDataRef$cur6 = localBodyDataRef.current[item_4.id]) !== null && _localBodyDataRef$cur6 !== void 0 && _localBodyDataRef$cur6.columns[columnId_11])) {
+          var columnId_11 = getFinalColumnId(column_6);
+          var columnData_7 = (_localBodyDataRef$cur3 = localBodyDataRef.current[item_4.id]) === null || _localBodyDataRef$cur3 === void 0 ? void 0 : _localBodyDataRef$cur3.columns[columnId_11];
+          if (!columnData_7) {
             setTimeout(_run_2);
             return;
           }
-          localBodyDataRef.current[item_4.id].columns[columnId_11].commands = commands;
+          columnData_7.commands = commands;
         };
         _run_2();
       }
@@ -3993,8 +3977,8 @@ function PTable(t0) {
   var TableContextSetItemColumnCommands = t56;
   var t57;
   if ($[102] !== getFinalColumnId) {
-    t57 = function t57(column_6, checked_4) {
-      var columnId_12 = getFinalColumnId(column_6);
+    t57 = function t57(column_7, checked_4) {
+      var columnId_12 = getFinalColumnId(column_7);
       if (columnId_12 && localHeaderDataRef.current[columnId_12]) {
         localHeaderDataRef.current[columnId_12].checked = checked_4;
       } else {
@@ -4004,7 +3988,7 @@ function PTable(t0) {
           if (runCount_1 > 10) {
             return;
           }
-          var columnId_13 = getFinalColumnId(column_6);
+          var columnId_13 = getFinalColumnId(column_7);
           if (!localHeaderDataRef.current[columnId_13]) {
             setTimeout(_run_3);
             return;
@@ -4022,8 +4006,8 @@ function PTable(t0) {
   var TableContextSetHeadColumnChecked = t57;
   var t58;
   if ($[104] !== getFinalColumnId) {
-    t58 = function t58(column_7, commands_0) {
-      var columnId_14 = getFinalColumnId(column_7);
+    t58 = function t58(column_8, commands_0) {
+      var columnId_14 = getFinalColumnId(column_8);
       if (columnId_14 && localHeaderDataRef.current[columnId_14]) {
         localHeaderDataRef.current[columnId_14].commands = commands_0;
       } else {
@@ -4033,7 +4017,7 @@ function PTable(t0) {
           if (runCount_2 > 10) {
             return;
           }
-          var columnId_15 = getFinalColumnId(column_7);
+          var columnId_15 = getFinalColumnId(column_8);
           if (!localHeaderDataRef.current[columnId_15]) {
             setTimeout(_run_4);
             return;
@@ -4247,10 +4231,10 @@ function PTable(t0) {
   var tableBody = t67;
   var t68;
   if ($[156] !== defaultAlign || $[157] !== finalColumns || $[158] !== footer || $[159] !== isNoData || $[160] !== items) {
-    t68 = finalColumns && !isNoData && footer && /*#__PURE__*/React.createElement(material.TableFooter, null, /*#__PURE__*/React.createElement(material.TableRow, null, finalColumns.map(function (column_8, idx_1) {
+    t68 = finalColumns && !isNoData && footer && /*#__PURE__*/React.createElement(material.TableFooter, null, /*#__PURE__*/React.createElement(material.TableRow, null, finalColumns.map(function (column_9, idx_1) {
       return /*#__PURE__*/React.createElement(PTableFooterCell, {
         key: idx_1,
-        column: column_8,
+        column: column_9,
         items: items,
         defaultAlign: defaultAlign
       });
@@ -4359,11 +4343,24 @@ function PTable(t0) {
   }
   return t69;
 }
-function _temp$1(col) {
+function _temp4(col) {
   if (col.id) {
     return col.id;
   } else {
     return getNewColumnId();
+  }
+}
+function _temp3(data_0) {
+  Object.values(data_0.columns).forEach(_temp2);
+}
+function _temp2(column_1) {
+  var _column_1$commands;
+  (_column_1$commands = column_1.commands) === null || _column_1$commands === void 0 || _column_1$commands.setChecked(false);
+}
+function _temp$1(data) {
+  if (data.column.type === "check") {
+    var _data$commands;
+    (_data$commands = data.commands) === null || _data$commands === void 0 || _data$commands.setChecked(false);
   }
 }var _excluded$2 = ["ref", "searchGroups"],
   _excluded2 = ["ref"];
@@ -4519,8 +4516,10 @@ function PSearchTable(t0) {
       if (commands) {
         commands.resetAll();
         var hashValues = deHash();
-        Object.keys(hashValues).forEach(function (name) {
-          var value = hashValues[name];
+        Object.entries(hashValues).forEach(function (t10) {
+          var _t = _slicedToArray(t10, 2),
+            name = _t[0],
+            value = _t[1];
           if (name === "page") {
             commands.setValue(name, Number(value) || 1);
           } else {
@@ -4835,7 +4834,7 @@ function PSearchTable(t0) {
                       resetValue = searchRef.current.getFormReset(name_0);
                     }
                 }
-                if (resetValue != null && !compare.equal(resetValue, value_0) && _typeof(value_0) !== "object") {
+                if (resetValue != null && !compare.equal(resetValue, value_0) && value_0 !== undefined && _typeof(value_0) !== "object") {
                   hashes.push("".concat(name_0, "=").concat(encodeURIComponent(value_0)));
                 }
               }

@@ -259,7 +259,7 @@ function PTable<T extends PTableItem = PTableItem>({
     (column: PTableColumn<T>) => {
       if (finalColumnsRef.current && finalColumnsIdRef.current) {
         const idx = finalColumnsRef.current.indexOf(column);
-        return finalColumnsIdRef.current[idx];
+        return finalColumnsIdRef.current[idx] ?? '';
       } else {
         return '';
       }
@@ -282,8 +282,8 @@ function PTable<T extends PTableItem = PTableItem>({
         updateHeadCheckTimer.current = setTimeout(() => {
           updateHeadCheckTimer.current = undefined;
 
-          const enabledCheckExists = !!Object.keys(localBodyDataRef.current).find((key) => {
-            const columnData = localBodyDataRef.current[key].columns[columnId];
+          const enabledCheckExists = !!Object.values(localBodyDataRef.current).find((itemData) => {
+            const columnData = itemData.columns[columnId];
             if (columnData) {
               if (!columnData.checkDisabled) {
                 return true;
@@ -293,8 +293,8 @@ function PTable<T extends PTableItem = PTableItem>({
 
           const allChecked =
             enabledCheckExists &&
-            !Object.keys(localBodyDataRef.current).find((key) => {
-              const columnData = localBodyDataRef.current[key].columns[columnId];
+            !Object.values(localBodyDataRef.current).find((itemData) => {
+              const columnData = itemData.columns[columnId];
               if (columnData) {
                 if (!columnData.checkDisabled) {
                   return !columnData.checked;
@@ -313,8 +313,7 @@ function PTable<T extends PTableItem = PTableItem>({
   /** getChecked */
   const getChecked = useCallback((itemKey: string, itemValue: any, columnId: string): boolean => {
     let checked = false;
-    Object.keys(localBodyDataRef.current).find((key) => {
-      const itemData = localBodyDataRef.current[key];
+    Object.values(localBodyDataRef.current).find((itemData) => {
       if (itemData.item[itemKey] === itemValue) {
         const columnData = itemData.columns[columnId];
         checked = !!columnData?.checked;
@@ -327,8 +326,7 @@ function PTable<T extends PTableItem = PTableItem>({
   /** setChecked */
   const setChecked = useCallback(
     (itemKey: string, itemValue: any, columnId: string, checked: boolean) => {
-      Object.keys(localBodyDataRef.current).find((key) => {
-        const itemData = localBodyDataRef.current[key];
+      Object.values(localBodyDataRef.current).find((itemData) => {
         if (itemData.item[itemKey] === itemValue) {
           const columnData = itemData.columns[columnId];
           if (columnData) {
@@ -345,8 +343,7 @@ function PTable<T extends PTableItem = PTableItem>({
   /** toggleChecked */
   const toggleChecked = useCallback(
     (itemKey: string, itemValue: any, columnId: string) => {
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        const itemData = localBodyDataRef.current[key];
+      Object.values(localBodyDataRef.current).forEach((itemData) => {
         if (itemData.item[itemKey] === itemValue) {
           const columnData = itemData.columns[columnId];
           if (columnData) {
@@ -362,8 +359,7 @@ function PTable<T extends PTableItem = PTableItem>({
 
   /** setCheckedAll */
   const setCheckedAll = useCallback((columnId: string, checked: boolean) => {
-    Object.keys(localBodyDataRef.current).forEach((key) => {
-      const itemData = localBodyDataRef.current[key];
+    Object.values(localBodyDataRef.current).forEach((itemData) => {
       const columnData = itemData.columns[columnId];
       if (columnData) {
         columnData.commands?.setChecked(checked);
@@ -375,8 +371,7 @@ function PTable<T extends PTableItem = PTableItem>({
   /** getCheckedItems */
   const getCheckedItems = useCallback((columnId: string): T[] => {
     const checkedItems: T[] = [];
-    Object.keys(localBodyDataRef.current).forEach((key) => {
-      const itemData = localBodyDataRef.current[key];
+    Object.values(localBodyDataRef.current).forEach((itemData) => {
       const columnData = itemData.columns[columnId];
       if (columnData) {
         if (columnData.checked) {
@@ -443,15 +438,15 @@ function PTable<T extends PTableItem = PTableItem>({
     stopHeadCheckTimer();
     clearFireOnCheckChangeTimer();
 
-    Object.keys(localHeaderDataRef.current).forEach((key) => {
-      if (localHeaderDataRef.current[key].column.type === 'check') {
-        localHeaderDataRef.current[key].commands?.setChecked(false);
+    Object.values(localHeaderDataRef.current).forEach((data) => {
+      if (data.column.type === 'check') {
+        data.commands?.setChecked(false);
       }
     });
 
-    Object.keys(localBodyDataRef.current).forEach((key) => {
-      Object.keys(localBodyDataRef.current[key].columns).forEach((cKey) => {
-        localBodyDataRef.current[key].columns[cKey].commands?.setChecked(false);
+    Object.values(localBodyDataRef.current).forEach((data) => {
+      Object.values(data.columns).forEach((column) => {
+        column.commands?.setChecked(false);
       });
     });
 
@@ -480,26 +475,18 @@ function PTable<T extends PTableItem = PTableItem>({
 
     if (sortableItems) {
       localBodyDataRef.current = sortableItems.reduce<TLocalBodyData<T>>((res, item) => {
-        res[item.id] = {
-          item,
-          columns: {},
-        };
+        const rowData: TLocalBodyData<T>[string] = { item, columns: {} };
+        res[item.id] = rowData;
 
-        if (finalColumns) {
-          finalColumns.forEach((c) => {
-            const columnId = getFinalColumnId(c);
-
-            if (localBodyDataRef.current[item.id]?.columns[columnId]) {
-              res[item.id].columns[columnId] = localBodyDataRef.current[item.id].columns[columnId];
-            } else {
-              res[item.id].columns[columnId] = {
-                column: c,
-                checked: false,
-                checkDisabled: false,
-              };
-            }
-          });
-        }
+        finalColumns?.forEach((c) => {
+          const columnId = getFinalColumnId(c);
+          const previousData = localBodyDataRef.current[item.id]?.columns[columnId];
+          rowData.columns[columnId] = previousData ?? {
+            column: c,
+            checked: false,
+            checkDisabled: false,
+          };
+        });
         return res;
       }, {});
     } else {
@@ -602,8 +589,8 @@ function PTable<T extends PTableItem = PTableItem>({
 
   const handleHeadCheckChange = useCallback(
     (column: PTableColumn<T>, checked: boolean) => {
-      Object.keys(localBodyDataRef.current).forEach((key) => {
-        const data = localBodyDataRef.current[key].columns[getFinalColumnId(column)];
+      Object.values(localBodyDataRef.current).forEach((itemData) => {
+        const data = itemData.columns[getFinalColumnId(column)];
         if (data) {
           if (!data.checkDisabled) {
             data.commands?.setChecked(checked);
@@ -679,8 +666,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const TableContextSetItemColumnCheckDisabled = useCallback(
     (item: T, column: PTableColumn<T>, disabled: boolean) => {
       const columnId = getFinalColumnId(column);
-      if (columnId && localBodyDataRef.current[item.id]?.columns[columnId]) {
-        localBodyDataRef.current[item.id].columns[columnId].checkDisabled = disabled;
+      const bodyData = localBodyDataRef.current[item.id];
+      if (columnId && bodyData?.columns[columnId]) {
+        bodyData.columns[columnId].checkDisabled = disabled;
         updateHeadCheck(column);
       } else {
         let runCount = 0;
@@ -689,11 +677,12 @@ function PTable<T extends PTableItem = PTableItem>({
           if (runCount > 10) return;
 
           const columnId = getFinalColumnId(column);
-          if (!localBodyDataRef.current[item.id]?.columns[columnId]) {
+          const columnData = localBodyDataRef.current[item.id]?.columns[columnId];
+          if (!columnData) {
             setTimeout(run);
             return;
           }
-          localBodyDataRef.current[item.id].columns[columnId].checkDisabled = disabled;
+          columnData.checkDisabled = disabled;
           updateHeadCheck(column);
         };
         run();
@@ -705,8 +694,9 @@ function PTable<T extends PTableItem = PTableItem>({
   const TableContextSetItemColumnCommands = useCallback(
     (item: T, column: PTableColumn<T>, commands: PTableBodyCellCommands) => {
       const columnId = getFinalColumnId(column);
-      if (columnId && localBodyDataRef.current[item.id]?.columns[columnId]) {
-        localBodyDataRef.current[item.id].columns[columnId].commands = commands;
+      const bodyData = localBodyDataRef.current[item.id];
+      if (columnId && bodyData?.columns[columnId]) {
+        bodyData.columns[columnId].commands = commands;
       } else {
         let runCount = 0;
         const run = () => {
@@ -714,11 +704,12 @@ function PTable<T extends PTableItem = PTableItem>({
           if (runCount > 10) return;
 
           const columnId = getFinalColumnId(column);
-          if (!localBodyDataRef.current[item.id]?.columns[columnId]) {
+          const columnData = localBodyDataRef.current[item.id]?.columns[columnId];
+          if (!columnData) {
             setTimeout(run);
             return;
           }
-          localBodyDataRef.current[item.id].columns[columnId].commands = commands;
+          columnData.commands = commands;
         };
         run();
       }

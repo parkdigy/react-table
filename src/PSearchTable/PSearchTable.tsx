@@ -112,8 +112,7 @@ function PSearchTable<T extends PTableItem = PTableItem>({
       commands.resetAll();
 
       const hashValues = deHash();
-      Object.keys(hashValues).forEach((name) => {
-        const value: PFormValue = hashValues[name];
+      Object.entries(hashValues).forEach(([name, value]) => {
         if (name === 'page') {
           commands.setValue(name, Number(value) || 1);
         } else {
@@ -359,7 +358,7 @@ function PSearchTable<T extends PTableItem = PTableItem>({
                     break;
                 }
 
-                if (resetValue != null && !equal(resetValue, value) && typeof value !== 'object') {
+                if (resetValue != null && !equal(resetValue, value) && value !== undefined && typeof value !== 'object') {
                   hashes.push(`${name}=${encodeURIComponent(value)}`);
                 }
               }
