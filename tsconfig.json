@@ -19,6 +19,7 @@
     "types": ["node"],
     "sourceMap": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "outDir": "dist"
   },
   "include": ["src/**/*"],
